@@ -105,7 +105,8 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
-        btnAddOpen.click();
+        const btn = document.getElementById(btn-add-open);
+        if (btn) btn.click();
       }
       if (e.key === 'Escape') {
         catalogModal.style.display = 'none';
@@ -248,6 +249,8 @@
       const card = document.createElement('div');
       card.className = 'service-card';
 
+      const iconWrapper = document.createElement('div');
+      iconWrapper.className = 'service-card-icon-wrapper';
       const img = document.createElement('img');
       img.src = `assets/icons/${item.id}.svg`;
       img.alt = item.name;
@@ -281,7 +284,8 @@
         openConfigureForm(item.name, item.url || 'https://', item.id);
       };
 
-      card.appendChild(img);
+      iconWrapper.appendChild(img);
+      card.appendChild(iconWrapper);
       card.appendChild(info);
       card.appendChild(btn);
 

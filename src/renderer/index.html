@@ -326,7 +326,7 @@
       inset: 0;
       background-color: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(6px);
-      z-index: 100;
+      z-index: 999999;
       display: none;
       align-items: center;
       justify-content: center;
@@ -460,12 +460,28 @@
       transform: translateY(-1px);
     }
 
-    .service-card img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      border-radius: 8px;
+    .service-card-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
+      padding: 3px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .service-card img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      border-radius: 6px;
+      flex-shrink: 0;
+      /* Subtle brightness filter so pure-black icons have visible contrast against dark themes */
+      filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.35));
     }
 
     .service-info {
