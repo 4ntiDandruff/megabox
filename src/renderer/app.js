@@ -121,7 +121,7 @@
 
     // Control bar
     btnReload.onclick = reloadActiveApp;
-    btnMute.onclick = toggleGlobalMute;
+    if (btnMute) btnMute.onclick = toggleGlobalMute;
 
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => {
@@ -150,7 +150,12 @@
     });
 
     // Close context menu on outside click
-    window.addEventListener('click', () => hideContextMenu());
+    window.addEventListener('click', () => hideContextMenu(), true);
+    window.addEventListener('mousedown', (e) => {
+      if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
+        hideContextMenu();
+      }
+    }, true);
 
     // Context menu handlers
     if (ctxBack) {
@@ -655,20 +660,48 @@
     };
   }
 
+    let ctxBackdrop = document.getElementById('ctx-backdrop');
+  if (!ctxBackdrop) {
+    ctxBackdrop = document.createElement('div');
+    ctxBackdrop.id = 'ctx-backdrop';
+    ctxBackdrop.style.cssText = 'position:fixed;inset:0;background:transparent;z-index:190;display:none;';
+    document.body.appendChild(ctxBackdrop);
+    ctxBackdrop.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      hideContextMenu();
+    });
+    ctxBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hideContextMenu();
+    });
+    ctxBackdrop.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      hideContextMenu();
+    });
+  }
+
   function showContextMenu(x, y, app) {
     contextTargetApp = app;
     ctxName.textContent = app.name;
 
     const wv = document.getElementById('wv-' + app.id);
-    const isMuted = wv ? wv.isAudioMuted() : false;
-    ctxMuteLabel.textContent = isMuted ? 'Bunyikan' : 'Bisukan';
+    if (ctxMuteLabel && wv) {
+      const isMuted = wv.isAudioMuted();
+      ctxMuteLabel.textContent = isMuted ? 'Bunyikan' : 'Bisukan';
+    }
 
     const isHibernated = wv ? (wv.dataset.hibernated === 'true') : false;
-    ctxHibernateLabel.textContent = isHibernated ? 'Bangunkan' : 'Tidurkan';
+    if (ctxHibernateLabel) {
+      ctxHibernateLabel.textContent = isHibernated ? 'Bangunkan' : 'Tidurkan';
+    }
+
+    // Tampilkan backdrop transparan agar klik di manapun (termasuk atas webview) menutup menu seketika
+    if (ctxBackdrop) ctxBackdrop.style.display = 'block';
 
     // Position menu dynamically to fit viewport (prevents cutoff on small screens)
     contextMenu.style.visibility = 'hidden';
     contextMenu.style.display = 'block';
+    contextMenu.style.zIndex = '200';
     const menuWidth = contextMenu.offsetWidth || 220;
     const menuHeight = contextMenu.offsetHeight || 380;
     contextMenu.style.visibility = 'visible';
@@ -681,6 +714,7 @@
 
   function hideContextMenu() {
     contextMenu.style.display = 'none';
+    if (ctxBackdrop) ctxBackdrop.style.display = 'none';
     contextTargetApp = null;
   }
 
@@ -1133,10 +1167,10 @@
     }
   }
 
-  if (btnLock) btnLock.onclick = lockWorkspace;
+  // lockWorkspace removed
   if (lockPinInput) {
     lockPinInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') unlockWorkspace();
+      if (e.key === 'Enter') un// lockWorkspace disabled
     });
   }
 
@@ -1157,7 +1191,7 @@
     // Ctrl+L -> Lock Workspace
     if (e.ctrlKey && e.key === 'l') {
       e.preventDefault();
-      lockWorkspace();
+      // lockWorkspace disabled
     }
     // Alt+2 -> Toggle Split Screen 1x2
     if (e.altKey && (e.key === '2' || e.key === '@')) {
@@ -1563,8 +1597,9 @@
 
   function openExtensionDrawer() {
     if (!extensionDrawer) return;
+    extensionDrawer.style.display = 'flex';
     const currentApp = apps.find(a => a.id === activeAppId);
-    const appName = currentApp ? currentApp.name : 'Active App';
+    const appName = currentApp ? currentApp.name : 'Layanan';
 
     if (drawerTitle) drawerTitle.textContent = `Ekstensi "${appName}"`;
     if (drawerSubtitle) drawerSubtitle.textContent = `Partisi: ${currentApp ? currentApp.partition || 'Pribadi' : 'Bawaan'}`;
@@ -1678,7 +1713,7 @@
 
       if (!isCallActive) {
         console.log(`[Megabox AutoLock] Workstation idle for ${autoLockMinutes} mins. Locking automatically.`);
-        lockWorkspace();
+        // lockWorkspace disabled
       } else {
         console.log('[Megabox AutoLock] Idle detected but active audio/call playing. Lock suppressed.');
       }
