@@ -328,7 +328,7 @@
     if (displayItems.length === 0) {
       catalogGrid.innerHTML = `
         <div style="grid-column: 1/-1; padding: 40px 20px; text-align: center; color: #94a3b8;">
-          <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;opacity:0.4;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <div style="font-size: 15px; font-weight: 600; color: #fff;">Layanan tidak ditemukan</div>
           <div style="font-size: 13px; margin-top: 4px;">Coba gunakan kata kunci lain atau tambahkan website kustom secara manual di bawah.</div>
         </div>
