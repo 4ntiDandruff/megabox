@@ -1,27 +1,239 @@
-// Megabox Client Controller (with Hibernate RAM Saver & Right-Click Context Menu)
+// Megabox Vanilla DOM Controller (Rambox + Ferdium Synthesis)
+// Includes Ferdium 440+ Recipes Catalog, Live Search, Tab Context Menu, and Hibernation
 (function() {
-  let apps = [];
-  let activeAppId = null;
-  let isMuted = false;
-  let appLastAccessed = {}; // Tracking for hibernation
-  const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 Menit idle -> hibernate
-  const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
-
-  const appsContainer = document.getElementById('apps-list');
+  const tabsContainer = document.getElementById('tabs-container');
   const webviewsContainer = document.getElementById('webviews-container');
-  const addModal = document.getElementById('add-modal');
   const btnAddOpen = document.getElementById('btn-add-open');
-  const btnAddCancel = document.getElementById('btn-add-cancel');
-  const btnAddSave = document.getElementById('btn-add-save');
   const btnReload = document.getElementById('btn-reload');
   const btnMute = document.getElementById('btn-mute');
+  const iconMuteUnmuted = document.getElementById('icon-mute-unmuted');
+  const iconMuteMuted = document.getElementById('icon-mute-muted');
 
-  const inputName = document.getElementById('input-name');
-  const inputUrl = document.getElementById('input-url');
-  const selectPreset = document.getElementById('select-preset');
+  // Catalog Modal
+  const catalogModal = document.getElementById('catalog-modal');
+  const btnCatalogClose = document.getElementById('btn-catalog-close');
+  const catalogSearchInput = document.getElementById('catalog-search-input');
+  const catalogGrid = document.getElementById('catalog-grid');
+  const btnCustomAdd = document.getElementById('btn-custom-add');
+  const catalogCountBadge = document.getElementById('catalog-count-badge');
+
+  // Configure / Custom Form Modal
+  const configureModal = document.getElementById('configure-modal');
+  const formModalTitle = document.getElementById('form-modal-title');
+  const btnFormClose = document.getElementById('btn-form-close');
+  const btnFormCancel = document.getElementById('btn-form-cancel');
+  const btnFormSave = document.getElementById('btn-form-save');
+  const inputServiceName = document.getElementById('input-service-name');
+  const inputServiceUrl = document.getElementById('input-service-url');
+  const inputServiceIcon = document.getElementById('input-service-icon');
+
+  // Custom Context Menu
+  const contextMenu = document.getElementById('context-menu');
+  const ctxName = document.getElementById('ctx-name');
+  const ctxReload = document.getElementById('ctx-reload');
+  const ctxMute = document.getElementById('ctx-mute');
+  const ctxMuteLabel = document.getElementById('ctx-mute-label');
+  const ctxHibernate = document.getElementById('ctx-hibernate');
+  const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
+  const ctxDelete = document.getElementById('ctx-delete');
+
+  let apps = [];
+  let recipesCatalog = [];
+  let activeAppId = null;
+  let isGlobalMuted = false;
+  let contextTargetApp = null;
+  const appLastAccessed = {};
+  const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 mins idle hibernate to free RAM
+
+  const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
 
   async function init() {
-    console.log('[Megabox] Initializing client...');
+    setupEventListeners();
+    await loadRecipesCatalog();
+    await loadApps();
+    setInterval(checkHibernation, 60000);
+  }
+
+  function setupEventListeners() {
+    // Open Ferdium Catalog
+    btnAddOpen.onclick = () => {
+      catalogSearchInput.value = '';
+      renderCatalogGrid(recipesCatalog);
+      catalogModal.style.display = 'flex';
+      setTimeout(() => catalogSearchInput.focus(), 100);
+    };
+
+    btnCatalogClose.onclick = () => { catalogModal.style.display = 'none'; };
+    btnCustomAdd.onclick = () => {
+      catalogModal.style.display = 'none';
+      openConfigureForm('Custom Service', 'https://', 'custom');
+    };
+
+    // Catalog live search
+    catalogSearchInput.oninput = () => {
+      const q = catalogSearchInput.value.toLowerCase().trim();
+      const filtered = recipesCatalog.filter(r => 
+        r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q)
+      );
+      renderCatalogGrid(filtered);
+    };
+
+    // Configure Form actions
+    btnFormClose.onclick = () => { configureModal.style.display = 'none'; };
+    btnFormCancel.onclick = () => { configureModal.style.display = 'none'; };
+    btnFormSave.onclick = handleSaveService;
+
+    // Control bar
+    btnReload.onclick = reloadActiveApp;
+    btnMute.onclick = toggleGlobalMute;
+
+    // Global keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        reloadActiveApp();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        btnAddOpen.click();
+      }
+      if (e.key === 'Escape') {
+        catalogModal.style.display = 'none';
+        configureModal.style.display = 'none';
+        hideContextMenu();
+      }
+      // Alt+1 to Alt+9 switch tab
+      if (e.altKey && e.key >= '1' && e.key <= '9') {
+        const idx = parseInt(e.key, 10) - 1;
+        if (apps[idx]) {
+          e.preventDefault();
+          selectApp(apps[idx].id);
+        }
+      }
+    });
+
+    // Close context menu on outside click
+    window.addEventListener('click', () => hideContextMenu());
+
+    // Context menu handlers
+    ctxReload.onclick = () => {
+      if (contextTargetApp) {
+        const wv = document.getElementById('wv-' + contextTargetApp.id);
+        if (wv) wv.reload();
+      }
+      hideContextMenu();
+    };
+
+    ctxMute.onclick = () => {
+      if (contextTargetApp) {
+        toggleMuteApp(contextTargetApp.id);
+      }
+      hideContextMenu();
+    };
+
+    ctxHibernate.onclick = () => {
+      if (contextTargetApp) {
+        toggleHibernateApp(contextTargetApp.id);
+      }
+      hideContextMenu();
+    };
+
+    ctxDelete.onclick = () => {
+      if (contextTargetApp) {
+        if (confirm(`Remove "${contextTargetApp.name}" from Megabox?`)) {
+          deleteAppById(contextTargetApp.id);
+        }
+      }
+      hideContextMenu();
+    };
+
+    if (window.megabox) {
+      window.megabox.onAppsUpdated((updatedApps) => {
+        apps = updatedApps;
+        renderTabs();
+      });
+      window.megabox.onReloadActive(() => {
+        reloadActiveApp();
+      });
+    }
+  }
+
+  async function loadRecipesCatalog() {
+    try {
+      const resp = await fetch('assets/recipes-catalog.json');
+      recipesCatalog = await resp.json();
+      if (catalogCountBadge) {
+        catalogCountBadge.textContent = `${recipesCatalog.length} Available`;
+      }
+    } catch (e) {
+      console.error('Failed to load recipes catalog:', e);
+    }
+  }
+
+  function renderCatalogGrid(items) {
+    catalogGrid.innerHTML = '';
+    const displayItems = items.slice(0, 80); // Fast initial virtual slice
+
+    displayItems.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+
+      const img = document.createElement('img');
+      img.src = `assets/icons/${item.id}.svg`;
+      img.alt = item.name;
+      img.onerror = () => {
+        img.src = 'assets/icons/custom.svg';
+        img.onerror = () => {
+          img.style.display = 'none';
+        };
+      };
+
+      const info = document.createElement('div');
+      info.className = 'service-info';
+
+      const name = document.createElement('div');
+      name.className = 'service-name';
+      name.textContent = item.name;
+
+      const meta = document.createElement('div');
+      meta.className = 'service-meta';
+      meta.textContent = item.url ? item.url.replace(/^https?:\/\//, '').split('/')[0] : 'Web Service';
+
+      info.appendChild(name);
+      info.appendChild(meta);
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-add-pill';
+      btn.textContent = 'Add';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        catalogModal.style.display = 'none';
+        openConfigureForm(item.name, item.url || 'https://', item.id);
+      };
+
+      card.appendChild(img);
+      card.appendChild(info);
+      card.appendChild(btn);
+
+      card.onclick = () => {
+        catalogModal.style.display = 'none';
+        openConfigureForm(item.name, item.url || 'https://', item.id);
+      };
+
+      catalogGrid.appendChild(card);
+    });
+  }
+
+  function openConfigureForm(name, url, icon) {
+    formModalTitle.textContent = `Add ${name}`;
+    inputServiceName.value = name;
+    inputServiceUrl.value = url;
+    inputServiceIcon.value = icon;
+    configureModal.style.display = 'flex';
+    setTimeout(() => inputServiceName.focus(), 100);
+  }
+
+  async function loadApps() {
     if (window.megabox) {
       apps = await window.megabox.getApps();
       renderTabs();
@@ -29,69 +241,98 @@
         selectApp(apps[0].id);
       }
     }
-
-    if (btnAddOpen) btnAddOpen.onclick = () => addModal.style.display = 'flex';
-    if (btnAddCancel) btnAddCancel.onclick = () => addModal.style.display = 'none';
-    if (btnAddSave) btnAddSave.onclick = handleAddApp;
-    if (btnReload) btnReload.onclick = reloadActiveApp;
-    if (btnMute) btnMute.onclick = toggleMuteActiveApp;
-
-    // Start background hibernation watchdog (check every 60s)
-    setInterval(checkHibernation, 60000);
-  }
-
-  function getIconSvg(icon) {
-    if (icon === 'whatsapp') {
-      return '<svg class="w-6 h-6 text-emerald-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>';
-    }
-    if (icon === 'telegram') {
-      return '<svg class="w-6 h-6 text-sky-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>';
-    }
-    if (icon === 'discord') {
-      return '<svg class="w-6 h-6 text-indigo-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>';
-    }
-    if (icon === 'gmail') {
-      return '<svg class="w-6 h-6 text-red-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
-    }
-    return '<span class="text-xs font-bold text-slate-300 uppercase pointer-events-none">' + (icon || 'APP').substring(0, 2) + '</span>';
   }
 
   function renderTabs() {
-    appsContainer.innerHTML = '';
-    apps.forEach(app => {
-      const btn = document.createElement('button');
-      btn.id = 'tab-' + app.id;
-      btn.className = 'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 relative shadow-sm cursor-pointer mb-3 ' +
-                      (activeAppId === app.id ? 'bg-slate-800 ring-2 ring-cyan-500/50 text-white' : 'bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-slate-200');
-      btn.title = app.name;
-      btn.innerHTML = getIconSvg(app.icon);
-      btn.onclick = () => selectApp(app.id);
+    tabsContainer.innerHTML = '';
 
-      // Right-click context menu on tab (Delete / Reload / Duplicate)
-      btn.oncontextmenu = (e) => {
+    apps.forEach((app, index) => {
+      const tab = document.createElement('div');
+      tab.id = 'tab-' + app.id;
+      tab.className = 'tab-item' + (activeAppId === app.id ? ' is-active' : '');
+      tab.title = `${app.name} (Alt+${index + 1})`;
+
+      // Render tab icon using official SVG
+      const iconPath = `assets/icons/${app.icon || 'whatsapp'}.svg`;
+      const img = document.createElement('img');
+      img.className = 'tab-icon';
+      img.src = iconPath;
+      img.alt = app.name;
+      img.onerror = () => {
+        img.remove();
+        const fallback = document.createElement('span');
+        fallback.className = 'tab-fallback';
+        fallback.textContent = (app.name || 'APP').substring(0, 2);
+        tab.appendChild(fallback);
+      };
+      tab.appendChild(img);
+
+      // Notification Badge matching Ferdium
+      const badge = document.createElement('span');
+      badge.id = 'badge-' + app.id;
+      badge.className = 'tab-badge';
+      badge.textContent = '0';
+      tab.appendChild(badge);
+
+      // Tab Click
+      tab.onclick = () => selectApp(app.id);
+
+      // Right-click Custom Context Menu (Ferdium TabItem exact replica)
+      tab.oncontextmenu = (e) => {
         e.preventDefault();
-        if (confirm('Delete "' + app.name + '" from Megabox?')) {
-          deleteAppById(app.id);
-        }
+        showContextMenu(e.clientX, e.clientY, app);
       };
 
-      appsContainer.appendChild(btn);
+      tabsContainer.appendChild(tab);
 
-      // Webview injection
+      // Ensure corresponding Webview exists
       let wv = document.getElementById('wv-' + app.id);
       if (!wv) {
         wv = document.createElement('webview');
         wv.id = 'wv-' + app.id;
         wv.src = app.url;
-        wv.partition = app.partition;
+        wv.partition = app.partition || ('persist:' + app.id);
         wv.useragent = app.user_agent || defaultUA;
         wv.setAttribute('preload', '../main/preload-webview.js');
         wv.setAttribute('allowpopups', '');
-        wv.className = 'w-full h-full bg-slate-950 absolute inset-0';
         wv.style.display = (activeAppId === app.id) ? 'flex' : 'none';
+
+        // Listen to badge events from preload-webview bridge
+        wv.addEventListener('ipc-message', (event) => {
+          if (event.channel === 'badge') {
+            const count = parseInt(event.args[0], 10) || 0;
+            updateAppBadge(app.id, count);
+          }
+          if (event.channel === 'notification') {
+            console.log('[Megabox Notification]', app.name, event.args[0]);
+          }
+        });
+
         webviewsContainer.appendChild(wv);
       }
     });
+  }
+
+  function showContextMenu(x, y, app) {
+    contextTargetApp = app;
+    ctxName.textContent = app.name;
+
+    const wv = document.getElementById('wv-' + app.id);
+    const isMuted = wv ? wv.isAudioMuted() : false;
+    ctxMuteLabel.textContent = isMuted ? 'Unmute Audio' : 'Mute Audio';
+
+    const isHibernated = wv ? (wv.dataset.hibernated === 'true') : false;
+    ctxHibernateLabel.textContent = isHibernated ? 'Wake Up Service' : 'Hibernate Service';
+
+    // Position menu
+    contextMenu.style.left = `${Math.min(x, window.innerWidth - 200)}px`;
+    contextMenu.style.top = `${Math.min(y, window.innerHeight - 180)}px`;
+    contextMenu.style.display = 'block';
+  }
+
+  function hideContextMenu() {
+    contextMenu.style.display = 'none';
+    contextTargetApp = null;
   }
 
   function selectApp(id) {
@@ -99,23 +340,79 @@
     appLastAccessed[id] = Date.now();
 
     apps.forEach(app => {
-      const btn = document.getElementById('tab-' + app.id);
-      if (btn) {
-        btn.className = 'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 relative shadow-sm cursor-pointer mb-3 ' +
-                        (app.id === id ? 'bg-slate-800 ring-2 ring-cyan-500/50 text-white' : 'bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-slate-200');
+      const tab = document.getElementById('tab-' + app.id);
+      if (tab) {
+        if (app.id === id) {
+          tab.classList.add('is-active');
+        } else {
+          tab.classList.remove('is-active');
+        }
       }
 
       const wv = document.getElementById('wv-' + app.id);
       if (wv) {
-        // If hibernated, wake up by reloading URL
-        if (wv.dataset.hibernated === 'true') {
-          console.log('[Megabox Hibernate] Waking up app:', app.id);
-          wv.dataset.hibernated = 'false';
-          wv.src = app.url;
+        if (app.id === id) {
+          // Wake up if hibernated
+          if (wv.dataset.hibernated === 'true') {
+            console.log('[Megabox Hibernate] Waking up app:', app.id);
+            wv.dataset.hibernated = 'false';
+            wv.src = app.url;
+            if (tab) tab.classList.remove('is-hibernated');
+          }
+          wv.style.display = 'flex';
+          try { wv.focus(); } catch (err) {}
+        } else {
+          wv.style.display = 'none';
         }
-        wv.style.display = (app.id === id) ? 'flex' : 'none';
       }
     });
+  }
+
+  function updateAppBadge(id, count) {
+    const badge = document.getElementById('badge-' + id);
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.classList.add('active');
+    } else {
+      badge.textContent = '0';
+      badge.classList.remove('active');
+    }
+  }
+
+  function toggleMuteApp(id) {
+    const wv = document.getElementById('wv-' + id);
+    const tab = document.getElementById('tab-' + id);
+    if (wv) {
+      const current = wv.isAudioMuted();
+      wv.setAudioMuted(!current);
+      if (tab) {
+        if (!current) tab.classList.add('is-muted');
+        else tab.classList.remove('is-muted');
+      }
+    }
+  }
+
+  function toggleHibernateApp(id) {
+    const app = apps.find(a => a.id === id);
+    const wv = document.getElementById('wv-' + id);
+    const tab = document.getElementById('tab-' + id);
+    if (!app || !wv) return;
+
+    if (wv.dataset.hibernated === 'true') {
+      // Wake up
+      wv.dataset.hibernated = 'false';
+      wv.src = app.url;
+      if (tab) tab.classList.remove('is-hibernated');
+    } else {
+      // Hibernate
+      wv.dataset.hibernated = 'true';
+      wv.src = 'about:blank';
+      if (tab) tab.classList.add('is-hibernated');
+      if (activeAppId === id) {
+        wv.style.display = 'none';
+      }
+    }
   }
 
   function checkHibernation() {
@@ -125,10 +422,12 @@
         const lastAccess = appLastAccessed[app.id] || now;
         if (now - lastAccess > HIBERNATE_TIMEOUT_MS) {
           const wv = document.getElementById('wv-' + app.id);
+          const tab = document.getElementById('tab-' + app.id);
           if (wv && wv.dataset.hibernated !== 'true') {
-            console.log('[Megabox Hibernate] Putting inactive tab to sleep to save RAM:', app.id);
+            console.log('[Megabox Hibernate] Putting idle service to sleep:', app.id);
             wv.dataset.hibernated = 'true';
-            wv.src = 'about:blank'; // Free memory footprint
+            wv.src = 'about:blank';
+            if (tab) tab.classList.add('is-hibernated');
           }
         }
       }
@@ -138,17 +437,25 @@
   function reloadActiveApp() {
     if (!activeAppId) return;
     const wv = document.getElementById('wv-' + activeAppId);
-    if (wv) wv.reload();
+    if (wv) {
+      wv.reload();
+    }
   }
 
-  function toggleMuteActiveApp() {
+  function toggleGlobalMute() {
     if (!activeAppId) return;
     const wv = document.getElementById('wv-' + activeAppId);
     if (wv) {
-      isMuted = !isMuted;
-      wv.setAudioMuted(isMuted);
-      if (btnMute) {
-        btnMute.className = isMuted ? 'w-9 h-9 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center cursor-pointer' : 'w-9 h-9 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 flex items-center justify-center cursor-pointer';
+      isGlobalMuted = !isGlobalMuted;
+      wv.setAudioMuted(isGlobalMuted);
+      if (isGlobalMuted) {
+        btnMute.classList.add('is-muted');
+        iconMuteUnmuted.style.display = 'none';
+        iconMuteMuted.style.display = 'block';
+      } else {
+        btnMute.classList.remove('is-muted');
+        iconMuteUnmuted.style.display = 'block';
+        iconMuteMuted.style.display = 'none';
       }
     }
   }
@@ -166,13 +473,20 @@
     }
   }
 
-  async function handleAddApp() {
-    const name = inputName.value.trim();
-    const url = inputUrl.value.trim();
-    const icon = selectPreset.value;
+  async function handleSaveService() {
+    const name = inputServiceName.value.trim();
+    let url = inputServiceUrl.value.trim();
+    const icon = inputServiceIcon.value || 'custom';
     if (!name || !url) return;
 
-    const id = 'app_' + Date.now();
+    // Handle teamId placeholder (e.g. {teamId}.slack.com)
+    if (url.includes('{teamId}')) {
+      const team = prompt('Enter your Slack / Workspace team ID:', 'myteam');
+      if (!team) return;
+      url = url.replace('{teamId}', team.trim());
+    }
+
+    const id = icon !== 'custom' && !apps.some(a => a.id === icon) ? icon : ('app_' + Date.now());
     const newApp = {
       id: id,
       name: name,
@@ -190,9 +504,7 @@
       selectApp(id);
     }
 
-    addModal.style.display = 'none';
-    inputName.value = '';
-    inputUrl.value = '';
+    configureModal.style.display = 'none';
   }
 
   window.addEventListener('DOMContentLoaded', init);

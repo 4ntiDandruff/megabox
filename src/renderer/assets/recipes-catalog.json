@@ -1,0 +1,3089 @@
+[
+  {
+    "id": "1password",
+    "name": "1Password",
+    "version": "1.0.0",
+    "url": "https://my.1password.com/signin/",
+    "featured": false
+  },
+  {
+    "id": "80lv",
+    "name": "80LV",
+    "version": "1.0.0",
+    "url": "https://80.lv",
+    "featured": false
+  },
+  {
+    "id": "affine",
+    "name": "Affine",
+    "version": "1.0.0",
+    "url": "https://{affine}/",
+    "featured": false
+  },
+  {
+    "id": "air-droid",
+    "name": "AirDroid",
+    "version": "1.3.1",
+    "url": "http://web.airdroid.com/",
+    "featured": false
+  },
+  {
+    "id": "airmessage",
+    "name": "AirMessage",
+    "version": "1.2.1",
+    "url": "https://web.airmessage.org/",
+    "featured": false
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "version": "1.4.1",
+    "url": "https://airtable.com",
+    "featured": false
+  },
+  {
+    "id": "alibaba-chat",
+    "name": "Alibaba Chat",
+    "version": "1.0.1",
+    "url": "https://message.alibaba.com/message/messenger.htm",
+    "featured": false
+  },
+  {
+    "id": "amazon-web-services",
+    "name": "Amazon Web Services",
+    "version": "1.3.1",
+    "url": "https://aws.amazon.com/",
+    "featured": false
+  },
+  {
+    "id": "amazon-work-mail",
+    "name": "Amazon WorkMail",
+    "version": "1.3.1",
+    "url": "https://{teamId}.awsapps.com/mail",
+    "featured": false
+  },
+  {
+    "id": "android-messages",
+    "name": "Android Messages",
+    "version": "2.4.1",
+    "url": "https://messages.google.com/web",
+    "featured": false
+  },
+  {
+    "id": "anonaddy",
+    "name": "addy.io",
+    "version": "1.3.3",
+    "url": "https://app.addy.io/",
+    "featured": false
+  },
+  {
+    "id": "anydo",
+    "name": "Any.do",
+    "version": "1.3.1",
+    "url": "https://desktop.any.do/",
+    "featured": false
+  },
+  {
+    "id": "aparat",
+    "name": "Aparat",
+    "version": "1.0.0",
+    "url": "https://www.aparat.com/",
+    "featured": false
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "version": "1.3.2",
+    "url": "https://app.asana.com",
+    "featured": false
+  },
+  {
+    "id": "awork",
+    "name": "Awork",
+    "version": "1.1.1",
+    "url": "https://{teamId}.awork.io",
+    "featured": false
+  },
+  {
+    "id": "azure-devops",
+    "name": "Azure DevOps",
+    "version": "1.4.2",
+    "url": "https://dev.azure.com/{teamId}",
+    "featured": false
+  },
+  {
+    "id": "azure-portal",
+    "name": "Azure Portal",
+    "version": "1.0.0",
+    "url": "https://portal.azure.com/",
+    "featured": false
+  },
+  {
+    "id": "badoo",
+    "name": "Badoo",
+    "version": "1.0.1",
+    "url": "https://badoo.com",
+    "featured": false
+  },
+  {
+    "id": "bale",
+    "name": "Bale",
+    "version": "1.0.0",
+    "url": "https://web.bale.ai/",
+    "featured": false
+  },
+  {
+    "id": "bard",
+    "name": "Bard",
+    "version": "1.1.2",
+    "url": "https://bard.google.com/",
+    "featured": false
+  },
+  {
+    "id": "basecamp",
+    "name": "Basecamp",
+    "version": "1.3.1",
+    "url": "https://launchpad.37signals.com/",
+    "featured": false
+  },
+  {
+    "id": "bigbluebutton",
+    "name": "BigBlueButton",
+    "version": "1.4.1",
+    "url": "https://bigbluebutton.mycompany.com/",
+    "featured": false
+  },
+  {
+    "id": "binance",
+    "name": "Binance",
+    "version": "1.3.1",
+    "url": "https://accounts.binance.com",
+    "featured": false
+  },
+  {
+    "id": "bip",
+    "name": "BiP",
+    "version": "1.3.1",
+    "url": "https://web.bip.com/",
+    "featured": false
+  },
+  {
+    "id": "bitbucket",
+    "name": "BitBucket",
+    "version": "1.4.1",
+    "url": "https://bitbucket.org/dashboard/overview",
+    "featured": false
+  },
+  {
+    "id": "bitwarden",
+    "name": "Bitwarden",
+    "version": "1.3.2",
+    "url": "https://vault.bitwarden.com/",
+    "featured": false
+  },
+  {
+    "id": "blinkist",
+    "name": "Blinkist",
+    "version": "1.0.0",
+    "url": "https://www.blinkist.com",
+    "featured": false
+  },
+  {
+    "id": "BlueBubbles",
+    "name": "BlueBubbles",
+    "version": "1.1.1",
+    "url": "https://bluebubbles.app/web/#/",
+    "featured": false
+  },
+  {
+    "id": "bluesky",
+    "name": "Bluesky",
+    "version": "1.1.5",
+    "url": "https://bsky.app/",
+    "featured": false
+  },
+  {
+    "id": "box",
+    "name": "Box",
+    "version": "1.4.1",
+    "url": "https://account.box.com/login",
+    "featured": false
+  },
+  {
+    "id": "brax.me",
+    "name": "Brax.Me",
+    "version": "1.1.1",
+    "url": "https://brax.me",
+    "featured": false
+  },
+  {
+    "id": "bring",
+    "name": "Bring!",
+    "version": "1.1.1",
+    "url": "https://web.getbring.com",
+    "featured": false
+  },
+  {
+    "id": "buffer",
+    "name": "Buffer",
+    "version": "1.3.1",
+    "url": "https://buffer.com",
+    "featured": false
+  },
+  {
+    "id": "bugzilla",
+    "name": "Bugzilla",
+    "version": "1.1.1",
+    "url": "https://bugzilla.mozilla.org/",
+    "featured": false
+  },
+  {
+    "id": "bycs-messenger",
+    "name": "Bycs-Messenger",
+    "version": "1.0.0",
+    "url": "https://messenger.bycs.de/#/home",
+    "featured": false
+  },
+  {
+    "id": "campuswire",
+    "name": "Campuswire",
+    "version": "1.3.1",
+    "url": "https://campuswire.com/c",
+    "featured": false
+  },
+  {
+    "id": "canva",
+    "name": "Canva",
+    "version": "1.0.1",
+    "url": "https://canva.com",
+    "featured": false
+  },
+  {
+    "id": "canvas",
+    "name": "Canvas",
+    "version": "1.2.1",
+    "url": "https://{teamId}.instructure.com/",
+    "featured": false
+  },
+  {
+    "id": "cara",
+    "name": "Cara",
+    "version": "1.0.0",
+    "url": "https://cara.app",
+    "featured": false
+  },
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "version": "1.2.1",
+    "url": "https://chat.openai.com/chat",
+    "featured": true
+  },
+  {
+    "id": "chatllm",
+    "name": "ChatLLM",
+    "version": "1.0.0",
+    "url": "https://apps.abacus.ai/chatllm",
+    "featured": false
+  },
+  {
+    "id": "chatra",
+    "name": "Chatra",
+    "version": "1.3.1",
+    "url": "https://app.chatra.io/",
+    "featured": false
+  },
+  {
+    "id": "chatwithgpt",
+    "name": "Chat with GPT",
+    "version": "1.1.1",
+    "url": "https://www.chatwithgpt.ai/",
+    "featured": false
+  },
+  {
+    "id": "chatwoot",
+    "name": "Chatwoot",
+    "version": "1.3.0",
+    "url": "https://app.chatwoot.com/",
+    "featured": false
+  },
+  {
+    "id": "chatwork",
+    "name": "Chatwork",
+    "version": "1.3.1",
+    "url": "https://www.chatwork.com/login.php",
+    "featured": false
+  },
+  {
+    "id": "cinny",
+    "name": "Cinny",
+    "version": "1.1.1",
+    "url": "https://app.cinny.in",
+    "featured": false
+  },
+  {
+    "id": "circuit",
+    "name": "Circuit",
+    "version": "1.2.1",
+    "url": "https://eu.yourcircuit.com/",
+    "featured": false
+  },
+  {
+    "id": "ciscospark",
+    "name": "Cisco Spark",
+    "version": "1.3.1",
+    "url": "https://web.ciscospark.com",
+    "featured": false
+  },
+  {
+    "id": "citrix-workspace",
+    "name": "Citrix Workspace",
+    "version": "1.1.1",
+    "url": "https://{teamId}.cloud.com",
+    "featured": false
+  },
+  {
+    "id": "claude-ai",
+    "name": "claude.ai",
+    "version": "1.0.0",
+    "url": "https://claude.ai",
+    "featured": false
+  },
+  {
+    "id": "clickup",
+    "name": "ClickUp",
+    "version": "2.4.1",
+    "url": "https://app.clickup.com",
+    "featured": false
+  },
+  {
+    "id": "cliq",
+    "name": "Cliq",
+    "version": "1.4.1",
+    "url": "https://www.zoho.com/cliq/login.html",
+    "featured": false
+  },
+  {
+    "id": "clockify",
+    "name": "Clockify",
+    "version": "1.3.2",
+    "url": "https://app.clockify.me/tracker",
+    "featured": false
+  },
+  {
+    "id": "clockwise",
+    "name": "Clockwise",
+    "version": "1.3.1",
+    "url": "https://www.getclockwise.com/app/",
+    "featured": false
+  },
+  {
+    "id": "clubhouse",
+    "name": "Clubhouse",
+    "version": "1.3.1",
+    "url": "https://app.clubhouse.io/{teamId}/dashboard",
+    "featured": false
+  },
+  {
+    "id": "coinbase",
+    "name": "Coinbase",
+    "version": "1.2.1",
+    "url": "https://www.coinbase.com/dashboard",
+    "featured": false
+  },
+  {
+    "id": "conceptboard",
+    "name": "Conceptboard",
+    "version": "1.0.1",
+    "url": "https://app.conceptboard.com/",
+    "featured": false
+  },
+  {
+    "id": "confluence",
+    "name": "Confluence",
+    "version": "1.2.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "crowdin",
+    "name": "Crowdin",
+    "version": "1.1.1",
+    "url": "https://crowdin.com/profile",
+    "featured": false
+  },
+  {
+    "id": "daily-dev",
+    "name": "Daily.dev",
+    "version": "1.0.0",
+    "url": "https://app.daily.dev",
+    "featured": false
+  },
+  {
+    "id": "daneshkar",
+    "name": "Daneshkar",
+    "version": "1.0.0",
+    "url": "https://www.daneshkar.net/",
+    "featured": false
+  },
+  {
+    "id": "deckblue",
+    "name": "DeckBlue",
+    "version": "1.0.1",
+    "url": "https://deck.blue/",
+    "featured": false
+  },
+  {
+    "id": "deepai",
+    "name": "DeepAI",
+    "version": "1.0.0",
+    "url": "https://deepai.org/",
+    "featured": false
+  },
+  {
+    "id": "deepl",
+    "name": "DeepL",
+    "version": "1.1.1",
+    "url": "https://www.deepl.com/translator",
+    "featured": true
+  },
+  {
+    "id": "deepseek",
+    "name": "DeepSeek",
+    "version": "1.0.1",
+    "url": "https://chat.deepseek.com/",
+    "featured": false
+  },
+  {
+    "id": "dev-community",
+    "name": "Dev Community",
+    "version": "1.1.1",
+    "url": "https://dev.to",
+    "featured": false
+  },
+  {
+    "id": "devdocs",
+    "name": "DevDocs",
+    "version": "1.3.1",
+    "url": "https://devdocs.io",
+    "featured": false
+  },
+  {
+    "id": "devRant",
+    "name": "devRant",
+    "version": "1.2.1",
+    "url": "https://devrant.com/",
+    "featured": false
+  },
+  {
+    "id": "diagrams",
+    "name": "Diagrams",
+    "version": "1.0.1",
+    "url": "https://app.diagrams.net/",
+    "featured": false
+  },
+  {
+    "id": "dialpad",
+    "name": "Dialpad",
+    "version": "1.2.1",
+    "url": "https://dialpad.com/app",
+    "featured": false
+  },
+  {
+    "id": "dict-cc",
+    "name": "Dict.cc",
+    "version": "1.0.0",
+    "url": "https://www.dict.cc/",
+    "featured": false
+  },
+  {
+    "id": "dingtalk",
+    "name": "Dingtalk",
+    "version": "1.2.1",
+    "url": "https://im.dingtalk.com/",
+    "featured": false
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "version": "1.8.6",
+    "url": "https://discord.com/app",
+    "featured": true
+  },
+  {
+    "id": "discourse",
+    "name": "Discourse",
+    "version": "1.1.1",
+    "url": "https://meta.discourse.org/",
+    "featured": false
+  },
+  {
+    "id": "disqus",
+    "name": "Disqus",
+    "version": "1.3.1",
+    "url": "https://disqus.com/home/",
+    "featured": false
+  },
+  {
+    "id": "divar",
+    "name": "Divar",
+    "version": "1.0.0",
+    "url": "https://www.divar.ir/",
+    "featured": false
+  },
+  {
+    "id": "dockerhub",
+    "name": "Docker Hub",
+    "version": "1.3.1",
+    "url": "https://hub.docker.com",
+    "featured": false
+  },
+  {
+    "id": "drawio",
+    "name": "Draw.io",
+    "version": "1.0.1",
+    "url": "https://app.diagrams.net/",
+    "featured": false
+  },
+  {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "version": "1.2.1",
+    "url": "https://www.dropbox.com/home",
+    "featured": false
+  },
+  {
+    "id": "duckduckgo-ai-chat",
+    "name": "DuckDuckGo AI Chat",
+    "version": "1.0.0",
+    "url": "https://duckduckgo.com/aichat",
+    "featured": false
+  },
+  {
+    "id": "easy-redmine",
+    "name": "Easy Redmine",
+    "version": "1.4.1",
+    "url": "https://{teamID}.easyredmine.com",
+    "featured": false
+  },
+  {
+    "id": "eestekhdam",
+    "name": "e-Estekhdam",
+    "version": "1.0.0",
+    "url": "https://www.e-estekhdam.com/",
+    "featured": false
+  },
+  {
+    "id": "eitaa",
+    "name": "Eitaa",
+    "version": "1.0.0",
+    "url": "https://web.eitaa.com/",
+    "featured": false
+  },
+  {
+    "id": "element",
+    "name": "Element",
+    "version": "1.4.1",
+    "url": "https://app.element.io/",
+    "featured": false
+  },
+  {
+    "id": "elevate",
+    "name": "Elevate",
+    "version": "1.1.1",
+    "url": "https://elevate.serverdata.net",
+    "featured": false
+  },
+  {
+    "id": "elk",
+    "name": "Elk",
+    "version": "1.1.1",
+    "url": "https://elk.zone/",
+    "featured": false
+  },
+  {
+    "id": "epicgames",
+    "name": "Epic Games Store",
+    "version": "1.3.1",
+    "url": "https://www.epicgames.com/id/login?lang=en_US&redirectUrl=https%3A%2F%2Fwww.epicgames.com%2Fstore%2Fen-US%2F&noHostRedirect=true",
+    "featured": false
+  },
+  {
+    "id": "epicmail",
+    "name": "EpicMail",
+    "version": "1.0.0",
+    "url": "https://app.epicmail.org/",
+    "featured": false
+  },
+  {
+    "id": "erepublik",
+    "name": "eRepublik",
+    "version": "1.3.1",
+    "url": "https://erepublik.com",
+    "featured": false
+  },
+  {
+    "id": "evernote",
+    "name": "Evernote",
+    "version": "1.3.2",
+    "url": "https://www.evernote.com/Login.action",
+    "featured": false
+  },
+  {
+    "id": "excalidraw",
+    "name": "Excalidraw",
+    "version": "1.0.2",
+    "url": "https://excalidraw.com/",
+    "featured": false
+  },
+  {
+    "id": "exploit-db",
+    "name": "Exploit DB",
+    "version": "1.0.0",
+    "url": "https://www.exploit-db.com/",
+    "featured": false
+  },
+  {
+    "id": "facebook",
+    "name": "Facebook",
+    "version": "1.3.1",
+    "url": "https://www.facebook.com/login",
+    "featured": false
+  },
+  {
+    "id": "facebookpages",
+    "name": "Facebook Pages",
+    "version": "1.4.1",
+    "url": "https://facebook.com/{teamId}/",
+    "featured": false
+  },
+  {
+    "id": "fandom",
+    "name": "Fandom",
+    "version": "1.0.1",
+    "url": "https://www.fandom.com",
+    "featured": false
+  },
+  {
+    "id": "farsnews",
+    "name": "FarsNews",
+    "version": "1.0.0",
+    "url": "https://farsnews.ir/",
+    "featured": false
+  },
+  {
+    "id": "fastmail",
+    "name": "FastMail",
+    "version": "2.4.2",
+    "url": "https://www.fastmail.com/mail/",
+    "featured": false
+  },
+  {
+    "id": "feedbin",
+    "name": "Feedbin",
+    "version": "1.3.1",
+    "url": "https://feedbin.com/login",
+    "featured": false
+  },
+  {
+    "id": "feedly",
+    "name": "Feedly",
+    "version": "1.3.2",
+    "url": "https://feedly.com",
+    "featured": false
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "version": "1.3.1",
+    "url": "https://figma.com",
+    "featured": false
+  },
+  {
+    "id": "firefly",
+    "name": "Firefly",
+    "version": "1.0.0",
+    "url": "https://{firefly}/",
+    "featured": false
+  },
+  {
+    "id": "fiverr",
+    "name": "Fiverr",
+    "version": "1.1.0",
+    "url": "https://www.fiverr.com/inbox/",
+    "featured": false
+  },
+  {
+    "id": "fleep",
+    "name": "Fleep",
+    "version": "1.3.1",
+    "url": "https://fleep.io/chat",
+    "featured": false
+  },
+  {
+    "id": "flipboard",
+    "name": "Flipboard",
+    "version": "1.0.0",
+    "url": "https://flipboard.com",
+    "featured": false
+  },
+  {
+    "id": "flock",
+    "name": "Flock",
+    "version": "1.2.1",
+    "url": "https://web.flock.com",
+    "featured": false
+  },
+  {
+    "id": "flowdock",
+    "name": "Flowdock",
+    "version": "1.3.1",
+    "url": "https://www.flowdock.com/app/",
+    "featured": false
+  },
+  {
+    "id": "fluffychat",
+    "name": "FluffyChat",
+    "version": "1.0.0",
+    "url": "https://fluffychat.im/web",
+    "featured": false
+  },
+  {
+    "id": "fluxer-gg",
+    "name": "Fluxer",
+    "version": "1.0.0",
+    "url": "https://web.fluxer.app/channels/@me",
+    "featured": false
+  },
+  {
+    "id": "follow-is",
+    "name": "Follow",
+    "version": "1.0.0",
+    "url": "https://app.follow.is/",
+    "featured": false
+  },
+  {
+    "id": "franz-custom-website",
+    "name": "Custom Website",
+    "version": "1.5.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "freshdesk",
+    "name": "Freshdesk",
+    "version": "1.2.2",
+    "url": "https://{teamId}.freshdesk.com/a/tickets/filters/unresolved",
+    "featured": false
+  },
+  {
+    "id": "freshrss",
+    "name": "FreshRSS",
+    "version": "1.2.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "freshservice",
+    "name": "Freshservice",
+    "version": "1.1.1",
+    "url": "https://freshservice.com",
+    "featured": false
+  },
+  {
+    "id": "friendica",
+    "name": "Friendica",
+    "version": "1.0.0",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "furaffinity",
+    "name": "Furaffinity",
+    "version": "1.0.0",
+    "url": "https://www.furaffinity.net/",
+    "featured": false
+  },
+  {
+    "id": "gadugadu",
+    "name": "Gadu-Gadu",
+    "version": "1.3.1",
+    "url": "https://www.gg.pl",
+    "featured": false
+  },
+  {
+    "id": "gaming-on-linux",
+    "name": "GamingOnLinux",
+    "version": "1.2.2",
+    "url": "https://www.gamingonlinux.com",
+    "featured": false
+  },
+  {
+    "id": "gap",
+    "name": "Gap",
+    "version": "1.0.0",
+    "url": "https://web.gap.im/",
+    "featured": false
+  },
+  {
+    "id": "gather",
+    "name": "Gather",
+    "version": "1.1.1",
+    "url": "https://app.gather.town/app",
+    "featured": false
+  },
+  {
+    "id": "gather-v2",
+    "name": "Gather 2.0",
+    "version": "1.0.0",
+    "url": "https://app.v2.gather.town/",
+    "featured": false
+  },
+  {
+    "id": "gettr",
+    "name": "Gettr",
+    "version": "1.1.1",
+    "url": "https://gettr.com",
+    "featured": false
+  },
+  {
+    "id": "gitea",
+    "name": "Gitea",
+    "version": "1.1.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "version": "2.6.5",
+    "url": "https://github.com/notifications",
+    "featured": true
+  },
+  {
+    "id": "gitlab",
+    "name": "GitLab",
+    "version": "1.4.1",
+    "url": "https://gitlab.com/users/sign_in",
+    "featured": false
+  },
+  {
+    "id": "gitter",
+    "name": "Gitter",
+    "version": "1.3.1",
+    "url": "https://gitter.im",
+    "featured": true
+  },
+  {
+    "id": "glowing-bear",
+    "name": "Glowing Bear",
+    "version": "1.3.1",
+    "url": "https://www.glowing-bear.org",
+    "featured": false
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "version": "1.6.4",
+    "url": "https://mail.google.com",
+    "featured": true
+  },
+  {
+    "id": "good-reads",
+    "name": "Good Reads",
+    "version": "1.2.1",
+    "url": "https://www.goodreads.com/",
+    "featured": false
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "version": "2.4.7",
+    "url": "https://calendar.google.com/u/0/",
+    "featured": true
+  },
+  {
+    "id": "google-classroom",
+    "name": "Google Classroom",
+    "version": "1.3.1",
+    "url": "https://classroom.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-contacts",
+    "name": "Google Contacts",
+    "version": "1.4.2",
+    "url": "https://contacts.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-docs",
+    "name": "Google Docs",
+    "version": "2.3.2",
+    "url": "https://docs.google.com/document/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-drive",
+    "name": "Google Drive",
+    "version": "2.3.3",
+    "url": "https://drive.google.com/drive/my-drive",
+    "featured": false
+  },
+  {
+    "id": "google-duo",
+    "name": "Google Duo",
+    "version": "1.2.1",
+    "url": "https://duo.google.com/?web",
+    "featured": false
+  },
+  {
+    "id": "google-gemini",
+    "name": "Google Gemini",
+    "version": "1.0.1",
+    "url": "https://gemini.google.com",
+    "featured": false
+  },
+  {
+    "id": "google-groups",
+    "name": "Google Groups",
+    "version": "1.1.1",
+    "url": "https://groups.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-keep",
+    "name": "Google Keep",
+    "version": "1.4.2",
+    "url": "https://keep.google.com/u/0/",
+    "featured": true
+  },
+  {
+    "id": "google-maps",
+    "name": "Google Maps",
+    "version": "1.0.2",
+    "url": "https://www.google.com/maps",
+    "featured": false
+  },
+  {
+    "id": "google-meet",
+    "name": "Google Meet",
+    "version": "2.4.2",
+    "url": "https://meet.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-news",
+    "name": "Google News",
+    "version": "1.4.1",
+    "url": "https://news.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-presentation",
+    "name": "Google Presentation",
+    "version": "2.3.2",
+    "url": "https://docs.google.com/presentation/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-spreadsheets",
+    "name": "Google Spreadsheets",
+    "version": "2.3.2",
+    "url": "https://docs.google.com/spreadsheets/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-translate",
+    "name": "Google Translate",
+    "version": "1.3.1",
+    "url": "https://translate.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "google-voice",
+    "name": "Google Voice",
+    "version": "0.6.7",
+    "url": "https://voice.google.com/u/0/",
+    "featured": false
+  },
+  {
+    "id": "gotify",
+    "name": "Gotify",
+    "version": "1.1.2",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "goto",
+    "name": "GoTo",
+    "version": "1.1.1",
+    "url": "https://app.goto.com/",
+    "featured": false
+  },
+  {
+    "id": "gotomeeting",
+    "name": "Go To Meeting",
+    "version": "0.5.1",
+    "url": "https://app.gotomeeting.com/home.html",
+    "featured": false
+  },
+  {
+    "id": "grammarly",
+    "name": "Grammarly",
+    "version": "1.1.1",
+    "url": "https://app.grammarly.com/",
+    "featured": false
+  },
+  {
+    "id": "grok",
+    "name": "Grok",
+    "version": "1.0.0",
+    "url": "https://grok.com",
+    "featured": false
+  },
+  {
+    "id": "groupme",
+    "name": "GroupMe",
+    "version": "1.3.2",
+    "url": "https://web.groupme.com",
+    "featured": false
+  },
+  {
+    "id": "guilded",
+    "name": "Guilded",
+    "version": "1.3.1",
+    "url": "https://www.guilded.gg/",
+    "featured": false
+  },
+  {
+    "id": "guru",
+    "name": "guru.com",
+    "version": "1.0.0",
+    "url": "https://www.guru.com/pro/messages.aspx",
+    "featured": false
+  },
+  {
+    "id": "habitica",
+    "name": "Habitica",
+    "version": "1.3.1",
+    "url": "https://habitica.com",
+    "featured": false
+  },
+  {
+    "id": "hacker-news",
+    "name": "Hacker News",
+    "version": "1.0.1",
+    "url": "https://news.ycombinator.com/",
+    "featured": false
+  },
+  {
+    "id": "hackmd",
+    "name": "HackMd",
+    "version": "1.3.1",
+    "url": "https://hackmd.io",
+    "featured": false
+  },
+  {
+    "id": "hangouts",
+    "name": "Google Chat",
+    "version": "1.5.3",
+    "url": "https://mail.google.com/chat/",
+    "featured": true
+  },
+  {
+    "id": "hangoutschat",
+    "name": "Hangouts Chat",
+    "version": "1.8.4",
+    "url": "https://chat.google.com",
+    "featured": false
+  },
+  {
+    "id": "harvest",
+    "name": "Harvest",
+    "version": "1.4.1",
+    "url": "https://{teamId}.harvestapp.com",
+    "featured": false
+  },
+  {
+    "id": "hastebin",
+    "name": "Hastebin",
+    "version": "1.0.0",
+    "url": "https://www.toptal.com/developers/hastebin",
+    "featured": false
+  },
+  {
+    "id": "help-scout",
+    "name": "Help Scout",
+    "version": "1.3.1",
+    "url": "https://www.helpscout.com",
+    "featured": false
+  },
+  {
+    "id": "hey",
+    "name": "Hey",
+    "version": "1.2.1",
+    "url": "https://app.hey.com",
+    "featured": false
+  },
+  {
+    "id": "home-assistant",
+    "name": "Home Assistant",
+    "version": "1.1.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "hostnet",
+    "name": "Hostnet",
+    "version": "1.3.1",
+    "url": "https://appsuite.hostnet.nl/appsuite/",
+    "featured": false
+  },
+  {
+    "id": "hubstaff",
+    "name": "HubStaff",
+    "version": "1.2.1",
+    "url": "https://app.hubstaff.com/login_now",
+    "featured": false
+  },
+  {
+    "id": "hugging-chat",
+    "name": "Hugging Chat",
+    "version": "1.0.0",
+    "url": "https://huggingface.co/chat/",
+    "featured": false
+  },
+  {
+    "id": "iberbox",
+    "name": "IberBox",
+    "version": "1.1.1",
+    "url": "https://iberbox.com/login",
+    "featured": false
+  },
+  {
+    "id": "iCloud",
+    "name": "iCloud",
+    "version": "1.4.1",
+    "url": "https://www.icloud.com/",
+    "featured": false
+  },
+  {
+    "id": "icloud-mail",
+    "name": "iCloud Mail",
+    "version": "1.0.0",
+    "url": "https://www.icloud.com/mail/",
+    "featured": false
+  },
+  {
+    "id": "icloud-reminders",
+    "name": "iCloud Reminders",
+    "version": "1.3.1",
+    "url": "https://www.icloud.com/reminders",
+    "featured": false
+  },
+  {
+    "id": "icq",
+    "name": "ICQ",
+    "version": "1.3.1",
+    "url": "https://web.icq.com",
+    "featured": false
+  },
+  {
+    "id": "idobata",
+    "name": "Idobata",
+    "version": "0.4.1",
+    "url": "https://idobata.io",
+    "featured": false
+  },
+  {
+    "id": "igap",
+    "name": "iGap",
+    "version": "1.0.0",
+    "url": "https://web.igap.net/",
+    "featured": false
+  },
+  {
+    "id": "infomaniak-calendar",
+    "name": "Infomaniak Calendar",
+    "version": "1.0.1",
+    "url": "https://calendar.infomaniak.com",
+    "featured": false
+  },
+  {
+    "id": "infomaniak-kdrive",
+    "name": "Infomaniak KDrive",
+    "version": "1.0.1",
+    "url": "https://kdrive.infomaniak.com/",
+    "featured": false
+  },
+  {
+    "id": "infomaniak-mail",
+    "name": "Infomaniak Mail",
+    "version": "1.4.1",
+    "url": "https://mail.infomaniak.com/",
+    "featured": false
+  },
+  {
+    "id": "inoreader",
+    "name": "Inoreader",
+    "version": "1.3.2",
+    "url": "https://www.inoreader.com",
+    "featured": false
+  },
+  {
+    "id": "instagram",
+    "name": "Instagram",
+    "version": "2.5.6",
+    "url": "https://instagram.com/",
+    "featured": true
+  },
+  {
+    "id": "instagram-direct-messages",
+    "name": "Instagram Direct Messages",
+    "version": "1.1.4",
+    "url": "https://www.instagram.com/direct/inbox/",
+    "featured": false
+  },
+  {
+    "id": "intercom",
+    "name": "Intercom",
+    "version": "1.3.1",
+    "url": "https://app.intercom.io/",
+    "featured": false
+  },
+  {
+    "id": "invoice-ninja",
+    "name": "Invoice Ninja",
+    "version": "1.1.0",
+    "url": "https://invoicing.co/#/",
+    "featured": false
+  },
+  {
+    "id": "iranestekhdam",
+    "name": "IranEstekhdam",
+    "version": "1.0.0",
+    "url": "https://www.iranestekhdam.ir/",
+    "featured": false
+  },
+  {
+    "id": "irantalent",
+    "name": "IranTalent",
+    "version": "1.0.0",
+    "url": "https://www.irantalent.com/",
+    "featured": false
+  },
+  {
+    "id": "irccloud",
+    "name": "IRCCloud",
+    "version": "1.3.1",
+    "url": "https://www.irccloud.com",
+    "featured": false
+  },
+  {
+    "id": "iris-messenger",
+    "name": "Iris Messenger",
+    "version": "1.2.1",
+    "url": "https://iris.to",
+    "featured": false
+  },
+  {
+    "id": "it-tools",
+    "name": "IT-Tools",
+    "version": "1.0.0",
+    "url": "https://it-tools.tech",
+    "featured": false
+  },
+  {
+    "id": "jira",
+    "name": "Jira",
+    "version": "1.5.1",
+    "url": "https://{teamId}.atlassian.net",
+    "featured": false
+  },
+  {
+    "id": "jitsi",
+    "name": "Jitsi Meet",
+    "version": "1.3.1",
+    "url": "https://meet.jit.si/",
+    "featured": false
+  },
+  {
+    "id": "jobinja",
+    "name": "Jobinja",
+    "version": "1.0.0",
+    "url": "https://www.jobinja.ir/",
+    "featured": false
+  },
+  {
+    "id": "jobvision",
+    "name": "JobVision",
+    "version": "1.0.0",
+    "url": "https://www.jobvision.ir/",
+    "featured": false
+  },
+  {
+    "id": "jollor",
+    "name": "jollor",
+    "version": "1.3.1",
+    "url": "https://jollor.com",
+    "featured": false
+  },
+  {
+    "id": "jsoncrack",
+    "name": "JSON Crack",
+    "version": "1.0.0",
+    "url": "https://app.jsoncrack.com/",
+    "featured": false
+  },
+  {
+    "id": "kaizala",
+    "name": "Microsoft Kaizala",
+    "version": "1.4.1",
+    "url": "https://webapp.kaiza.la",
+    "featured": false
+  },
+  {
+    "id": "karboom",
+    "name": "Karboom",
+    "version": "1.0.0",
+    "url": "https://www.karboom.io/",
+    "featured": false
+  },
+  {
+    "id": "keepervault",
+    "name": "Keeper Vault",
+    "version": "1.1.1",
+    "url": "https://keepersecurity.eu/vault/#",
+    "featured": false
+  },
+  {
+    "id": "keybase.io",
+    "name": "Keybase",
+    "version": "1.4.1",
+    "url": "https://keybase.io/login",
+    "featured": false
+  },
+  {
+    "id": "kimaicloud",
+    "name": "Kimai Cloud",
+    "version": "1.5.1",
+    "url": "https://{teamId}.kimai.cloud",
+    "featured": false
+  },
+  {
+    "id": "kiwiirc",
+    "name": "KiwiIRC",
+    "version": "1.1.1",
+    "url": "https://kiwiirc.com/nextclient/",
+    "featured": false
+  },
+  {
+    "id": "ko-fi",
+    "name": "Ko-fi",
+    "version": "1.0.0",
+    "url": "https://ko-fi.com",
+    "featured": false
+  },
+  {
+    "id": "lark",
+    "name": "Lark",
+    "version": "0.3.1",
+    "url": "https://{teamId}.larksuite.com/messenger/",
+    "featured": false
+  },
+  {
+    "id": "lastpass",
+    "name": "LastPass",
+    "version": "2.4.1",
+    "url": "https://lastpass.com/?ac=1&lpnorefresh=1",
+    "featured": false
+  },
+  {
+    "id": "lemmy",
+    "name": "Lemmy",
+    "version": "1.1.1",
+    "url": "https://lemmy.ml/",
+    "featured": false
+  },
+  {
+    "id": "linear",
+    "name": "Linear",
+    "version": "1.1.1",
+    "url": "https://linear.app",
+    "featured": false
+  },
+  {
+    "id": "lineworks",
+    "name": "Line Works",
+    "version": "1.1.1",
+    "url": "https://talk.worksmobile.com/",
+    "featured": false
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "version": "1.5.1",
+    "url": "https://www.linkedin.com/messaging",
+    "featured": true
+  },
+  {
+    "id": "lobe-chat",
+    "name": "LobeChat",
+    "version": "1.0.0",
+    "url": "https://lobechat.com/chat",
+    "featured": false
+  },
+  {
+    "id": "localazy",
+    "name": "Localazy",
+    "version": "1.1.1",
+    "url": "https://localazy.com/my/dashboard",
+    "featured": false
+  },
+  {
+    "id": "loginformant",
+    "name": "LogInformant",
+    "version": "1.0.0",
+    "url": "https://app.loginformant.com/",
+    "featured": false
+  },
+  {
+    "id": "magic-level",
+    "name": "Magic Level",
+    "version": "1.1.1",
+    "url": "https://magiclevel.ml",
+    "featured": false
+  },
+  {
+    "id": "mailbox.org",
+    "name": "Mailbox.org",
+    "version": "1.5.1",
+    "url": "https://office.mailbox.org/appsuite/#!!&app=io.ox/portal",
+    "featured": false
+  },
+  {
+    "id": "mailfence",
+    "name": "Mailfence",
+    "version": "1.1.1",
+    "url": "https://mailfence.com",
+    "featured": false
+  },
+  {
+    "id": "mastodeck",
+    "name": "Mastodeck",
+    "version": "1.0.1",
+    "url": "https://mastodeck.com",
+    "featured": false
+  },
+  {
+    "id": "mastodon",
+    "name": "Mastodon",
+    "version": "1.4.1",
+    "url": "https://mastodon.social",
+    "featured": false
+  },
+  {
+    "id": "mattermost",
+    "name": "Mattermost",
+    "version": "1.5.1",
+    "url": "",
+    "featured": true
+  },
+  {
+    "id": "max",
+    "name": "MaX",
+    "version": "1.0.0",
+    "url": "https://web.max.ru/",
+    "featured": false
+  },
+  {
+    "id": "mdaemon",
+    "name": "MDaemon Worldclient",
+    "version": "1.0.0",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "medium",
+    "name": "Medium",
+    "version": "1.1.1",
+    "url": "https://medium.com",
+    "featured": false
+  },
+  {
+    "id": "meetup",
+    "name": "Meetup",
+    "version": "1.2.1",
+    "url": "https://meetup.com",
+    "featured": false
+  },
+  {
+    "id": "memos",
+    "name": "memos",
+    "version": "1.0.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "messenger",
+    "name": "Messenger",
+    "version": "1.8.6",
+    "url": "https://facebook.com/messages",
+    "featured": true
+  },
+  {
+    "id": "meta-business-suite",
+    "name": "Meta Business Suite",
+    "version": "1.1.1",
+    "url": "https://business.facebook.com",
+    "featured": false
+  },
+  {
+    "id": "mewe",
+    "name": "MeWe",
+    "version": "1.2.1",
+    "url": "https://mewe.com/chat",
+    "featured": false
+  },
+  {
+    "id": "mightytext",
+    "name": "MightyText",
+    "version": "1.0.0",
+    "url": "https://mightytext.net/web",
+    "featured": false
+  },
+  {
+    "id": "miniflux",
+    "name": "Miniflux",
+    "version": "1.0.1",
+    "url": "https://reader.miniflux.app",
+    "featured": false
+  },
+  {
+    "id": "miro",
+    "name": "Miro",
+    "version": "1.1.2",
+    "url": "https://miro.com/app/dashboard/",
+    "featured": false
+  },
+  {
+    "id": "mirotalk-bro",
+    "name": "MiroTalk Live Broadcast",
+    "version": "1.1.1",
+    "url": "https://bro.mirotalk.com",
+    "featured": false
+  },
+  {
+    "id": "mirotalk-c2c",
+    "name": "MiroTalk C2C",
+    "version": "1.1.2",
+    "url": "https://c2c.mirotalk.com",
+    "featured": false
+  },
+  {
+    "id": "mirotalk-p2p",
+    "name": "MiroTalk P2P",
+    "version": "1.1.2",
+    "url": "https://p2p.mirotalk.com",
+    "featured": false
+  },
+  {
+    "id": "mirotalk-sfu",
+    "name": "MiroTalk SFU",
+    "version": "1.1.2",
+    "url": "https://sfu.mirotalk.com",
+    "featured": false
+  },
+  {
+    "id": "mirotalk-webrtc",
+    "name": "MiroTalk WebRTC",
+    "version": "1.2.2",
+    "url": "https://webrtc.mirotalk.com",
+    "featured": false
+  },
+  {
+    "id": "misskey",
+    "name": "Misskey",
+    "version": "1.2.1",
+    "url": "https://{teamId}",
+    "featured": false
+  },
+  {
+    "id": "mistral",
+    "name": "Le Chat by Mistral",
+    "version": "1.0.0",
+    "url": "https://chat.mistral.ai/chat",
+    "featured": false
+  },
+  {
+    "id": "monarch-money",
+    "name": "Monarch Money",
+    "version": "1.0.0",
+    "url": "https://app.monarch.com/",
+    "featured": false
+  },
+  {
+    "id": "monday",
+    "name": "Monday",
+    "version": "1.3.1",
+    "url": "https://{teamId}.monday.com",
+    "featured": false
+  },
+  {
+    "id": "monicahq",
+    "name": "Monica HQ",
+    "version": "1.4.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "moodle",
+    "name": "Moodle",
+    "version": "1.2.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "ms-planner",
+    "name": "Microsoft Planner",
+    "version": "1.0.1",
+    "url": "https://tasks.office.com/",
+    "featured": false
+  },
+  {
+    "id": "msteams",
+    "name": "Microsoft Teams",
+    "version": "3.3.5",
+    "url": "https://teams.cloud.microsoft",
+    "featured": true
+  },
+  {
+    "id": "mstodo",
+    "name": "Microsoft To Do",
+    "version": "1.3.3",
+    "url": "https://to-do.office.com",
+    "featured": false
+  },
+  {
+    "id": "mysms",
+    "name": "MySMS",
+    "version": "1.3.1",
+    "url": "https://app.mysms.com",
+    "featured": false
+  },
+  {
+    "id": "navidrome",
+    "name": "Navidrome",
+    "version": "1.0.0",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "nazdika",
+    "name": "Nazdika",
+    "version": "1.0.0",
+    "url": "https://app.nazdika.com/",
+    "featured": false
+  },
+  {
+    "id": "netatmo-energy",
+    "name": "Netatmo Energy",
+    "version": "1.4.1",
+    "url": "https://my.netatmo.com/app/energy",
+    "featured": false
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "version": "1.2.1",
+    "url": "https://app.netlify.com",
+    "featured": false
+  },
+  {
+    "id": "NewsBlur",
+    "name": "NewsBlur",
+    "version": "1.4.1",
+    "url": "https://newsblur.com",
+    "featured": false
+  },
+  {
+    "id": "nextcloud",
+    "name": "Nextcloud",
+    "version": "1.3.1",
+    "url": "https://{nextcloud}/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-calendar",
+    "name": "Nextcloud Calendar",
+    "version": "1.3.2",
+    "url": "https://{teamId}/apps/calendar/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-carnet",
+    "name": "Carnet (Nextcloud)",
+    "version": "1.3.1",
+    "url": "https://{teamId}/apps/carnet/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-cospend",
+    "name": "Nextcloud Cospend",
+    "version": "1.3.1",
+    "url": "https://{teamId}/apps/cospend/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-deck",
+    "name": "Nextcloud Deck",
+    "version": "1.1.1",
+    "url": "https://{teamId}/apps/deck/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-news",
+    "name": "Nextcloud News",
+    "version": "1.3.1",
+    "url": "https://{teamId}/apps/news/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-talk",
+    "name": "Nextcloud Talk",
+    "version": "1.4.2",
+    "url": "https://{teamId}/apps/spreed/",
+    "featured": false
+  },
+  {
+    "id": "nextcloud-tasks",
+    "name": "Nextcloud Tasks",
+    "version": "1.3.1",
+    "url": "https://{teamId}/apps/tasks/",
+    "featured": false
+  },
+  {
+    "id": "nextdoor",
+    "name": "Nextdoor",
+    "version": "1.3.1",
+    "url": "https://nextdoor.co.uk/inbox/",
+    "featured": false
+  },
+  {
+    "id": "noisli",
+    "name": "Noisli",
+    "version": "1.3.1",
+    "url": "https://www.noisli.com/login",
+    "featured": false
+  },
+  {
+    "id": "nomadlist",
+    "name": "NomadList",
+    "version": "1.3.1",
+    "url": "https://nomadlist.com/chat",
+    "featured": false
+  },
+  {
+    "id": "nostr",
+    "name": "Nostr",
+    "version": "1.0.0",
+    "url": "https://nostr.com/",
+    "featured": false
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "version": "1.3.1",
+    "url": "https://www.notion.so/",
+    "featured": true
+  },
+  {
+    "id": "notion-calendar",
+    "name": "Notion Calendar",
+    "version": "1.0.2",
+    "url": "https://calendar.notion.so/",
+    "featured": false
+  },
+  {
+    "id": "notion-mail",
+    "name": "Notion Mail",
+    "version": "1.0.0",
+    "url": "https://mail.notion.so",
+    "featured": false
+  },
+  {
+    "id": "ntfy",
+    "name": "ntfy",
+    "version": "1.1.1",
+    "url": "https://ntfy.sh/app",
+    "featured": false
+  },
+  {
+    "id": "odoo",
+    "name": "Odoo",
+    "version": "1.3.1",
+    "url": "https://www.odoo.com/web/login",
+    "featured": false
+  },
+  {
+    "id": "odysee",
+    "name": "Odysee",
+    "version": "1.1.1",
+    "url": "https://odysee.com",
+    "featured": false
+  },
+  {
+    "id": "office365-owa",
+    "name": "Office 365 Outlook",
+    "version": "1.7.7",
+    "url": "https://outlook.cloud.microsoft/mail/",
+    "featured": false
+  },
+  {
+    "id": "onedrive",
+    "name": "OneDrive",
+    "version": "1.0.1",
+    "url": "https://onedrive.live.com/",
+    "featured": false
+  },
+  {
+    "id": "onenote",
+    "name": "OneNote",
+    "version": "1.4.1",
+    "url": "https://onenote.com",
+    "featured": false
+  },
+  {
+    "id": "online-go",
+    "name": "Online Go",
+    "version": "1.0.1",
+    "url": "https://online-go.com",
+    "featured": false
+  },
+  {
+    "id": "onmail",
+    "name": "onMail",
+    "version": "1.1.1",
+    "url": "https://mail.onmail.com",
+    "featured": false
+  },
+  {
+    "id": "open-webui",
+    "name": "Open WebUI",
+    "version": "1.0.0",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "oreilly-learning",
+    "name": "O'Reilly Learning",
+    "version": "1.1.1",
+    "url": "https://learning.oreilly.com/home-new/",
+    "featured": false
+  },
+  {
+    "id": "outreach",
+    "name": "Outreach",
+    "version": "1.1.1",
+    "url": "https://accounts.outreach.io/users/sign_in",
+    "featured": false
+  },
+  {
+    "id": "OVHCloud",
+    "name": "OVH Cloud",
+    "version": "1.3.1",
+    "url": "https://www.ovh.com/auth",
+    "featured": false
+  },
+  {
+    "id": "paperless-ngx",
+    "name": "Paperless-ngx",
+    "version": "1.0.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "parro",
+    "name": "Parro",
+    "version": "1.0.0",
+    "url": "https://talk.parro.com/",
+    "featured": false
+  },
+  {
+    "id": "pastebin",
+    "name": "Pastebin",
+    "version": "1.0.0",
+    "url": "https://pastebin.com/",
+    "featured": false
+  },
+  {
+    "id": "patreon",
+    "name": "Patreon",
+    "version": "1.0.1",
+    "url": "https://www.patreon.com/login",
+    "featured": false
+  },
+  {
+    "id": "paymo",
+    "name": "Paymo",
+    "version": "1.4.1",
+    "url": "https://app.paymoapp.com/auth/login",
+    "featured": false
+  },
+  {
+    "id": "penpot",
+    "name": "Penpot",
+    "version": "1.0.1",
+    "url": "https://design.penpot.app/",
+    "featured": false
+  },
+  {
+    "id": "peopleperhour",
+    "name": "People Per Hour",
+    "version": "1.0.0",
+    "url": "https://www.peopleperhour.com/notification/list",
+    "featured": false
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity AI",
+    "version": "1.1.2",
+    "url": "https://www.perplexity.ai/",
+    "featured": false
+  },
+  {
+    "id": "phanpy",
+    "name": "Phanpy",
+    "version": "1.0.0",
+    "url": "https://phanpy.social/",
+    "featured": false
+  },
+  {
+    "id": "photon",
+    "name": "Photon",
+    "version": "1.0.0",
+    "url": "https://phtn.app/",
+    "featured": false
+  },
+  {
+    "id": "pinterest",
+    "name": "Pinterest",
+    "version": "1.3.1",
+    "url": "https://pinterest.com",
+    "featured": false
+  },
+  {
+    "id": "pipefy",
+    "name": "Pipefy",
+    "version": "1.2.1",
+    "url": "https://app.pipefy.com/",
+    "featured": false
+  },
+  {
+    "id": "pivotal-tracker",
+    "name": "pivotal-tracker",
+    "version": "1.3.1",
+    "url": "https://www.pivotaltracker.com/signin",
+    "featured": false
+  },
+  {
+    "id": "pixelfed",
+    "name": "Pixelfed",
+    "version": "1.1.1",
+    "url": "https://pixelfed.social",
+    "featured": false
+  },
+  {
+    "id": "pixieset",
+    "name": "Pixieset",
+    "version": "1.1.1",
+    "url": "https://accounts.pixieset.com/dashboard/",
+    "featured": false
+  },
+  {
+    "id": "plan",
+    "name": "Plan",
+    "version": "1.4.1",
+    "url": "https://getplan.co/",
+    "featured": false
+  },
+  {
+    "id": "planitpoker",
+    "name": "PlanITPoker",
+    "version": "1.1.1",
+    "url": "https://www.planitpoker.com/board/#/room/{teamId}",
+    "featured": false
+  },
+  {
+    "id": "plek",
+    "name": "Plek",
+    "version": "1.2.1",
+    "url": "https://{teamId}.plek.co",
+    "featured": false
+  },
+  {
+    "id": "pleroma",
+    "name": "Pleroma",
+    "version": "1.4.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "plurk",
+    "name": "Plurk",
+    "version": "1.3.1",
+    "url": "https://www.plurk.com",
+    "featured": false
+  },
+  {
+    "id": "pocket",
+    "name": "Pocket",
+    "version": "1.4.1",
+    "url": "https://getpocket.com/a/queue/list/",
+    "featured": false
+  },
+  {
+    "id": "pocketcasts",
+    "name": "PocketCasts",
+    "version": "1.1.1",
+    "url": "https://play.pocketcasts.com/user/login",
+    "featured": false
+  },
+  {
+    "id": "podio",
+    "name": "Podio",
+    "version": "1.3.1",
+    "url": "https://podio.com",
+    "featured": false
+  },
+  {
+    "id": "poe",
+    "name": "poe",
+    "version": "1.0.1",
+    "url": "https://poe.com/",
+    "featured": false
+  },
+  {
+    "id": "pomodoro-tracker",
+    "name": "Pomodoro Tracker",
+    "version": "1.4.1",
+    "url": "https://pomodoro-tracker.com",
+    "featured": false
+  },
+  {
+    "id": "portainer",
+    "name": "Portainer",
+    "version": "1.0.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "posteo",
+    "name": "Posteo",
+    "version": "1.1.1",
+    "url": "https://posteo.de/webmail/",
+    "featured": false
+  },
+  {
+    "id": "postman",
+    "name": "Postman",
+    "version": "1.0.1",
+    "url": "https://web.postman.co/home",
+    "featured": false
+  },
+  {
+    "id": "primal",
+    "name": "Primal",
+    "version": "1.0.0",
+    "url": "https://primal.net/",
+    "featured": false
+  },
+  {
+    "id": "producthunt",
+    "name": "Product Hunt",
+    "version": "1.2.1",
+    "url": "https://www.producthunt.com/",
+    "featured": false
+  },
+  {
+    "id": "productive",
+    "name": "Productive",
+    "version": "1.0.0",
+    "url": "https://app.productive.io/",
+    "featured": false
+  },
+  {
+    "id": "proton-calendar",
+    "name": "ProtonCalendar",
+    "version": "1.5.1",
+    "url": "https://calendar.proton.me/",
+    "featured": false
+  },
+  {
+    "id": "proton-drive",
+    "name": "Proton Drive",
+    "version": "1.1.1",
+    "url": "https://drive.proton.me",
+    "featured": false
+  },
+  {
+    "id": "proton-mail",
+    "name": "Proton Mail",
+    "version": "1.7.2",
+    "url": "https://mail.proton.me/login",
+    "featured": true
+  },
+  {
+    "id": "proton-pass",
+    "name": "Proton Pass",
+    "version": "1.0.2",
+    "url": "https://pass.proton.me/",
+    "featured": false
+  },
+  {
+    "id": "protonet",
+    "name": "protonet",
+    "version": "1.3.1",
+    "url": "https://{teamID}.protonet.info",
+    "featured": false
+  },
+  {
+    "id": "pulse-sms",
+    "name": "PulseSMS",
+    "version": "1.4.1",
+    "url": "https://pulsesms.app",
+    "featured": false
+  },
+  {
+    "id": "purelymail",
+    "name": "Purelymail",
+    "version": "1.0.1",
+    "url": "https://inbox.purelymail.com",
+    "featured": false
+  },
+  {
+    "id": "pushbullet",
+    "name": "Pushbullet",
+    "version": "1.4.1",
+    "url": "https://www.pushbullet.com/",
+    "featured": false
+  },
+  {
+    "id": "pushover",
+    "name": "Pushover",
+    "version": "1.1.2",
+    "url": "https://client.pushover.net",
+    "featured": false
+  },
+  {
+    "id": "quora",
+    "name": "Quora",
+    "version": "1.0.0",
+    "url": "https://www.quora.com",
+    "featured": false
+  },
+  {
+    "id": "rainloop",
+    "name": "RainLoop",
+    "version": "1.3.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "reclaim",
+    "name": "Reclaim",
+    "version": "1.1.2",
+    "url": "https://app.reclaim.ai/",
+    "featured": false
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "version": "1.4.1",
+    "url": "https://www.reddit.com/",
+    "featured": true
+  },
+  {
+    "id": "reddit-chat",
+    "name": "Reddit Chat",
+    "version": "1.3.2",
+    "url": "https://chat.reddit.com/",
+    "featured": false
+  },
+  {
+    "id": "regex101",
+    "name": "Regex101",
+    "version": "1.0.1",
+    "url": "https://regex101.com/",
+    "featured": false
+  },
+  {
+    "id": "replit",
+    "name": "Replit",
+    "version": "1.0.0",
+    "url": "https://replit.com/login",
+    "featured": false
+  },
+  {
+    "id": "revolt",
+    "name": "Revolt",
+    "version": "1.0.1",
+    "url": "https://app.revolt.chat/",
+    "featured": false
+  },
+  {
+    "id": "ring-central",
+    "name": "RingCentral",
+    "version": "1.2.1",
+    "url": "https://app.ringcentral.com/",
+    "featured": false
+  },
+  {
+    "id": "riseup",
+    "name": "Riseup.net",
+    "version": "1.3.1",
+    "url": "https://mail.riseup.net",
+    "featured": false
+  },
+  {
+    "id": "ritetag",
+    "name": "Ritetag",
+    "version": "1.2.1",
+    "url": "https://ritetag.com",
+    "featured": false
+  },
+  {
+    "id": "rocketchat",
+    "name": "Rocket.Chat",
+    "version": "1.5.1",
+    "url": "https://{teamId}.rocket.chat",
+    "featured": false
+  },
+  {
+    "id": "romeo",
+    "name": "Romeo",
+    "version": "1.0.1",
+    "url": "http://romeo.com",
+    "featured": false
+  },
+  {
+    "id": "roundcube",
+    "name": "Roundcube",
+    "version": "1.3.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "rubika",
+    "name": "Rubika",
+    "version": "1.0.0",
+    "url": "https://web.rubika.ir/",
+    "featured": false
+  },
+  {
+    "id": "rydoo",
+    "name": "Rydoo",
+    "version": "1.0.0",
+    "url": "https://app.rydoo.com/",
+    "featured": false
+  },
+  {
+    "id": "schildichat",
+    "name": "SchildiChat",
+    "version": "1.1.1",
+    "url": "https://app.schildi.chat/",
+    "featured": false
+  },
+  {
+    "id": "scribens",
+    "name": "Scribens",
+    "version": "1.3.1",
+    "url": "https://scribens.{teamId}",
+    "featured": false
+  },
+  {
+    "id": "scrumpy",
+    "name": "Scrumpy",
+    "version": "1.2.1",
+    "url": "https://app.scrumpy.io",
+    "featured": false
+  },
+  {
+    "id": "sendtask",
+    "name": "Sendtask",
+    "version": "1.3.1",
+    "url": "https://app.sendtask.io/",
+    "featured": false
+  },
+  {
+    "id": "shad",
+    "name": "Shad",
+    "version": "1.0.0",
+    "url": "https://my.shad.ir/",
+    "featured": false
+  },
+  {
+    "id": "sharezone",
+    "name": "Sharezone",
+    "version": "1.0.0",
+    "url": "https://web.sharezone.net/",
+    "featured": false
+  },
+  {
+    "id": "sheypoor",
+    "name": "Sheypoor",
+    "version": "1.0.0",
+    "url": "https://www.sheypoor.com/",
+    "featured": false
+  },
+  {
+    "id": "simplelogin",
+    "name": "SimpleLogin",
+    "version": "1.1.1",
+    "url": "https://app.simplelogin.io/",
+    "featured": false
+  },
+  {
+    "id": "simplenote",
+    "name": "Simplenote",
+    "version": "1.4.2",
+    "url": "https://app.simplenote.com/",
+    "featured": false
+  },
+  {
+    "id": "skiff-mail",
+    "name": "Skiff Mail",
+    "version": "1.2.2",
+    "url": "https://app.skiff.com/mail/inbox",
+    "featured": false
+  },
+  {
+    "id": "skype",
+    "name": "Skype",
+    "version": "3.6.3",
+    "url": "https://web.skype.com/",
+    "featured": true
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "version": "1.6.2",
+    "url": "https://{teamId}.slack.com",
+    "featured": true
+  },
+  {
+    "id": "slite",
+    "name": "Slite",
+    "version": "1.2.1",
+    "url": "https://{teamId}.slite.com",
+    "featured": false
+  },
+  {
+    "id": "slowly",
+    "name": "Slowly",
+    "version": "1.3.1",
+    "url": "https://web.getslowly.com/home",
+    "featured": false
+  },
+  {
+    "id": "smartsheet",
+    "name": "SmartSheet",
+    "version": "1.1.1",
+    "url": "https://app.smartsheet.com",
+    "featured": false
+  },
+  {
+    "id": "snapchat",
+    "name": "Snapchat",
+    "version": "1.2.2",
+    "url": "https://web.snapchat.com/",
+    "featured": false
+  },
+  {
+    "id": "snapdrop",
+    "name": "Snapdrop",
+    "version": "1.4.2",
+    "url": "http://snapdrop.net/",
+    "featured": false
+  },
+  {
+    "id": "sococo",
+    "name": "Sococo",
+    "version": "1.2.1",
+    "url": "https://app.sococo.com",
+    "featured": false
+  },
+  {
+    "id": "sogo",
+    "name": "SOGo",
+    "version": "1.0.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "somtoday",
+    "name": "SomToday",
+    "version": "1.0.0",
+    "url": "https://inloggen.somtoday.nl",
+    "featured": false
+  },
+  {
+    "id": "sonarqube",
+    "name": "SonarQube",
+    "version": "1.0.0",
+    "url": "https://{sonarqube}/",
+    "featured": false
+  },
+  {
+    "id": "soroushplus",
+    "name": "Soroush+",
+    "version": "1.0.0",
+    "url": "https://web.splus.ir/",
+    "featured": false
+  },
+  {
+    "id": "spikenow",
+    "name": "Spike",
+    "version": "1.0.0",
+    "url": "https://spikenow.com/web/",
+    "featured": false
+  },
+  {
+    "id": "stackexchange",
+    "name": "StackExchange",
+    "version": "1.4.1",
+    "url": "https://stackexchange.com/",
+    "featured": false
+  },
+  {
+    "id": "stackoverflow",
+    "name": "Stack Overflow",
+    "version": "0.2.1",
+    "url": "https://stackoverflow.com",
+    "featured": false
+  },
+  {
+    "id": "stackoverflow-chat",
+    "name": "Stack Overflow Chat",
+    "version": "1.2.1",
+    "url": "https://chat.stackoverflow.com/",
+    "featured": false
+  },
+  {
+    "id": "standardnotes",
+    "name": "StandardNotes",
+    "version": "1.5.1",
+    "url": "https://app.standardnotes.com/",
+    "featured": false
+  },
+  {
+    "id": "statuzer",
+    "name": "Statuzer",
+    "version": "1.0.0",
+    "url": "https://statuzer.com",
+    "featured": false
+  },
+  {
+    "id": "steamchat",
+    "name": "SteamChat",
+    "version": "1.5.2",
+    "url": "https://steamcommunity.com/chat",
+    "featured": false
+  },
+  {
+    "id": "stoat",
+    "name": "Stoat",
+    "version": "1.0.0",
+    "url": "https://stoat.chat/app",
+    "featured": false
+  },
+  {
+    "id": "strava",
+    "name": "Strava",
+    "version": "1.0.1",
+    "url": "https://www.strava.com/",
+    "featured": false
+  },
+  {
+    "id": "stride",
+    "name": "Stride",
+    "version": "1.4.1",
+    "url": "https://app.stride.com",
+    "featured": false
+  },
+  {
+    "id": "super-productivity",
+    "name": "Super Productivity",
+    "version": "1.0.0",
+    "url": "https://app.super-productivity.com",
+    "featured": false
+  },
+  {
+    "id": "superhuman",
+    "name": "Superhuman",
+    "version": "1.3.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "superlist",
+    "name": "Superlist",
+    "version": "1.0.1",
+    "url": "https://app.superlist.com",
+    "featured": false
+  },
+  {
+    "id": "sympatia",
+    "name": "Sympatia",
+    "version": "1.0.1",
+    "url": "https://sympatia.onet.pl/",
+    "featured": false
+  },
+  {
+    "id": "sync",
+    "name": "Sync",
+    "version": "1.4.1",
+    "url": "https://cp.sync.com/files/",
+    "featured": false
+  },
+  {
+    "id": "synology-chat",
+    "name": "Synology Chat",
+    "version": "1.0.2",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "taiga",
+    "name": "Taiga",
+    "version": "1.0.0",
+    "url": "https://tree.taiga.io",
+    "featured": false
+  },
+  {
+    "id": "talkspirit",
+    "name": "talkspirit",
+    "version": "1.0.0",
+    "url": "https://{teamId}.talkspirit.com",
+    "featured": false
+  },
+  {
+    "id": "tawk",
+    "name": "Tawk.to",
+    "version": "1.4.1",
+    "url": "https://dashboard.tawk.to/",
+    "featured": false
+  },
+  {
+    "id": "tchap",
+    "name": "Tchap",
+    "version": "1.1.3",
+    "url": "https://www.tchap.gouv.fr/",
+    "featured": false
+  },
+  {
+    "id": "teamleader",
+    "name": "teamleader",
+    "version": "1.3.1",
+    "url": "https://app.teamleader.eu/?gotologin",
+    "featured": false
+  },
+  {
+    "id": "teamweek",
+    "name": "Teamweek",
+    "version": "1.3.2",
+    "url": "https://app.teamweek.com/",
+    "featured": false
+  },
+  {
+    "id": "teamwork-projects",
+    "name": "Teamwork Projects",
+    "version": "0.4.1",
+    "url": "https://{teamId}.teamwork.com/",
+    "featured": false
+  },
+  {
+    "id": "techmeme",
+    "name": "techmeme",
+    "version": "1.0.0",
+    "url": "https://techmeme.com",
+    "featured": false
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "version": "3.4.5",
+    "url": "https://web.telegram.org",
+    "featured": true
+  },
+  {
+    "id": "temp-mail",
+    "name": "Temp Mail",
+    "version": "1.0.1",
+    "url": "https://temp-mail.org/",
+    "featured": false
+  },
+  {
+    "id": "thelounge",
+    "name": "The Lounge",
+    "version": "1.4.2",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "threads",
+    "name": "Threads",
+    "version": "1.0.1",
+    "url": "https://threads.net/",
+    "featured": false
+  },
+  {
+    "id": "threema",
+    "name": "Threema",
+    "version": "1.3.1",
+    "url": "https://web.threema.ch",
+    "featured": false
+  },
+  {
+    "id": "thundermail",
+    "name": "Thundermail",
+    "version": "1.0.0",
+    "url": "https://webmail.thundermail.com/",
+    "featured": false
+  },
+  {
+    "id": "tick",
+    "name": "tick",
+    "version": "1.1.1",
+    "url": "http://app.tickspot.com/",
+    "featured": false
+  },
+  {
+    "id": "TickTick",
+    "name": "TickTick",
+    "version": "1.4.2",
+    "url": "https://www.ticktick.com/#p/inbox/tasks",
+    "featured": false
+  },
+  {
+    "id": "tiktok",
+    "name": "Tiktok",
+    "version": "1.2.1",
+    "url": "https://tiktok.com",
+    "featured": true
+  },
+  {
+    "id": "tinder",
+    "name": "Tinder",
+    "version": "1.3.2",
+    "url": "https://tinder.com",
+    "featured": false
+  },
+  {
+    "id": "tixio",
+    "name": "Tixio",
+    "version": "1.3.2",
+    "url": "https://{teamId}.tixio.io/app/",
+    "featured": false
+  },
+  {
+    "id": "todoist",
+    "name": "Todoist",
+    "version": "1.5.3",
+    "url": "https://todoist.com/app",
+    "featured": true
+  },
+  {
+    "id": "toggl",
+    "name": "Toggl",
+    "version": "1.4.1",
+    "url": "https://www.toggl.com/app/timer",
+    "featured": false
+  },
+  {
+    "id": "traccar",
+    "name": "Traccar",
+    "version": "1.0.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "trakt",
+    "name": "Trakt",
+    "version": "1.2.1",
+    "url": "https://trakt.tv",
+    "featured": false
+  },
+  {
+    "id": "trello",
+    "name": "Trello",
+    "version": "1.4.1",
+    "url": "https://trello.com/",
+    "featured": true
+  },
+  {
+    "id": "trilium",
+    "name": "Trilium",
+    "version": "1.0.0",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "truelancer",
+    "name": "Truelancer",
+    "version": "1.0.0",
+    "url": "https://www.truelancer.com/notifications?page=1",
+    "featured": false
+  },
+  {
+    "id": "tt-rss",
+    "name": "Tiny Tiny RSS",
+    "version": "1.3.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "tutanota",
+    "name": "Tuta Mail",
+    "version": "1.3.3",
+    "url": "https://app.tuta.com/",
+    "featured": false
+  },
+  {
+    "id": "tweetdeck",
+    "name": "Tweetdeck",
+    "version": "1.4.1",
+    "url": "https://tweetdeck.twitter.com/",
+    "featured": true
+  },
+  {
+    "id": "twist",
+    "name": "Twist",
+    "version": "1.3.1",
+    "url": "https://twistapp.com/login",
+    "featured": false
+  },
+  {
+    "id": "twitch",
+    "name": "Twitch",
+    "version": "1.3.1",
+    "url": "https://www.twitch.tv/{teamId}/chat",
+    "featured": false
+  },
+  {
+    "id": "twitter",
+    "name": "X",
+    "version": "1.4.2",
+    "url": "https://x.com",
+    "featured": true
+  },
+  {
+    "id": "twitter-dm",
+    "name": "Twitter DM",
+    "version": "1.3.1",
+    "url": "https://mobile.twitter.com/messages",
+    "featured": false
+  },
+  {
+    "id": "udemy",
+    "name": "Udemy",
+    "version": "1.2.1",
+    "url": "https://www.udemy.com/home/my-courses/learning/",
+    "featured": false
+  },
+  {
+    "id": "unraid",
+    "name": "Unraid",
+    "version": "1.3.1",
+    "url": "{teamId}",
+    "featured": false
+  },
+  {
+    "id": "upwork",
+    "name": "upwork",
+    "version": "1.0.0",
+    "url": "https://www.upwork.com/ab/notifications/",
+    "featured": false
+  },
+  {
+    "id": "virasty",
+    "name": "Virasty",
+    "version": "1.0.0",
+    "url": "https://virasty.com/",
+    "featured": false
+  },
+  {
+    "id": "virgool",
+    "name": "Virgool",
+    "version": "1.0.0",
+    "url": "https://virgool.io/",
+    "featured": false
+  },
+  {
+    "id": "viva-engage",
+    "name": "Viva Engage",
+    "version": "1.0.0",
+    "url": "https://engage.cloud.microsoft",
+    "featured": false
+  },
+  {
+    "id": "vk",
+    "name": "VK",
+    "version": "1.3.1",
+    "url": "https://www.vk.com",
+    "featured": false
+  },
+  {
+    "id": "voetbal-nl",
+    "name": "Voetbal",
+    "version": "1.0.1",
+    "url": "https://voetbal.nl/inloggen",
+    "featured": false
+  },
+  {
+    "id": "voxer",
+    "name": "Voxer",
+    "version": "1.3.1",
+    "url": "https://web.voxer.com",
+    "featured": false
+  },
+  {
+    "id": "wafrn",
+    "name": "Wafrn",
+    "version": "1.0.0",
+    "url": "https://app.wafrn.net",
+    "featured": false
+  },
+  {
+    "id": "wakapi",
+    "name": "Wakapi",
+    "version": "1.0.1",
+    "url": "https://wakapi.dev",
+    "featured": false
+  },
+  {
+    "id": "wakatime",
+    "name": "Wakatime",
+    "version": "1.3.1",
+    "url": "https://wakatime.com/login",
+    "featured": false
+  },
+  {
+    "id": "wallabag",
+    "name": "Wallabag",
+    "version": "1.0.0",
+    "url": "https://app.wallabag.it/",
+    "featured": false
+  },
+  {
+    "id": "webex-teams",
+    "name": "Webex Teams",
+    "version": "1.3.1",
+    "url": "https://web.webex.com",
+    "featured": false
+  },
+  {
+    "id": "wechat",
+    "name": "WeChat",
+    "version": "1.3.1",
+    "url": "https://web.wechat.com/",
+    "featured": true
+  },
+  {
+    "id": "weekplan",
+    "name": "Weekplan",
+    "version": "1.2.1",
+    "url": "https://next.weekplan.net/",
+    "featured": false
+  },
+  {
+    "id": "whatsapp",
+    "name": "WhatsApp",
+    "version": "3.5.8",
+    "url": "https://web.whatsapp.com",
+    "featured": true
+  },
+  {
+    "id": "whereby",
+    "name": "Whereby",
+    "version": "1.2.1",
+    "url": "https://whereby.com/{teamId}",
+    "featured": false
+  },
+  {
+    "id": "whimsical",
+    "name": "Whimsical",
+    "version": "1.1.1",
+    "url": "https://whimsical.com/",
+    "featured": false
+  },
+  {
+    "id": "wikipedia",
+    "name": "Wikipedia",
+    "version": "1.0.1",
+    "url": "https://www.wikipedia.org/",
+    "featured": false
+  },
+  {
+    "id": "wire",
+    "name": "Wire",
+    "version": "1.2.1",
+    "url": "https://app.wire.com/",
+    "featured": false
+  },
+  {
+    "id": "wisgoon",
+    "name": "Wisgoon",
+    "version": "1.0.0",
+    "url": "https://wisgoon.com/",
+    "featured": false
+  },
+  {
+    "id": "withspectrum",
+    "name": "Spectrum",
+    "version": "1.3.1",
+    "url": "https://spectrum.chat",
+    "featured": false
+  },
+  {
+    "id": "workflowy",
+    "name": "WorkFlowy",
+    "version": "1.2.1",
+    "url": "https://workflowy.com",
+    "featured": false
+  },
+  {
+    "id": "workplace",
+    "name": "Workplace",
+    "version": "1.5.1",
+    "url": "https://{teamId}.workplace.com/chat",
+    "featured": false
+  },
+  {
+    "id": "wrike",
+    "name": "Wrike",
+    "version": "1.3.1",
+    "url": "https://www.wrike.com/login/",
+    "featured": false
+  },
+  {
+    "id": "xing",
+    "name": "XING",
+    "version": "1.4.1",
+    "url": "https://www.xing.com/messenger/global",
+    "featured": false
+  },
+  {
+    "id": "xmpp",
+    "name": "XMPP",
+    "version": "1.2.1",
+    "url": "https://inverse.chat",
+    "featured": false
+  },
+  {
+    "id": "yahoo-mail",
+    "name": "Yahoo Mail",
+    "version": "1.3.5",
+    "url": "https://mail.yahoo.com",
+    "featured": false
+  },
+  {
+    "id": "yandex-mail",
+    "name": "Yandex Mail",
+    "version": "1.2.1",
+    "url": "https://mail.yandex.ru",
+    "featured": false
+  },
+  {
+    "id": "youtrack",
+    "name": "YouTrack",
+    "version": "1.4.1",
+    "url": "https://{teamId}.myjetbrains.com/youtrack/",
+    "featured": false
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "version": "1.3.1",
+    "url": "https://youtube.com/",
+    "featured": true
+  },
+  {
+    "id": "youtubemusic",
+    "name": "YouTube Music",
+    "version": "1.4.1",
+    "url": "https://music.youtube.com/",
+    "featured": false
+  },
+  {
+    "id": "zalo",
+    "name": "Zalo",
+    "version": "1.6.0",
+    "url": "https://chat.zalo.me/",
+    "featured": false
+  },
+  {
+    "id": "zammad",
+    "name": "Zammad",
+    "version": "1.1.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "zendesk",
+    "name": "Zendesk",
+    "version": "1.3.1",
+    "url": "https://{teamId}.zendesk.com/agent",
+    "featured": false
+  },
+  {
+    "id": "zenhub",
+    "name": "ZenHub",
+    "version": "1.3.2",
+    "url": "https://app.zenhub.com/workspaces/{teamId}/board",
+    "featured": false
+  },
+  {
+    "id": "zeplin",
+    "name": "Zeplin",
+    "version": "1.3.1",
+    "url": "https://app.zeplin.io/login",
+    "featured": false
+  },
+  {
+    "id": "zimbra",
+    "name": "Zimbra",
+    "version": "1.3.1",
+    "url": "",
+    "featured": false
+  },
+  {
+    "id": "zoho",
+    "name": "Zoho Mail",
+    "version": "1.4.2",
+    "url": "https://www.zoho.com/mail/login.html",
+    "featured": false
+  },
+  {
+    "id": "zoho-projects",
+    "name": "Zoho Projects",
+    "version": "1.2.1",
+    "url": "https://projects.zoho.eu/",
+    "featured": false
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "version": "1.4.2",
+    "url": "https://app.zoom.us/wc/home",
+    "featured": true
+  },
+  {
+    "id": "zulip",
+    "name": "Zulip",
+    "version": "1.4.1",
+    "url": "",
+    "featured": false
+  }
+]

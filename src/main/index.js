@@ -60,13 +60,18 @@ function createWindow() {
     minHeight: 600,
     title: 'Megabox',
     icon: path.join(__dirname, '../renderer/assets/tray/tray_icon.png'),
-    backgroundColor: '#0F172A',
+    backgroundColor: '#1e1e1e',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
       webviewTag: true,
       nodeIntegration: false,
       contextIsolation: true
     }
+  });
+
+  // Forward renderer console to terminal stdout for transparent debugging
+  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer Console] ${message} (line ${line})`);
   });
 
   // Intercept header & user-agent
@@ -90,13 +95,19 @@ function createWindow() {
 app.whenReady().then(() => {
   db = initDatabase();
 
-  ipcMain.handle('apps:get', () => getApps(db));
+  ipcMain.handle('apps:get', () => {
+    const list = getApps(db);
+    console.log('[IPC Main] apps:get returned', list.length, 'apps');
+    return list;
+  });
+
   ipcMain.handle('apps:save', (_, appData) => {
     saveApp(db, appData);
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
     return true;
   });
+
   ipcMain.handle('apps:delete', (_, id) => {
     deleteApp(db, id);
     const updated = getApps(db);

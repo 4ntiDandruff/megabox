@@ -93,7 +93,7 @@ const { ipcRenderer } = require('electron');
     },
     injectCSS: (cssPath) => {},
     handleDarkMode: (cb) => {
-      cb(true); // Always enforce dark mode integration
+      cb(false); // Do not force dark mode on web services
     },
     releaseServiceWorkers: () => {},
     setDialogTitle: (title) => {},
