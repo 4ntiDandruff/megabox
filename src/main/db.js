@@ -1,4 +1,3 @@
-const Database = require('better-sqlite3');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -8,90 +7,72 @@ function getDefaultDbPath() {
   if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir, { recursive: true });
   }
-  return path.join(configDir, 'megabox.db');
+  return path.join(configDir, 'megabox-config.json');
 }
 
 function initDatabase(customPath = null) {
-  const dbPath = customPath || getDefaultDbPath();
-  const db = new Database(dbPath);
+  const filePath = customPath || getDefaultDbPath();
+  
+  const defaults = [
+    { id: 'whatsapp', name: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'whatsapp', partition: 'persist:whatsapp', order_index: 0, is_enabled: 1 },
+    { id: 'telegram', name: 'Telegram', url: 'https://web.telegram.org/a/', icon: 'telegram', partition: 'persist:telegram', order_index: 1, is_enabled: 1 },
+    { id: 'discord', name: 'Discord', url: 'https://discord.com/app', icon: 'discord', partition: 'persist:discord', order_index: 2, is_enabled: 1 },
+    { id: 'gmail', name: 'Gmail', url: 'https://mail.google.com', icon: 'gmail', partition: 'persist:gmail', order_index: 3, is_enabled: 1 }
+  ];
 
-  db.pragma('journal_mode = WAL');
-  db.pragma('synchronous = NORMAL');
-  db.pragma('busy_timeout = 5000');
-
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS apps (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      url TEXT NOT NULL,
-      icon TEXT NOT NULL,
-      partition TEXT NOT NULL,
-      order_index INTEGER DEFAULT 0,
-      is_enabled INTEGER DEFAULT 1,
-      is_muted INTEGER DEFAULT 0,
-      user_agent TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS settings (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL
-    );
-  `);
-
-  const count = db.prepare('SELECT COUNT(*) as total FROM apps').get().total;
-  if (count === 0) {
-    const insert = db.prepare(`
-      INSERT INTO apps (id, name, url, icon, partition, order_index, is_enabled)
-      VALUES (?, ?, ?, ?, ?, ?, 1)
-    `);
-
-    const defaults = [
-      ['whatsapp', 'WhatsApp', 'https://web.whatsapp.com', 'whatsapp', 'persist:whatsapp', 0],
-      ['telegram', 'Telegram', 'https://web.telegram.org/a/', 'telegram', 'persist:telegram', 1],
-      ['discord', 'Discord', 'https://discord.com/app', 'discord', 'persist:discord', 2],
-      ['gmail', 'Gmail', 'https://mail.google.com', 'gmail', 'persist:gmail', 3]
-    ];
-
-    for (const d of defaults) {
-      insert.run(...d);
-    }
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify({ apps: defaults, settings: {} }, null, 2), 'utf-8');
   }
 
-  return db;
+  return {
+    filePath,
+    read: function() {
+      try {
+        return JSON.parse(fs.readFileSync(this.filePath, 'utf-8'));
+      } catch (e) {
+        return { apps: defaults, settings: {} };
+      }
+    },
+    write: function(data) {
+      // Atomic write (temp file + rename) for abrupt power-loss safety (Cak Hizam SOP)
+      const tmpPath = this.filePath + '.tmp';
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+      fs.renameSync(tmpPath, this.filePath);
+    }
+  };
 }
 
 function getApps(db) {
-  return db.prepare('SELECT * FROM apps WHERE is_enabled = 1 ORDER BY order_index ASC').all();
+  const data = db.read();
+  return (data.apps || []).filter(a => a.is_enabled === 1).sort((a, b) => a.order_index - b.order_index);
 }
 
 function saveApp(db, app) {
-  const stmt = db.prepare(`
-    INSERT INTO apps (id, name, url, icon, partition, order_index, is_enabled, is_muted, user_agent)
-    VALUES (@id, @name, @url, @icon, @partition, @order_index, @is_enabled, 0, @user_agent)
-    ON CONFLICT(id) DO UPDATE SET
-      name = excluded.name,
-      url = excluded.url,
-      icon = excluded.icon,
-      partition = excluded.partition,
-      order_index = excluded.order_index,
-      is_enabled = excluded.is_enabled,
-      user_agent = excluded.user_agent
-  `);
-  stmt.run({
+  const data = db.read();
+  data.apps = data.apps || [];
+  const idx = data.apps.findIndex(a => a.id === app.id);
+  const cleanApp = {
     id: app.id,
     name: app.name,
     url: app.url,
     icon: app.icon || 'globe',
     partition: app.partition || ('persist:' + app.id),
-    order_index: app.order_index || 0,
+    order_index: app.order_index !== undefined ? app.order_index : data.apps.length,
     is_enabled: app.is_enabled !== undefined ? app.is_enabled : 1,
     user_agent: app.user_agent || null
-  });
+  };
+  if (idx >= 0) {
+    data.apps[idx] = cleanApp;
+  } else {
+    data.apps.push(cleanApp);
+  }
+  db.write(data);
 }
 
 function deleteApp(db, id) {
-  db.prepare('DELETE FROM apps WHERE id = ?').run(id);
+  const data = db.read();
+  data.apps = (data.apps || []).filter(a => a.id !== id);
+  db.write(data);
 }
 
 module.exports = {
