@@ -1062,7 +1062,7 @@
           <span id="avatar-user-initials" class="profile-avatar-initials" style="display:none;">ME</span>
         </div>
       </button>
-      <button id="btn-extensions" class="sidebar-btn" title="Contextual Extensions / Ekstensi (Puzzle)">
+      <button id="btn-extensions" class="sidebar-btn" title="Ekstensi">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19.439 7.85c0-1.571-1.275-2.841-2.847-2.841-.39 0-.76.082-1.096.229C15.013 3.619 13.626 2.5 12 2.5s-3.013 1.119-3.496 2.738c-.336-.147-.706-.229-1.096-.229C5.836 5.009 4.561 6.279 4.561 7.85c0 .762.298 1.455.786 1.968-.698.813-1.12 1.879-1.12 3.047 0 1.168.422 2.234 1.12 3.047-.488.513-.786 1.206-.786 1.968 0 1.571 1.275 2.841 2.847 2.841.39 0 .76-.082 1.096-.229.483 1.619 1.87 2.738 3.496 2.738s3.013-1.119 3.496-2.738c.336.147.706.229 1.096.229 1.572 0 2.847-1.27 2.847-2.841 0-.762-.298-1.455-.786-1.968.698-.813 1.12-1.879 1.12-3.047 0-1.168-.422-2.234-1.12-3.047.488-.513.786-1.206.786-1.968z"></path>
         </svg>
@@ -1126,8 +1126,8 @@
       <div class="catalog-header">
         <div class="catalog-title-row">
           <div class="catalog-title">
-            <span>Buka Ruang &bull; Tambah Aplikasi</span>
-            <span id="catalog-count-badge" class="catalog-badge">441 Available</span>
+            <span>Tambah Layanan</span>
+            <span id="catalog-count-badge" class="catalog-badge">441 Layanan</span>
           </div>
           <button id="btn-catalog-close" class="catalog-close">&times;</button>
         </div>
@@ -1137,16 +1137,16 @@
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.3-4.3"/>
           </svg>
-          <input type="text" id="catalog-search-input" class="catalog-search" placeholder="Search 440+ services (e.g. WhatsApp, Claude, ChatGPT, Notion)...">
+          <input type="text" id="catalog-search-input" class="catalog-search" placeholder="Cari layanan...">
         </div>
 
         <!-- Category Filter Pills -->
         <div id="catalog-category-pills" class="catalog-categories">
           <button class="category-pill is-active" data-cat="all">Semua</button>
           <button class="category-pill" data-cat="featured">⭐ Populer</button>
-          <button class="category-pill" data-cat="chat">💬 Chat & Pesan</button>
-          <button class="category-pill" data-cat="ai">✨ AI & Asisten</button>
-          <button class="category-pill" data-cat="email">✉️ Email & Kalender</button>
+          <button class="category-pill" data-cat="chat">💬 Pesan</button>
+          <button class="category-pill" data-cat="ai">✨ AI</button>
+          <button class="category-pill" data-cat="email">✉️ Email</button>
           <button class="category-pill" data-cat="productivity">📊 Produktivitas</button>
           <button class="category-pill" data-cat="dev">⚡ Developer</button>
         </div>
@@ -1157,8 +1157,8 @@
 
       <!-- Footer for Custom URL -->
       <div class="catalog-footer">
-        <span class="custom-app-prompt">Don't see your service listed?</span>
-        <button id="btn-custom-add" class="btn-custom-service">Add Custom Website</button>
+        <span class="custom-app-prompt">Ingin pasang web lain?</span>
+        <button id="btn-custom-add" class="btn-custom-service">Tambah Website</button>
       </div>
     </div>
   </div>
@@ -1167,23 +1167,23 @@
   <div id="configure-modal" class="modal-overlay">
     <div class="modal-box-form">
       <div class="catalog-title-row">
-        <h3 id="form-modal-title" class="catalog-title">Add Service</h3>
+        <h3 id="form-modal-title" class="catalog-title">Tambah Layanan</h3>
         <button id="btn-form-close" class="catalog-close">&times;</button>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="input-service-name">Service Name</label>
+        <label class="form-label" for="input-service-name">Nama Layanan</label>
         <input type="text" id="input-service-name" class="form-input" placeholder="e.g. Office WhatsApp">
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="input-service-url">Service URL</label>
+        <label class="form-label" for="input-service-url">Alamat Web</label>
         <input type="url" id="input-service-url" class="form-input" placeholder="https://web.whatsapp.com">
       </div>
 
       
       <div class="form-group">
-        <label class="form-label" for="input-service-partition">Isolasi Sesi & Profil (Session Partition)</label>
+        <label class="form-label" for="input-service-partition">Isolasi Sesi</label>
         <select id="input-service-partition" class="form-input" style="cursor:pointer;background:#282828;">
           <option value="private" selected>🔒 Private Session (Isolasi mandiri, multi-akun aman)</option>
           <option value="shared">🌐 Shared Workspace (Sesi bersama, auto-login Google/SSO)</option>
@@ -1191,15 +1191,15 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="input-service-proxy">Custom Proxy (Optional: socks5://127.0.0.1:1080 or http://ip:port)</label>
+        <label class="form-label" for="input-service-proxy">Proxy Jaringan</label>
         <input type="text" id="input-service-proxy" class="form-input" placeholder="Direct connection (leave empty) or socks5://127.0.0.1:1080">
       </div>
 
       <input type="hidden" id="input-service-icon" value="custom">
 
       <div class="modal-actions">
-        <button id="btn-form-cancel" class="btn-cancel">Cancel</button>
-        <button id="btn-form-save" class="btn-submit">Add to Megabox</button>
+        <button id="btn-form-cancel" class="btn-cancel">Batal</button>
+        <button id="btn-form-save" class="btn-submit">Simpan</button>
       </div>
     </div>
   </div>
@@ -1209,39 +1209,39 @@
     <div id="ctx-name" class="context-menu-header">Service</div>
     <div class="context-menu-divider"></div>
     <div id="ctx-back" class="context-menu-item">
-      <span>Back</span>
+      <span>Kembali</span>
       <span style="font-size:11px;opacity:0.6;">Alt+←</span>
     </div>
     <div id="ctx-forward" class="context-menu-item">
-      <span>Forward</span>
+      <span>Maju</span>
       <span style="font-size:11px;opacity:0.6;">Alt+→</span>
     </div>
     <div id="ctx-reload" class="context-menu-item">
-      <span>Reload Service</span>
+      <span>Muat Ulang</span>
       <span style="font-size:11px;opacity:0.6;">Ctrl+R</span>
     </div>
     <div id="ctx-home" class="context-menu-item">
-      <span>Go to Home URL</span>
+      <span>Buka Beranda</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-open-browser" class="context-menu-item">
-      <span>Open in External Browser</span>
+      <span>Buka Browser</span>
     </div>
     <div id="ctx-mute" class="context-menu-item">
-      <span id="ctx-mute-label">Mute Audio</span>
+      <span id="ctx-mute-label">Bisukan</span>
     </div>
     <div id="ctx-hibernate" class="context-menu-item">
-      <span id="ctx-hibernate-label">Hibernate Service</span>
+      <span id="ctx-hibernate-label">Tidurkan</span>
     </div>
     <div id="ctx-tile" class="context-menu-item">
-      <span id="ctx-tile-label">Split Screen 1x2 (Berdampingan)</span>
+      <span id="ctx-tile-label">Bagi Layar</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-edit" class="context-menu-item">
-      <span>Edit Service & Proxy...</span>
+      <span>Ubah Layanan</span>
     </div>
     <div id="ctx-delete" class="context-menu-item danger">
-      <span>Remove Service</span>
+      <span>Hapus Layanan</span>
     </div>
   </div>
 
@@ -1257,7 +1257,7 @@
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span>Megabox Settings</span>
+            <span>Pengaturan</span>
           </div>
           <button id="btn-settings-close" class="catalog-close">&times;</button>
         </div>
@@ -1267,7 +1267,7 @@
         
         <!-- General Section -->
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Workstation & Privacy</h4>
+          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Keamanan Layar</h4>
           
           <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
             <div>
@@ -1279,7 +1279,7 @@
 
           <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
             <div>
-              <div style="font-weight:600; font-size:14px;">Auto-Lock Workstation (Idle)</div>
+              <div style="font-weight:600; font-size:14px;">Kunci Otomatis</div>
               <div style="font-size:12px; color:var(--text-muted);">Kunci layar otomatis saat tidak ada aktivitas mouse/keyboard</div>
             </div>
             <select id="setting-autolock-val" style="padding:6px 10px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">
@@ -1299,11 +1299,11 @@
           </div>
         </div>
 
-        <!-- Cloud & Profile Sync (SaaS Multi-Device) -->
+        <!-- Sinkronisasi Akun (SaaS Multi-Device) -->
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Cloud & Profile Sync</h4>
-            <span id="sync-badge-status" style="font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.08); color:var(--text-muted); font-weight:600;">Not Connected</span>
+            <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Sinkronisasi Akun</h4>
+            <span id="sync-badge-status" style="font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.08); color:var(--text-muted); font-weight:600;">Belum Terhubung</span>
           </div>
 
           <!-- Logged Out State: Auth Form -->
@@ -1335,9 +1335,9 @@
             </div>
 
             <div style="display:flex; gap:8px; margin-top:4px;">
-              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Upload ke Cloud</button>
-              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Download dari Cloud</button>
-              <button id="btn-sync-logout" type="button" style="padding:7px 12px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Logout</button>
+              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unggah</button>
+              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unduh</button>
+              <button id="btn-sync-logout" type="button" style="padding:7px 12px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
             </div>
             <div id="sync-op-msg" style="font-size:11px; color:var(--text-muted);"></div>
           </div>
@@ -1346,7 +1346,7 @@
       </div>
 
       <div class="modal-actions" style="padding:16px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#1d1d1d;">
-        <button id="btn-settings-done" class="btn-submit" style="width:100%;">Save Preferences</button>
+        <button id="btn-settings-done" class="btn-submit" style="width:100%;">Simpan</button>
       </div>
     </div>
   </div>
@@ -1374,8 +1374,8 @@
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
       </div>
       <div style="text-align:center;">
-        <h3 style="margin:0 0 4px 0;font-size:18px;color:#fff;">Megabox Locked</h3>
-        <p style="margin:0;font-size:12px;color:#888;">Enter 4-digit PIN to unlock workstation</p>
+        <h3 style="margin:0 0 4px 0;font-size:18px;color:#fff;">Layar Terkunci</h3>
+        <p style="margin:0;font-size:12px;color:#888;">Masukkan 4 digit PIN</p>
       </div>
       <input type="password" id="lock-pin-input" class="lock-input" maxlength="4" placeholder="••••" autofocus>
       <div id="lock-error" style="color:#f43f5e;font-size:12px;display:none;">Incorrect PIN</div>
@@ -1387,8 +1387,8 @@
   <aside id="extension-drawer" class="extension-drawer">
     <div class="drawer-header">
       <div class="drawer-title-box">
-        <div id="drawer-title" class="drawer-title">Extensions</div>
-        <div id="drawer-subtitle" class="drawer-subtitle">Manage Chromium extensions for active app</div>
+        <div id="drawer-title" class="drawer-title">Ekstensi</div>
+        <div id="drawer-subtitle" class="drawer-subtitle">Kelola ekstensi</div>
       </div>
       <button id="btn-drawer-close" class="drawer-close">&times;</button>
     </div>
@@ -1398,7 +1398,7 @@
     </div>
 
     <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);background:#101317;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;">
-      <span>Chrome WebExtensions</span>
+      <span>Ekstensi Chrome</span>
       <span style="color:#7266f0;font-weight:600;">Megabox Native</span>
     </div>
   </aside>

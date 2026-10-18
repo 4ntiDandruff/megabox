@@ -260,7 +260,7 @@
       const resp = await fetch('assets/recipes-catalog.json');
       recipesCatalog = await resp.json();
       if (catalogCountBadge) {
-        catalogCountBadge.textContent = `${recipesCatalog.length} Available`;
+      catalogCountBadge.textContent = String(currentFilteredCatalog.length) + " Layanan";
       }
     } catch (e) {
       console.error('Failed to load recipes catalog:', e);
@@ -307,7 +307,7 @@
     renderCatalogGrid(currentFilteredCatalog, true);
 
     if (catalogCountBadge) {
-      catalogCountBadge.textContent = `${currentFilteredCatalog.length} Tersedia`;
+      catalogCountBadge.textContent = String(currentFilteredCatalog.length) + " Layanan";
     }
   }
 
@@ -438,18 +438,46 @@
       tab.className = 'tab-item' + (activeAppId === app.id ? ' is-active' : '');
       tab.title = `${app.name} (Alt+${index + 1})`;
 
-      // Render tab icon using official SVG
-      const iconPath = `assets/icons/${app.icon || 'whatsapp'}.svg`;
+      // Resolve tab icon
+      let iconSrc = '';
+      const isOfficial = app.icon && app.icon !== 'custom' && app.icon !== 'globe' && app.icon !== 'web';
+      if (isOfficial) {
+        iconSrc = `assets/icons/${app.icon}.svg`;
+      } else if (app.custom_icon) {
+        iconSrc = app.custom_icon;
+      } else if (app.icon && (app.icon.startsWith('http://') || app.icon.startsWith('https://') || app.icon.startsWith('data:'))) {
+        iconSrc = app.icon;
+      } else {
+        const lowerName = (app.name || '').toLowerCase();
+        if (lowerName.includes('cctv') || lowerName.includes('cam')) iconSrc = 'assets/icons/cctv.svg';
+        else if (lowerName.includes('github') || lowerName.includes('git')) iconSrc = 'assets/icons/github.svg';
+        else if (lowerName.includes('password') || lowerName.includes('key')) iconSrc = 'assets/icons/key.svg';
+        else iconSrc = 'assets/icons/web.svg';
+      }
+
       const img = document.createElement('img');
       img.className = 'tab-icon';
-      img.src = iconPath;
+      img.src = iconSrc;
       img.alt = app.name;
       img.onerror = () => {
-        img.remove();
-        const fallback = document.createElement('span');
-        fallback.className = 'tab-fallback';
-        fallback.textContent = (app.name || 'APP').substring(0, 2);
-        tab.appendChild(fallback);
+        if (img.src.includes('assets/icons/') && app.icon && app.icon !== 'custom' && !img.dataset.cdnTried) {
+          img.dataset.cdnTried = 'true';
+          img.src = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/' + app.icon + '.svg';
+          return;
+        }
+        if (!img.src.includes('assets/icons/')) {
+          const lowerName = (app.name || '').toLowerCase();
+          if (lowerName.includes('cctv') || lowerName.includes('cam')) img.src = 'assets/icons/cctv.svg';
+          else if (lowerName.includes('github') || lowerName.includes('git')) img.src = 'assets/icons/github.svg';
+          else if (lowerName.includes('password') || lowerName.includes('key')) img.src = 'assets/icons/key.svg';
+          else img.src = 'assets/icons/web.svg';
+        } else {
+          img.remove();
+          const fallback = document.createElement('span');
+          fallback.className = 'tab-fallback';
+          fallback.textContent = (app.name || 'APP').substring(0, 2);
+          tab.appendChild(fallback);
+        }
       };
       tab.appendChild(img);
 
@@ -483,13 +511,44 @@
         wv.setAttribute('allowpopups', '');
         wv.style.display = (activeAppId === app.id) ? 'flex' : 'none';
 
+        // Auto Favicon caching handler
+        const handleFaviconUpdate = (favUrl) => {
+          // Jangan timpa icon jika aplikasi adalah katalog resmi bawaan
+          if (app.icon && app.icon !== 'custom' && app.icon !== 'globe' && app.icon !== 'web') return;
+          if (!favUrl || typeof favUrl !== 'string') return;
+          if (app.custom_icon && app.custom_icon.startsWith('data:')) return;
+          if (window.megabox && window.megabox.cacheFavicon) {
+            window.megabox.cacheFavicon(app.id, favUrl).then(res => {
+              if (res && res.success && res.dataUri) {
+                app.custom_icon = res.dataUri;
+                const tabImg = document.querySelector(`#tab-${app.id} img.tab-icon`);
+                if (tabImg) tabImg.src = res.dataUri;
+              }
+            }).catch(e => console.warn('[Favicon Cache Error]', e));
+          }
+        };
+
+        wv.addEventListener('page-favicon-updated', (event) => {
+          if (event.favicons && event.favicons.length > 0) {
+            handleFaviconUpdate(event.favicons[0]);
+          }
+        });
+
         // Listen to badge events from preload-webview bridge
         wv.addEventListener('dom-ready', () => {
-        if (isDndActive) {
-          try { wv.setAudioMuted(true); } catch (_) {}
-        }
-      });
-      wv.addEventListener('ipc-message', (event) => {
+          if (isDndActive) {
+            try { wv.setAudioMuted(true); } catch (_) {}
+          }
+          // If custom icon not cached as data URI, extract from page DOM
+          if ((!app.custom_icon || !app.custom_icon.startsWith('data:')) && (!app.icon || app.icon === 'custom' || app.icon === 'globe' || app.icon === 'web')) {
+            wv.executeJavaScript(`(() => {
+              const link = document.querySelector('link[rel~="icon"]') || document.querySelector('link[rel~="apple-touch-icon"]');
+              return link ? link.href : (window.location.origin + '/favicon.ico');
+            })()`).then(handleFaviconUpdate).catch(() => {});
+          }
+        });
+
+        wv.addEventListener('ipc-message', (event) => {
           if (event.channel === 'badge') {
             const count = parseInt(event.args[0], 10) || 0;
             updateAppBadge(app.id, count);
@@ -499,8 +558,6 @@
           }
         });
 
-        // WebControls real-time URL updates
-        
         webviewsContainer.appendChild(wv);
       }
     });
@@ -604,15 +661,22 @@
 
     const wv = document.getElementById('wv-' + app.id);
     const isMuted = wv ? wv.isAudioMuted() : false;
-    ctxMuteLabel.textContent = isMuted ? 'Unmute Audio' : 'Mute Audio';
+    ctxMuteLabel.textContent = isMuted ? 'Bunyikan' : 'Bisukan';
 
     const isHibernated = wv ? (wv.dataset.hibernated === 'true') : false;
-    ctxHibernateLabel.textContent = isHibernated ? 'Wake Up Service' : 'Hibernate Service';
+    ctxHibernateLabel.textContent = isHibernated ? 'Bangunkan' : 'Tidurkan';
 
-    // Position menu
-    contextMenu.style.left = `${Math.min(x, window.innerWidth - 200)}px`;
-    contextMenu.style.top = `${Math.min(y, window.innerHeight - 180)}px`;
+    // Position menu dynamically to fit viewport (prevents cutoff on small screens)
+    contextMenu.style.visibility = 'hidden';
     contextMenu.style.display = 'block';
+    const menuWidth = contextMenu.offsetWidth || 220;
+    const menuHeight = contextMenu.offsetHeight || 380;
+    contextMenu.style.visibility = 'visible';
+
+    const safeX = Math.max(10, Math.min(x, window.innerWidth - menuWidth - 10));
+    const safeY = Math.max(10, Math.min(y, window.innerHeight - menuHeight - 10));
+    contextMenu.style.left = `${safeX}px`;
+    contextMenu.style.top = `${safeY}px`;
   }
 
   function hideContextMenu() {
