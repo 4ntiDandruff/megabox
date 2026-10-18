@@ -176,3 +176,39 @@ const { ipcRenderer } = require('electron');
 
   console.log('[Megabox] Ferdium Recipe & Service Shield injected successfully.');
 })();
+// --- Absorbed from Rambox native injected.js via REA ---
+// 1. Mouse Button 3/4 Navigation Intercept (Back/Forward hardware mouse buttons)
+window.addEventListener('mouseup', (event) => {
+  if (event.button === 3) window.history.back();
+  if (event.button === 4) window.history.forward();
+});
+
+// 2. Alt/Meta + Arrow Navigation (Keyboard History)
+document.addEventListener('keydown', (e) => {
+  if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable) return;
+  const isModifier = process.platform === 'darwin' ? e.metaKey : e.altKey;
+  if (isModifier && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    if (e.key === 'ArrowLeft') window.history.back();
+    if (e.key === 'ArrowRight') window.history.forward();
+  }
+});
+
+// 3. Empty Body Self-Healing Watchdog (Auto reload if service hangs on blank white page)
+(function initEmptyBodyWatchdog() {
+  const emptyValues = ['', '\n', '<head></head><body></body>'];
+  let checkCount = 0;
+  const checkEmpty = () => {
+    try {
+      if (document.readyState === 'complete' && (!document.body || emptyValues.includes(document.body.innerHTML.trim()))) {
+        checkCount++;
+        if (checkCount >= 2) {
+          console.warn('[Megabox Watchdog] Empty body detected twice. Triggering auto-recovery reload...');
+          window.location.reload();
+        }
+      } else {
+        checkCount = 0;
+      }
+    } catch (e) {}
+  };
+  setInterval(checkEmpty, 15000);
+})();
