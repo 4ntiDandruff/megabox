@@ -182,6 +182,7 @@ async function pushWorkspace(services, settings = {}) {
       name: s.name,
       url: s.url,
       icon: s.icon || 'globe',
+      custom_icon: s.custom_icon || null,
       proxy: s.proxy || '',
       order_index: s.order_index !== undefined ? s.order_index : idx,
       muted: s.muted || false

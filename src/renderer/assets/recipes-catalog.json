@@ -1,11 +1,30 @@
 [
   {
+    "id": "google-passwords",
+    "name": "Google Password Manager",
+    "version": "1.0.0",
+    "url": "https://accounts.google.com/ServiceLogin?continue=https://passwords.google.com/",
+    "icon": "google-passwords",
+    "featured": true,
+    "category": "productivity",
+    "partition": "persist:workspace_shared"
+  },
+  {
     "id": "chatgpt",
     "name": "ChatGPT",
     "url": "https://chatgpt.com",
     "icon": "chatgpt",
     "category": "ai",
     "featured": true
+  },
+  {
+    "id": "cctv",
+    "name": "CCTV Stream",
+    "version": "1.0.0",
+    "url": "http://100.x.y.z:8000/",
+    "icon": "cctv",
+    "featured": true,
+    "category": "media"
   },
   {
     "id": "claude",
@@ -22,6 +41,123 @@
     "icon": "gemini",
     "category": "ai",
     "featured": true
+  },
+  {
+    "id": "frigate",
+    "name": "Frigate NVR",
+    "version": "1.0.0",
+    "url": "http://localhost:5000",
+    "icon": "frigate",
+    "featured": true,
+    "category": "media"
+  },
+  {
+    "id": "jellyfin",
+    "name": "Jellyfin Media",
+    "version": "1.0.0",
+    "url": "http://localhost:8096",
+    "icon": "jellyfin",
+    "featured": true,
+    "category": "media"
+  },
+  {
+    "id": "qbittorrent",
+    "name": "qBittorrent WebUI",
+    "version": "1.0.0",
+    "url": "http://localhost:8080",
+    "icon": "qbittorrent",
+    "featured": false,
+    "category": "productivity"
+  },
+  {
+    "id": "truenas",
+    "name": "TrueNAS Scale",
+    "version": "1.0.0",
+    "url": "http://truenas.local",
+    "icon": "truenas",
+    "featured": false,
+    "category": "dev"
+  },
+  {
+    "id": "synology",
+    "name": "Synology DSM",
+    "version": "1.0.0",
+    "url": "http://synology.local:5000",
+    "icon": "synology",
+    "featured": false,
+    "category": "dev"
+  },
+  {
+    "id": "rustdesk",
+    "name": "RustDesk Web",
+    "version": "1.0.0",
+    "url": "http://localhost:21114",
+    "icon": "rustdesk",
+    "featured": false,
+    "category": "dev"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n Automation",
+    "version": "1.0.0",
+    "url": "http://localhost:5678",
+    "icon": "n8n",
+    "featured": true,
+    "category": "productivity"
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama WebUI",
+    "version": "1.0.0",
+    "url": "http://localhost:11434",
+    "icon": "ollama",
+    "featured": true,
+    "category": "ai"
+  },
+  {
+    "id": "uptime-kuma",
+    "name": "Uptime Kuma",
+    "version": "1.0.0",
+    "url": "http://localhost:3001",
+    "icon": "uptime-kuma",
+    "featured": true,
+    "category": "dev"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare Zero Trust",
+    "version": "1.0.0",
+    "url": "https://one.dash.cloudflare.com",
+    "icon": "cloudflare",
+    "featured": true,
+    "category": "dev"
+  },
+  {
+    "id": "tailscale",
+    "name": "Tailscale Admin",
+    "version": "1.0.0",
+    "url": "https://login.tailscale.com/admin",
+    "icon": "tailscale",
+    "featured": true,
+    "category": "dev"
+  },
+  {
+    "id": "proxmox",
+    "name": "Proxmox VE",
+    "version": "1.0.0",
+    "url": "https://proxmox.local:8006",
+    "icon": "proxmox",
+    "featured": true,
+    "category": "dev"
+  },
+  {
+    "id": "adguard-home",
+    "name": "AdGuard Home",
+    "version": "1.0.0",
+    "url": "http://adguard.local:3000",
+    "icon": "adguard-home",
+    "featured": true,
+    "category": "dev"
   },
   {
     "id": "deepseek",

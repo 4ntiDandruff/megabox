@@ -1,5 +1,10 @@
 node_modules/
 decompiled/
+ferdium-src/
+megabox.db
+docs/superpowers/
 .superpowers/
 *.log
 *.db-journal
+/tmp/
+extensions/

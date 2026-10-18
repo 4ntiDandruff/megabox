@@ -56,11 +56,13 @@ function saveApp(db, app) {
     name: app.name,
     url: app.url,
     icon: app.icon || 'globe',
+    custom_icon: app.custom_icon || null,
     partition: app.partition || ('persist:' + app.id),
     partition_type: app.partition_type || (app.partition && app.partition.includes('workspace_shared') ? 'shared' : 'private'),
     order_index: app.order_index !== undefined ? app.order_index : data.apps.length,
     is_enabled: app.is_enabled !== undefined ? app.is_enabled : 1,
-    user_agent: app.user_agent || null
+    user_agent: app.user_agent || null,
+    proxy: app.proxy || ''
   };
   if (idx >= 0) {
     data.apps[idx] = cleanApp;

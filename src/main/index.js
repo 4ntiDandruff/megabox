@@ -180,6 +180,7 @@ app.whenReady().then(() => {
           name: s.name,
           url: s.url,
           icon: s.icon || 'globe',
+          custom_icon: s.custom_icon || null,
           partition: 'persist:' + s.id,
           order_index: s.order_index !== undefined ? s.order_index : idx,
           is_enabled: 1,
@@ -241,6 +242,46 @@ app.whenReady().then(() => {
   ipcMain.handle('extensions:toggle', async (_, { appId, extensionId, enabled }) => {
     console.log(`[Megabox IPC] Extension toggle: ${extensionId} for ${appId} -> ${enabled}`);
     return { success: true, appId, extensionId, enabled };
+  });
+
+
+async function cacheFaviconToDataUri(iconUrl) {
+  if (!iconUrl || typeof iconUrl !== 'string') return null;
+  if (iconUrl.startsWith('data:')) return iconUrl;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const resp = await fetch(iconUrl, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0 Megabox Favicon' }
+    });
+    clearTimeout(timeoutId);
+    if (!resp.ok) return null;
+    const ct = resp.headers.get('content-type') || 'image/png';
+    const arrayBuf = await resp.arrayBuffer();
+    const buf = Buffer.from(arrayBuf);
+    if (buf.length > 0 && buf.length <= 1500000) {
+      return 'data:' + ct + ';base64,' + buf.toString('base64');
+    }
+  } catch (err) {
+    console.warn('[FaviconCache] Fetch failed:', err.message);
+  }
+  return null;
+}
+
+  ipcMain.handle('apps:cache-favicon', async (_, { appId, iconUrl }) => {
+    const dataUri = await cacheFaviconToDataUri(iconUrl);
+    if (dataUri) {
+      const appItem = getApps(db).find(a => a.id === appId);
+      if (appItem && appItem.custom_icon !== dataUri) {
+        appItem.custom_icon = dataUri;
+        saveApp(db, appItem);
+        mainWindow.webContents.send('apps:updated', getApps(db));
+        triggerAutoSync();
+      }
+      return { success: true, dataUri };
+    }
+    return { success: false };
   });
 
   ipcMain.handle('apps:get', () => {
@@ -305,6 +346,7 @@ app.whenReady().then(() => {
           name: s.name,
           url: s.url,
           icon: s.icon || 'globe',
+          custom_icon: s.custom_icon || null,
           partition: 'persist:' + s.id,
           order_index: s.order_index !== undefined ? s.order_index : idx,
           is_enabled: 1,
@@ -357,6 +399,7 @@ app.whenReady().then(() => {
           name: s.name,
           url: s.url,
           icon: s.icon || 'globe',
+          custom_icon: s.custom_icon || null,
           partition: 'persist:' + s.id,
           order_index: s.order_index !== undefined ? s.order_index : idx,
           is_enabled: 1,

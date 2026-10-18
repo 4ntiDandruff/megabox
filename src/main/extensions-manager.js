@@ -7,28 +7,31 @@ class ExtensionsManager {
     this.extensionsDir = path.join(__dirname, '../../extensions');
     this.catalog = [
       {
-        id: 'dark-reader',
-        name: 'Dark Reader',
-        version: '4.9.96',
-        description: 'Dark mode for every website. Care your eyes, use dark theme for night and daily browsing.',
-        icon: 'assets/icons/chat.svg',
-        builtin: true
-      },
-      {
-        id: 'bitwarden',
-        name: 'Bitwarden Password Manager',
-        version: '2024.10.0',
-        description: 'Secure and free password manager for all of your devices.',
-        icon: 'assets/icons/bitwarden.svg',
-        builtin: true
+        id: 'simple-translate',
+        name: 'Simple Translate',
+        version: '3.1.0',
+        description: 'Terjemahkan teks terpilih seketika dengan tooltip melayang otomatis & pengaturan lengkap.',
+        icon: 'assets/icons/simple-translate.png',
+        builtin: true,
+        hasSettings: true
       },
       {
         id: 'ublock-origin',
         name: 'uBlock Origin',
         version: '1.60.0',
-        description: 'An efficient blocker. Easy on CPU and memory.',
-        icon: 'assets/icons/bell.svg',
-        builtin: true
+        description: 'Pemblokir iklan & pelacak efisien. Ringan beban RAM dan CPU.',
+        icon: 'assets/icons/shield.svg',
+        builtin: true,
+        hasSettings: false
+      },
+      {
+        id: 'dark-reader',
+        name: 'Dark Reader',
+        version: '4.9.96',
+        description: 'Mode gelap pintar untuk kenyamanan mata di setiap website.',
+        icon: 'assets/icons/theme-light-dark.svg',
+        builtin: true,
+        hasSettings: false
       }
     ];
   }
@@ -41,7 +44,11 @@ class ExtensionsManager {
     try {
       const extPath = path.join(this.extensionsDir, extensionId);
       if (fs.existsSync(extPath)) {
-        await ses.loadExtension(extPath, { allowFileAccess: true });
+        if (ses.extensions && typeof ses.extensions.loadExtension === 'function') {
+          await ses.extensions.loadExtension(extPath, { allowFileAccess: true });
+        } else if (typeof ses.loadExtension === 'function') {
+          await ses.loadExtension(extPath, { allowFileAccess: true });
+        }
         console.log(`[Megabox Extensions] Loaded ${extensionId} into session`);
         return { success: true };
       }
