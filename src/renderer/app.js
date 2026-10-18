@@ -584,6 +584,8 @@
     const existing = apps.find(a => a.name.toLowerCase() === name.toLowerCase());
     const id = existing ? existing.id : (icon !== 'custom' && !apps.some(a => a.id === icon) ? icon : ('app_' + Date.now()));
     const proxy = inputServiceProxy ? inputServiceProxy.value.trim() : '';
+    const partType = inputServicePartition ? inputServicePartition.value : 'private';
+    const partitionStr = partType === 'shared' ? 'persist:workspace_shared' : ('persist:' + id);
 
     const newApp = {
       id: id,
@@ -591,7 +593,8 @@
       url: url,
       icon: icon,
       proxy: proxy,
-      partition: 'persist:' + id,
+      partition_type: partType,
+      partition: partitionStr,
       order_index: existing ? existing.order_index : apps.length,
       is_enabled: 1
     };
@@ -632,6 +635,7 @@
   const wcActiveUrl = document.getElementById('wc-active-url');
   const wcOpenExternal = document.getElementById('wc-open-external');
   const inputServiceProxy = document.getElementById('input-service-proxy');
+  const inputServicePartition = document.getElementById('input-service-partition');
 
   let quickSwitchIndex = 0;
   let filteredQuickApps = [];
