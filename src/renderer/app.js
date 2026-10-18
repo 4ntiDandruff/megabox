@@ -652,13 +652,42 @@
     quickswitchInput.blur();
   }
 
+  // System command palette actions
+  const systemCommands = [
+    { id: 'cmd:catalog', name: 'Tambah Aplikasi (Buka Katalog)', subtitle: 'Jelajahi dan pasang layanan baru', icon: 'assets/icons/chat.svg', action: () => openCatalog() },
+    { id: 'cmd:settings', name: 'Pengaturan & Profil Akun', subtitle: 'Konfigurasi sinkronisasi cloud dan avatar', icon: 'assets/icons/settings.svg', action: () => openSettingsModal() },
+    { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', icon: 'assets/icons/reload.svg', action: () => { if (wcReload) wcReload.click(); } },
+    { id: 'cmd:lock', name: 'Kunci Ruang Kerja (PIN Lock)', subtitle: 'Amankan workstation Megabox seketika', icon: 'assets/icons/lock.svg', action: () => lockWorkspace() }
+  ];
+
   function renderQuickSwitchList() {
     const q = quickswitchInput.value.toLowerCase().trim();
-    filteredQuickApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q));
+    
+    // Match apps
+    const matchedApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => ({
+      type: 'app',
+      id: a.id,
+      name: a.name,
+      subtitle: a.url,
+      icon: a.icon !== 'custom' ? `assets/icons/${a.icon}.svg` : 'assets/icons/chat.svg',
+      action: () => selectApp(a.id)
+    }));
+
+    // Match system commands
+    const matchedCommands = systemCommands.filter(c => c.name.toLowerCase().includes(q) || c.subtitle.toLowerCase().includes(q)).map(c => ({
+      type: 'cmd',
+      id: c.id,
+      name: c.name,
+      subtitle: c.subtitle,
+      icon: c.icon,
+      action: c.action
+    }));
+
+    filteredQuickApps = [...matchedApps, ...matchedCommands];
 
     quickswitchList.innerHTML = '';
     if (filteredQuickApps.length === 0) {
-      quickswitchList.innerHTML = '<div style="padding:14px;text-align:center;color:#888;font-size:13px;">No matching services</div>';
+      quickswitchList.innerHTML = '<div style="padding:14px;text-align:center;color:#888;font-size:13px;">Tidak ada layanan atau perintah yang cocok</div>';
       return;
     }
 
@@ -669,21 +698,23 @@
       const item = document.createElement('div');
       item.className = 'quickswitch-item' + (idx === quickSwitchIndex ? ' is-selected' : '');
       
-      const iconSrc = app.icon !== 'custom' 
-        ? `assets/icons/${app.icon}.svg` 
-        : `assets/icons/chat.svg`;
+      const iconSrc = app.icon;
+      const isCmd = app.type === 'cmd';
 
       item.innerHTML = `
         <img src="${iconSrc}" onerror="this.src='assets/icons/chat.svg'">
-        <div style="flex:1;">
-          <div style="font-weight:600;font-size:14px;">${app.name}</div>
-          <div style="font-size:11px;opacity:0.6;">${app.url}</div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;">
+            <span>${app.name}</span>
+            ${isCmd ? '<span style="font-size:10px;background:rgba(114,102,240,0.25);color:#a5b4fc;padding:1px 5px;border-radius:3px;">Perintah</span>' : ''}
+          </div>
+          <div style="font-size:11px;opacity:0.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${app.subtitle}</div>
         </div>
-        ${app.id === activeAppId ? '<span style="font-size:11px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">Active</span>' : ''}
+        ${app.id === activeAppId ? '<span style="font-size:11px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">Aktif</span>' : ''}
       `;
 
       item.onclick = () => {
-        selectApp(app.id);
+        if (app.action) app.action();
         closeQuickSwitcher();
       };
 
@@ -714,7 +745,9 @@
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (filteredQuickApps[quickSwitchIndex]) {
-        selectApp(filteredQuickApps[quickSwitchIndex].id);
+        if (filteredQuickApps[quickSwitchIndex].action) {
+          filteredQuickApps[quickSwitchIndex].action();
+        }
         closeQuickSwitcher();
       }
     } else if (e.key === 'Escape') {
