@@ -815,6 +815,7 @@
   // --- Additional Modules for Megabox: QuickSwitcher, WebControls, Per-Service Proxy, and Master PIN Lock ---
 
   // DOM Elements for New Features
+  const btnExtensions = document.getElementById('btn-extensions');
   const btnQuickSwitch = document.getElementById('btn-quickswitch');
   const btnLock = document.getElementById('btn-lock');
   const quickswitchModal = document.getElementById('quickswitch-modal');
@@ -959,6 +960,13 @@
     });
   }
 
+  if (btnExtensions) {
+    btnExtensions.onclick = () => {
+      if (typeof toggleExtensionDrawer === 'function') {
+        toggleExtensionDrawer();
+      }
+    };
+  }
   if (btnQuickSwitch) btnQuickSwitch.onclick = openQuickSwitcher;
   quickswitchModal.onclick = (e) => {
     if (e.target === quickswitchModal) closeQuickSwitcher();
