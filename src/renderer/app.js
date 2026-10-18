@@ -1370,10 +1370,10 @@
         if (syncAuthBox) syncAuthBox.style.display = 'none';
         if (syncConnectedBox) syncConnectedBox.style.display = 'flex';
         if (syncUserEmail) syncUserEmail.textContent = status.user.email;
-        if (syncTierBadge) syncTierBadge.textContent = (status.user.tier || 'Free') + ' Plan';
+        if (syncTierBadge) syncTierBadge.textContent = (status.user.tier || 'Gratis').toUpperCase();
         if (syncTimeInfo) {
           const syncDate = status.last_sync ? new Date(status.last_sync).toLocaleTimeString() : 'Baru saja';
-          syncTimeInfo.textContent = 'Sinkronisasi terakhir: ' + syncDate + ' (' + (status.device_name || 'PC Ini') + ')';
+          syncTimeInfo.textContent = 'Sinkron terakhir: ' + syncDate + ' (' + (status.device_name || 'PC Ini') + ')';
         }
       } else {
         updateProfileAvatar(null);
@@ -1555,10 +1555,10 @@
 
   // Built-in Chromium extensions catalog for Megabox (Valid verified local SVGs)
   const extensionCatalog = [
-    { id: 'dark-reader', name: 'Dark Reader', desc: 'Invert colors & eye protection dark mode', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
-    { id: 'bitwarden', name: 'Bitwarden', desc: 'Secure open-source password manager', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Efficient content blocker & anti-tracker', icon: 'assets/icons/shield.svg', enabledByDefault: true },
-    { id: 'translate', name: 'Google Translate', desc: 'One-click page and message translation', icon: 'assets/icons/google-translate.svg', enabledByDefault: false }
+    { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
+    { id: 'bitwarden', name: 'Bitwarden', desc: 'Pengelola sandi terenkripsi', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true },
+    { id: 'translate', name: 'Google Translate', desc: 'Terjemahan instan web', icon: 'assets/icons/google-translate.svg', enabledByDefault: false }
   ];
 
   function openExtensionDrawer() {
@@ -1566,8 +1566,8 @@
     const currentApp = apps.find(a => a.id === activeAppId);
     const appName = currentApp ? currentApp.name : 'Active App';
 
-    if (drawerTitle) drawerTitle.textContent = `Extensions for "${appName}"`;
-    if (drawerSubtitle) drawerSubtitle.textContent = `Partition: ${currentApp ? currentApp.partition || 'Private' : 'Default'}`;
+    if (drawerTitle) drawerTitle.textContent = `Ekstensi "${appName}"`;
+    if (drawerSubtitle) drawerSubtitle.textContent = `Partisi: ${currentApp ? currentApp.partition || 'Pribadi' : 'Bawaan'}`;
 
     renderDrawerExtensions(currentApp);
 
