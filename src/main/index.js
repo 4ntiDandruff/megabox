@@ -1,10 +1,56 @@
-const { app, BrowserWindow, ipcMain, session } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp } = require('./db.js');
-const { setupHeaderInterceptors, CHROME_UA } = require('./extensions.js');
+const { setupHeaderInterceptors } = require('./extensions.js');
 
 let mainWindow = null;
+let tray = null;
 let db = null;
+let isQuitting = false;
+
+function createTray() {
+  const iconPath = path.join(__dirname, '../renderer/assets/tray/tray_icon.png');
+  let trayIcon = nativeImage.createFromPath(iconPath);
+  
+  tray = new Tray(trayIcon);
+  tray.setToolTip('Megabox - Zero Bloat Multi-App Workspace');
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Open Megabox',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.show();
+          mainWindow.focus();
+        }
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Reload Active Service',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.webContents.send('action:reload');
+        }
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit Megabox',
+      click: () => {
+        isQuitting = true;
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setContextMenu(contextMenu);
+  tray.on('click', () => {
+    if (mainWindow) {
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    }
+  });
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -13,7 +59,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: 'Megabox',
-    frame: true,
+    icon: path.join(__dirname, '../renderer/assets/tray/tray_icon.png'),
     backgroundColor: '#0F172A',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
@@ -23,39 +69,34 @@ function createWindow() {
     }
   });
 
-  // Setup interceptors for default session
+  // Intercept header & user-agent
   setupHeaderInterceptors(session.defaultSession);
-
-  // Setup interceptor for any custom webview partition session
   app.on('session-created', (ses) => {
     setupHeaderInterceptors(ses);
   });
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
 
-  if (process.argv.includes('--test-exit')) {
-    setTimeout(() => {
-      console.log('Megabox test-exit flag received: shutting down cleanly.');
-      app.exit(0);
-    }, 2000);
-  }
+  // Close to Tray behavior (Identical to Rambox)
+  mainWindow.on('close', (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+      return false;
+    }
+  });
 }
 
 app.whenReady().then(() => {
   db = initDatabase();
 
-  // IPC Handlers
-  ipcMain.handle('apps:get', () => {
-    return getApps(db);
-  });
-
+  ipcMain.handle('apps:get', () => getApps(db));
   ipcMain.handle('apps:save', (_, appData) => {
     saveApp(db, appData);
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
     return true;
   });
-
   ipcMain.handle('apps:delete', (_, id) => {
     deleteApp(db, id);
     const updated = getApps(db);
@@ -63,20 +104,14 @@ app.whenReady().then(() => {
     return true;
   });
 
-  ipcMain.on('window:minimize', () => mainWindow && mainWindow.minimize());
-  ipcMain.on('window:maximize', () => {
-    if (!mainWindow) return;
-    mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
-  });
-  ipcMain.on('window:close', () => mainWindow && mainWindow.close());
-
   createWindow();
+  createTray();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (mainWindow) mainWindow.show();
   });
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+app.on('before-quit', () => {
+  isQuitting = true;
 });

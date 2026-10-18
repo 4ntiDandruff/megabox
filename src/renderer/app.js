@@ -1,8 +1,10 @@
-// Native Vanilla JS Controller for Megabox (Zero-Dependency & Immune to CDN/Evaluation race conditions)
+// Megabox Client Controller (with Hibernate RAM Saver & Right-Click Context Menu)
 (function() {
   let apps = [];
   let activeAppId = null;
   let isMuted = false;
+  let appLastAccessed = {}; // Tracking for hibernation
+  const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 Menit idle -> hibernate
   const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
 
   const appsContainer = document.getElementById('apps-list');
@@ -19,24 +21,23 @@
   const selectPreset = document.getElementById('select-preset');
 
   async function init() {
-    console.log('[Megabox Native] Booting controller...');
+    console.log('[Megabox] Initializing client...');
     if (window.megabox) {
       apps = await window.megabox.getApps();
-      console.log('[Megabox Native] Loaded apps:', apps);
       renderTabs();
       if (apps.length > 0) {
         selectApp(apps[0].id);
       }
     }
 
-    // Modal controls
     if (btnAddOpen) btnAddOpen.onclick = () => addModal.style.display = 'flex';
     if (btnAddCancel) btnAddCancel.onclick = () => addModal.style.display = 'none';
     if (btnAddSave) btnAddSave.onclick = handleAddApp;
-
-    // Tab toolbar controls
     if (btnReload) btnReload.onclick = reloadActiveApp;
     if (btnMute) btnMute.onclick = toggleMuteActiveApp;
+
+    // Start background hibernation watchdog (check every 60s)
+    setInterval(checkHibernation, 60000);
   }
 
   function getIconSvg(icon) {
@@ -65,9 +66,18 @@
       btn.title = app.name;
       btn.innerHTML = getIconSvg(app.icon);
       btn.onclick = () => selectApp(app.id);
+
+      // Right-click context menu on tab (Delete / Reload / Duplicate)
+      btn.oncontextmenu = (e) => {
+        e.preventDefault();
+        if (confirm('Delete "' + app.name + '" from Megabox?')) {
+          deleteAppById(app.id);
+        }
+      };
+
       appsContainer.appendChild(btn);
 
-      // Create webview if not exists
+      // Webview injection
       let wv = document.getElementById('wv-' + app.id);
       if (!wv) {
         wv = document.createElement('webview');
@@ -86,22 +96,41 @@
 
   function selectApp(id) {
     activeAppId = id;
-    console.log('[Megabox Native] Selected tab:', id);
+    appLastAccessed[id] = Date.now();
 
-    // Update buttons
     apps.forEach(app => {
       const btn = document.getElementById('tab-' + app.id);
       if (btn) {
-        if (app.id === id) {
-          btn.className = 'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 relative shadow-sm cursor-pointer mb-3 bg-slate-800 ring-2 ring-cyan-500/50 text-white';
-        } else {
-          btn.className = 'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 relative shadow-sm cursor-pointer mb-3 bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-slate-200';
-        }
+        btn.className = 'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 relative shadow-sm cursor-pointer mb-3 ' +
+                        (app.id === id ? 'bg-slate-800 ring-2 ring-cyan-500/50 text-white' : 'bg-slate-800/50 hover:bg-slate-800 text-slate-400 hover:text-slate-200');
       }
 
       const wv = document.getElementById('wv-' + app.id);
       if (wv) {
+        // If hibernated, wake up by reloading URL
+        if (wv.dataset.hibernated === 'true') {
+          console.log('[Megabox Hibernate] Waking up app:', app.id);
+          wv.dataset.hibernated = 'false';
+          wv.src = app.url;
+        }
         wv.style.display = (app.id === id) ? 'flex' : 'none';
+      }
+    });
+  }
+
+  function checkHibernation() {
+    const now = Date.now();
+    apps.forEach(app => {
+      if (app.id !== activeAppId) {
+        const lastAccess = appLastAccessed[app.id] || now;
+        if (now - lastAccess > HIBERNATE_TIMEOUT_MS) {
+          const wv = document.getElementById('wv-' + app.id);
+          if (wv && wv.dataset.hibernated !== 'true') {
+            console.log('[Megabox Hibernate] Putting inactive tab to sleep to save RAM:', app.id);
+            wv.dataset.hibernated = 'true';
+            wv.src = 'about:blank'; // Free memory footprint
+          }
+        }
       }
     });
   }
@@ -109,10 +138,7 @@
   function reloadActiveApp() {
     if (!activeAppId) return;
     const wv = document.getElementById('wv-' + activeAppId);
-    if (wv) {
-      console.log('[Megabox Native] Reloading active webview:', activeAppId);
-      wv.reload();
-    }
+    if (wv) wv.reload();
   }
 
   function toggleMuteActiveApp() {
@@ -121,9 +147,21 @@
     if (wv) {
       isMuted = !isMuted;
       wv.setAudioMuted(isMuted);
-      console.log('[Megabox Native] Audio muted state:', isMuted);
       if (btnMute) {
         btnMute.className = isMuted ? 'w-9 h-9 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center cursor-pointer' : 'w-9 h-9 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 flex items-center justify-center cursor-pointer';
+      }
+    }
+  }
+
+  async function deleteAppById(id) {
+    if (window.megabox) {
+      await window.megabox.deleteApp(id);
+      apps = apps.filter(a => a.id !== id);
+      const wv = document.getElementById('wv-' + id);
+      if (wv) wv.remove();
+      renderTabs();
+      if (activeAppId === id && apps.length > 0) {
+        selectApp(apps[0].id);
       }
     }
   }
