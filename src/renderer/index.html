@@ -622,6 +622,167 @@
       color: var(--text-muted);
       letter-spacing: 0.5px;
     }
+  
+    /* --- Absorbed from Ferdium webControls & QuickSwitch --- */
+    .web-controls-bar {
+      height: 38px;
+      background-color: #1a1a1a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .web-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .wc-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .wc-btn:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .wc-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .wc-url-badge {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: #252526;
+      padding: 3px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main-workspace {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Quick Switcher Modal */
+    .quickswitch-box {
+      width: 100%;
+      max-width: 520px;
+      background-color: #202020;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quickswitch-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 18px;
+      font-size: 15px;
+      background: #282828;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      outline: none;
+    }
+
+    .quickswitch-list {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .quickswitch-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #e2e8f0;
+      transition: background-color 0.1s;
+    }
+
+    .quickswitch-item:hover, .quickswitch-item.is-selected {
+      background-color: var(--brand-primary);
+      color: #ffffff;
+    }
+
+    .quickswitch-item img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    /* Privacy Lock Screen */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .lock-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 32px;
+      background: #222222;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.8);
+    }
+
+    .lock-input {
+      letter-spacing: 6px;
+      font-size: 24px;
+      text-align: center;
+      width: 200px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: #181818;
+      color: #ffffff;
+      outline: none;
+    }
+
   </style>
 </head>
 <body>
@@ -653,6 +814,21 @@
 
     <!-- Bottom Actions -->
     <div class="sidebar-bottom">
+      
+      <button id="btn-quickswitch" class="sidebar-btn" title="Quick Switch Service (Ctrl+K / Ctrl+P)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+
+      <button id="btn-lock" class="sidebar-btn" title="Lock Megabox (Ctrl+L)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0110 0v4"></path>
+        </svg>
+      </button>
+
       <button id="btn-reload" class="sidebar-btn" title="Reload Active Tab (Ctrl+R)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -672,7 +848,39 @@
   </aside>
 
   <!-- Webview Host Area (Clean White Background for Web Pages) -->
-  <main id="webviews-container" class="webviews-container"></main>
+  
+  <!-- Main Application Workspace -->
+  <div class="main-workspace">
+    
+    <!-- Floating Web Controls Bar (Ferdium webControls) -->
+    <header class="web-controls-bar">
+      <div class="web-controls-group">
+        <button id="wc-back" class="wc-btn" title="Back (Alt+Left)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button id="wc-forward" class="wc-btn" title="Forward (Alt+Right)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <button id="wc-reload" class="wc-btn" title="Reload Service (Ctrl+R)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </button>
+        <button id="wc-home" class="wc-btn" title="Service Home URL">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </button>
+        <span id="wc-active-url" class="wc-url-badge">Megabox Ready</span>
+      </div>
+
+      <div class="web-controls-group">
+        <button id="wc-open-external" class="wc-btn" title="Open in System Browser (Chrome / Firefox)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Webview Host Area -->
+    <main id="webviews-container" class="webviews-container"></main>
+  </div>
+
 
   <!-- Ferdium Service Store / Catalog Modal -->
   <div id="catalog-modal" class="modal-overlay">
@@ -724,6 +932,12 @@
         <input type="url" id="input-service-url" class="form-input" placeholder="https://web.whatsapp.com">
       </div>
 
+      
+      <div class="form-group">
+        <label class="form-label" for="input-service-proxy">Custom Proxy (Optional: socks5://127.0.0.1:1080 or http://ip:port)</label>
+        <input type="text" id="input-service-proxy" class="form-input" placeholder="Direct connection (leave empty) or socks5://127.0.0.1:1080">
+      </div>
+
       <input type="hidden" id="input-service-icon" value="custom">
 
       <div class="modal-actions">
@@ -754,5 +968,29 @@
   </div>
 
   <script src="app.js"></script>
+
+  <!-- Quick Switcher Modal (Ctrl+K / Ctrl+P) -->
+  <div id="quickswitch-modal" class="modal-overlay">
+    <div class="quickswitch-box">
+      <input type="text" id="quickswitch-input" class="quickswitch-input" placeholder="Quick switch service (type name or use ↑ ↓ Enter)...">
+      <div id="quickswitch-list" class="quickswitch-list"></div>
+    </div>
+  </div>
+
+  <!-- Privacy PIN Lock Screen (Ctrl+L) -->
+  <div id="lock-screen" class="lock-overlay">
+    <div class="lock-card">
+      <div style="width:50px;height:50px;border-radius:50%;background:rgba(114,102,240,0.15);display:flex;align-items:center;justify-content:center;color:#7266f0;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+      </div>
+      <div style="text-align:center;">
+        <h3 style="margin:0 0 4px 0;font-size:18px;color:#fff;">Megabox Locked</h3>
+        <p style="margin:0;font-size:12px;color:#888;">Enter 4-digit PIN to unlock workstation</p>
+      </div>
+      <input type="password" id="lock-pin-input" class="lock-input" maxlength="4" placeholder="••••" autofocus>
+      <div id="lock-error" style="color:#f43f5e;font-size:12px;display:none;">Incorrect PIN</div>
+    </div>
+  </div>
+
 </body>
 </html>

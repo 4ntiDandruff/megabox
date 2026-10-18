@@ -50,7 +50,8 @@
   async function init() {
     setupEventListeners();
     await loadRecipesCatalog();
-    await loadApps();
+    await setupWebControls();
+    loadApps();
     setInterval(checkHibernation, 60000);
   }
 
@@ -224,11 +225,12 @@
     });
   }
 
-  function openConfigureForm(name, url, icon) {
-    formModalTitle.textContent = `Add ${name}`;
+  function openConfigureForm(name, url, icon, proxy = '') {
+    formModalTitle.textContent = `Configure ${name}`;
     inputServiceName.value = name;
     inputServiceUrl.value = url;
     inputServiceIcon.value = icon;
+    if (inputServiceProxy) inputServiceProxy.value = proxy || '';
     configureModal.style.display = 'flex';
     setTimeout(() => inputServiceName.focus(), 100);
   }
@@ -307,6 +309,17 @@
             console.log('[Megabox Notification]', app.name, event.args[0]);
           }
         });
+
+        // WebControls real-time URL updates
+        const updateCurrentUrl = () => {
+          if (activeAppId === app.id) {
+            try {
+              updateWebControlsUrl(wv.getURL());
+            } catch (e) {}
+          }
+        };
+        wv.addEventListener('did-navigate', updateCurrentUrl);
+        wv.addEventListener('did-navigate-in-page', updateCurrentUrl);
 
         webviewsContainer.appendChild(wv);
       }
@@ -486,26 +499,235 @@
       url = url.replace('{teamId}', team.trim());
     }
 
-    const id = icon !== 'custom' && !apps.some(a => a.id === icon) ? icon : ('app_' + Date.now());
+    const existing = apps.find(a => a.name.toLowerCase() === name.toLowerCase());
+    const id = existing ? existing.id : (icon !== 'custom' && !apps.some(a => a.id === icon) ? icon : ('app_' + Date.now()));
+    const proxy = inputServiceProxy ? inputServiceProxy.value.trim() : '';
+
     const newApp = {
       id: id,
       name: name,
       url: url,
       icon: icon,
+      proxy: proxy,
       partition: 'persist:' + id,
-      order_index: apps.length,
+      order_index: existing ? existing.order_index : apps.length,
       is_enabled: 1
     };
 
     if (window.megabox) {
       await window.megabox.saveApp(newApp);
-      apps.push(newApp);
+      if (existing) {
+        Object.assign(existing, newApp);
+      } else {
+        apps.push(newApp);
+      }
       renderTabs();
       selectApp(id);
     }
 
     configureModal.style.display = 'none';
   }
+
+  // --- Additional Modules for Megabox: QuickSwitcher, WebControls, Per-Service Proxy, and Master PIN Lock ---
+
+  // DOM Elements for New Features
+  const btnQuickSwitch = document.getElementById('btn-quickswitch');
+  const btnLock = document.getElementById('btn-lock');
+  const quickswitchModal = document.getElementById('quickswitch-modal');
+  const quickswitchInput = document.getElementById('quickswitch-input');
+  const quickswitchList = document.getElementById('quickswitch-list');
+
+  const lockScreen = document.getElementById('lock-screen');
+  const lockPinInput = document.getElementById('lock-pin-input');
+  const lockError = document.getElementById('lock-error');
+
+  const wcBack = document.getElementById('wc-back');
+  const wcForward = document.getElementById('wc-forward');
+  const wcReload = document.getElementById('wc-reload');
+  const wcHome = document.getElementById('wc-home');
+  const wcActiveUrl = document.getElementById('wc-active-url');
+  const wcOpenExternal = document.getElementById('wc-open-external');
+  const inputServiceProxy = document.getElementById('input-service-proxy');
+
+  let quickSwitchIndex = 0;
+  let filteredQuickApps = [];
+  const DEFAULT_PIN = "1234"; // Default service PIN (can be customized)
+
+  // 1. Web Controls Logic (Ferdium webControls)
+  function setupWebControls() {
+    wcBack.onclick = () => {
+      const wv = document.getElementById('wv-' + activeAppId);
+      if (wv && wv.canGoBack()) wv.goBack();
+    };
+
+    wcForward.onclick = () => {
+      const wv = document.getElementById('wv-' + activeAppId);
+      if (wv && wv.canGoForward()) wv.goForward();
+    };
+
+    wcReload.onclick = () => {
+      const wv = document.getElementById('wv-' + activeAppId);
+      if (wv) wv.reload();
+    };
+
+    wcHome.onclick = () => {
+      const current = apps.find(a => a.id === activeAppId);
+      const wv = document.getElementById('wv-' + activeAppId);
+      if (current && wv) {
+        wv.loadURL(current.url);
+      }
+    };
+
+    wcOpenExternal.onclick = () => {
+      const wv = document.getElementById('wv-' + activeAppId);
+      const current = apps.find(a => a.id === activeAppId);
+      const targetUrl = (wv && wv.getURL && wv.getURL()) ? wv.getURL() : (current ? current.url : '');
+      if (targetUrl && window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal(targetUrl);
+      }
+    };
+  }
+
+  function updateWebControlsUrl(url) {
+    if (wcActiveUrl) {
+      try {
+        const parsed = new URL(url);
+        wcActiveUrl.textContent = parsed.hostname + (parsed.pathname !== '/' ? parsed.pathname : '');
+      } catch (e) {
+        wcActiveUrl.textContent = url || 'Megabox Ready';
+      }
+    }
+  }
+
+  // 2. Quick Switcher Logic (Ferdium quickSwitch & Rambox quickSwitcher)
+  function openQuickSwitcher() {
+    quickswitchModal.style.display = 'flex';
+    quickswitchInput.value = '';
+    quickSwitchIndex = 0;
+    renderQuickSwitchList();
+    setTimeout(() => quickswitchInput.focus(), 20);
+  }
+
+  function closeQuickSwitcher() {
+    quickswitchModal.style.display = 'none';
+    quickswitchInput.blur();
+  }
+
+  function renderQuickSwitchList() {
+    const q = quickswitchInput.value.toLowerCase().trim();
+    filteredQuickApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q));
+
+    quickswitchList.innerHTML = '';
+    if (filteredQuickApps.length === 0) {
+      quickswitchList.innerHTML = '<div style="padding:14px;text-align:center;color:#888;font-size:13px;">No matching services</div>';
+      return;
+    }
+
+    if (quickSwitchIndex >= filteredQuickApps.length) quickSwitchIndex = 0;
+    if (quickSwitchIndex < 0) quickSwitchIndex = filteredQuickApps.length - 1;
+
+    filteredQuickApps.forEach((app, idx) => {
+      const item = document.createElement('div');
+      item.className = 'quickswitch-item' + (idx === quickSwitchIndex ? ' is-selected' : '');
+      
+      const iconSrc = app.icon !== 'custom' 
+        ? `assets/icons/${app.icon}.svg` 
+        : `assets/icons/chat.svg`;
+
+      item.innerHTML = `
+        <img src="${iconSrc}" onerror="this.src='assets/icons/chat.svg'">
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14px;">${app.name}</div>
+          <div style="font-size:11px;opacity:0.6;">${app.url}</div>
+        </div>
+        ${app.id === activeAppId ? '<span style="font-size:11px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">Active</span>' : ''}
+      `;
+
+      item.onclick = () => {
+        selectApp(app.id);
+        closeQuickSwitcher();
+      };
+
+      quickswitchList.appendChild(item);
+    });
+
+    const activeEl = quickswitchList.children[quickSwitchIndex];
+    if (activeEl && activeEl.scrollIntoViewIfNeeded) {
+      activeEl.scrollIntoViewIfNeeded(false);
+    }
+  }
+
+  quickswitchInput.addEventListener('input', () => {
+    quickSwitchIndex = 0;
+    renderQuickSwitchList();
+  });
+
+  quickswitchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      quickSwitchIndex++;
+      renderQuickSwitchList();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      quickSwitchIndex--;
+      renderQuickSwitchList();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredQuickApps[quickSwitchIndex]) {
+        selectApp(filteredQuickApps[quickSwitchIndex].id);
+        closeQuickSwitcher();
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      closeQuickSwitcher();
+    }
+  });
+
+  btnQuickSwitch.onclick = openQuickSwitcher;
+  quickswitchModal.onclick = (e) => {
+    if (e.target === quickswitchModal) closeQuickSwitcher();
+  };
+
+  // 3. Privacy PIN Lock Screen Logic (trusted-subnet-auth-skill & Rambox lock)
+  function lockWorkspace() {
+    lockScreen.style.display = 'flex';
+    lockPinInput.value = '';
+    lockError.style.display = 'none';
+    setTimeout(() => lockPinInput.focus(), 20);
+  }
+
+  function unlockWorkspace() {
+    const entered = lockPinInput.value.trim();
+    if (entered === DEFAULT_PIN) {
+      lockScreen.style.display = 'none';
+      lockPinInput.value = '';
+      lockError.style.display = 'none';
+    } else {
+      lockError.style.display = 'block';
+      lockPinInput.value = '';
+      lockPinInput.focus();
+    }
+  }
+
+  btnLock.onclick = lockWorkspace;
+  lockPinInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') unlockWorkspace();
+  });
+
+  // Global Keyboard Shortcuts
+  window.addEventListener('keydown', (e) => {
+    // Ctrl+K or Ctrl+P -> Quick Switcher
+    if (e.ctrlKey && (e.key === 'k' || e.key === 'p')) {
+      e.preventDefault();
+      quickswitchModal.style.display === 'flex' ? closeQuickSwitcher() : openQuickSwitcher();
+    }
+    // Ctrl+L -> Lock Workspace
+    if (e.ctrlKey && e.key === 'l') {
+      e.preventDefault();
+      lockWorkspace();
+    }
+  });
+
 
   window.addEventListener('DOMContentLoaded', init);
 })();

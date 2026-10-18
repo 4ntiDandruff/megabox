@@ -1,9 +1,11 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, shell } = require('electron');
 
 contextBridge.exposeInMainWorld('megabox', {
   getApps: () => ipcRenderer.invoke('apps:get'),
   saveApp: (app) => ipcRenderer.invoke('apps:save', app),
   deleteApp: (id) => ipcRenderer.invoke('apps:delete', id),
+  setServiceProxy: (serviceId, proxyRules) => ipcRenderer.invoke('service:set-proxy', { serviceId, proxyRules }),
+  openExternal: (url) => shell.openExternal(url),
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   minimizeWindow: () => ipcRenderer.send('window:minimize'),

@@ -103,6 +103,19 @@ app.whenReady().then(() => {
 
   ipcMain.handle('apps:save', (_, appData) => {
     saveApp(db, appData);
+    // If proxy configured, apply immediately to this service's partition
+    if (appData.id && appData.proxy) {
+      try {
+        const ses = session.fromPartition(`persist:service_${appData.id}`);
+        ses.setProxy({ proxyRules: appData.proxy }).then(() => {
+          console.log(`[Proxy] Applied proxy ${appData.proxy} to service ${appData.id}`);
+        }).catch(err => {
+          console.error(`[Proxy Error] Failed to set proxy for ${appData.id}:`, err);
+        });
+      } catch (e) {
+        console.error('[Proxy Error]', e);
+      }
+    }
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
     return true;
@@ -113,6 +126,18 @@ app.whenReady().then(() => {
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
     return true;
+  });
+
+  ipcMain.handle('service:set-proxy', async (_, { serviceId, proxyRules }) => {
+    try {
+      const ses = session.fromPartition(`persist:service_${serviceId}`);
+      await ses.setProxy({ proxyRules: proxyRules || '' });
+      console.log(`[Proxy] Dynamic proxy update for ${serviceId}: ${proxyRules || 'DIRECT'}`);
+      return { success: true };
+    } catch (err) {
+      console.error(`[Proxy Error] Dynamic setProxy failed:`, err);
+      return { success: false, error: err.message };
+    }
   });
 
   createWindow();
