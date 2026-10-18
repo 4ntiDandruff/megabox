@@ -1,15 +1,23 @@
 {
   "name": "megabox",
   "version": "1.0.0",
-  "description": "Zero-bloat multi-app workspace reverse-engineered from Rambox",
+  "description": "Zero-bloat multi-app workspace: Rambox Pro capabilities without subscription, rock-solid stability on KDE Wayland without Ferdium bugs",
   "main": "src/main/index.js",
   "scripts": {
-    "start": "electron .",
+    "start": "bash megabox-launcher.sh",
     "test": "node tests/test_db.js"
   },
-  "dependencies": {
-    "better-sqlite3": "^12.6.2"
-  },
+  "keywords": [
+    "workspace",
+    "rambox-alternative",
+    "ferdium-alternative",
+    "wayland-native",
+    "kde-plasma",
+    "zero-bloat"
+  ],
+  "author": "Hizam Nahari",
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "electron": "^33.2.0"
   }
