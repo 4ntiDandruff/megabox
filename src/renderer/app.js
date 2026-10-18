@@ -1007,6 +1007,13 @@
       e.preventDefault();
       quickswitchModal.style.display === 'flex' ? closeQuickSwitcher() : openQuickSwitcher();
     }
+    // Escape -> Close Extension Drawer if open
+    if (e.key === 'Escape') {
+      if (extensionDrawer && extensionDrawer.classList.contains('is-open')) {
+        closeExtensionDrawer();
+        return;
+      }
+    }
     // Ctrl+L -> Lock Workspace
     if (e.ctrlKey && e.key === 'l') {
       e.preventDefault();
@@ -1381,4 +1388,106 @@
   }
 
   window.addEventListener('DOMContentLoaded', init);
+
+  // --- Contextual Right Extension Drawer Controller ---
+  const extensionDrawer = document.getElementById('extension-drawer');
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const btnDrawerClose = document.getElementById('btn-drawer-close');
+  const drawerTitle = document.getElementById('drawer-title');
+  const drawerSubtitle = document.getElementById('drawer-subtitle');
+  const drawerExtensionList = document.getElementById('drawer-extension-list');
+
+  // Built-in Chromium extensions catalog for Megabox
+  const extensionCatalog = [
+    { id: 'dark-reader', name: 'Dark Reader', desc: 'Invert colors & eye protection dark mode', icon: 'assets/icons/chat.svg', enabledByDefault: false },
+    { id: 'bitwarden', name: 'Bitwarden', desc: 'Secure open-source password manager', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Efficient content blocker & anti-tracker', icon: 'assets/icons/bell.svg', enabledByDefault: true },
+    { id: 'translate', name: 'Google Translate', desc: 'One-click page and message translation', icon: 'assets/icons/globe.svg', enabledByDefault: false }
+  ];
+
+  function openExtensionDrawer() {
+    if (!extensionDrawer) return;
+    const currentApp = apps.find(a => a.id === activeAppId);
+    const appName = currentApp ? currentApp.name : 'Active App';
+
+    if (drawerTitle) drawerTitle.textContent = `Extensions for "${appName}"`;
+    if (drawerSubtitle) drawerSubtitle.textContent = `Partition: ${currentApp ? currentApp.partition || 'Private' : 'Default'}`;
+
+    renderDrawerExtensions(currentApp);
+
+    if (drawerOverlay) drawerOverlay.classList.add('is-open');
+    extensionDrawer.classList.add('is-open');
+  }
+
+  function closeExtensionDrawer() {
+    if (drawerOverlay) drawerOverlay.classList.remove('is-open');
+    if (extensionDrawer) extensionDrawer.classList.remove('is-open');
+  }
+
+  function toggleExtensionDrawer() {
+    if (extensionDrawer && extensionDrawer.classList.contains('is-open')) {
+      closeExtensionDrawer();
+    } else {
+      openExtensionDrawer();
+    }
+  }
+
+  function renderDrawerExtensions(app) {
+    if (!drawerExtensionList) return;
+    drawerExtensionList.innerHTML = '';
+
+    const appExtKey = 'megabox_ext_' + (app ? app.id : 'default');
+    let savedPrefs = {};
+    try {
+      savedPrefs = JSON.parse(localStorage.getItem(appExtKey) || '{}');
+    } catch (_) {}
+
+    extensionCatalog.forEach(ext => {
+      const isEnabled = savedPrefs[ext.id] !== undefined ? savedPrefs[ext.id] : ext.enabledByDefault;
+      const card = document.createElement('div');
+      card.className = 'drawer-extension-card';
+
+      card.innerHTML = `
+        <div class="ext-icon-box">
+          <img src="${ext.icon}" onerror="this.src='assets/icons/chat.svg'">
+        </div>
+        <div class="ext-info">
+          <div class="ext-name">${ext.name}</div>
+          <div class="ext-desc">${ext.desc}</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" ${isEnabled ? 'checked' : ''} data-ext="${ext.id}">
+          <span class="slider"></span>
+        </label>
+      `;
+
+      const toggle = card.querySelector('input');
+      toggle.addEventListener('change', () => {
+        savedPrefs[ext.id] = toggle.checked;
+        localStorage.setItem(appExtKey, JSON.stringify(savedPrefs));
+        console.log(`[Megabox Extensions] ${ext.id} set to ${toggle.checked} for app ${app ? app.id : 'default'}`);
+
+        // If Dark Reader toggled, apply immediate fast CSS injection for instant result!
+        if (ext.id === 'dark-reader' && activeAppId) {
+          const wv = document.getElementById('wv-' + activeAppId);
+          if (wv) {
+            if (toggle.checked) {
+              wv.insertCSS(`
+                html, body { filter: invert(90%) hue-rotate(180deg) !important; background: #121212 !important; }
+                img, video, canvas, [style*="background-image"] { filter: invert(100%) hue-rotate(180deg) !important; }
+              `).catch(() => {});
+            } else {
+              wv.reload();
+            }
+          }
+        }
+      });
+
+      drawerExtensionList.appendChild(card);
+    });
+  }
+
+  if (btnDrawerClose) btnDrawerClose.onclick = closeExtensionDrawer;
+  if (drawerOverlay) drawerOverlay.onclick = closeExtensionDrawer;
+
 })();
