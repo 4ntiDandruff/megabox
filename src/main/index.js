@@ -107,9 +107,10 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     width: 1280,
-    height: 800,
+    height: 820,
     minWidth: 800,
     minHeight: 600,
+    show: true,
     autoHideMenuBar: true,
     title: 'Megabox',
     icon: path.join(__dirname, '../renderer/assets/megabox.png'),
@@ -132,6 +133,26 @@ function createWindow() {
   });
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
+  // Expose CLI trigger to pop window to front if it goes behind
+  ipcMain.handle('window:focus', () => {
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.focus();
+      return true;
+    }
+    return false;
+  });
+
+  // Keep window visible and prevent accidental minimize on startup
+  mainWindow.on('minimize', (e) => {
+    console.log('[Megabox Window] Window minimized by system/user');
+  });
 
   mainWindow.on('close', (event) => {
     if (!isQuitting) {

@@ -64,6 +64,8 @@
     loadApps();
     refreshSyncUI();
     setInterval(checkHibernation, 60000);
+
+
   }
 
   function setupEventListeners() {
@@ -72,7 +74,14 @@
       const btn = e.target.closest('#btn-add-open');
       if (btn) {
         catalogSearchInput.value = '';
-        renderCatalogGrid(recipesCatalog);
+        activeCatalogCategory = 'all';
+        const categoryContainer = document.getElementById('catalog-category-pills');
+        if (categoryContainer) {
+          categoryContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('is-active'));
+          const firstPill = categoryContainer.querySelector('[data-cat="all"]');
+          if (firstPill) firstPill.classList.add('is-active');
+        }
+        filterCatalog();
         catalogModal.style.display = 'flex';
         setTimeout(() => catalogSearchInput.focus(), 100);
       }
@@ -84,14 +93,22 @@
       openConfigureForm('Custom Service', 'https://', 'custom');
     };
 
-    // Catalog live search
+    // Catalog live search & Category filter pills delegation
     catalogSearchInput.oninput = () => {
-      const q = catalogSearchInput.value.toLowerCase().trim();
-      const filtered = recipesCatalog.filter(r => 
-        r.name.toLowerCase().includes(q) || r.id.toLowerCase().includes(q)
-      );
-      renderCatalogGrid(filtered);
+      filterCatalog();
     };
+
+    const categoryContainer = document.getElementById('catalog-category-pills');
+    if (categoryContainer) {
+      categoryContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('.category-pill');
+        if (!btn) return;
+        categoryContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        activeCatalogCategory = btn.dataset.cat || 'all';
+        filterCatalog();
+      });
+    }
 
     // Configure Form actions
     btnFormClose.onclick = () => { configureModal.style.display = 'none'; };
@@ -246,13 +263,73 @@
     }
   }
 
-  function renderCatalogGrid(items) {
+  let activeCatalogCategory = 'all';
+  let catalogCurrentSlice = 80;
+  let currentFilteredCatalog = [];
+
+  function filterCatalog() {
+    const q = (catalogSearchInput ? catalogSearchInput.value : '').toLowerCase().trim();
+    
+    currentFilteredCatalog = recipesCatalog.filter(item => {
+      // 1. Category check
+      if (activeCatalogCategory === 'featured') {
+        if (!item.featured) return false;
+      } else if (activeCatalogCategory !== 'all') {
+        if (item.category !== activeCatalogCategory) return false;
+      }
+
+      // 2. Search query check
+      if (q) {
+        const matchesName = item.name.toLowerCase().includes(q);
+        const matchesId = item.id.toLowerCase().includes(q);
+        const matchesCategory = item.category ? item.category.toLowerCase().includes(q) : false;
+        return matchesName || matchesId || matchesCategory;
+      }
+      return true;
+    });
+
+    // Smart Sorting: When in "all" or category view without explicit search,
+    // boost featured / essential services (WhatsApp, WA Business, Telegram, Discord, Gmail, ChatGPT, Claude) to the front!
+    if (!q) {
+      currentFilteredCatalog.sort((a, b) => {
+        const aFeat = a.featured ? 1 : 0;
+        const bFeat = b.featured ? 1 : 0;
+        if (aFeat !== bFeat) return bFeat - aFeat;
+        return a.name.localeCompare(b.name);
+      });
+    }
+
+    catalogCurrentSlice = 80;
+    renderCatalogGrid(currentFilteredCatalog, true);
+
+    if (catalogCountBadge) {
+      catalogCountBadge.textContent = `${currentFilteredCatalog.length} Tersedia`;
+    }
+  }
+
+  function renderCatalogGrid(items, reset = false) {
+    if (reset) {
+      catalogGrid.innerHTML = '';
+      catalogGrid.scrollTop = 0;
+    }
+
+    const displayItems = items.slice(0, catalogCurrentSlice);
     catalogGrid.innerHTML = '';
-    const displayItems = items.slice(0, 80); // Fast initial virtual slice
+
+    if (displayItems.length === 0) {
+      catalogGrid.innerHTML = `
+        <div style="grid-column: 1/-1; padding: 40px 20px; text-align: center; color: #94a3b8;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+          <div style="font-size: 15px; font-weight: 600; color: #fff;">Layanan tidak ditemukan</div>
+          <div style="font-size: 13px; margin-top: 4px;">Coba gunakan kata kunci lain atau tambahkan website kustom secara manual di bawah.</div>
+        </div>
+      `;
+      return;
+    }
 
     displayItems.forEach(item => {
       const card = document.createElement('div');
-      card.className = 'service-card';
+      card.className = 'service-card' + (item.featured ? ' is-featured-card' : '');
 
       const iconWrapper = document.createElement('div');
       iconWrapper.className = 'service-card-icon-wrapper';
@@ -260,7 +337,7 @@
       img.src = `assets/icons/${item.id}.svg`;
       img.alt = item.name;
       img.onerror = () => {
-        img.src = 'assets/icons/custom.svg';
+        img.src = 'assets/icons/chat.svg';
         img.onerror = () => {
           img.style.display = 'none';
         };
@@ -269,20 +346,33 @@
       const info = document.createElement('div');
       info.className = 'service-info';
 
+      const nameRow = document.createElement('div');
+      nameRow.style.display = 'flex';
+      nameRow.style.alignItems = 'center';
+      nameRow.style.gap = '6px';
+
       const name = document.createElement('div');
       name.className = 'service-name';
       name.textContent = item.name;
+      nameRow.appendChild(name);
+
+      if (item.featured) {
+        const featPill = document.createElement('span');
+        featPill.className = 'featured-badge-pill';
+        featPill.textContent = 'Top';
+        nameRow.appendChild(featPill);
+      }
 
       const meta = document.createElement('div');
       meta.className = 'service-meta';
       meta.textContent = item.url ? item.url.replace(/^https?:\/\//, '').split('/')[0] : 'Web Service';
 
-      info.appendChild(name);
+      info.appendChild(nameRow);
       info.appendChild(meta);
 
       const btn = document.createElement('button');
       btn.className = 'btn-add-pill';
-      btn.textContent = 'Add';
+      btn.textContent = 'Pasang';
       btn.onclick = (e) => {
         e.stopPropagation();
         catalogModal.style.display = 'none';
@@ -300,6 +390,18 @@
       };
 
       catalogGrid.appendChild(card);
+    });
+  }
+
+  // Infinite Scroll Trigger on Catalog Body
+  if (catalogGrid) {
+    catalogGrid.addEventListener('scroll', () => {
+      if (catalogGrid.scrollTop + catalogGrid.clientHeight >= catalogGrid.scrollHeight - 150) {
+        if (catalogCurrentSlice < currentFilteredCatalog.length) {
+          catalogCurrentSlice += 60;
+          renderCatalogGrid(currentFilteredCatalog, false);
+        }
+      }
     });
   }
 
@@ -412,7 +514,14 @@
     addBtn.onclick = () => {
       catalogModal.style.display = 'flex';
       catalogSearchInput.value = '';
-      renderCatalogGrid(recipesCatalog);
+      activeCatalogCategory = 'all';
+      const categoryContainer = document.getElementById('catalog-category-pills');
+      if (categoryContainer) {
+        categoryContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('is-active'));
+        const firstPill = categoryContainer.querySelector('[data-cat="all"]');
+        if (firstPill) firstPill.classList.add('is-active');
+      }
+      filterCatalog();
       setTimeout(() => catalogSearchInput.focus(), 50);
     };
     tabsContainer.appendChild(addBtn);
