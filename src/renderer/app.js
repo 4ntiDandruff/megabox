@@ -9,6 +9,11 @@
   const iconMuteUnmuted = document.getElementById('icon-mute-unmuted');
   const iconMuteMuted = document.getElementById('icon-mute-muted');
 
+  const btnDnd = document.getElementById('btn-dnd');
+  const iconDndOff = document.getElementById('icon-dnd-off');
+  const iconDndOn = document.getElementById('icon-dnd-on');
+  let isDndActive = localStorage.getItem('megabox_dnd_active') === 'true';
+
   // Catalog Modal
   const catalogModal = document.getElementById('catalog-modal');
   const btnCatalogClose = document.getElementById('btn-catalog-close');
@@ -373,7 +378,12 @@
         wv.style.display = (activeAppId === app.id) ? 'flex' : 'none';
 
         // Listen to badge events from preload-webview bridge
-        wv.addEventListener('ipc-message', (event) => {
+        wv.addEventListener('dom-ready', () => {
+        if (isDndActive) {
+          try { wv.setAudioMuted(true); } catch (_) {}
+        }
+      });
+      wv.addEventListener('ipc-message', (event) => {
           if (event.channel === 'badge') {
             const count = parseInt(event.args[0], 10) || 0;
             updateAppBadge(app.id, count);
@@ -537,6 +547,42 @@
     }
   }
 
+  function updateDndUI() {
+    if (!btnDnd) return;
+    if (isDndActive) {
+      btnDnd.classList.add('is-active');
+      btnDnd.style.color = '#f43f5e';
+      if (iconDndOff) iconDndOff.style.display = 'none';
+      if (iconDndOn) iconDndOn.style.display = 'block';
+    } else {
+      btnDnd.classList.remove('is-active');
+      btnDnd.style.color = '';
+      if (iconDndOff) iconDndOff.style.display = 'block';
+      if (iconDndOn) iconDndOn.style.display = 'none';
+    }
+  }
+
+  function toggleDNDMode() {
+    isDndActive = !isDndActive;
+    localStorage.setItem('megabox_dnd_active', isDndActive);
+    updateDndUI();
+
+    // Mute or unmute all active webviews
+    const webviews = document.querySelectorAll('webview');
+    webviews.forEach(wv => {
+      try {
+        wv.setAudioMuted(isDndActive);
+      } catch (_) {}
+    });
+
+    console.log('[Megabox DND] Concentration mode set to:', isDndActive);
+  }
+
+  if (btnDnd) {
+    btnDnd.onclick = toggleDNDMode;
+    updateDndUI();
+  }
+
   function toggleGlobalMute() {
     if (!activeAppId) return;
     const wv = document.getElementById('wv-' + activeAppId);
@@ -658,6 +704,7 @@
 
   // System command palette actions
   const systemCommands = [
+    { id: 'cmd:dnd', name: 'Mode Konsentrasi / DND (Toggle)', subtitle: 'Senyapkan notifikasi dan suara seketika', icon: 'assets/icons/bell.svg', action: () => toggleDNDMode() },
     { id: 'cmd:catalog', name: 'Tambah Aplikasi (Buka Katalog)', subtitle: 'Jelajahi dan pasang layanan baru', icon: 'assets/icons/chat.svg', action: () => openCatalog() },
     { id: 'cmd:settings', name: 'Pengaturan & Profil Akun', subtitle: 'Konfigurasi sinkronisasi cloud dan avatar', icon: 'assets/icons/settings.svg', action: () => openSettingsModal() },
     { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', icon: 'assets/icons/reload.svg', action: () => { if (wcReload) wcReload.click(); } },
@@ -805,6 +852,11 @@
     if (e.ctrlKey && e.key === 'l') {
       e.preventDefault();
       lockWorkspace();
+    }
+    // Alt+Shift+D -> Toggle DND Concentration Mode
+    if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+      e.preventDefault();
+      toggleDNDMode();
     }
   });
 
