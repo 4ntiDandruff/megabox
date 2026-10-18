@@ -900,8 +900,10 @@
     const cleanEmail = email.trim().toLowerCase();
     const initials = cleanEmail.substring(0, 2).toUpperCase();
     const emailHash = md5(cleanEmail);
-    // Auto-resolve avatar: Try Gravatar / Google linked avatar, with identicon/initials fallback
-    const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?s=96&d=identicon`;
+    // D=404: Hanya tampilkan foto jika user BENAR-BENAR punya foto profil asli.
+    // Jika tidak punya foto atau 404, JANGAN pakai pola kristal identicon yang bikin mata lelah!
+    // Langsung fallback ke ikon siluet orang minimalis atau inisial elegan.
+    const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?s=96&d=404`;
 
     if (avatarUserImg) {
       avatarUserImg.src = gravatarUrl;
@@ -912,10 +914,10 @@
       };
       avatarUserImg.onerror = () => {
         avatarUserImg.style.display = 'none';
-        if (avatarDefaultIcon) avatarDefaultIcon.style.display = 'none';
-        if (avatarUserInitials) {
-          avatarUserInitials.textContent = initials;
-          avatarUserInitials.style.display = 'block';
+        if (avatarUserInitials) avatarUserInitials.style.display = 'none';
+        if (avatarDefaultIcon) {
+          avatarDefaultIcon.style.display = 'block';
+          avatarDefaultIcon.style.color = 'var(--brand-primary)';
         }
       };
     }

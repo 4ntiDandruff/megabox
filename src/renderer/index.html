@@ -228,19 +228,27 @@
     }
 
         .profile-avatar-btn {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(114, 102, 240, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.15s ease;
       margin-bottom: 6px;
+      color: #94a3b8;
+    }
+
+    .profile-avatar-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(114, 102, 240, 0.5);
+      color: #ffffff;
+      transform: translateY(-1px);
     }
 
     .profile-avatar-btn:hover {
