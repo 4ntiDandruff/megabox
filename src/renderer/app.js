@@ -534,14 +534,17 @@
 
   window.toggleTileView = toggleTileView;
   window.toggleExtensionDrawer = toggleExtensionDrawer;
+  function exitTileMode() {
+    isTileModeActive = false;
+    secondaryTiledAppId = null;
+    webviewsContainer.classList.remove('is-tiled');
+    selectApp(activeAppId);
+    console.log('[Megabox Tile] Exited split tile view');
+  }
+
   function toggleTileView(targetId) {
-    if (isTileModeActive && secondaryTiledAppId === targetId) {
-      // Exit tile mode
-      isTileModeActive = false;
-      secondaryTiledAppId = null;
-      webviewsContainer.classList.remove('is-tiled');
-      selectApp(activeAppId);
-      console.log('[Megabox Tile] Exited split tile view');
+    if (isTileModeActive && (!targetId || secondaryTiledAppId === targetId)) {
+      exitTileMode();
       return;
     }
 
@@ -618,6 +621,11 @@
   }
 
   function selectApp(id) {
+    if (isTileModeActive) {
+      isTileModeActive = false;
+      secondaryTiledAppId = null;
+      webviewsContainer.classList.remove('is-tiled');
+    }
     activeAppId = id;
     appLastAccessed[id] = Date.now();
 

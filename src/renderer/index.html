@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#1e1e1e] text-[#f7f7f9] select-none">
+<html lang="en" class="h-full bg-[#1e1e1e] text-[#f7f7f9]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +36,13 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--sidebar-bg);
       color: #ffffff;
+    }
+
+    
+    /* Cegah seleksi teks yang tidak disengaja hanya pada bilah navigasi dan drawer */
+    .sidebar, .extension-drawer, .custom-context-menu {
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     /* Ferdium Authentic Sidebar */
