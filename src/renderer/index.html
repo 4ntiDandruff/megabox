@@ -310,6 +310,22 @@
       overflow: hidden;
     }
 
+    
+    /* Split Tile 1x2 Dual Screen Mode */
+    .webviews-container.is-tiled {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 3px;
+      background: #111317;
+    }
+    .webviews-container.is-tiled webview {
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+
     webview {
       width: 100%;
       height: 100%;
@@ -1207,6 +1223,9 @@
     </div>
     <div id="ctx-hibernate" class="context-menu-item">
       <span id="ctx-hibernate-label">Hibernate Service</span>
+    </div>
+    <div id="ctx-tile" class="context-menu-item">
+      <span id="ctx-tile-label">Split Screen 1x2 (Berdampingan)</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-edit" class="context-menu-item">

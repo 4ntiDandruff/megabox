@@ -44,12 +44,16 @@
   const ctxMuteLabel = document.getElementById('ctx-mute-label');
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
+  const ctxTile = document.getElementById('ctx-tile');
+  const ctxTileLabel = document.getElementById('ctx-tile-label');
   const ctxEdit = document.getElementById('ctx-edit');
   const ctxDelete = document.getElementById('ctx-delete');
 
   let apps = [];
   let recipesCatalog = [];
   let activeAppId = null;
+  let secondaryTiledAppId = null;
+  let isTileModeActive = false;
   let isGlobalMuted = false;
   let contextTargetApp = null;
   const appLastAccessed = {};
@@ -525,6 +529,68 @@
       setTimeout(() => catalogSearchInput.focus(), 50);
     };
     tabsContainer.appendChild(addBtn);
+  }
+
+
+  function toggleTileView(targetId) {
+    if (isTileModeActive && secondaryTiledAppId === targetId) {
+      // Exit tile mode
+      isTileModeActive = false;
+      secondaryTiledAppId = null;
+      webviewsContainer.classList.remove('is-tiled');
+      selectApp(activeAppId);
+      console.log('[Megabox Tile] Exited split tile view');
+      return;
+    }
+
+    // Enter tile mode: active app on left, targetId on right
+    if (apps.length < 2) {
+      alert('Tambahkan minimal 2 aplikasi untuk menggunakan mode Split Screen 1x2.');
+      return;
+    }
+
+    const secondary = targetId || (apps.find(a => a.id !== activeAppId) || {}).id;
+    if (!secondary) return;
+
+    isTileModeActive = true;
+    secondaryTiledAppId = secondary;
+    webviewsContainer.classList.add('is-tiled');
+
+    // Show both webviews
+    apps.forEach(app => {
+      const wv = document.getElementById('wv-' + app.id);
+      const tab = document.getElementById('tab-' + app.id);
+      if (wv) {
+        if (app.id === activeAppId || app.id === secondaryTiledAppId) {
+          if (wv.dataset.hibernated === 'true') {
+            wv.dataset.hibernated = 'false';
+            wv.src = app.url;
+            if (tab) tab.classList.remove('is-hibernated');
+          }
+          wv.style.display = 'flex';
+        } else {
+          wv.style.display = 'none';
+        }
+      }
+      if (tab) {
+        if (app.id === activeAppId || app.id === secondaryTiledAppId) {
+          tab.classList.add('is-active');
+        } else {
+          tab.classList.remove('is-active');
+        }
+      }
+    });
+
+    console.log(`[Megabox Tile] 1x2 Split screen active: ${activeAppId} & ${secondaryTiledAppId}`);
+  }
+
+  if (ctxTile) {
+    ctxTile.onclick = () => {
+      if (contextTargetApp) {
+        toggleTileView(contextTargetApp.id);
+      }
+      hideContextMenu();
+    };
   }
 
   function showContextMenu(x, y, app) {
@@ -1018,6 +1084,11 @@
     if (e.ctrlKey && e.key === 'l') {
       e.preventDefault();
       lockWorkspace();
+    }
+    // Alt+2 -> Toggle Split Screen 1x2
+    if (e.altKey && (e.key === '2' || e.key === '@')) {
+      e.preventDefault();
+      toggleTileView();
     }
     // Alt+Shift+D -> Toggle DND Concentration Mode
     if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
