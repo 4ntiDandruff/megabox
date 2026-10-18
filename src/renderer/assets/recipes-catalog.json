@@ -3085,5 +3085,13 @@
     "version": "1.4.1",
     "url": "",
     "featured": false
+  },
+  {
+    "id": "whatsapp-business",
+    "name": "WhatsApp Business",
+    "description": "WhatsApp Business Web messaging for companies and customer service",
+    "category": "chat",
+    "url": "https://web.whatsapp.com",
+    "icon": "whatsapp-business"
   }
 ]

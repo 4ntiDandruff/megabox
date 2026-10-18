@@ -62,13 +62,16 @@
   }
 
   function setupEventListeners() {
-    // Open Ferdium Catalog
-    btnAddOpen.onclick = () => {
-      catalogSearchInput.value = '';
-      renderCatalogGrid(recipesCatalog);
-      catalogModal.style.display = 'flex';
-      setTimeout(() => catalogSearchInput.focus(), 100);
-    };
+    // Open Service Catalog / Tambah Aplikasi via delegation on tabsContainer
+    tabsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('#btn-add-open');
+      if (btn) {
+        catalogSearchInput.value = '';
+        renderCatalogGrid(recipesCatalog);
+        catalogModal.style.display = 'flex';
+        setTimeout(() => catalogSearchInput.focus(), 100);
+      }
+    });
 
     btnCatalogClose.onclick = () => { catalogModal.style.display = 'none'; };
     btnCustomAdd.onclick = () => {
@@ -381,6 +384,24 @@
         webviewsContainer.appendChild(wv);
       }
     });
+
+    // Add Service (+) Button rendered dynamically right below the last tab item
+    const addBtn = document.createElement('button');
+    addBtn.id = 'btn-add-open';
+    addBtn.className = 'btn-add-service';
+    addBtn.title = 'Tambah Aplikasi / Buka Ruang (Ctrl+N)';
+    addBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 4v16m8-8H4"/>
+      </svg>
+    `;
+    addBtn.onclick = () => {
+      catalogModal.style.display = 'flex';
+      catalogSearchInput.value = '';
+      renderCatalogGrid(recipesCatalog);
+      setTimeout(() => catalogSearchInput.focus(), 50);
+    };
+    tabsContainer.appendChild(addBtn);
   }
 
   function showContextMenu(x, y, app) {
@@ -572,14 +593,16 @@
     };
 
     if (window.megabox) {
-      await window.megabox.saveApp(newApp);
-      if (existing) {
-        Object.assign(existing, newApp);
-      } else {
-        apps.push(newApp);
+      btnFormSave.disabled = true;
+      btnFormSave.textContent = 'Menyimpan...';
+      try {
+        await window.megabox.saveApp(newApp);
+        // onAppsUpdated will automatically update apps array and renderTabs() cleanly without duplicating
+        selectApp(id);
+      } finally {
+        btnFormSave.disabled = false;
+        btnFormSave.textContent = 'Save Service';
       }
-      renderTabs();
-      selectApp(id);
     }
 
     configureModal.style.display = 'none';

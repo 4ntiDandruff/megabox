@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="wab_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#25D366"/>
+      <stop offset="100%" stop-color="#128C7E"/>
+    </linearGradient>
+  </defs>
+  <!-- Main circle speech bubble -->
+  <path fill="url(#wab_bg)" d="M24,4 C12.954,4 4,12.954 4,24 C4,27.766 5.048,31.29 6.864,34.316 L4.4,43.6 L13.984,41.176 C16.924,42.946 20.344,44 24,44 C35.046,44 44,35.046 44,24 C44,12.954 35.046,4 24,4 Z"/>
+  <!-- Distinctive WhatsApp Business "B" glyph in clean geometric white -->
+  <path fill="#ffffff" d="M18,14 L26.5,14 C29.538,14 32,16.239 32,19 C32,20.89 30.826,22.529 29.117,23.328 C31.332,24.162 33,26.115 33,29 C33,32.314 30.314,35 27,35 L18,35 L18,14 Z M22,18 L22,22.5 L26,22.5 C27.105,22.5 28,21.605 28,20.5 C28,19.395 27.105,18.5 26,18.5 L22,18.5 Z M22,26.5 L22,31 L26.5,31 C27.881,31 29,29.881 29,28.5 C29,27.119 27.881,26 26.5,26 L22,26 Z"/>
+</svg>
