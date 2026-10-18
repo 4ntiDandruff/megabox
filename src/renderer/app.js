@@ -1312,9 +1312,11 @@
   }
 
   if (btnSettings && settingsModal) {
+    const settingAutoLockVal = document.getElementById('setting-autolock-val');
     btnSettings.onclick = async () => {
       settingsModal.style.display = 'flex';
       if (settingPinVal) settingPinVal.value = DEFAULT_PIN;
+      if (settingAutoLockVal) settingAutoLockVal.value = String(autoLockMinutes);
       await refreshSyncUI();
     };
     if (btnSettingsClose) {
@@ -1326,6 +1328,10 @@
       btnSettingsDone.onclick = () => {
         if (settingPinVal && settingPinVal.value.trim()) {
           DEFAULT_PIN = settingPinVal.value.trim();
+        }
+        if (settingAutoLockVal) {
+          autoLockMinutes = parseInt(settingAutoLockVal.value, 10);
+          localStorage.setItem('megabox_autolock_min', String(autoLockMinutes));
         }
         settingsModal.style.display = 'none';
       };
@@ -1560,5 +1566,44 @@
 
   if (btnDrawerClose) btnDrawerClose.onclick = closeExtensionDrawer;
   if (drawerOverlay) drawerOverlay.onclick = closeExtensionDrawer;
+
+
+  // --- Idle Auto-Lock Timer with Active Audio Call Immunity ---
+  let lastUserActivity = Date.now();
+  let autoLockMinutes = parseInt(localStorage.getItem('megabox_autolock_min') || '10', 10);
+
+  function resetActivityTimer() {
+    lastUserActivity = Date.now();
+  }
+
+  window.addEventListener('mousemove', resetActivityTimer, { passive: true });
+  window.addEventListener('keydown', resetActivityTimer, { passive: true });
+  window.addEventListener('click', resetActivityTimer, { passive: true });
+
+  setInterval(() => {
+    if (!autoLockMinutes || autoLockMinutes <= 0) return;
+    if (lockScreen && lockScreen.style.display === 'flex') return;
+
+    const idleMs = Date.now() - lastUserActivity;
+    if (idleMs > autoLockMinutes * 60 * 1000) {
+      // Check audio call immunity
+      const webviews = document.querySelectorAll('webview');
+      let isCallActive = false;
+      webviews.forEach(wv => {
+        try {
+          if (typeof wv.isCurrentlyAudible === 'function' && wv.isCurrentlyAudible()) {
+            isCallActive = true;
+          }
+        } catch (_) {}
+      });
+
+      if (!isCallActive) {
+        console.log(`[Megabox AutoLock] Workstation idle for ${autoLockMinutes} mins. Locking automatically.`);
+        lockWorkspace();
+      } else {
+        console.log('[Megabox AutoLock] Idle detected but active audio/call playing. Lock suppressed.');
+      }
+    }
+  }, 15000); // Check every 15s
 
 })();

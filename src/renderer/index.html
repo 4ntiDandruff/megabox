@@ -1270,6 +1270,19 @@
 
           <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
             <div>
+              <div style="font-weight:600; font-size:14px;">Auto-Lock Workstation (Idle)</div>
+              <div style="font-size:12px; color:var(--text-muted);">Kunci layar otomatis saat tidak ada aktivitas mouse/keyboard</div>
+            </div>
+            <select id="setting-autolock-val" style="padding:6px 10px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">
+              <option value="0">Dinonaktifkan</option>
+              <option value="5">5 Menit</option>
+              <option value="10" selected>10 Menit (Standar)</option>
+              <option value="30">30 Menit</option>
+            </select>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
               <div style="font-weight:600; font-size:14px;">RAM Idle Hibernate</div>
               <div style="font-size:12px; color:var(--text-muted);">Auto suspend tabs to about:blank when unused</div>
             </div>
