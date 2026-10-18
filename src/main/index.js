@@ -53,11 +53,14 @@ function createTray() {
 }
 
 function createWindow() {
+  Menu.setApplicationMenu(null);
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    autoHideMenuBar: true,
     title: 'Megabox',
     icon: path.join(__dirname, '../renderer/assets/megabox.png'),
     backgroundColor: '#1e1e1e',

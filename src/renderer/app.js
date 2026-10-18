@@ -607,7 +607,7 @@
 
   let quickSwitchIndex = 0;
   let filteredQuickApps = [];
-  const DEFAULT_PIN = "1234"; // Default service PIN (can be customized)
+  let DEFAULT_PIN = "1234"; // Default service PIN (can be customized)
 
 
   // 2. Quick Switcher Logic (Ferdium quickSwitch & Rambox quickSwitcher)
@@ -743,6 +743,36 @@
     }
   });
 
+
+    // Settings Modal Logic
+  const btnSettings = document.getElementById('btn-settings');
+  const settingsModal = document.getElementById('settings-modal');
+  const btnSettingsClose = document.getElementById('btn-settings-close');
+  const btnSettingsDone = document.getElementById('btn-settings-done');
+  const settingPinVal = document.getElementById('setting-pin-val');
+
+  if (btnSettings && settingsModal) {
+    btnSettings.onclick = () => {
+      settingsModal.style.display = 'flex';
+      if (settingPinVal) settingPinVal.value = DEFAULT_PIN;
+    };
+    if (btnSettingsClose) {
+      btnSettingsClose.onclick = () => {
+        settingsModal.style.display = 'none';
+      };
+    }
+    if (btnSettingsDone) {
+      btnSettingsDone.onclick = () => {
+        if (settingPinVal && settingPinVal.value.trim()) {
+          DEFAULT_PIN = settingPinVal.value.trim();
+        }
+        settingsModal.style.display = 'none';
+      };
+    }
+    settingsModal.onclick = (e) => {
+      if (e.target === settingsModal) settingsModal.style.display = 'none';
+    };
+  }
 
   window.addEventListener('DOMContentLoaded', init);
 })();

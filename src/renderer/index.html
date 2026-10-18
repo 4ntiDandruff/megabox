@@ -744,6 +744,12 @@
     <!-- Bottom Actions -->
     <div class="sidebar-bottom">
       
+            <button id="btn-settings" class="sidebar-btn" title="Settings & Preferences">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
       <button id="btn-quickswitch" class="sidebar-btn" title="Quick Switch Service (Ctrl+K / Ctrl+P)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
@@ -885,6 +891,64 @@
     </div>
   </div>
 
+
+
+  <!-- Settings & Preferences Modal (Ferdium / Rambox Clean Panel) -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-box-catalog" style="max-width: 640px;">
+      <div class="catalog-header">
+        <div class="catalog-title-row">
+          <div class="catalog-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Megabox Settings</span>
+          </div>
+          <button id="btn-settings-close" class="catalog-close">&times;</button>
+        </div>
+      </div>
+
+      <div style="padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- General Section -->
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Workstation & Privacy</h4>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:14px;">Master Lock PIN</div>
+              <div style="font-size:12px; color:var(--text-muted);">Current PIN required to unlock screen (Ctrl+L)</div>
+            </div>
+            <input type="text" id="setting-pin-val" value="1234" maxlength="6" style="width:70px; text-align:center; padding:6px 8px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-weight:700;">
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:14px;">RAM Idle Hibernate</div>
+              <div style="font-size:12px; color:var(--text-muted);">Auto suspend tabs to about:blank when unused</div>
+            </div>
+            <span style="font-size:12px; background:rgba(92,184,92,0.15); color:var(--brand-success); padding:3px 10px; border-radius:12px; border:1px solid rgba(92,184,92,0.3); font-weight:600;">15 Mins (Active)</span>
+          </div>
+        </div>
+
+        <!-- Engine & Cloud Architecture Note -->
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Cloud & Profile Sync (Brainstorming)</h4>
+          
+          <div style="background:#1e1e1e; padding:14px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); font-size:13px; line-height:1.5; color:#cbd5e1;">
+            <p style="margin:0 0 8px 0;"><strong>Konsep Sinkronisasi Multi-Node:</strong></p>
+            <p style="margin:0; font-size:12px; color:var(--text-muted);">Profil & pengaturan akun Megabox dapat disinkronkan antar-PC (node hizam, celeron, laptop) via endpoint API ringan Megapass atau SQLite WAL Cloudflare Tunnel tanpa perlu langganan cloud berbayar.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-actions" style="padding:16px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#1d1d1d;">
+        <button id="btn-settings-done" class="btn-submit" style="width:100%;">Save Preferences</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Quick Switcher Modal (Ctrl+K / Ctrl+P) -->
   <div id="quickswitch-modal" class="modal-overlay">
