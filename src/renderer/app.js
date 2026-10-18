@@ -532,6 +532,8 @@
   }
 
 
+  window.toggleTileView = toggleTileView;
+  window.toggleExtensionDrawer = toggleExtensionDrawer;
   function toggleTileView(targetId) {
     if (isTileModeActive && secondaryTiledAppId === targetId) {
       // Exit tile mode
