@@ -1090,6 +1090,11 @@
       e.preventDefault();
       toggleTileView();
     }
+    // Alt+E -> Toggle Contextual Extension Drawer
+    if (e.altKey && (e.key === 'e' || e.key === 'E')) {
+      e.preventDefault();
+      toggleExtensionDrawer();
+    }
     // Alt+Shift+D -> Toggle DND Concentration Mode
     if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
       e.preventDefault();
