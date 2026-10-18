@@ -1,0 +1,5 @@
+node_modules/
+decompiled/
+.superpowers/
+*.log
+*.db-journal

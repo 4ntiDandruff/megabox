@@ -1,0 +1,16 @@
+{
+  "name": "megabox",
+  "version": "1.0.0",
+  "description": "Zero-bloat multi-app workspace reverse-engineered from Rambox",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node tests/test_db.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0"
+  }
+}
