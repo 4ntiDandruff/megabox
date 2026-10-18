@@ -27,14 +27,19 @@
   const inputServiceUrl = document.getElementById('input-service-url');
   const inputServiceIcon = document.getElementById('input-service-icon');
 
-  // Custom Context Menu
+  // Custom Context Menu (Power-User Controls)
   const contextMenu = document.getElementById('context-menu');
   const ctxName = document.getElementById('ctx-name');
+  const ctxBack = document.getElementById('ctx-back');
+  const ctxForward = document.getElementById('ctx-forward');
   const ctxReload = document.getElementById('ctx-reload');
+  const ctxHome = document.getElementById('ctx-home');
+  const ctxOpenBrowser = document.getElementById('ctx-open-browser');
   const ctxMute = document.getElementById('ctx-mute');
   const ctxMuteLabel = document.getElementById('ctx-mute-label');
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
+  const ctxEdit = document.getElementById('ctx-edit');
   const ctxDelete = document.getElementById('ctx-delete');
 
   let apps = [];
@@ -50,7 +55,7 @@
   async function init() {
     setupEventListeners();
     await loadRecipesCatalog();
-    await setupWebControls();
+    
     loadApps();
     setInterval(checkHibernation, 60000);
   }
@@ -117,36 +122,96 @@
     window.addEventListener('click', () => hideContextMenu());
 
     // Context menu handlers
-    ctxReload.onclick = () => {
-      if (contextTargetApp) {
-        const wv = document.getElementById('wv-' + contextTargetApp.id);
-        if (wv) wv.reload();
-      }
-      hideContextMenu();
-    };
-
-    ctxMute.onclick = () => {
-      if (contextTargetApp) {
-        toggleMuteApp(contextTargetApp.id);
-      }
-      hideContextMenu();
-    };
-
-    ctxHibernate.onclick = () => {
-      if (contextTargetApp) {
-        toggleHibernateApp(contextTargetApp.id);
-      }
-      hideContextMenu();
-    };
-
-    ctxDelete.onclick = () => {
-      if (contextTargetApp) {
-        if (confirm(`Remove "${contextTargetApp.name}" from Megabox?`)) {
-          deleteAppById(contextTargetApp.id);
+    if (ctxBack) {
+      ctxBack.onclick = () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          if (wv && wv.canGoBack()) wv.goBack();
         }
-      }
-      hideContextMenu();
-    };
+        hideContextMenu();
+      };
+    }
+
+    if (ctxForward) {
+      ctxForward.onclick = () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          if (wv && wv.canGoForward()) wv.goForward();
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxReload) {
+      ctxReload.onclick = () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          if (wv) wv.reload();
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxHome) {
+      ctxHome.onclick = () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          if (wv) wv.loadURL(contextTargetApp.url);
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxOpenBrowser) {
+      ctxOpenBrowser.onclick = () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          const currentUrl = (wv && wv.getURL && wv.getURL()) ? wv.getURL() : contextTargetApp.url;
+          if (window.megabox && window.megabox.openExternal) {
+            window.megabox.openExternal(currentUrl);
+          }
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxMute) {
+      ctxMute.onclick = () => {
+        if (contextTargetApp) {
+          toggleMuteApp(contextTargetApp.id);
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxHibernate) {
+      ctxHibernate.onclick = () => {
+        if (contextTargetApp) {
+          toggleHibernateApp(contextTargetApp.id);
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxEdit) {
+      ctxEdit.onclick = () => {
+        if (contextTargetApp) {
+          openConfigureForm(contextTargetApp.name, contextTargetApp.url, contextTargetApp.icon, contextTargetApp.proxy);
+        }
+        hideContextMenu();
+      };
+    }
+
+    if (ctxDelete) {
+      ctxDelete.onclick = () => {
+        if (contextTargetApp) {
+          if (confirm(`Remove "${contextTargetApp.name}" from Megabox?`)) {
+            deleteAppById(contextTargetApp.id);
+          }
+        }
+        hideContextMenu();
+      };
+    }
 
     if (window.megabox) {
       window.megabox.onAppsUpdated((updatedApps) => {
@@ -311,16 +376,7 @@
         });
 
         // WebControls real-time URL updates
-        const updateCurrentUrl = () => {
-          if (activeAppId === app.id) {
-            try {
-              updateWebControlsUrl(wv.getURL());
-            } catch (e) {}
-          }
-        };
-        wv.addEventListener('did-navigate', updateCurrentUrl);
-        wv.addEventListener('did-navigate-in-page', updateCurrentUrl);
-
+        
         webviewsContainer.appendChild(wv);
       }
     });
@@ -553,51 +609,6 @@
   let filteredQuickApps = [];
   const DEFAULT_PIN = "1234"; // Default service PIN (can be customized)
 
-  // 1. Web Controls Logic (Ferdium webControls)
-  function setupWebControls() {
-    wcBack.onclick = () => {
-      const wv = document.getElementById('wv-' + activeAppId);
-      if (wv && wv.canGoBack()) wv.goBack();
-    };
-
-    wcForward.onclick = () => {
-      const wv = document.getElementById('wv-' + activeAppId);
-      if (wv && wv.canGoForward()) wv.goForward();
-    };
-
-    wcReload.onclick = () => {
-      const wv = document.getElementById('wv-' + activeAppId);
-      if (wv) wv.reload();
-    };
-
-    wcHome.onclick = () => {
-      const current = apps.find(a => a.id === activeAppId);
-      const wv = document.getElementById('wv-' + activeAppId);
-      if (current && wv) {
-        wv.loadURL(current.url);
-      }
-    };
-
-    wcOpenExternal.onclick = () => {
-      const wv = document.getElementById('wv-' + activeAppId);
-      const current = apps.find(a => a.id === activeAppId);
-      const targetUrl = (wv && wv.getURL && wv.getURL()) ? wv.getURL() : (current ? current.url : '');
-      if (targetUrl && window.megabox && window.megabox.openExternal) {
-        window.megabox.openExternal(targetUrl);
-      }
-    };
-  }
-
-  function updateWebControlsUrl(url) {
-    if (wcActiveUrl) {
-      try {
-        const parsed = new URL(url);
-        wcActiveUrl.textContent = parsed.hostname + (parsed.pathname !== '/' ? parsed.pathname : '');
-      } catch (e) {
-        wcActiveUrl.textContent = url || 'Megabox Ready';
-      }
-    }
-  }
 
   // 2. Quick Switcher Logic (Ferdium quickSwitch & Rambox quickSwitcher)
   function openQuickSwitcher() {
