@@ -657,12 +657,13 @@
     }
   }
 
-  quickswitchInput.addEventListener('input', () => {
-    quickSwitchIndex = 0;
-    renderQuickSwitchList();
-  });
+  if (quickswitchInput) {
+    quickswitchInput.addEventListener('input', () => {
+      quickSwitchIndex = 0;
+      renderQuickSwitchList();
+    });
 
-  quickswitchInput.addEventListener('keydown', (e) => {
+    quickswitchInput.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       quickSwitchIndex++;
@@ -681,9 +682,10 @@
       e.preventDefault();
       closeQuickSwitcher();
     }
-  });
+    });
+  }
 
-  btnQuickSwitch.onclick = openQuickSwitcher;
+  if (btnQuickSwitch) btnQuickSwitch.onclick = openQuickSwitcher;
   quickswitchModal.onclick = (e) => {
     if (e.target === quickswitchModal) closeQuickSwitcher();
   };
@@ -709,10 +711,12 @@
     }
   }
 
-  btnLock.onclick = lockWorkspace;
-  lockPinInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') unlockWorkspace();
-  });
+  if (btnLock) btnLock.onclick = lockWorkspace;
+  if (lockPinInput) {
+    lockPinInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlockWorkspace();
+    });
+  }
 
   // Global Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
