@@ -869,12 +869,11 @@
     .drawer-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
+      background: transparent;
       z-index: 99990;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.2s ease;
     }
     .drawer-overlay.is-open {
       opacity: 1;
@@ -974,6 +973,9 @@
       flex-shrink: 0;
     }
     .ext-icon-box img, .ext-icon-box svg {
+      display: block;
+      image-rendering: -webkit-optimize-contrast;
+      transform: translateZ(0);
       width: 22px;
       height: 22px;
       object-fit: contain;

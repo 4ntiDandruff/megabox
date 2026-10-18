@@ -981,7 +981,7 @@
       const isCmd = app.type === 'cmd';
 
       item.innerHTML = `
-        <img src="${iconSrc}" onerror="this.src='assets/icons/chat.svg'">
+        <img src="${iconSrc}" onerror="this.src='assets/icons/shield.svg'">
         <div style="flex:1;overflow:hidden;">
           <div style="font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;">
             <span>${app.name}</span>
@@ -1489,12 +1489,12 @@
   const drawerSubtitle = document.getElementById('drawer-subtitle');
   const drawerExtensionList = document.getElementById('drawer-extension-list');
 
-  // Built-in Chromium extensions catalog for Megabox
+  // Built-in Chromium extensions catalog for Megabox (Valid verified local SVGs)
   const extensionCatalog = [
-    { id: 'dark-reader', name: 'Dark Reader', desc: 'Invert colors & eye protection dark mode', icon: 'assets/icons/chat.svg', enabledByDefault: false },
+    { id: 'dark-reader', name: 'Dark Reader', desc: 'Invert colors & eye protection dark mode', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
     { id: 'bitwarden', name: 'Bitwarden', desc: 'Secure open-source password manager', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Efficient content blocker & anti-tracker', icon: 'assets/icons/bell.svg', enabledByDefault: true },
-    { id: 'translate', name: 'Google Translate', desc: 'One-click page and message translation', icon: 'assets/icons/globe.svg', enabledByDefault: false }
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Efficient content blocker & anti-tracker', icon: 'assets/icons/shield.svg', enabledByDefault: true },
+    { id: 'translate', name: 'Google Translate', desc: 'One-click page and message translation', icon: 'assets/icons/google-translate.svg', enabledByDefault: false }
   ];
 
   function openExtensionDrawer() {
@@ -1541,7 +1541,7 @@
 
       card.innerHTML = `
         <div class="ext-icon-box">
-          <img src="${ext.icon}" onerror="this.src='assets/icons/chat.svg'">
+          <img src="${ext.icon}" onerror="this.src='assets/icons/shield.svg'">
         </div>
         <div class="ext-info">
           <div class="ext-name">${ext.name}</div>
