@@ -744,17 +744,68 @@
   });
 
 
-    // Settings Modal Logic
+    
+  // Settings & Cloud Sync UI Logic
   const btnSettings = document.getElementById('btn-settings');
   const settingsModal = document.getElementById('settings-modal');
   const btnSettingsClose = document.getElementById('btn-settings-close');
   const btnSettingsDone = document.getElementById('btn-settings-done');
   const settingPinVal = document.getElementById('setting-pin-val');
 
+  const syncBadgeStatus = document.getElementById('sync-badge-status');
+  const syncAuthBox = document.getElementById('sync-auth-box');
+  const syncConnectedBox = document.getElementById('sync-connected-box');
+  const syncInputEmail = document.getElementById('sync-input-email');
+  const syncInputPassword = document.getElementById('sync-input-password');
+  const btnSyncLogin = document.getElementById('btn-sync-login');
+  const btnSyncRegister = document.getElementById('btn-sync-register');
+  const syncAuthMsg = document.getElementById('sync-auth-msg');
+  const syncUserEmail = document.getElementById('sync-user-email');
+  const syncTimeInfo = document.getElementById('sync-time-info');
+  const syncTierBadge = document.getElementById('sync-tier-badge');
+  const btnSyncManualPush = document.getElementById('btn-sync-manual-push');
+  const btnSyncManualPull = document.getElementById('btn-sync-manual-pull');
+  const btnSyncLogout = document.getElementById('btn-sync-logout');
+  const syncOpMsg = document.getElementById('sync-op-msg');
+
+  async function refreshSyncUI() {
+    if (!window.megabox || !window.megabox.getSyncStatus) return;
+    try {
+      const status = await window.megabox.getSyncStatus();
+      if (status.logged_in && status.user) {
+        if (syncBadgeStatus) {
+          syncBadgeStatus.textContent = 'Terhubung';
+          syncBadgeStatus.style.background = 'rgba(92,184,92,0.15)';
+          syncBadgeStatus.style.color = 'var(--brand-success)';
+          syncBadgeStatus.style.borderColor = 'rgba(92,184,92,0.3)';
+        }
+        if (syncAuthBox) syncAuthBox.style.display = 'none';
+        if (syncConnectedBox) syncConnectedBox.style.display = 'flex';
+        if (syncUserEmail) syncUserEmail.textContent = status.user.email;
+        if (syncTierBadge) syncTierBadge.textContent = (status.user.tier || 'Free') + ' Plan';
+        if (syncTimeInfo) {
+          const syncDate = status.last_sync ? new Date(status.last_sync).toLocaleTimeString() : 'Baru saja';
+          syncTimeInfo.textContent = 'Sinkronisasi terakhir: ' + syncDate + ' (' + (status.device_name || 'PC Ini') + ')';
+        }
+      } else {
+        if (syncBadgeStatus) {
+          syncBadgeStatus.textContent = 'Belum Terhubung';
+          syncBadgeStatus.style.background = 'rgba(255,255,255,0.08)';
+          syncBadgeStatus.style.color = 'var(--text-muted)';
+        }
+        if (syncAuthBox) syncAuthBox.style.display = 'flex';
+        if (syncConnectedBox) syncConnectedBox.style.display = 'none';
+      }
+    } catch (e) {
+      console.warn('Failed to refresh sync UI:', e);
+    }
+  }
+
   if (btnSettings && settingsModal) {
-    btnSettings.onclick = () => {
+    btnSettings.onclick = async () => {
       settingsModal.style.display = 'flex';
       if (settingPinVal) settingPinVal.value = DEFAULT_PIN;
+      await refreshSyncUI();
     };
     if (btnSettingsClose) {
       btnSettingsClose.onclick = () => {
@@ -772,6 +823,129 @@
     settingsModal.onclick = (e) => {
       if (e.target === settingsModal) settingsModal.style.display = 'none';
     };
+  }
+
+  if (btnSyncLogin) {
+    btnSyncLogin.onclick = async () => {
+      const email = syncInputEmail.value.trim();
+      const password = syncInputPassword.value.trim();
+      if (!email || !password) {
+        syncAuthMsg.style.display = 'block';
+        syncAuthMsg.style.color = '#ef4444';
+        syncAuthMsg.textContent = 'Email dan password wajib diisi';
+        return;
+      }
+      btnSyncLogin.disabled = true;
+      btnSyncLogin.textContent = 'Memproses...';
+      try {
+        const res = await window.megabox.loginSync(email, password);
+        if (res.success) {
+          syncAuthMsg.style.display = 'none';
+          await refreshSyncUI();
+        } else {
+          syncAuthMsg.style.display = 'block';
+          syncAuthMsg.style.color = '#ef4444';
+          syncAuthMsg.textContent = res.error || 'Gagal masuk akun';
+        }
+      } catch (err) {
+        syncAuthMsg.style.display = 'block';
+        syncAuthMsg.style.color = '#ef4444';
+        syncAuthMsg.textContent = err.message;
+      } finally {
+        btnSyncLogin.disabled = false;
+        btnSyncLogin.textContent = 'Masuk Cloud';
+      }
+    };
+  }
+
+  if (btnSyncRegister) {
+    btnSyncRegister.onclick = async () => {
+      const email = syncInputEmail.value.trim();
+      const password = syncInputPassword.value.trim();
+      if (!email || !password) {
+        syncAuthMsg.style.display = 'block';
+        syncAuthMsg.style.color = '#ef4444';
+        syncAuthMsg.textContent = 'Email dan password wajib diisi';
+        return;
+      }
+      btnSyncRegister.disabled = true;
+      btnSyncRegister.textContent = 'Mendaftar...';
+      try {
+        const res = await window.megabox.registerSync(email, password);
+        if (res.success) {
+          syncAuthMsg.style.display = 'none';
+          await refreshSyncUI();
+        } else {
+          syncAuthMsg.style.display = 'block';
+          syncAuthMsg.style.color = '#ef4444';
+          syncAuthMsg.textContent = res.error || 'Gagal mendaftar';
+        }
+      } catch (err) {
+        syncAuthMsg.style.display = 'block';
+        syncAuthMsg.style.color = '#ef4444';
+        syncAuthMsg.textContent = err.message;
+      } finally {
+        btnSyncRegister.disabled = false;
+        btnSyncRegister.textContent = 'Daftar Baru';
+      }
+    };
+  }
+
+  if (btnSyncLogout) {
+    btnSyncLogout.onclick = async () => {
+      await window.megabox.logoutSync();
+      await refreshSyncUI();
+    };
+  }
+
+  if (btnSyncManualPush) {
+    btnSyncManualPush.onclick = async () => {
+      btnSyncManualPush.textContent = 'Uploading...';
+      try {
+        const res = await window.megabox.manualPushSync();
+        if (res.success) {
+          syncOpMsg.textContent = 'Berhasil upload tata letak tab ke cloud!';
+          syncOpMsg.style.color = 'var(--brand-success)';
+          await refreshSyncUI();
+        } else {
+          syncOpMsg.textContent = res.error || 'Gagal upload';
+          syncOpMsg.style.color = '#ef4444';
+        }
+      } catch (err) {
+        syncOpMsg.textContent = err.message;
+        syncOpMsg.style.color = '#ef4444';
+      } finally {
+        btnSyncManualPush.textContent = 'Upload ke Cloud';
+      }
+    };
+  }
+
+  if (btnSyncManualPull) {
+    btnSyncManualPull.onclick = async () => {
+      btnSyncManualPull.textContent = 'Downloading...';
+      try {
+        const res = await window.megabox.manualPullSync();
+        if (res.success) {
+          syncOpMsg.textContent = 'Berhasil download tatanan (' + res.count + ' tab)!';
+          syncOpMsg.style.color = 'var(--brand-success)';
+          await refreshSyncUI();
+        } else {
+          syncOpMsg.textContent = res.error || 'Gagal download';
+          syncOpMsg.style.color = '#ef4444';
+        }
+      } catch (err) {
+        syncOpMsg.textContent = err.message;
+        syncOpMsg.style.color = '#ef4444';
+      } finally {
+        btnSyncManualPull.textContent = 'Download dari Cloud';
+      }
+    };
+  }
+
+  if (window.megabox && window.megabox.onSyncStatusUpdated) {
+    window.megabox.onSyncStatusUpdated(() => {
+      refreshSyncUI();
+    });
   }
 
   window.addEventListener('DOMContentLoaded', init);

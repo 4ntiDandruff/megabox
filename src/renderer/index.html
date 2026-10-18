@@ -932,13 +932,47 @@
           </div>
         </div>
 
-        <!-- Engine & Cloud Architecture Note -->
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Cloud & Profile Sync (Brainstorming)</h4>
-          
-          <div style="background:#1e1e1e; padding:14px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); font-size:13px; line-height:1.5; color:#cbd5e1;">
-            <p style="margin:0 0 8px 0;"><strong>Konsep Sinkronisasi Multi-Node:</strong></p>
-            <p style="margin:0; font-size:12px; color:var(--text-muted);">Profil & pengaturan akun Megabox dapat disinkronkan antar-PC (node hizam, celeron, laptop) via endpoint API ringan Megapass atau SQLite WAL Cloudflare Tunnel tanpa perlu langganan cloud berbayar.</p>
+        <!-- Cloud & Profile Sync (SaaS Multi-Device) -->
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Cloud & Profile Sync</h4>
+            <span id="sync-badge-status" style="font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.08); color:var(--text-muted); font-weight:600;">Not Connected</span>
+          </div>
+
+          <!-- Logged Out State: Auth Form -->
+          <div id="sync-auth-box" style="background:#1e1e1e; padding:16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+              Sinkronkan urutan tab, custom proxy, dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% aman di laptop ini.
+            </div>
+            
+            <div style="display:flex; gap:8px;">
+              <input type="email" id="sync-input-email" placeholder="Email akun Megabox" style="flex:1; padding:8px 12px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px;">
+              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:8px 12px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px;">
+            </div>
+
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button id="btn-sync-login" type="button" style="flex:1; padding:8px 14px; background:var(--brand-primary); color:#fff; border:none; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Masuk Cloud</button>
+              <button id="btn-sync-register" type="button" style="flex:1; padding:8px 14px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Daftar Baru</button>
+            </div>
+            <div id="sync-auth-msg" style="font-size:12px; display:none;"></div>
+          </div>
+
+          <!-- Logged In State: Connected Info & Actions -->
+          <div id="sync-connected-box" style="background:#1e1e1e; padding:16px; border-radius:10px; border:1px solid rgba(92,184,92,0.25); display:none; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div id="sync-user-email" style="font-weight:700; font-size:14px; color:#fff;">user@domain.com</div>
+                <div id="sync-time-info" style="font-size:11px; color:var(--text-muted); margin-top:2px;">Tersinkron: Baru saja</div>
+              </div>
+              <span id="sync-tier-badge" style="font-size:11px; background:rgba(114,102,240,0.2); color:var(--brand-primary); padding:3px 10px; border-radius:12px; border:1px solid rgba(114,102,240,0.4); font-weight:700; text-transform:uppercase;">Free Plan</span>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Upload ke Cloud</button>
+              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Download dari Cloud</button>
+              <button id="btn-sync-logout" type="button" style="padding:7px 12px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Logout</button>
+            </div>
+            <div id="sync-op-msg" style="font-size:11px; color:var(--text-muted);"></div>
           </div>
         </div>
 
