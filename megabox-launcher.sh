@@ -10,7 +10,7 @@ fi
 
 # Detect Wayland socket on host
 if [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/$WAYLAND_DISPLAY" ]; then
-  exec npx electron "$DIR" --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer --no-sandbox --disable-gpu-sandbox "$@"
+  exec npx electron "$DIR" --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer --no-sandbox --disable-gpu-sandbox --remote-debugging-port=9222 "$@"
 else
   exec npx electron "$DIR" --no-sandbox "$@"
 fi
