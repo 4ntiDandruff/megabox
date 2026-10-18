@@ -3,6 +3,36 @@ const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
+const fs = require('fs');
+
+function checkGpuCacheConsistency() {
+  try {
+    const configDir = path.join(app.getPath('userData'));
+    const gpuHashFile = path.join(configDir, 'gpu_version_hash.txt');
+    const gpuCacheDir = path.join(configDir, 'GPUCache');
+    
+    // Read current Mesa / Linux GPU release fingerprint
+    let currentHash = 'unknown';
+    try {
+      const releaseInfo = fs.readFileSync('/proc/version', 'utf8');
+      currentHash = releaseInfo.split(' ').slice(0, 4).join('_');
+    } catch (_) {}
+
+    let previousHash = '';
+    if (fs.existsSync(gpuHashFile)) {
+      previousHash = fs.readFileSync(gpuHashFile, 'utf8').trim();
+    }
+
+    if (currentHash !== previousHash && fs.existsSync(gpuCacheDir)) {
+      console.log('[Wayland GPU Guard] Kernel/Mesa updated. Flushing stale GPUCache to prevent shader deadlock...');
+      fs.rmSync(gpuCacheDir, { recursive: true, force: true });
+    }
+    fs.mkdirSync(configDir, { recursive: true });
+    fs.writeFileSync(gpuHashFile, currentHash);
+  } catch (err) {
+    console.warn('[Wayland GPU Guard] Non-critical check error:', err.message);
+  }
+}
 
 let mainWindow = null;
 let tray = null;
@@ -113,6 +143,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  checkGpuCacheConsistency();
   db = initDatabase();
 
   // Initial cloud sync pull if logged in
@@ -141,6 +172,44 @@ app.whenReady().then(() => {
       console.warn('[Sync Startup] Pull skipped/failed:', err.message);
     });
   }
+
+    // Non-blocking Wayland Notification Relay with 500ms Circuit Breaker
+  ipcMain.handle('notify:dispatch', async (_, { title, body, icon }) => {
+    return new Promise((resolve) => {
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          console.warn('[Wayland D-Bus Circuit] Notification timed out (500ms). Bypassing to prevent UI freeze.');
+          resolve({ delivered: false, reason: 'timeout' });
+        }
+      }, 500);
+
+      try {
+        const { Notification } = require('electron');
+        if (Notification.isSupported()) {
+          const notif = new Notification({
+            title: title || 'Megabox',
+            body: body || '',
+            icon: icon || path.join(__dirname, '../renderer/assets/megabox.png'),
+            silent: false
+          });
+          notif.show();
+        }
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve({ delivered: true });
+        }
+      } catch (e) {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve({ delivered: false, error: e.message });
+        }
+      }
+    });
+  });
 
   ipcMain.handle('apps:get', () => {
     const list = getApps(db);
