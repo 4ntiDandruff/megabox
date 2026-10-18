@@ -9,6 +9,10 @@ contextBridge.exposeInMainWorld('megabox', {
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   
+  // Extensions API
+  getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),
+  toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
+
   // Cloud Sync API
   getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
   loginSync: (email, password) => ipcRenderer.invoke('sync:login', { email, password }),

@@ -3,6 +3,7 @@ const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
+const extensionsManager = require('./extensions-manager.js');
 const fs = require('fs');
 
 function checkGpuCacheConsistency() {
@@ -230,6 +231,16 @@ app.whenReady().then(() => {
         }
       }
     });
+  });
+
+  // Extensions Management IPC handlers
+  ipcMain.handle('extensions:get-catalog', () => {
+    return extensionsManager.getCatalog();
+  });
+
+  ipcMain.handle('extensions:toggle', async (_, { appId, extensionId, enabled }) => {
+    console.log(`[Megabox IPC] Extension toggle: ${extensionId} for ${appId} -> ${enabled}`);
+    return { success: true, appId, extensionId, enabled };
   });
 
   ipcMain.handle('apps:get', () => {
