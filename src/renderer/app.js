@@ -457,9 +457,9 @@
       const wv = document.getElementById('wv-' + app.id);
       if (wv) {
         if (app.id === id) {
-          // Wake up if hibernated
+          // Wake up immediately for active selected tab
           if (wv.dataset.hibernated === 'true') {
-            console.log('[Megabox Hibernate] Waking up app:', app.id);
+            console.log('[Megabox Hibernate] Immediate foreground wake up for active app:', app.id);
             wv.dataset.hibernated = 'false';
             wv.src = app.url;
             if (tab) tab.classList.remove('is-hibernated');
@@ -520,6 +520,39 @@
     }
   }
 
+  // Staggered Splay Queue for tab wakeups (800ms debounce interval to avoid OOM freeze)
+  const wakeQueue = [];
+  let isProcessingWakeQueue = false;
+
+  function queueServiceWake(app, wv, tab) {
+    if (wakeQueue.some(item => item.app.id === app.id)) return;
+    wakeQueue.push({ app, wv, tab });
+    processWakeQueue();
+  }
+
+  function processWakeQueue() {
+    if (isProcessingWakeQueue || wakeQueue.length === 0) return;
+    isProcessingWakeQueue = true;
+
+    const { app, wv, tab } = wakeQueue.shift();
+    console.log('[Megabox Splay] Staggered wake-up executing for service:', app.id);
+
+    try {
+      wv.dataset.hibernated = 'false';
+      wv.src = app.url;
+      if (tab) tab.classList.remove('is-hibernated');
+    } catch (err) {
+      console.warn('[Megabox Splay] Error waking up service:', app.id, err);
+    }
+
+    setTimeout(() => {
+      isProcessingWakeQueue = false;
+      if (wakeQueue.length > 0) {
+        processWakeQueue();
+      }
+    }, 800);
+  }
+
   function checkHibernation() {
     const now = Date.now();
     apps.forEach(app => {
@@ -528,7 +561,16 @@
         if (now - lastAccess > HIBERNATE_TIMEOUT_MS) {
           const wv = document.getElementById('wv-' + app.id);
           const tab = document.getElementById('tab-' + app.id);
+          
           if (wv && wv.dataset.hibernated !== 'true') {
+            // Anti-Interruption Circuit: Check if audio is currently playing (active voice call / WebRTC)
+            try {
+              if (typeof wv.isCurrentlyAudible === 'function' && wv.isCurrentlyAudible()) {
+                console.log('[Megabox Hibernate Guard] Active call or audio playing. Suppressing hibernation for:', app.id);
+                return;
+              }
+            } catch (_) {}
+
             console.log('[Megabox Hibernate] Putting idle service to sleep:', app.id);
             wv.dataset.hibernated = 'true';
             wv.src = 'about:blank';
