@@ -11,7 +11,7 @@
       --brand-primary-hover: #5e50ee;
       --brand-danger: #d9534f;
       --brand-success: #5cb85c;
-      --sidebar-width: 68px;
+      --sidebar-width: 72px;
       --sidebar-bg: #1e1e1e;
       --sidebar-active-bg: #2d2f31;
       --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
@@ -47,7 +47,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 12px 0 10px 0;
+      padding: 16px 0 14px 0;
       user-select: none;
       flex-shrink: 0;
       z-index: 20;
@@ -88,19 +88,19 @@
       align-items: center;
       overflow-y: auto;
       overflow-x: hidden;
-      gap: 10px;
-      padding: 0 4px;
+      gap: 12px;
+      padding: 0 8px;
     }
 
     .tabs-container::-webkit-scrollbar {
       display: none;
     }
 
-    /* Tab Item matching Ferdium .tab-item */
+    /* Tab Item - Perfectly Centered & Balanced */
     .tab-item {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -108,6 +108,7 @@
       cursor: pointer;
       background: transparent;
       border: 1px solid transparent;
+      margin: 0 auto;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -117,19 +118,20 @@
 
     .tab-item.is-active {
       background-color: var(--sidebar-active-bg);
-      border-color: rgba(114, 102, 240, 0.4);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      border-color: rgba(114, 102, 240, 0.45);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
     }
 
     .tab-item.is-active::before {
       content: '';
       position: absolute;
-      left: -8px;
-      top: 14px;
-      bottom: 14px;
-      width: 3px;
+      left: -10px;
+      top: 12px;
+      bottom: 12px;
+      width: 4px;
       background-color: var(--brand-primary);
       border-radius: 0 4px 4px 0;
+      box-shadow: 0 0 8px rgba(114, 102, 240, 0.6);
     }
 
     .tab-item.is-muted::after {
@@ -148,8 +150,8 @@
     }
 
     .tab-item img.tab-icon {
-      width: 30px;
-      height: 30px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       pointer-events: none;
       border-radius: 6px;

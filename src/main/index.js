@@ -9,7 +9,7 @@ let db = null;
 let isQuitting = false;
 
 function createTray() {
-  const iconPath = path.join(__dirname, '../renderer/assets/tray/tray_icon.png');
+  const iconPath = path.join(__dirname, '../renderer/assets/megabox.png');
   let trayIcon = nativeImage.createFromPath(iconPath);
   
   tray = new Tray(trayIcon);
@@ -59,7 +59,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: 'Megabox',
-    icon: path.join(__dirname, '../renderer/assets/tray/tray_icon.png'),
+    icon: path.join(__dirname, '../renderer/assets/megabox.png'),
     backgroundColor: '#1e1e1e',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),

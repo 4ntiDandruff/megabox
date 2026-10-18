@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="50%" stop-color="#7266f0"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+
+    <!-- Bevel Reflection -->
+    <linearGradient id="bevelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="25%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Inner Glow / Shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base with Shadow -->
+  <rect x="36" y="36" width="440" height="440" rx="110" fill="url(#bgGrad)" filter="url(#shadow)"/>
+
+  <!-- Inner Bevel Highlight -->
+  <rect x="40" y="40" width="432" height="432" rx="106" fill="none" stroke="url(#bevelGrad)" stroke-width="6"/>
+
+  <!-- Central Geometry: Workspace Multi-Split Panels (Lucide Scale 16) -->
+  <g transform="translate(116, 116)" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main Outer Window Frame -->
+    <rect x="0" y="0" width="280" height="280" rx="44" stroke-width="24"/>
+    
+    <!-- Vertical Sidebar Partition -->
+    <line x1="88" y1="0" x2="88" y2="280" stroke-width="22"/>
+
+    <!-- Horizontal Panels on the Right -->
+    <line x1="88" y1="140" x2="280" y2="140" stroke-width="20"/>
+
+    <!-- Brand 'M' / Active Service Dots in Sidebar -->
+    <circle cx="44" cy="64" r="14" fill="#ffffff" stroke="none"/>
+    <circle cx="44" cy="116" r="14" fill="#ffffff" fill-opacity="0.8" stroke="none"/>
+    <circle cx="44" cy="168" r="14" fill="#ffffff" fill-opacity="0.6" stroke="none"/>
+    <circle cx="44" cy="220" r="14" fill="#ffffff" fill-opacity="0.4" stroke="none"/>
+
+    <!-- Accent Card / Pill inside main view -->
+    <rect x="124" y="44" width="120" height="52" rx="16" fill="#ffffff" fill-opacity="0.25" stroke="none"/>
+    <rect x="124" y="180" width="120" height="52" rx="16" fill="#ffffff" fill-opacity="0.15" stroke="none"/>
+  </g>
+</svg>
