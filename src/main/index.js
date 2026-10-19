@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
-const { initDatabase, getApps, saveApp, deleteApp } = require('./db.js');
+const { initDatabase, getApps, saveApp, deleteApp, reorderApp } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
 const extensionsManager = require('./extensions-manager.js');
@@ -316,6 +316,15 @@ async function cacheFaviconToDataUri(iconUrl) {
     triggerAutoSync();
     return true;
   });
+
+  ipcMain.handle('apps:reorder', (_, { id, dir }) => {
+    reorderApp(db, id, dir);
+    const updated = getApps(db);
+    mainWindow.webContents.send('apps:updated', updated);
+    triggerAutoSync();
+    return updated;
+  });
+
 
   ipcMain.handle('service:set-proxy', async (_, { serviceId, proxyRules }) => {
     try {

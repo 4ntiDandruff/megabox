@@ -27,6 +27,7 @@
   const inputServiceName = document.getElementById('input-service-name');
   const inputServiceUrl = document.getElementById('input-service-url');
   const inputServiceIcon = document.getElementById('input-service-icon');
+  const inputServiceId = document.getElementById('input-service-id');
 
   // Custom Context Menu (Power-User Controls)
   const contextMenu = document.getElementById('context-menu');
@@ -39,6 +40,8 @@
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
   const ctxTile = document.getElementById('ctx-tile');
+  const ctxMoveUp = document.getElementById('ctx-move-up');
+  const ctxMoveDown = document.getElementById('ctx-move-down');
   const ctxEdit = document.getElementById('ctx-edit');
   const ctxDelete = document.getElementById('ctx-delete');
 
@@ -128,6 +131,7 @@
       if (e.key === 'Escape') {
         catalogModal.style.display = 'none';
         configureModal.style.display = 'none';
+        if (typeof closeQuickSwitcher === 'function') closeQuickSwitcher();
         hideContextMenu();
       }
       // Alt+1 to Alt+9 switch tab
@@ -141,7 +145,11 @@
     });
 
     // Close context menu on outside click
-    window.addEventListener('click', () => hideContextMenu(), true);
+    window.addEventListener('click', (e) => {
+      if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
+        hideContextMenu();
+      }
+    }, true);
     window.addEventListener('mousedown', (e) => {
       if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) {
         hideContextMenu();
@@ -211,12 +219,39 @@
       };
     }
 
+    if (ctxMoveUp) {
+      ctxMoveUp.onclick = async () => {
+        if (contextTargetApp && window.megabox && window.megabox.reorderApp) {
+          const targetId = contextTargetApp.id;
+          hideContextMenu();
+          await window.megabox.reorderApp(targetId, 'up');
+        } else {
+          hideContextMenu();
+        }
+      };
+    }
+
+    if (ctxMoveDown) {
+      ctxMoveDown.onclick = async () => {
+        if (contextTargetApp && window.megabox && window.megabox.reorderApp) {
+          const targetId = contextTargetApp.id;
+          hideContextMenu();
+          await window.megabox.reorderApp(targetId, 'down');
+        } else {
+          hideContextMenu();
+        }
+      };
+    }
+
     if (ctxEdit) {
       ctxEdit.onclick = () => {
         if (contextTargetApp) {
-          openConfigureForm(contextTargetApp.name, contextTargetApp.url, contextTargetApp.icon, contextTargetApp.proxy);
+          const target = contextTargetApp;
+          hideContextMenu();
+          openConfigureForm(target.name, target.url, target.icon, target.proxy, target.partition_type, target.id);
+        } else {
+          hideContextMenu();
         }
-        hideContextMenu();
       };
     }
 
@@ -396,12 +431,19 @@
     });
   }
 
-  function openConfigureForm(name, url, icon, proxy = '') {
-    formModalTitle.textContent = `Configure ${name}`;
+  function openConfigureForm(name, url, icon, proxy = '', partitionType = 'private', existingId = null) {
+    if (existingId) {
+      formModalTitle.textContent = `Ubah Layanan ${name}`;
+      if (inputServiceId) inputServiceId.value = existingId;
+    } else {
+      formModalTitle.textContent = `Tambah Layanan ${name}`;
+      if (inputServiceId) inputServiceId.value = '';
+    }
     inputServiceName.value = name;
     inputServiceUrl.value = url;
     inputServiceIcon.value = icon;
     if (inputServiceProxy) inputServiceProxy.value = proxy || '';
+    if (inputServicePartition) inputServicePartition.value = partitionType || 'private';
     configureModal.style.display = 'flex';
     setTimeout(() => inputServiceName.focus(), 100);
   }
@@ -889,10 +931,11 @@
     }
   }
 
-  async function handleSaveService() {
+    async function handleSaveService() {
     const name = inputServiceName.value.trim();
     let url = inputServiceUrl.value.trim();
     const icon = inputServiceIcon.value || 'custom';
+    const targetId = inputServiceId ? inputServiceId.value.trim() : '';
     if (!name || !url) return;
 
     // Handle teamId placeholder (e.g. {teamId}.slack.com)
@@ -902,8 +945,10 @@
       url = url.replace('{teamId}', team.trim());
     }
 
-    const existing = apps.find(a => a.name.toLowerCase() === name.toLowerCase());
-    const id = existing ? existing.id : (icon !== 'custom' && !apps.some(a => a.id === icon) ? icon : ('app_' + Date.now()));
+    const existing = targetId ? apps.find(a => a.id === targetId) : null;
+    
+    // Multi-account guarantee: If not editing existing, generate unique ID
+    const id = existing ? existing.id : ('app_' + icon + '_' + Date.now());
     const proxy = inputServiceProxy ? inputServiceProxy.value.trim() : '';
     const partType = inputServicePartition ? inputServicePartition.value : 'private';
     const partitionStr = partType === 'shared' ? 'persist:workspace_shared' : ('persist:' + id);
@@ -925,11 +970,10 @@
       btnFormSave.textContent = 'Menyimpan...';
       try {
         await window.megabox.saveApp(newApp);
-        // onAppsUpdated will automatically update apps array and renderTabs() cleanly without duplicating
         selectApp(id);
       } finally {
         btnFormSave.disabled = false;
-        btnFormSave.textContent = 'Save Service';
+        btnFormSave.textContent = 'Simpan';
       }
     }
 

@@ -4,6 +4,18 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.5] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Multi-Instance & Multi-Akun Tanpa Batas**: Memungkinkan penambahan aplikasi yang sama berulang kali (misal: WhatsApp Kantor, WhatsApp Pribadi, WhatsApp CS) dengan ID unik otomatis dan partisi sesi terisolasi penuh (`persist:app_...`) sehingga login, session, dan cookie tidak saling bertubrukan.
+- **Pindah Urutan Tab Naik / Turun (Reorder Tabs)**: Menambahkan menu "Pindah Naik" (Alt+↑) dan "Pindah Turun" (Alt+↓) pada menu konteks tab sidebar, terhubung langsung ke IPC `apps:reorder` dan atomic storage `reorderApp` di database lokal serta terintegrasi otomatis dengan sinkronisasi cloud.
+
+### Diperbaiki (Fixed)
+- **Menu Konteks "Ubah Layanan"**: Memperbaiki listener event klik global (`useCapture`) yang sebelumnya menghapus referensi `contextTargetApp` sebelum aksi `ctxEdit.onclick` dieksekusi, serta menambahkan pelacakan ID layanan (`input-service-id`) agar form modal mengedit data yang tepat tanpa membuat duplikasi.
+- **Menutup Menu Konteks Klik Luar**: Memastikan klik kiri di area mana pun di luar menu konteks langsung menutup menu secara bersih dan instan tanpa memblokir klik pada item menu itu sendiri.
+
+---
+
 ## [1.2.4] - 2026-10-19
 
 ### Dihapus (Removed)

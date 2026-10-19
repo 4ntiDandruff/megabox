@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('megabox', {
   saveApp: (app) => ipcRenderer.invoke('apps:save', app),
   cacheFavicon: (appId, iconUrl) => ipcRenderer.invoke('apps:cache-favicon', { appId, iconUrl }),
   deleteApp: (id) => ipcRenderer.invoke('apps:delete', id),
+  reorderApp: (id, dir) => ipcRenderer.invoke('apps:reorder', { id, dir }),
   setServiceProxy: (serviceId, proxyRules) => ipcRenderer.invoke('service:set-proxy', { serviceId, proxyRules }),
   openExternal: (url) => shell.openExternal(url),
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),

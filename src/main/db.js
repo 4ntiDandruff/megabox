@@ -78,10 +78,29 @@ function deleteApp(db, id) {
   db.write(data);
 }
 
+
+function reorderApp(db, id, direction) {
+  const data = db.read();
+  data.apps = (data.apps || []).sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+  const idx = data.apps.findIndex(a => a.id === id);
+  if (idx < 0) return data.apps;
+
+  const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+  if (targetIdx >= 0 && targetIdx < data.apps.length) {
+    const temp = data.apps[idx];
+    data.apps[idx] = data.apps[targetIdx];
+    data.apps[targetIdx] = temp;
+    data.apps.forEach((a, i) => { a.order_index = i; });
+    db.write(data);
+  }
+  return data.apps;
+}
+
 module.exports = {
   getDefaultDbPath,
   initDatabase,
   getApps,
   saveApp,
-  deleteApp
+  deleteApp,
+  reorderApp
 };

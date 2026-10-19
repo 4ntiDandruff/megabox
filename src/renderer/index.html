@@ -1122,6 +1122,7 @@
         <input type="text" id="input-service-proxy" class="form-input" placeholder="Koneksi langsung atau socks5://127.0.0.1:1080">
       </div>
 
+      <input type="hidden" id="input-service-id" value="">
       <input type="hidden" id="input-service-icon" value="custom">
 
       <div class="modal-actions">
@@ -1159,6 +1160,15 @@
     </div>
     <div id="ctx-tile" class="context-menu-item">
       <span id="ctx-tile-label">Bagi Layar</span>
+    </div>
+    <div class="context-menu-divider"></div>
+    <div id="ctx-move-up" class="context-menu-item">
+      <span>Pindah Naik</span>
+      <span style="font-size:11px;opacity:0.6;">Alt+↑</span>
+    </div>
+    <div id="ctx-move-down" class="context-menu-item">
+      <span>Pindah Turun</span>
+      <span style="font-size:11px;opacity:0.6;">Alt+↓</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-edit" class="context-menu-item">
