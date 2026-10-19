@@ -1669,13 +1669,13 @@
             </div>
 
             <div style="font-size: 11.5px; color: #cbd5e1; line-height: 1.5;">
-              Megabox dibangun dengan prinsip zero-bloat, hemat RAM, dan menghargai privasi pengguna. Jika aplikasi ini membantu produktivitas meja kerja Anda, Anda bisa mentraktir kopi kreator melalui Saweria atau GitHub Sponsors.
+              Megabox dibangun dengan prinsip zero-bloat, hemat RAM, dan menghargai privasi pengguna. Jika aplikasi ini membantu produktivitas meja kerja Anda, Anda bisa mentraktir kopi kreator melalui QRIS atau GitHub Sponsors.
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 2px;">
-              <button id="btn-support-saweria" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px; color: #fef08a; border-color: rgba(245, 158, 11, 0.35);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                <span>Traktir via Saweria</span>
+              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px; color: #fef08a; border-color: rgba(245, 158, 11, 0.35);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Donasi via QRIS</span>
               </button>
               <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -1812,9 +1812,49 @@
     </div>
   </aside>
 
+  <!-- MODAL POPUP QRIS (DONASI) -->
+  <div id="qris-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #18191d; border: 1px solid #2e281e; border-radius: 12px; width: 100%; max-width: 360px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;">
+      
+      <!-- Close Button -->
+      <button id="btn-qris-close" type="button" style="position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 150ms ease;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <!-- Header -->
+      <div style="text-align: center;">
+        <div style="font-size: 15px; font-weight: 700; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span style="color: #f59e0b;">QRIS</span>
+          <span>Donasi Megabox</span>
+        </div>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 3px;">Dukungan sukarela untuk pengembangan software zero-bloat</div>
+      </div>
+
+      <!-- QR Image Container / Placeholder (Siap dipasang gambar asli kapan saja) -->
+      <div style="width: 240px; height: 240px; border-radius: 8px; background: #ffffff; padding: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid #30343d; position: relative; overflow: hidden;">
+        <img id="qris-img" src="assets/qris.png" onerror="this.style.display='none'; document.getElementById('qris-placeholder').style.display='flex';" style="width: 100%; height: 100%; object-fit: contain;" alt="QRIS Megabox">
+        <div id="qris-placeholder" style="display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; color: #1e293b;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><line x1="7" y1="17" x2="7" y2="17.01"></line><line x1="17" y1="7" x2="17" y2="7.01"></line></svg>
+          <div style="font-size: 12px; font-weight: 700; color: #0f172a;">Menunggu Gambar QRIS</div>
+          <div style="font-size: 10px; color: #64748b; line-height: 1.3;">Simpan gambar QRIS di:<br><code>src/renderer/assets/qris.png</code></div>
+        </div>
+      </div>
+
+      <!-- Instructions / Scan Badges -->
+      <div style="width: 100%; text-align: center; font-size: 11px; color: #cbd5e1; line-height: 1.4; background: #1f2025; padding: 8px 12px; border-radius: 6px; border: 1px solid #2e3037;">
+        Bisa dipindai dari BCA, Mandiri, GoPay, OVO, Dana, ShopeePay, dan seluruh perbankan nasional.
+      </div>
+
+      <button id="btn-qris-done" type="button" class="btn-apple-pill-dark" style="width: 100%; justify-content: center; padding: 9px; font-size: 12px; font-weight: 600;">
+        Tutup
+      </button>
+
+    </div>
+  </div>
+
   <script src="app.js"></script>
 
 
 
-</body>
+  </body>
 </html>

@@ -1482,8 +1482,11 @@
   const btnBackupExport = document.getElementById('btn-backup-export');
   const btnBackupImport = document.getElementById('btn-backup-import');
   const backupStatusMsg = document.getElementById('backup-status-msg');
-  const btnSupportSaweria = document.getElementById('btn-support-saweria');
+  const btnSupportQris = document.getElementById('btn-support-qris');
   const btnSupportGithub = document.getElementById('btn-support-github');
+  const qrisModal = document.getElementById('qris-modal');
+  const btnQrisClose = document.getElementById('btn-qris-close');
+  const btnQrisDone = document.getElementById('btn-qris-done');
 
   if (btnBackupExport) {
     btnBackupExport.addEventListener('click', async () => {
@@ -1561,13 +1564,24 @@
     });
   }
 
-  // Donation / Sponsor Click Handlers
-  if (btnSupportSaweria) {
-    btnSupportSaweria.addEventListener('click', () => {
-      if (window.megabox && window.megabox.openExternal) {
-        window.megabox.openExternal('https://saweria.co/4ntiDandruff');
-      }
-    });
+  // Donation / Sponsor Click Handlers (QRIS Modal Popup)
+  if (btnSupportQris && qrisModal) {
+    btnSupportQris.onclick = () => {
+      qrisModal.style.display = 'flex';
+    };
+    if (btnQrisClose) {
+      btnQrisClose.onclick = () => {
+        qrisModal.style.display = 'none';
+      };
+    }
+    if (btnQrisDone) {
+      btnQrisDone.onclick = () => {
+        qrisModal.style.display = 'none';
+      };
+    }
+    qrisModal.onclick = (e) => {
+      if (e.target === qrisModal) qrisModal.style.display = 'none';
+    };
   }
 
   if (btnSupportGithub) {
