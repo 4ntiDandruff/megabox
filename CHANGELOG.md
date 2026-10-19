@@ -4,6 +4,17 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.4] - 2026-10-19
+
+### Dihapus (Removed)
+- **Eliminasi 2.216 Asset SVG Orphan**: Memangkas 2.216 file vektor SVG yang tidak terdaftar di katalog layanan maupun antarmuka sistem (menyusutkan direktori icon dari 2.693 menjadi 481 icon esensial, menghemat ruang disk ~23 MB dan merampingkan git tree).
+- **Pembersihan Dead Variables & Floating State**: Menghapus sisa variabel mengambang (btnAddOpen, ctxTileLabel, txt, avatarContainer, OriginalNotification, autoLockMinutes, dan lastUserActivity) di renderer dan preload.
+
+### Diperbaiki (Fixed)
+- **Keseimbangan Struktur DOM index.html**: Menghapus tag penutup </div> yatim piatu pada modal quickswitch, mengembalikan validasi DOM 100% seimbang (balance selisih tag = 0).
+
+---
+
 ## [1.2.3] - 2026-10-19
 
 ### Dihapus (Removed)

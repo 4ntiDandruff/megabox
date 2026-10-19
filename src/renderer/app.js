@@ -3,7 +3,6 @@
 (function() {
   const tabsContainer = document.getElementById('tabs-container');
   const webviewsContainer = document.getElementById('webviews-container');
-  const btnAddOpen = document.getElementById('btn-add-open');
   const btnReload = document.getElementById('btn-reload');
 
   const btnDnd = document.getElementById('btn-dnd');
@@ -40,7 +39,6 @@
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
   const ctxTile = document.getElementById('ctx-tile');
-  const ctxTileLabel = document.getElementById('ctx-tile-label');
   const ctxEdit = document.getElementById('ctx-edit');
   const ctxDelete = document.getElementById('ctx-delete');
 
@@ -1197,7 +1195,6 @@
   function hh(a, b, c, d, x, s, t) { return cmn(b ^ c ^ d, a, b, x, s, t); }
   function ii(a, b, c, d, x, s, t) { return cmn(c ^ (b | (~d)), a, b, x, s, t); }
   function md51(s) {
-    var txt = '';
     var n = s.length, state = [1732584193, -271733879, -1732584194, 271733878], i;
     for (i = 64; i <= s.length; i += 64) {
       md5Cycle(state, md5blk(s.substring(i - 64, i)));
@@ -1254,7 +1251,6 @@
   const btnSyncManualPull = document.getElementById('btn-sync-manual-pull');
   const btnSyncLogout = document.getElementById('btn-sync-logout');
   const syncOpMsg = document.getElementById('sync-op-msg');
-  const avatarContainer = document.getElementById('avatar-container');
   const avatarDefaultIcon = document.getElementById('avatar-default-icon');
   const avatarUserImg = document.getElementById('avatar-user-img');
   const avatarUserInitials = document.getElementById('avatar-user-initials');
@@ -1329,24 +1325,18 @@
   }
 
   if (btnSettings && settingsModal) {
-    const settingAutoLockVal = document.getElementById('setting-autolock-val');
     btnSettings.onclick = async () => {
       settingsModal.style.display = 'flex';
-      if (settingAutoLockVal) settingAutoLockVal.value = String(autoLockMinutes);
       await refreshSyncUI();
     };
     if (btnSettingsClose) {
       btnSettingsClose.onclick = () => {
-        settingsModal.style.display = 'none';
+        settingsModal.style.display = "none";
       };
     }
     if (btnSettingsDone) {
       btnSettingsDone.onclick = () => {
-        if (settingAutoLockVal) {
-          autoLockMinutes = parseInt(settingAutoLockVal.value, 10);
-          localStorage.setItem('megabox_autolock_min', String(autoLockMinutes));
-        }
-        settingsModal.style.display = 'none';
+        settingsModal.style.display = "none";
       };
     }
     settingsModal.onclick = (e) => {
@@ -1580,10 +1570,4 @@
 
   if (btnDrawerClose) btnDrawerClose.onclick = closeExtensionDrawer;
   if (drawerOverlay) drawerOverlay.onclick = closeExtensionDrawer;
-
-
-  // --- Idle Auto-Lock Timer with Active Audio Call Immunity ---
-  let lastUserActivity = Date.now();
-  let autoLockMinutes = parseInt(localStorage.getItem('megabox_autolock_min') || '10', 10);
-
 })();

@@ -25,8 +25,6 @@ const { ipcRenderer } = require('electron');
 
 // 2. Desktop Notification & Badge Bridge
 (function bridgeNotifications() {
-  const OriginalNotification = window.Notification;
-
   function CustomNotification(title, options = {}) {
     ipcRenderer.sendToHost('notification', { title, options });
     return new EventTarget();
