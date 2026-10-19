@@ -603,6 +603,16 @@
   function renderTabs() {
     tabsContainer.innerHTML = '';
 
+    // Synchronize Webviews with current apps list (cleanup orphaned webviews after import or delete)
+    const validAppIds = new Set(apps.map(a => 'wv-' + a.id));
+    const existingWvs = webviewsContainer.querySelectorAll('webview');
+    existingWvs.forEach(wv => {
+      if (!validAppIds.has(wv.id)) {
+        console.log('[Megabox Cleanup] Removing orphan webview:', wv.id);
+        wv.remove();
+      }
+    });
+
     apps.forEach((app, index) => {
       const tab = document.createElement('div');
       tab.id = 'tab-' + app.id;
@@ -1591,6 +1601,9 @@
             backupStatusMsg.style.borderColor = 'rgba(34, 197, 94, 0.4)';
             backupStatusMsg.style.color = '#4ade80';
             backupStatusMsg.textContent = `Berhasil memulihkan ${res.count} aplikasi dari berkas cadangan!`;
+          }
+          if (apps.length > 0) {
+            selectApp(apps[0].id);
           }
         } else {
           if (backupStatusMsg) {
