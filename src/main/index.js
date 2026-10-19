@@ -245,6 +245,46 @@ app.whenReady().then(() => {
   });
 
 
+async function resolveFaviconForUrl(targetUrl) {
+  if (!targetUrl || typeof targetUrl !== 'string') return null;
+  let domain = '';
+  let origin = '';
+  try {
+    const u = new URL(targetUrl.startsWith('http') ? targetUrl : ('https://' + targetUrl));
+    domain = u.hostname;
+    origin = u.origin;
+  } catch (_) {
+    return null;
+  }
+
+  const candidates = [
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
+    `${origin}/favicon.ico`,
+    `${origin}/apple-touch-icon.png`
+  ];
+
+  for (const favUrl of candidates) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const resp = await fetch(favUrl, {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'Mozilla/5.0 Megabox Favicon' }
+      });
+      clearTimeout(timeoutId);
+      if (resp.ok) {
+        const ct = resp.headers.get('content-type') || 'image/png';
+        const arrayBuf = await resp.arrayBuffer();
+        const buf = Buffer.from(arrayBuf);
+        if (buf.length > 100 && buf.length <= 1500000) {
+          return 'data:' + ct + ';base64,' + buf.toString('base64');
+        }
+      }
+    } catch (_) {}
+  }
+  return null;
+}
+
 async function cacheFaviconToDataUri(iconUrl) {
   if (!iconUrl || typeof iconUrl !== 'string') return null;
   if (iconUrl.startsWith('data:')) return iconUrl;
@@ -289,7 +329,19 @@ async function cacheFaviconToDataUri(iconUrl) {
     return list;
   });
 
-  ipcMain.handle('apps:save', (_, appData) => {
+  ipcMain.handle('apps:save', async (_, appData) => {
+    // Auto-generate favicon for custom services if not yet cached
+    if ((!appData.custom_icon || !appData.custom_icon.startsWith('data:')) && (!appData.icon || appData.icon === 'custom' || appData.icon === 'globe' || appData.icon === 'web')) {
+      try {
+        const autoFav = await resolveFaviconForUrl(appData.url);
+        if (autoFav) {
+          appData.custom_icon = autoFav;
+          console.log(`[Favicon] Auto-generated and cached favicon for ${appData.name}`);
+        }
+      } catch (err) {
+        console.warn('[Favicon Auto-Gen Failed]', err.message);
+      }
+    }
     saveApp(db, appData);
     if (appData.id && appData.proxy) {
       try {

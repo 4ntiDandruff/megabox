@@ -4,6 +4,15 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.0] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Auto-Generate & Database Cache Favicon Custom Service**: Layanan kustom (tambah web manual) kini secara otomatis mengambil icon favicon asli dari domain web tersebut (menggunakan multi-tier resolver: Google S2 64px Favicon API + root origin `/favicon.ico` + `/apple-touch-icon.png`), mengonversinya menjadi Base64 Data URI, dan menyimpannya langsung ke database lokal (`custom_icon`).
+- **Retensi Permanen Lintas Sesi**: Icon favicon yang sudah tersimpan di database tidak akan hilang saat aplikasi ditutup atau dijalankan ulang, langsung dirender sejak cold-start tanpa mengandalkan network request ulang atau icon globe generik.
+- **Dynamic In-Page Favicon Sync**: Webview secara aktif mendengarkan event `page-favicon-updated` dan `dom-ready` untuk menyelaraskan favicon beresolusi tinggi langsung dari tag `<link rel="icon">` halaman dan menyimpannya ke database secara otomatis.
+
+---
+
 ## [1.2.9] - 2026-10-19
 
 ### Diubah (Changed)

@@ -549,7 +549,12 @@
               if (res && res.success && res.dataUri) {
                 app.custom_icon = res.dataUri;
                 const tabImg = document.querySelector(`#tab-${app.id} img.tab-icon`);
-                if (tabImg) tabImg.src = res.dataUri;
+                if (tabImg) {
+                  tabImg.src = res.dataUri;
+                  tabImg.style.display = 'block';
+                }
+                const fallback = document.querySelector(`#tab-${app.id} .tab-fallback`);
+                if (fallback) fallback.remove();
               }
             }).catch(e => console.warn('[Favicon Cache Error]', e));
           }
