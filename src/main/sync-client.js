@@ -151,6 +151,20 @@ function getSyncStatus() {
   };
 }
 
+async function refreshUserProfile() {
+  const auth = getStoredAuth();
+  if (!auth || !auth.token) return null;
+  try {
+    const me = await apiRequest('/api/v1/auth/me', 'GET', null, auth.token);
+    if (me && me.id) {
+      auth.user.tier = me.plan_tier;
+      auth.user.max_services = me.max_services;
+      saveStoredAuth(auth);
+    }
+  } catch (e) {}
+  return auth.user;
+}
+
 async function pullWorkspace() {
   const auth = getStoredAuth();
   if (!auth || !auth.token) {
@@ -196,6 +210,7 @@ async function pushWorkspace(services, settings = {}) {
 }
 
 module.exports = {
+  refreshUserProfile,
   getStoredAuth,
   getSyncStatus,
   register,

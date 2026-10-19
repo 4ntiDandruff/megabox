@@ -4,6 +4,15 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.4.0] - 2026-10-19
+
+### Diubah & Ditingkatkan (Changed & Enhanced)
+- **Tombol Sinkronisasi Tunggal Terpadu**: Mengeliminasi tombol ganda (Unggah & Unduh) menjadi tombol tunggal yang elegan: **Sinkron** (menyelaraskan tatanan lokal dan cloud secara otomatis dua arah) dan **Keluar**.
+- **Dukungan SaaS & Format Email Akun Gmail**: Memperbarui antarmuka login/registrasi dengan placeholder resmi standar Gmail (nama@gmail.com) serta validasi akun yang fleksibel untuk kebutuhan SaaS masa depan.
+- **Pembaruan Profil Otomatis & Badge PRO**: Mengintegrasikan endpoint /api/v1/auth/me agar status tier akun (PRO) dan kuota (999 layanan) langsung tampil akurat di UI desktop tanpa harus login ulang.
+
+---
+
 ## [1.3.8] - 2026-10-19
 
 ### Ditambahkan (Added)

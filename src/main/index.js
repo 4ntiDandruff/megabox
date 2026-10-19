@@ -402,7 +402,8 @@ async function cacheFaviconToDataUri(iconUrl) {
   });
 
   // Cloud Sync IPC Handlers
-  ipcMain.handle('sync:get-status', () => {
+  ipcMain.handle('sync:get-status', async () => {
+    if (sync.refreshUserProfile) await sync.refreshUserProfile();
     return sync.getSyncStatus();
   });
 
@@ -452,22 +453,14 @@ async function cacheFaviconToDataUri(iconUrl) {
     return { success: true };
   });
 
-  ipcMain.handle('sync:manual-push', async () => {
+    ipcMain.handle('sync:now', async () => {
     try {
-      const res = await sync.pushWorkspace(getApps(db), getSettings(db));
-      return { success: true, data: res };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  });
-
-  ipcMain.handle('sync:manual-pull', async () => {
-    try {
-      const res = await sync.pullWorkspace();
-      if (res.exists && res.layout) {
+      const pullRes = await sync.pullWorkspace();
+      let restoredCount = 0;
+      if (pullRes.exists && pullRes.layout) {
         const currentData = db.read();
-        if (res.layout.services && res.layout.services.length > 0) {
-          currentData.apps = res.layout.services.map((s, idx) => ({
+        if (pullRes.layout.services && pullRes.layout.services.length > 0) {
+          currentData.apps = pullRes.layout.services.map((s, idx) => ({
             id: s.id,
             name: s.name,
             url: s.url,
@@ -478,124 +471,29 @@ async function cacheFaviconToDataUri(iconUrl) {
             is_enabled: 1,
             proxy: s.proxy || ''
           }));
+          restoredCount = currentData.apps.length;
         }
-        if (res.layout.settings && typeof res.layout.settings === 'object') {
-          currentData.settings = Object.assign({}, currentData.settings || {}, res.layout.settings);
+        if (pullRes.layout.settings && typeof pullRes.layout.settings === 'object') {
+          currentData.settings = Object.assign({}, currentData.settings || {}, pullRes.layout.settings);
         }
         db.write(currentData);
         mainWindow.webContents.send('apps:updated', getApps(db));
         mainWindow.webContents.send('settings:updated', getSettings(db));
-        return { success: true, count: res.layout.services ? res.layout.services.length : 0 };
       }
-      return { success: false, error: 'Belum ada data workspace di cloud' };
+      
+      // Always backup current local state to cloud
+      const pushRes = await sync.pushWorkspace(getApps(db), getSettings(db));
+      if (mainWindow) {
+        mainWindow.webContents.send('sync:status-updated', sync.getSyncStatus());
+      }
+      return { 
+        success: true, 
+        count: restoredCount || getApps(db).length,
+        version_hash: pushRes.version_hash
+      };
     } catch (err) {
       return { success: false, error: err.message };
     }
-  });
-
-
-
-  // System Settings IPC Handlers
-  ipcMain.handle('settings:get', () => {
-    return getSettings(db);
-  });
-
-  ipcMain.handle('settings:save', (_, newSettings) => {
-    const updated = saveSettings(db, newSettings);
-    // Apply autostart if toggled
-    triggerAutoSync();
-    if (typeof newSettings.autostart === 'boolean') {
-      try {
-        app.setLoginItemSettings({
-          openAtLogin: newSettings.autostart,
-          path: process.execPath,
-          args: [path.join(__dirname, '../../')]
-        });
-      } catch (err) {
-        console.warn('[Autostart] setLoginItemSettings error:', err.message);
-      }
-    }
-    return updated;
-  });
-
-  ipcMain.handle('system:clear-cache', async () => {
-    try {
-      if (session.defaultSession) {
-        await session.defaultSession.clearCache();
-      }
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  });
-
-  // Universal Keyboard Shortcut Interceptor for Main Window and all Guest Webviews
-  function handleInputShortcut(input) {
-    if (input.type !== "keyDown") return null;
-    const isCtrl = Boolean(input.control || input.meta);
-    const isAlt = Boolean(input.alt);
-    const isShift = Boolean(input.shift);
-    const key = input.key;
-
-    // Alt + 1..9 (Switch tab directly)
-    if (isAlt && !isCtrl && !isShift && key >= "1" && key <= "9") {
-      return { action: "switch-tab", index: parseInt(key, 10) - 1 };
-    }
-    // Alt + ArrowUp / Up (Pindah Naik)
-    if (isAlt && !isCtrl && !isShift && (key === "ArrowUp" || key === "Up")) {
-      return { action: "reorder-active-app", dir: "up" };
-    }
-    // Alt + ArrowDown / Down (Pindah Turun)
-    if (isAlt && !isCtrl && !isShift && (key === "ArrowDown" || key === "Down")) {
-      return { action: "reorder-active-app", dir: "down" };
-    }
-    // Alt + ArrowLeft / Left (Kembali)
-    if (isAlt && !isCtrl && !isShift && (key === "ArrowLeft" || key === "Left")) {
-      return { action: "nav-history", dir: "back" };
-    }
-    // Alt + ArrowRight / Right (Maju)
-    if (isAlt && !isCtrl && !isShift && (key === "ArrowRight" || key === "Right")) {
-      return { action: "nav-history", dir: "forward" };
-    }
-    // Ctrl + R / F5 (Muat Ulang Layanan)
-    if ((isCtrl && !isAlt && (key === "r" || key === "R")) || key === "F5") {
-      return { action: "reload-active" };
-    }
-    // Ctrl + K / Ctrl + P (Quick Switcher)
-    if (isCtrl && !isAlt && (key === "k" || key === "K" || key === "p" || key === "P")) {
-      return { action: "quick-switch" };
-    }
-    // Ctrl + N (Tambah Layanan / Katalog)
-    if (isCtrl && !isAlt && (key === "n" || key === "N")) {
-      return { action: "open-catalog" };
-    }
-    // Alt + Shift + D (Toggle DND)
-    if (isAlt && isShift && !isCtrl && (key === "D" || key === "d")) {
-      return { action: "toggle-dnd" };
-    }
-    // Alt + E (Toggle Extension Drawer)
-    if (isAlt && !isShift && !isCtrl && (key === "e" || key === "E")) {
-      return { action: "toggle-extensions" };
-    }
-    // Alt + S (Toggle Split Screen 1x2, disambiguated from Alt+2)
-    if (isAlt && !isCtrl && (key === "s" || key === "S")) {
-      return { action: "toggle-split" };
-    }
-    // Escape (Close Dialogs / Drawers / Context Menu)
-    if (key === "Escape") {
-      return { action: "escape" };
-    }
-    return null;
-  }
-
-  app.on("web-contents-created", (event, contents) => {
-    contents.on("before-input-event", (e, input) => {
-      const match = handleInputShortcut(input);
-      if (match && mainWindow && !mainWindow.isDestroyed()) {
-        e.preventDefault();
-        mainWindow.webContents.send("shortcut:action", match);
-      }
-    });
   });
 
   createWindow();

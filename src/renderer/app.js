@@ -1397,8 +1397,7 @@
   const syncUserEmail = document.getElementById('sync-user-email');
   const syncTimeInfo = document.getElementById('sync-time-info');
   const syncTierBadge = document.getElementById('sync-tier-badge');
-  const btnSyncManualPush = document.getElementById('btn-sync-manual-push');
-  const btnSyncManualPull = document.getElementById('btn-sync-manual-pull');
+  const btnSyncNow = document.getElementById('btn-sync-now');
   const btnSyncLogout = document.getElementById('btn-sync-logout');
   const syncOpMsg = document.getElementById('sync-op-msg');
   const syncStatusDot = document.getElementById('sync-status-dot');
@@ -1724,46 +1723,26 @@
     };
   }
 
-  if (btnSyncManualPush) {
-    btnSyncManualPush.onclick = async () => {
-      btnSyncManualPush.textContent = 'Uploading...';
+  if (btnSyncNow) {
+    btnSyncNow.onclick = async () => {
+      btnSyncNow.disabled = true;
+      btnSyncNow.innerHTML = '<span>Menyelaraskan...</span>';
       try {
-        const res = await window.megabox.manualPushSync();
+        const res = await window.megabox.syncNow();
         if (res.success) {
-          syncOpMsg.textContent = 'Berhasil upload tata letak tab ke cloud!';
+          syncOpMsg.textContent = '[+] Berhasil disinkronkan (' + res.count + ' tab & preferensi)!';
           syncOpMsg.style.color = 'var(--brand-success)';
           await refreshSyncUI();
         } else {
-          syncOpMsg.textContent = res.error || 'Gagal upload';
+          syncOpMsg.textContent = '[-] ' + (res.error || 'Gagal sinkron');
           syncOpMsg.style.color = '#ef4444';
         }
       } catch (err) {
-        syncOpMsg.textContent = err.message;
+        syncOpMsg.textContent = '[-] Error: ' + err.message;
         syncOpMsg.style.color = '#ef4444';
       } finally {
-        btnSyncManualPush.textContent = 'Upload ke Cloud';
-      }
-    };
-  }
-
-  if (btnSyncManualPull) {
-    btnSyncManualPull.onclick = async () => {
-      btnSyncManualPull.textContent = 'Downloading...';
-      try {
-        const res = await window.megabox.manualPullSync();
-        if (res.success) {
-          syncOpMsg.textContent = 'Berhasil download tatanan (' + res.count + ' tab)!';
-          syncOpMsg.style.color = 'var(--brand-success)';
-          await refreshSyncUI();
-        } else {
-          syncOpMsg.textContent = res.error || 'Gagal download';
-          syncOpMsg.style.color = '#ef4444';
-        }
-      } catch (err) {
-        syncOpMsg.textContent = err.message;
-        syncOpMsg.style.color = '#ef4444';
-      } finally {
-        btnSyncManualPull.textContent = 'Download dari Cloud';
+        btnSyncNow.disabled = false;
+        btnSyncNow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span>Sinkron</span>';
       }
     };
   }

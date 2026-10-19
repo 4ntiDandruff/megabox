@@ -1330,7 +1330,7 @@
             </div>
             
             <div style="display:flex; gap:10px;">
-              <input type="email" id="sync-input-email" placeholder="Email akun Megabox" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
+              <input type="email" id="sync-input-email" placeholder="nama@gmail.com" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
               <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
             </div>
 
@@ -1352,9 +1352,11 @@
             </div>
 
             <div style="display:flex; gap:10px; margin-top:4px;">
-              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unggah ke Cloud</button>
-              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unduh dari Cloud</button>
-              <button id="btn-sync-logout" type="button" style="padding:8px 14px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
+              <button id="btn-sync-now" type="button" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:9px 16px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:background 0.15s;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span>Sinkron</span>
+              </button>
+              <button id="btn-sync-logout" type="button" style="padding:9px 16px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
             </div>
             <div id="sync-op-msg" style="font-size:11px; color:#a1a1aa;"></div>
           </div>
