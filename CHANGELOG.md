@@ -4,6 +4,14 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.5] - 2026-10-19
+
+### Diubah (Changed)
+- **Penyederhanaan Copywriting Ekstrem (Maksimal 2 Kata & Zero Bloat)**: Menghapus seluruh teks penjelasan panjang berbahasa Indonesia yang berlebihan pada Panel Pengaturan. Seluruh label tombol, menu, navigasi tab, dan kartu kini padat, to-the-point, dan berstandar teknis (contoh: *Hibernasi RAM*, *Aksi Tutup*, *Auto-Start*, *Cache Web*, *Unggah Tab*, *Unduh Tab*, *BNSP Ponsel*, *BMY Laptop*).
+- **Kepadatan Tata Letak Kompak**: Menghilangkan scrollbar vertikal di seluruh tab modal Pengaturan sehingga seluruh opsi dapat dilihat seketika tanpa perlu menggulir layar.
+
+---
+
 ## [1.3.4] - 2026-10-19
 
 ### Ditambahkan (Added)

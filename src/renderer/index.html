@@ -1220,78 +1220,75 @@
 
 
 
-  <!-- Settings & Preferences Modal (Pure Flat Slate Architecture) -->
+  <!-- Settings & Preferences Modal (Concise Pure Flat Architecture) -->
   <div id="settings-modal" class="modal-overlay">
-    <div class="modal-box-catalog" style="max-width: 680px; min-height: 540px; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-box-catalog" style="max-width: 660px; min-height: 520px; max-height: 85vh; display: flex; flex-direction: column;">
       
       <!-- Modal Header -->
-      <div class="catalog-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
+      <div class="catalog-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
         <div class="catalog-title-row">
-          <div class="catalog-title" style="display:flex; align-items:center; gap:10px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="catalog-title" style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span style="font-weight:700; font-size:16px; letter-spacing:0.2px;">Pengaturan Sistem</span>
+            <span style="font-weight:700; font-size:15px;">Pengaturan</span>
           </div>
           <button id="btn-settings-close" class="catalog-close">&times;</button>
         </div>
 
-        <!-- Navigation Tabs inside Settings Modal -->
-        <div style="display:flex; gap:6px; margin-top:14px;">
+        <!-- Navigation Tabs -->
+        <div style="display:flex; gap:6px; margin-top:12px;">
           <button id="tab-nav-general" type="button" class="settings-tab-btn is-active" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.12); cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            <span>Umum & Sistem</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Sistem</span>
           </button>
           <button id="tab-nav-sync" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
-            <span>Cloud Megapass</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+            <span>Cloud</span>
           </button>
           <button id="tab-nav-about" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             <span>Tentang</span>
           </button>
         </div>
       </div>
 
       <!-- Tab Content Area -->
-      <div style="flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:20px;">
+      <div style="flex:1; overflow-y:auto; padding:18px 22px; display:flex; flex-direction:column; gap:14px;">
         
-        <!-- SECTION 1: UMUM & SISTEM -->
-        <div id="section-settings-general" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- SECTION 1: SISTEM -->
+        <div id="section-settings-general" style="display:flex; flex-direction:column; gap:12px;">
           
           <!-- Hibernation Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Hemat Memori (Hibernasi Otomatis)</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Hibernasi RAM</div>
             </div>
             <select id="setting-hibernate-timeout" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
               <option value="5">5 Menit</option>
-              <option value="15" selected>15 Menit (Bawaan)</option>
+              <option value="15" selected>15 Menit</option>
               <option value="30">30 Menit</option>
               <option value="60">1 Jam</option>
-              <option value="0">Nonaktifkan (Selalu Aktif)</option>
+              <option value="0">Nonaktif</option>
             </select>
           </div>
 
           <!-- Close Action Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Perilaku Tombol Tutup [x]</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Aksi Tutup</div>
             </div>
             <select id="setting-close-action" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
-              <option value="tray" selected>Sembunyikan ke Tray</option>
-              <option value="quit">Keluar dari Aplikasi</option>
+              <option value="tray" selected>Ke Tray</option>
+              <option value="quit">Keluar Penuh</option>
             </select>
           </div>
 
           <!-- Startup Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Mulai Otomatis Saat Login</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Auto-Start</div>
             </div>
             <label class="flat-switch">
               <input type="checkbox" id="setting-autostart">
@@ -1300,10 +1297,9 @@
           </div>
 
           <!-- Maintenance / Flush Cache -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Pembersih Cache Web & GPU</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div>
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Cache Web</div>
             </div>
             <button id="btn-clear-cache" type="button" style="display:flex; align-items:center; gap:6px; padding:7px 12px; background:#27272a; color:#f4f4f5; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
@@ -1314,145 +1310,129 @@
 
         </div>
 
-        <!-- SECTION 2: CLOUD MEGAPASS -->
-        <div id="section-settings-sync" style="display:none; flex-direction:column; gap:14px;">
+        <!-- SECTION 2: CLOUD -->
+        <div id="section-settings-sync" style="display:none; flex-direction:column; gap:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="font-size:13px; font-weight:600; color:#f4f4f5;">Status Sinkronisasi</div>
-            <span id="sync-badge-status" style="font-size:11px; padding:3px 10px; border-radius:12px; background:rgba(255,255,255,0.08); color:#a1a1aa; font-weight:600; border:1px solid rgba(255,255,255,0.1);">Belum Terhubung</span>
+            <div style="font-size:13px; font-weight:600; color:#f4f4f5;">Status Cloud</div>
+            <span id="sync-badge-status" style="font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.08); color:#a1a1aa; font-weight:600; border:1px solid rgba(255,255,255,0.1);">Offline</span>
           </div>
 
-          <!-- Logged Out State: Auth Form -->
-          <div id="sync-auth-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
-              Sinkronkan urutan tab dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% tersimpan aman di perangkat lokal ini.
-            </div>
-            
-            <div style="display:flex; gap:10px;">
-              <input type="email" id="sync-input-email" placeholder="Email akun Megabox" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
-              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
+          <!-- Logged Out State -->
+          <div id="sync-auth-box" style="background:#18181b; padding:14px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; gap:8px;">
+              <input type="email" id="sync-input-email" placeholder="Email" style="flex:1; padding:8px 10px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:12px; outline:none;">
+              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:8px 10px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:12px; outline:none;">
             </div>
 
-            <div style="display:flex; gap:10px; align-items:center;">
-              <button id="btn-sync-login" type="button" style="flex:1; padding:9px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Masuk Cloud</button>
-              <button id="btn-sync-register" type="button" style="flex:1; padding:9px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Daftar Akun Baru</button>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button id="btn-sync-login" type="button" style="flex:1; padding:8px 12px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;">Masuk Cloud</button>
+              <button id="btn-sync-register" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;">Daftar Akun</button>
             </div>
-            <div id="sync-auth-msg" style="font-size:12px; display:none;"></div>
+            <div id="sync-auth-msg" style="font-size:11px; display:none;"></div>
           </div>
 
-          <!-- Logged In State: Connected Info & Actions -->
-          <div id="sync-connected-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(34,197,94,0.3); display:none; flex-direction:column; gap:14px;">
+          <!-- Logged In State -->
+          <div id="sync-connected-box" style="background:#18181b; padding:14px; border-radius:8px; border:1px solid rgba(34,197,94,0.3); display:none; flex-direction:column; gap:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <div id="sync-user-email" style="font-weight:700; font-size:14px; color:#fff;">user@domain.com</div>
-                <div id="sync-time-info" style="font-size:11px; color:#a1a1aa; margin-top:3px;">Sinkron terakhir: Baru saja</div>
+                <div id="sync-user-email" style="font-weight:700; font-size:13px; color:#fff;">user@domain.com</div>
+                <div id="sync-time-info" style="font-size:11px; color:#a1a1aa; margin-top:2px;">Sinkron: Aktif</div>
               </div>
-              <span id="sync-tier-badge" style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700; text-transform:uppercase;">Free Plan</span>
+              <span id="sync-tier-badge" style="font-size:10px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:2px 8px; border-radius:10px; border:1px solid rgba(59,130,246,0.3); font-weight:700;">PRO</span>
             </div>
 
-            <div style="display:flex; gap:10px; margin-top:4px;">
-              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unggah ke Cloud</button>
-              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unduh dari Cloud</button>
-              <button id="btn-sync-logout" type="button" style="padding:8px 14px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
+            <div style="display:flex; gap:8px;">
+              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:7px 10px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">Unggah Tab</button>
+              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:7px 10px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">Unduh Tab</button>
+              <button id="btn-sync-logout" type="button" style="padding:7px 12px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">Keluar</button>
             </div>
             <div id="sync-op-msg" style="font-size:11px; color:#a1a1aa;"></div>
           </div>
         </div>
 
-        <!-- SECTION 3: TENTANG APLIKASI (PROFIL REKAYASA & MEGAPASS) -->
-        <div id="section-settings-about" style="display:none; flex-direction:column; gap:16px;">
+        <!-- SECTION 3: TENTANG (CONCISE TECH & MEGAPASS) -->
+        <div id="section-settings-about" style="display:none; flex-direction:column; gap:12px;">
           
-          <!-- Card 1: Produk & Identitas Rekayasa -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <img src="assets/megabox.png" style="width:46px; height:46px; border-radius:10px; background:#27272a; padding:6px; border:1px solid rgba(255,255,255,0.1);">
+          <!-- Card 1: Produk -->
+          <div style="background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <img src="assets/megabox.png" style="width:36px; height:36px; border-radius:8px; background:#27272a; padding:4px; border:1px solid rgba(255,255,255,0.1);">
                 <div>
-                  <div style="font-size:16px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-                    <span>Megabox Workspace</span>
-                    <span style="font-size:10px; padding:2px 8px; border-radius:10px; background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.3); font-weight:700;">v1.3.3 PROD</span>
+                  <div style="font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+                    <span>Megabox</span>
+                    <span style="font-size:10px; padding:1px 6px; border-radius:8px; background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.3); font-weight:700;">v1.3.4</span>
                   </div>
-                  <div style="font-size:12px; color:#a1a1aa; margin-top:2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
+                  <div style="font-size:11px; color:#a1a1aa;">Multi-App Workspace</div>
                 </div>
               </div>
-              <button id="btn-about-github" type="button" style="display:flex; align-items:center; gap:6px; padding:6px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <span>GitHub Repo</span>
+              <button id="btn-about-github" type="button" style="display:flex; align-items:center; gap:5px; padding:5px 10px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <span>GitHub</span>
               </button>
-            </div>
-            
-            <div style="font-size:12px; color:#d4d4d8; line-height:1.6; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
-              Megabox lahir dari kebutuhan fisik meja servis: menggabungkan fleksibilitas Rambox & Ferdium tanpa pemborosan RAM, tanpa langganan berbayar, kebal terhadap mati lampu tiba-tiba berkat proteksi <strong>SQLite WAL Fortress</strong>, dan stabil beroperasi di Linux Wayland (KDE Plasma).
             </div>
 
             <!-- Arsitektur Badge Grid -->
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:2px;">
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Tampilan</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Pure Flat Slate</div>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+              <div style="background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="color:#71717a; font-size:10px; font-weight:700;">UI</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600;">Pure Flat</div>
               </div>
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Ketahanan Daya</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Power-Loss Proof</div>
+              <div style="background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="color:#71717a; font-size:10px; font-weight:700;">Storage</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600;">SQLite WAL</div>
               </div>
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Lisensi</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">MIT Open Source</div>
+              <div style="background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="color:#71717a; font-size:10px; font-weight:700;">Lisensi</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600;">MIT</div>
               </div>
             </div>
           </div>
 
-          <!-- Card 2: Profil Teknisi & Kredensial Resmi -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+          <!-- Card 2: Teknisi & Kredensial Resmi -->
+          <div style="background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <div style="font-size:14px; font-weight:700; color:#fff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
-                <div style="font-size:11px; color:#a1a1aa; margin-top:2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+                <div style="font-size:13px; font-weight:700; color:#fff;">Hizam Nahari</div>
+                <div style="font-size:11px; color:#a1a1aa;">MEGAPASS • Sidoarjo</div>
               </div>
-              <span style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700;">BNSP & BMY Certified</span>
-            </div>
-
-            <div style="font-size:12px; color:#d4d4d8; line-height:1.6;">
-              Didesain langsung oleh praktisi teknisi perangkat keras bersertifikasi nasional dengan pengalaman 12+ tahun di ranah triase motherboard chip-level, injeksi tegangan mikroskopik, flash EEPROM, serta arsitektur software zero-bloat Linux bare-metal.
+              <span style="font-size:10px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:2px 8px; border-radius:10px; border:1px solid rgba(59,130,246,0.3); font-weight:700;">BNSP / BMY</span>
             </div>
 
             <!-- List Kredensial Terverifikasi -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BNSP Reparasi Ponsel</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+              <div style="display:flex; align-items:center; gap:6px; background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BNSP Ponsel</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BMY Motherboard Laptop</div>
+              <div style="display:flex; align-items:center; gap:6px; background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BMY Laptop</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">10 Sertifikasi Resmi</div>
+              <div style="display:flex; align-items:center; gap:6px; background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">10 Sertifikasi</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">12+ Tahun Pengalaman</div>
+              <div style="display:flex; align-items:center; gap:6px; background:#27272a; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">12+ Tahun</div>
               </div>
             </div>
           </div>
 
-          <!-- Card 3: Soft-Selling Solusi & Layanan Servis Megapass -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="font-size:13px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.5px;">Solusi Teknis & Servis Profesional Megapass</div>
+          <!-- Card 3: Layanan Servis & CTA -->
+          <div style="background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase;">Servis Hardware</div>
             
-            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
-              Butuh perbaikan hardware laptop/HP yang rumit, pemulihan sistem Windows dari Linux, atau perancangan arsitektur IT hemat resource tanpa server bengkak? Tim teknisi Megapass siap melayani di workshop maupun remote servicing.
-            </div>
-
             <!-- Call-to-Action Link Buttons -->
-            <div style="display:flex; gap:10px; margin-top:4px;">
-              <button id="btn-about-portfolio" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                <span>Lihat Portofolio & Sertifikat</span>
+            <div style="display:flex; gap:8px;">
+              <button id="btn-about-portfolio" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:6px; padding:8px 12px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                <span>Portofolio Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>Kunjungi megapass.web.id</span>
+              <button id="btn-about-megapass" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:6px; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>Web Megapass</span>
               </button>
             </div>
           </div>
@@ -1462,11 +1442,9 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="modal-actions" style="padding:14px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#18181b; display:flex; justify-content:space-between; align-items:center;">
-        <span id="settings-status-save" style="font-size:12px; color:#22c55e; font-weight:600; display:none;">Tersimpan otomatis</span>
-        <div style="display:flex; gap:10px; margin-left:auto;">
-          <button id="btn-settings-done" type="button" style="padding:8px 20px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Tutup</button>
-        </div>
+      <div class="modal-actions" style="padding:12px 20px; border-top:1px solid rgba(255,255,255,0.08); background:#18181b; display:flex; justify-content:space-between; align-items:center;">
+        <span id="settings-status-save" style="font-size:11px; color:#22c55e; font-weight:600; display:none;">Tersimpan</span>
+        <button id="btn-settings-done" type="button" style="margin-left:auto; padding:6px 16px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:12px; cursor:pointer;">Tutup</button>
       </div>
 
     </div>
