@@ -1649,7 +1649,7 @@
   if (btnSupportGithub) {
     btnSupportGithub.onclick = () => {
       if (window.megabox && window.megabox.openExternal) {
-        window.megabox.openExternal('https://github.com/sponsors/4ntiDandruff');
+        window.megabox.openExternal('https://github.com/4ntiDandruff/megabox');
       }
     };
   }

@@ -173,7 +173,7 @@ bash megabox-launcher.sh
 Megabox dikembangkan sebagai proyek perangkat lunak mandiri yang bebas dari iklan, bebas dari pelacak (*trackers*), dan bebas dari paywall. Jika perangkat lunak ini mempermudah alur kerja Anda sehari-hari, Anda dapat memberikan apresiasi sukarela:
 
 - **Donasi via QRIS Nasional**: Buka menu **Pengaturan \rightarrow Tentang \rightarrow Donasi via QRIS** untuk memindai kartu QRIS resmi Megabox (dapat dipindai dari BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh perbankan nasional).
-- **GitHub Sponsors**: Melalui profil resmi [GitHub 4ntiDandruff](https://github.com/4ntiDandruff).
+- **Dukungan Komunitas (GitHub Star)**: Berikan apresiasi bintang (Star) pada repositori resmi [GitHub 4ntiDandruff/megabox](https://github.com/4ntiDandruff/megabox).
 
 ---
 
