@@ -496,6 +496,40 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
+  // System Settings IPC Handlers
+  ipcMain.handle('settings:get', () => {
+    return getSettings(db);
+  });
+
+  ipcMain.handle('settings:save', (_, newSettings) => {
+    const updated = saveSettings(db, newSettings);
+    // Apply autostart if toggled
+    triggerAutoSync();
+    if (typeof newSettings.autostart === 'boolean') {
+      try {
+        app.setLoginItemSettings({
+          openAtLogin: newSettings.autostart,
+          path: process.execPath,
+          args: [path.join(__dirname, '../../')]
+        });
+      } catch (err) {
+        console.warn('[Autostart] setLoginItemSettings error:', err.message);
+      }
+    }
+    return updated;
+  });
+
+  ipcMain.handle('system:clear-cache', async () => {
+    try {
+      if (session.defaultSession) {
+        await session.defaultSession.clearCache();
+      }
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
   createWindow();
   createTray();
 
