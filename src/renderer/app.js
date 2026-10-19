@@ -1404,37 +1404,51 @@
   const avatarDefaultIcon = document.getElementById('avatar-default-icon');
   const avatarUserImg = document.getElementById('avatar-user-img');
   const avatarUserInitials = document.getElementById('avatar-user-initials');
+  const syncModalAvatarImg = document.getElementById('sync-modal-avatar-img');
+  const syncModalAvatarIcon = document.getElementById('sync-modal-avatar-icon');
 
-  function updateProfileAvatar(email) {
-    if (!email) {
+  function updateProfileAvatar(email, customAvatarUrl = null) {
+    if (!email && !customAvatarUrl) {
       if (avatarDefaultIcon) avatarDefaultIcon.style.display = 'block';
       if (avatarUserImg) avatarUserImg.style.display = 'none';
       if (avatarUserInitials) avatarUserInitials.style.display = 'none';
       return;
     }
 
-    const cleanEmail = email.trim().toLowerCase();
-    const initials = cleanEmail.substring(0, 2).toUpperCase();
+    const cleanEmail = (email || '').trim().toLowerCase();
     const emailHash = md5(cleanEmail);
-    // D=404: Hanya tampilkan foto jika user BENAR-BENAR punya foto profil asli.
-    // Jika tidak punya foto atau 404, JANGAN pakai pola kristal identicon yang bikin mata lelah!
-    // Langsung fallback ke ikon siluet orang minimalis atau inisial elegan.
-    const gravatarUrl = `https://www.gravatar.com/avatar/${emailHash}?s=96&d=404`;
+    const targetUrl = customAvatarUrl || ('https://www.gravatar.com/avatar/' + emailHash + '?s=96&d=404');
 
     if (avatarUserImg) {
-      avatarUserImg.src = gravatarUrl;
+      avatarUserImg.src = targetUrl;
       avatarUserImg.onload = () => {
         avatarUserImg.style.display = 'block';
         if (avatarDefaultIcon) avatarDefaultIcon.style.display = 'none';
         if (avatarUserInitials) avatarUserInitials.style.display = 'none';
       };
       avatarUserImg.onerror = () => {
+        if (customAvatarUrl && targetUrl === customAvatarUrl) {
+          avatarUserImg.src = 'https://www.gravatar.com/avatar/' + emailHash + '?s=96&d=404';
+          return;
+        }
         avatarUserImg.style.display = 'none';
         if (avatarUserInitials) avatarUserInitials.style.display = 'none';
         if (avatarDefaultIcon) {
           avatarDefaultIcon.style.display = 'block';
           avatarDefaultIcon.style.color = 'var(--brand-primary)';
         }
+      };
+    }
+
+    if (syncModalAvatarImg) {
+      syncModalAvatarImg.src = targetUrl;
+      syncModalAvatarImg.onload = () => {
+        syncModalAvatarImg.style.display = 'block';
+        if (syncModalAvatarIcon) syncModalAvatarIcon.style.display = 'none';
+      };
+      syncModalAvatarImg.onerror = () => {
+        syncModalAvatarImg.style.display = 'none';
+        if (syncModalAvatarIcon) syncModalAvatarIcon.style.display = 'block';
       };
     }
   }
@@ -1444,7 +1458,7 @@
     try {
       const status = await window.megabox.getSyncStatus();
       if (status.logged_in && status.user) {
-        updateProfileAvatar(status.user.email);
+        updateProfileAvatar(status.user.email, status.user.avatar_url);
         if (syncStatusDot) {
           syncStatusDot.style.background = '#22c55e'; // Green solid
           syncStatusDot.style.boxShadow = '0 0 6px rgba(34, 197, 94, 0.4)';

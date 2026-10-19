@@ -159,6 +159,9 @@ async function refreshUserProfile() {
     if (me && me.id) {
       auth.user.tier = me.plan_tier;
       auth.user.max_services = me.max_services;
+      if (me.avatar_url) {
+        auth.user.avatar_url = me.avatar_url;
+      }
       saveStoredAuth(auth);
     }
   } catch (e) {}
