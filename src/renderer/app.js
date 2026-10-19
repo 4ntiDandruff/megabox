@@ -1698,14 +1698,17 @@
   // ==========================================
   // MEGABOX DUAL-LANGUAGE (EN / ID) I18N ENGINE
   // ==========================================
+  // Megabox Zero-Bloat Reactive i18n Dictionary
+  // Single Source of Truth for EN and ID
+  // ==========================================
   const I18N = {
     en: {
       // Sidebar tooltips
-      add_service_title: "Add App / Browse Catalog (Ctrl+N)",
+      add_service_title: "Add App (Ctrl+N)",
       btn_settings_title: "Workspace Settings",
-      btn_reload_title: "Reload Current App (F5 / Ctrl+R)",
-      btn_dnd_quiet: "Focus Mode (Silence Audio & Alerts)",
-      btn_dnd_active: "Focus Mode Active (Muted)",
+      btn_reload_title: "Reload App (Ctrl+R)",
+      btn_dnd_quiet: "Focus Mode (Mute Notifications)",
+      btn_dnd_active: "Focus Mode Active",
 
       // Context Menu
       ctx_back: "Back",
@@ -1718,51 +1721,49 @@
       ctx_wake: "Wake Up",
       ctx_move_up: "Move Up",
       ctx_move_down: "Move Down",
-      ctx_edit: "Edit Service",
-      ctx_delete: "Delete Service",
+      ctx_edit: "Edit App",
+      ctx_delete: "Delete App",
 
       // Settings Header & Navigation
       settings_header_title: "Megabox Settings",
-      settings_header_subtitle: "System, Data Backup, and Architecture",
+      settings_header_subtitle: "System Preferences, Backup, and Architecture",
       tab_nav_general: "General & System",
       tab_nav_sync: "Backup & Data",
       tab_nav_about: "About",
       btn_settings_done: "Done",
       settings_status_save: "Saved automatically",
 
-      // General Section
+      // Section 1: General & System
       heading_system: "Host Performance & System Behavior",
       card_lang_title: "Interface Language",
-      card_lang_desc: "Choose between English (Default) and Bahasa Indonesia for workspace interface.",
+      card_lang_desc: "Select English (Default) or Bahasa Indonesia for the interface.",
       card_avatar_title: "Workspace Profile Avatar",
-      card_avatar_desc: "Set custom avatar in the bottom-left sidebar (100% local on this machine).",
+      card_avatar_desc: "Display custom photo on bottom-left sidebar (100% local on this device).",
       btn_pick_avatar: "Choose Photo",
       btn_reset_avatar: "Remove",
       row_hibernate_title: "Memory Saver (Auto-Hibernation)",
-      row_hibernate_desc: "Put inactive tabs to sleep to reduce host RAM. Tabs playing audio will stay awake.",
+      row_hibernate_desc: "Put inactive tabs to sleep to reduce host RAM. Tabs playing audio stay awake.",
       opt_5m: "5 Minutes",
       opt_15m: "15 Minutes (Default)",
       opt_30m: "30 Minutes",
       opt_60m: "1 Hour",
       opt_0m: "Disabled (Always Awake)",
       row_close_title: "Close Button Action [x]",
-      row_close_desc: "Choose whether the window hides to the System Tray or quits the application.",
+      row_close_desc: "Specify whether close button minimizes window to System Tray or quits application.",
       opt_tray: "Minimize to Tray",
       opt_quit: "Quit Application",
       row_autostart_title: "Start Automatically at Login",
       row_autostart_desc: "Launch Megabox quietly in the background when logging into desktop session.",
-      opt_auto_on: "Enabled (Autostart)",
-      opt_auto_off: "Disabled",
-      card_cache_title: "Service Storage & Cookie Cache",
-      card_cache_desc: "Clears temporary network cache, cookies, and cached favicons. Service logins will remain active.",
+      card_cache_title: "Storage & Cache Cleaner",
+      card_cache_desc: "Clear temporary HTTP cache and GPU shader cache. Active logins remain intact.",
       btn_clear_cache: "Clear Cache",
-      clear_cache_done: "Storage cache cleared successfully!",
+      clear_cache_done: "Cache cleared successfully!",
 
-      // Backup Section
+      // Section 2: Backup & Data
       heading_backup: "Local-First Storage & Data Sovereignty",
       badge_private_local: "100% Private Local",
       card_privacy_title: "Zero External Server Privacy",
-      card_privacy_desc: "All tabs, layout ordering, and preferences are stored completely on your computer. No data is sent to any cloud server. To move to another PC, export your configuration as a JSON file and import it on the target machine.",
+      card_privacy_desc: "All app workspaces, tabs, and preferences are saved exclusively on this PC. No data is sent to cloud servers. To transfer to another PC, export configuration as a JSON file and import it on the target device.",
       card_backup_ops_title: "Backup File Operations (.json)",
       btn_backup_export: "Export Backup",
       btn_backup_import: "Import Backup",
@@ -1770,8 +1771,7 @@
       backup_import_ok: "Successfully restored {count} apps from backup file!",
       backup_op_failed: "Operation failed: ",
 
-      // About Section
-      about_hero_title: "Megabox",
+      // Section 3: About
       about_hero_sub: "Zero-Bloat & Local-First Multi-App Desktop Workspace",
       card_arch_label: "Architecture",
       card_arch_val: "Local-First JSON",
@@ -1781,27 +1781,25 @@
       card_license_val: "MIT Open Source",
       heading_support: "Community Support",
       badge_no_ads: "Ad-Free & Tracker-Free",
-      card_support_desc: "Megabox is built for daily workstation efficiency. If this software streamlines your daily routine, your support is deeply appreciated.",
+      card_support_desc: "Megabox is engineered for daily workstation efficiency. If this software streamlines your daily routine, your support is deeply appreciated.",
       btn_support_qris: "Donate via QRIS",
       btn_support_github: "Star on GitHub",
-      card_dev_name: "Hizam Nahari",
       card_dev_sub: "MEGAPASS Intra Solusindo • Sidoarjo, East Java",
-      badge_certified: "BNSP & BMY Certified",
       card_dev_desc: "Engineered from a certified hardware technician workbench: fusing physical machine resilience (power-loss resistance), Linux kernel efficiency, and zero-bloat interface.",
       btn_about_portfolio: "Portfolio & Certificates",
       btn_about_megapass: "megapass.web.id",
 
       // Quick Switcher & Catalog
       quick_placeholder: "Type a command or service name...",
-      catalog_badge_suffix: "Services"
+      catalog_badge_suffix: "Apps"
     },
     id: {
       // Sidebar tooltips
-      add_service_title: "Tambah Aplikasi / Buka Ruang (Ctrl+N)",
-      btn_settings_title: "Pengaturan Akun & Workspace",
-      btn_reload_title: "Muat Ulang Layanan Aktif (F5 / Ctrl+R)",
-      btn_dnd_quiet: "Mode Fokus Hening (Senyapkan Audio & Notifikasi)",
-      btn_dnd_active: "Mode Fokus Aktif (Hening)",
+      add_service_title: "Tambah Aplikasi (Ctrl+N)",
+      btn_settings_title: "Pengaturan Workspace",
+      btn_reload_title: "Muat Ulang Aplikasi (Ctrl+R)",
+      btn_dnd_quiet: "Mode Fokus (Senyapkan Notifikasi)",
+      btn_dnd_active: "Mode Fokus Aktif",
 
       // Context Menu
       ctx_back: "Kembali",
@@ -1814,51 +1812,49 @@
       ctx_wake: "Bangunkan",
       ctx_move_up: "Pindah Naik",
       ctx_move_down: "Pindah Turun",
-      ctx_edit: "Ubah Layanan",
-      ctx_delete: "Hapus Layanan",
+      ctx_edit: "Ubah Aplikasi",
+      ctx_delete: "Hapus Aplikasi",
 
       // Settings Header & Navigation
       settings_header_title: "Pengaturan Megabox",
-      settings_header_subtitle: "Sistem, Cadangan Data, dan Arsitektur",
+      settings_header_subtitle: "Preferensi Sistem, Cadangan Data, dan Arsitektur",
       tab_nav_general: "Umum & Sistem",
       tab_nav_sync: "Cadangan & Data",
       tab_nav_about: "Tentang",
       btn_settings_done: "Selesai",
       settings_status_save: "Tersimpan otomatis",
 
-      // General Section
+      // Section 1: General & System
       heading_system: "Performa Host & Perilaku Sistem",
       card_lang_title: "Bahasa Antarmuka",
-      card_lang_desc: "Pilih antara Bahasa Inggris (Bawaan) dan Bahasa Indonesia untuk antarmuka workspace.",
+      card_lang_desc: "Pilih antara Bahasa Inggris (Bawaan) dan Bahasa Indonesia untuk antarmuka.",
       card_avatar_title: "Foto Profil Workspace",
-      card_avatar_desc: "Tampilkan foto pribadi di sidebar kiri bawah (100% lokal di komputer ini).",
+      card_avatar_desc: "Tampilkan foto kustom di sidebar kiri bawah (100% lokal di perangkat ini).",
       btn_pick_avatar: "Pilih Foto",
       btn_reset_avatar: "Hapus",
       row_hibernate_title: "Hemat Memori (Hibernasi Otomatis)",
-      row_hibernate_desc: "Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.",
+      row_hibernate_desc: "Tidurkan tab nonaktif untuk menghemat RAM host. Tab yang memutar audio tetap aktif.",
       opt_5m: "5 Menit",
       opt_15m: "15 Menit (Bawaan)",
       opt_30m: "30 Menit",
       opt_60m: "1 Jam",
       opt_0m: "Nonaktifkan (Selalu Aktif)",
       row_close_title: "Perilaku Tombol Tutup [x]",
-      row_close_desc: "Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.",
+      row_close_desc: "Tentukan apakah tombol tutup menyembunyikan jendela ke System Tray atau menutup aplikasi.",
       opt_tray: "Sembunyikan ke Tray",
       opt_quit: "Keluar dari Aplikasi",
       row_autostart_title: "Mulai Otomatis Saat Login",
       row_autostart_desc: "Jalankan Megabox di latar belakang secara otomatis saat login ke desktop.",
-      opt_auto_on: "Aktif (Mulai Otomatis)",
-      opt_auto_off: "Nonaktif",
-      card_cache_title: "Penyimpanan Layanan & Cache Cookie",
-      card_cache_desc: "Menghapus cache jaringan sementara, cookies, dan cache favicon lokal. Sesi login layanan tetap dipertahankan.",
+      card_cache_title: "Pembersih Penyimpanan & Cache",
+      card_cache_desc: "Kosongkan cache HTTP dan GPU shader sementara. Sesi login akun tetap aman.",
       btn_clear_cache: "Bersihkan Cache",
-      clear_cache_done: "Cache penyimpanan berhasil dibersihkan!",
+      clear_cache_done: "Cache berhasil dibersihkan!",
 
-      // Backup Section
+      // Section 2: Backup & Data
       heading_backup: "Penyimpanan & Cadangan Mandiri (Local-First)",
       badge_private_local: "100% Privat Lokal",
       card_privacy_title: "Privasi Tanpa Server Luar",
-      card_privacy_desc: "Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.",
+      card_privacy_desc: "Semua daftar aplikasi, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi berkas JSON dan impor di PC tujuan.",
       card_backup_ops_title: "Operasi Berkas Cadangan (.json)",
       btn_backup_export: "Ekspor Cadangan",
       btn_backup_import: "Impor Cadangan",
@@ -1866,8 +1862,7 @@
       backup_import_ok: "Berhasil memulihkan {count} aplikasi dari berkas cadangan!",
       backup_op_failed: "Gagal operasi: ",
 
-      // About Section
-      about_hero_title: "Megabox",
+      // Section 3: About
       about_hero_sub: "Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First",
       card_arch_label: "Arsitektur",
       card_arch_val: "Local-First JSON",
@@ -1880,16 +1875,14 @@
       card_support_desc: "Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.",
       btn_support_qris: "Donasi via QRIS",
       btn_support_github: "Bintang di GitHub",
-      card_dev_name: "Hizam Nahari",
       card_dev_sub: "MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur",
-      badge_certified: "BNSP & BMY Certified",
       card_dev_desc: "Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.",
       btn_about_portfolio: "Portofolio & Sertifikat",
       btn_about_megapass: "megapass.web.id",
 
       // Quick Switcher & Catalog
-      quick_placeholder: "Ketik perintah atau nama layanan...",
-      catalog_badge_suffix: "Layanan"
+      quick_placeholder: "Ketik perintah atau nama aplikasi...",
+      catalog_badge_suffix: "Aplikasi"
     }
   };
 
@@ -1900,7 +1893,7 @@
     currentLang = lang;
     const t = I18N[lang];
 
-    // 1. Language pill toggle UI
+    // 1. Language pill toggle UI styling
     const btnEn = document.getElementById('btn-lang-en');
     const btnId = document.getElementById('btn-lang-id');
     if (btnEn && btnId) {
@@ -1921,10 +1914,10 @@
       }
     }
 
-    // 2. Settings Header & Tabs
-    const setHeaderTitle = document.querySelector('#settings-modal span[style*="font-size: 15px"]');
+    // 2. Settings Modal Header & Nav Tabs
+    const setHeaderTitle = document.getElementById('i18n-settings-title');
     if (setHeaderTitle) setHeaderTitle.textContent = t.settings_header_title;
-    const setHeaderSub = document.querySelector('#settings-modal div[style*="font-size: 11px"][style*="margin-top: 1px"]');
+    const setHeaderSub = document.getElementById('i18n-settings-subtitle');
     if (setHeaderSub) setHeaderSub.textContent = t.settings_header_subtitle;
 
     const navGeneral = document.getElementById('tab-nav-general');
@@ -1939,13 +1932,12 @@
     const statusSave = document.getElementById('settings-status-save');
     if (statusSave && statusSave.querySelector('span')) statusSave.querySelector('span').textContent = t.settings_status_save;
 
-    // 3. Section 1: General
+    // 3. Section 1: General & System
     const cardLangTitle = document.getElementById('i18n-card-lang-title');
     if (cardLangTitle) cardLangTitle.textContent = t.card_lang_title;
     const cardLangDesc = document.getElementById('i18n-card-lang-desc');
     if (cardLangDesc) cardLangDesc.textContent = t.card_lang_desc;
 
-    // Avatar Card
     const avatarTitle = document.getElementById('i18n-card-avatar-title');
     if (avatarTitle) avatarTitle.textContent = t.card_avatar_title;
     const avatarDesc = document.getElementById('i18n-card-avatar-desc');
@@ -1956,97 +1948,91 @@
     const btnReset = document.getElementById('btn-reset-avatar');
     if (btnReset && btnReset.querySelector('span')) btnReset.querySelector('span').textContent = t.btn_reset_avatar;
 
-    // System Settings Rows
-    const rows = document.querySelectorAll('#section-settings-general .apple-setting-row');
-    if (rows.length >= 3) {
-      // Row 1: Hibernate
-      const r1Title = rows[0].querySelector('div[style*="font-weight: 600"]');
-      if (r1Title) r1Title.textContent = t.row_hibernate_title;
-      const r1Desc = rows[0].querySelector('div[style*="font-size: 11px"]');
-      if (r1Desc) r1Desc.textContent = t.row_hibernate_desc;
-      const selHib = document.getElementById('setting-hibernate-timeout');
-      if (selHib && selHib.options.length >= 5) {
-        selHib.options[0].text = t.opt_5m;
-        selHib.options[1].text = t.opt_15m;
-        selHib.options[2].text = t.opt_30m;
-        selHib.options[3].text = t.opt_60m;
-        selHib.options[4].text = t.opt_0m;
-      }
-
-      // Row 2: Close Action
-      const r2Title = rows[1].querySelector('div[style*="font-weight: 600"]');
-      if (r2Title) r2Title.textContent = t.row_close_title;
-      const r2Desc = rows[1].querySelector('div[style*="font-size: 11px"]');
-      if (r2Desc) r2Desc.textContent = t.row_close_desc;
-      const selClose = document.getElementById('setting-close-action');
-      if (selClose && selClose.options.length >= 2) {
-        selClose.options[0].text = t.opt_tray;
-        selClose.options[1].text = t.opt_quit;
-      }
-
-      // Row 3: Autostart
-      const r3Title = rows[2].querySelector('div[style*="font-weight: 600"]');
-      if (r3Title) r3Title.textContent = t.row_autostart_title;
-      const r3Desc = rows[2].querySelector('div[style*="font-size: 11px"]');
-      if (r3Desc) r3Desc.textContent = t.row_autostart_desc;
-    }
-
-    // Heading System
     const headingSystem = document.getElementById('i18n-heading-system');
     if (headingSystem) headingSystem.textContent = t.heading_system;
 
-    // Cache Card
+    const r1Title = document.getElementById('i18n-row-hibernate-title');
+    if (r1Title) r1Title.textContent = t.row_hibernate_title;
+    const r1Desc = document.getElementById('i18n-row-hibernate-desc');
+    if (r1Desc) r1Desc.textContent = t.row_hibernate_desc;
+    const selHib = document.getElementById('setting-hibernate-timeout');
+    if (selHib && selHib.options.length >= 5) {
+      selHib.options[0].text = t.opt_5m;
+      selHib.options[1].text = t.opt_15m;
+      selHib.options[2].text = t.opt_30m;
+      selHib.options[3].text = t.opt_60m;
+      selHib.options[4].text = t.opt_0m;
+    }
+
+    const r2Title = document.getElementById('i18n-row-close-title');
+    if (r2Title) r2Title.textContent = t.row_close_title;
+    const r2Desc = document.getElementById('i18n-row-close-desc');
+    if (r2Desc) r2Desc.textContent = t.row_close_desc;
+    const selClose = document.getElementById('setting-close-action');
+    if (selClose && selClose.options.length >= 2) {
+      selClose.options[0].text = t.opt_tray;
+      selClose.options[1].text = t.opt_quit;
+    }
+
+    const r3Title = document.getElementById('i18n-row-autostart-title');
+    if (r3Title) r3Title.textContent = t.row_autostart_title;
+    const r3Desc = document.getElementById('i18n-row-autostart-desc');
+    if (r3Desc) r3Desc.textContent = t.row_autostart_desc;
+
     const cardCacheTitle = document.getElementById('i18n-card-cache-title');
     if (cardCacheTitle) cardCacheTitle.textContent = t.card_cache_title;
     const cardCacheDesc = document.getElementById('i18n-card-cache-desc');
     if (cardCacheDesc) cardCacheDesc.textContent = t.card_cache_desc;
-
     const btnClear = document.getElementById('btn-clear-cache');
     if (btnClear && btnClear.querySelector('span')) btnClear.querySelector('span').textContent = t.btn_clear_cache;
 
-    // 4. Section 2: Backup
-    const badgeLocal = document.querySelector('#section-settings-sync span[style*="border-radius: 9999px"]');
+    // 4. Section 2: Backup & Data
+    const headingBackup = document.getElementById('i18n-heading-backup');
+    if (headingBackup) headingBackup.textContent = t.heading_backup;
+    const badgeLocal = document.getElementById('i18n-badge-private-local');
     if (badgeLocal) badgeLocal.textContent = t.badge_private_local;
 
-    const privacyTitle = document.querySelector('#section-settings-sync div[style*="font-size: 13px; font-weight: 600"] span');
+    const privacyTitle = document.getElementById('i18n-card-privacy-title');
     if (privacyTitle) privacyTitle.textContent = t.card_privacy_title;
-    const privacyDesc = document.querySelector('#section-settings-sync div[style*="font-size: 12px; color: #94a3b8"]');
+    const privacyDesc = document.getElementById('i18n-card-privacy-desc');
     if (privacyDesc) privacyDesc.textContent = t.card_privacy_desc;
 
-    const backupOpsTitle = document.querySelector('#section-settings-sync div[style*="text-transform: uppercase; letter-spacing: 0.04em"]');
+    const backupOpsTitle = document.getElementById('i18n-card-backup-ops-title');
     if (backupOpsTitle) backupOpsTitle.textContent = t.card_backup_ops_title;
-
     const btnExport = document.getElementById('btn-backup-export');
     if (btnExport && btnExport.querySelector('span')) btnExport.querySelector('span').textContent = t.btn_backup_export;
     const btnImport = document.getElementById('btn-backup-import');
     if (btnImport && btnImport.querySelector('span')) btnImport.querySelector('span').textContent = t.btn_backup_import;
 
     // 5. Section 3: About
-    const heroDesc = document.querySelector('#section-settings-about div[style*="font-size: 11.5px; color: #94a3b8"]');
-    if (heroDesc) heroDesc.textContent = t.about_hero_desc;
+    const heroSub = document.getElementById('i18n-about-hero-sub');
+    if (heroSub) heroSub.textContent = t.about_hero_sub;
 
-    const archCards = document.querySelectorAll('#section-settings-about div[style*="background: rgba(255,255,255,0.02)"]');
-    if (archCards.length >= 3) {
-      if (archCards[0].children[0]) archCards[0].children[0].textContent = t.card_arch_label;
-      if (archCards[1].children[0]) archCards[1].children[0].textContent = t.card_resilience_label;
-      if (archCards[2].children[0]) archCards[2].children[0].textContent = t.card_license_label;
-    }
+    const archLabel = document.getElementById('i18n-card-arch-label');
+    if (archLabel) archLabel.textContent = t.card_arch_label;
+    const resilienceLabel = document.getElementById('i18n-card-resilience-label');
+    if (resilienceLabel) resilienceLabel.textContent = t.card_resilience_label;
+    const licenseLabel = document.getElementById('i18n-card-license-label');
+    if (licenseLabel) licenseLabel.textContent = t.card_license_label;
 
-    const cardSupportHeading = document.querySelector('#section-settings-about div[style*="text-transform: uppercase; letter-spacing: 0.05em"]');
-    if (cardSupportHeading) cardSupportHeading.textContent = t.heading_support;
-    const cardSupportDesc = document.querySelector('#section-settings-about div[style*="font-size: 11.5px; color: #94a3b8; line-height: 1.5"]');
-    if (cardSupportDesc) cardSupportDesc.textContent = t.card_support_desc;
+    const supportHeading = document.getElementById('i18n-heading-support');
+    if (supportHeading) supportHeading.textContent = t.heading_support;
+    const badgeNoAds = document.getElementById('i18n-badge-no-ads');
+    if (badgeNoAds) badgeNoAds.textContent = t.badge_no_ads;
+    const supportDesc = document.getElementById('i18n-card-support-desc');
+    if (supportDesc) supportDesc.textContent = t.card_support_desc;
 
     const btnQris = document.getElementById('btn-support-qris');
-    if (btnQris && btnQris.querySelector('span')) btnQris.querySelector('span').textContent = t.btn_donate_qris;
+    if (btnQris && btnQris.querySelector('span')) btnQris.querySelector('span').textContent = t.btn_support_qris;
     const btnStar = document.getElementById('btn-support-github');
-    if (btnStar && btnStar.querySelector('span')) btnStar.querySelector('span').textContent = t.btn_star_github;
+    if (btnStar && btnStar.querySelector('span')) btnStar.querySelector('span').textContent = t.btn_support_github;
 
-    const devDesc = document.querySelector('#section-settings-about div[style*="font-size: 11.5px; color: #94a3b8; line-height: 1.55"]');
+    const devSub = document.getElementById('i18n-card-dev-sub');
+    if (devSub) devSub.textContent = t.card_dev_sub;
+    const devDesc = document.getElementById('i18n-card-dev-desc');
     if (devDesc) devDesc.textContent = t.card_dev_desc;
-
     const btnPort = document.getElementById('btn-about-portfolio');
-    if (btnPort && btnPort.querySelector('span')) btnPort.querySelector('span').textContent = t.btn_portfolio;
+    if (btnPort && btnPort.querySelector('span')) btnPort.querySelector('span').textContent = t.btn_about_portfolio;
 
     // 6. Context Menu labels
     const ctxBack = document.querySelector('#ctx-back span:first-child');

@@ -1464,8 +1464,8 @@
               </svg>
             </div>
             <div>
-              <span style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ffffff;">Pengaturan Megabox</span>
-              <div style="font-size: 11px; color: #94a3b8; margin-top: 1px;">Sistem, Cadangan Data, dan Arsitektur</div>
+              <span id="i18n-settings-title" style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ffffff;">Pengaturan Megabox</span>
+              <div id="i18n-settings-subtitle" style="font-size: 11px; color: #94a3b8; margin-top: 1px;">Sistem, Cadangan Data, dan Arsitektur</div>
             </div>
           </div>
           
@@ -1547,8 +1547,8 @@
             <!-- Row 1: Hibernation -->
             <div class="apple-setting-row">
               <div style="max-width: 400px;">
-                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+                <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
+                <div id="i18n-row-hibernate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
               </div>
               <select id="setting-hibernate-timeout" class="apple-select-dark">
                 <option value="5">5 Menit</option>
@@ -1562,8 +1562,8 @@
             <!-- Row 2: Close Action -->
             <div class="apple-setting-row">
               <div style="max-width: 400px;">
-                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+                <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
+                <div id="i18n-row-close-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
               </div>
               <select id="setting-close-action" class="apple-select-dark">
                 <option value="tray" selected>Sembunyikan ke Tray</option>
@@ -1574,8 +1574,8 @@
             <!-- Row 3: Autostart -->
             <div class="apple-setting-row">
               <div style="max-width: 400px;">
-                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+                <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
+                <div id="i18n-row-autostart-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
               </div>
               <label class="apple-switch-mint">
                 <input type="checkbox" id="setting-autostart">
@@ -1605,11 +1605,11 @@
           
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
-              Penyimpanan & Cadangan Mandiri (Local-First)
+              <span id="i18n-heading-backup">Penyimpanan & Cadangan Mandiri (Local-First)</span>
             </div>
             <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
               <span style="width: 6px; height: 6px; border-radius: 50%; background: #38bdf8;"></span>
-              <span style="font-size: 11px; color: #f4f4f6; font-weight: 600;">100% Privat Lokal</span>
+              <span id="i18n-badge-private-local" style="font-size: 11px; color: #f4f4f6; font-weight: 600;">100% Privat Lokal</span>
             </div>
           </div>
 
@@ -1617,17 +1617,15 @@
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
             <div style="font-size: 13px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-              <span>Privasi Tanpa Server Luar</span>
+              <span id="i18n-card-privacy-title">Privasi Tanpa Server Luar</span>
             </div>
-            <div style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
-              Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.
-            </div>
+            <div id="i18n-card-privacy-desc" style="font-size: 12px; color: #94a3b8; line-height: 1.6;">Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.</div>
           </div>
 
           <!-- Action Buttons Card -->
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
             <div style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;">
-              Operasi Berkas Cadangan (.json)
+              <span id="i18n-card-backup-ops-title">Operasi Berkas Cadangan (.json)</span>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -1662,7 +1660,7 @@
                     <span style="font-size: 16px; font-weight: 700; color: #f8fafc; letter-spacing: -0.01em;">Megabox</span>
                     <span style="font-size: 10px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 1px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;">v1.4.2</span>
                   </div>
-                  <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
+                  <div id="i18n-about-hero-sub" style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
                 </div>
               </div>
 
@@ -1675,15 +1673,15 @@
             <!-- Arsitektur Ringkas (Two Columns) -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
               <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Arsitektur</div>
+                <div id="i18n-card-arch-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Arsitektur</div>
                 <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Local-First JSON</div>
               </div>
               <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Ketahanan</div>
+                <div id="i18n-card-resilience-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Ketahanan</div>
                 <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Atomic File Write</div>
               </div>
               <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Lisensi</div>
+                <div id="i18n-card-license-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Lisensi</div>
                 <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">MIT Open Source</div>
               </div>
             </div>
@@ -1693,14 +1691,12 @@
           <div style="background: #151619; border: 1px solid #282a30; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
-                Dukungan Sukarela
+                <span id="i18n-heading-support">Dukungan Sukarela</span>
               </div>
-              <span style="font-size: 10px; color: #cbd5e1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 4px;">Bebas Iklan & Pelacak</span>
+              <span id="i18n-badge-no-ads" style="font-size: 10px; color: #cbd5e1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 4px;">Bebas Iklan & Pelacak</span>
             </div>
 
-            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.5;">
-              Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.
-            </div>
+            <div id="i18n-card-support-desc" style="font-size: 11.5px; color: #94a3b8; line-height: 1.5;">Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.</div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
               <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 7px;">
@@ -1719,14 +1715,12 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Hizam Nahari</div>
-                <div style="font-size: 11px; color: #64748b; margin-top: 1px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+                <div id="i18n-card-dev-sub" style="font-size: 11px; color: #64748b; margin-top: 1px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
               </div>
               <span style="font-size: 10.5px; color: #38bdf8; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600;">BNSP & BMY Certified</span>
             </div>
 
-            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.55;">
-              Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.
-            </div>
+            <div id="i18n-card-dev-desc" style="font-size: 11.5px; color: #94a3b8; line-height: 1.55;">Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.</div>
 
             <!-- Tautan Web & Portofolio -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
