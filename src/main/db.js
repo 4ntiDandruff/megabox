@@ -98,6 +98,7 @@ function reorderApp(db, id, direction) {
 
 
 const defaultSettings = {
+  language: 'en',
   hibernate_timeout_minutes: 15,
   close_to_tray: true,
   autostart: false
