@@ -1647,11 +1647,11 @@
   }
 
   if (btnSupportGithub) {
-    btnSupportGithub.addEventListener('click', () => {
+    btnSupportGithub.onclick = () => {
       if (window.megabox && window.megabox.openExternal) {
         window.megabox.openExternal('https://github.com/sponsors/4ntiDandruff');
       }
-    });
+    };
   }
 
   const tabNavGeneral = document.getElementById('tab-nav-general');

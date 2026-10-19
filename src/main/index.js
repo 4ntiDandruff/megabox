@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell } = require('electron');
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
@@ -684,6 +684,19 @@ async function cacheFaviconToDataUri(iconUrl) {
       }
     }
     return updated;
+  });
+
+  ipcMain.handle('system:open-external', async (_, { url }) => {
+    try {
+      if (url && (url.startsWith('https://') || url.startsWith('http://'))) {
+        await shell.openExternal(url);
+        return { success: true };
+      }
+      return { success: false, error: 'Invalid URL protocol' };
+    } catch (err) {
+      console.error('[OpenExternal Error]', err);
+      return { success: false, error: err.message };
+    }
   });
 
   ipcMain.handle('system:clear-cache', async () => {

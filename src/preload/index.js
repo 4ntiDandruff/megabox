@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('megabox', {
   deleteApp: (id) => ipcRenderer.invoke('apps:delete', id),
   reorderApp: (id, dir) => ipcRenderer.invoke('apps:reorder', { id, dir }),
   setServiceProxy: (serviceId, proxyRules) => ipcRenderer.invoke('service:set-proxy', { serviceId, proxyRules }),
-  openExternal: (url) => shell.openExternal(url),
+  openExternal: (url) => ipcRenderer.invoke('system:open-external', { url }),
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   onShortcutAction: (callback) => ipcRenderer.on('shortcut:action', (_, data) => callback(data)),
