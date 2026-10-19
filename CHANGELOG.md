@@ -4,6 +4,14 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.6] - 2026-10-19
+
+### Diperbaiki & Disesuaikan (Refined)
+- **Rollback & Penyesuaian Arsitektur Copywriting**: Mengembalikan detail lengkap penjelasan pengaturan pada panel Pengaturan (Settings) dan kredensial resmi pada tab Tentang dengan gaya bahasa teknis ringkas, tidak berlebihan, dan lugas.
+- **Penyederhanaan Maksimal 2 Kata untuk Area Menu Konteks & Petunjuk**: Menyelaraskan seluruh label menu konteks klik kanan, petunjuk navigasi tombol keyboard, command palette, dan prompt pencarian layanan agar padat dan konsisten maksimal 2 kata (contoh: *Kembali*, *Maju*, *Muat Ulang*, *Beranda*, *Browser*, *Tidurkan*, *Bagi Layar*, *Pindah Naik*, *Pindah Turun*, *Ubah Layanan*, *Hapus Layanan*).
+
+---
+
 ## [1.3.4] - 2026-10-19
 
 ### Ditambahkan (Added)
