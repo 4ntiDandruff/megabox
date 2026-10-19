@@ -579,6 +579,26 @@
     }
   }
 
+  // Single Source of Truth for resolving application icons across all views (Tabs, QuickSwitcher, Modals)
+  function resolveAppIconSrc(app) {
+    if (!app) return 'assets/icons/web.svg';
+    const isOfficial = app.icon && app.icon !== 'custom' && app.icon !== 'globe' && app.icon !== 'web';
+    if (isOfficial) {
+      return `assets/icons/${app.icon}.svg`;
+    }
+    if (app.custom_icon) {
+      return app.custom_icon;
+    }
+    if (app.icon && (app.icon.startsWith('http://') || app.icon.startsWith('https://') || app.icon.startsWith('data:'))) {
+      return app.icon;
+    }
+    const lowerName = (app.name || '').toLowerCase();
+    if (lowerName.includes('cctv') || lowerName.includes('cam')) return 'assets/icons/cctv.svg';
+    if (lowerName.includes('github') || lowerName.includes('git')) return 'assets/icons/github.svg';
+    if (lowerName.includes('password') || lowerName.includes('key')) return 'assets/icons/key.svg';
+    return 'assets/icons/web.svg';
+  }
+
   function renderTabs() {
     tabsContainer.innerHTML = '';
 
@@ -588,22 +608,8 @@
       tab.className = 'tab-item' + (activeAppId === app.id ? ' is-active' : '');
       tab.title = `${app.name} (Alt+${index + 1})`;
 
-      // Resolve tab icon
-      let iconSrc = '';
-      const isOfficial = app.icon && app.icon !== 'custom' && app.icon !== 'globe' && app.icon !== 'web';
-      if (isOfficial) {
-        iconSrc = `assets/icons/${app.icon}.svg`;
-      } else if (app.custom_icon) {
-        iconSrc = app.custom_icon;
-      } else if (app.icon && (app.icon.startsWith('http://') || app.icon.startsWith('https://') || app.icon.startsWith('data:'))) {
-        iconSrc = app.icon;
-      } else {
-        const lowerName = (app.name || '').toLowerCase();
-        if (lowerName.includes('cctv') || lowerName.includes('cam')) iconSrc = 'assets/icons/cctv.svg';
-        else if (lowerName.includes('github') || lowerName.includes('git')) iconSrc = 'assets/icons/github.svg';
-        else if (lowerName.includes('password') || lowerName.includes('key')) iconSrc = 'assets/icons/key.svg';
-        else iconSrc = 'assets/icons/web.svg';
-      }
+      // Resolve tab icon via single source of truth
+      const iconSrc = resolveAppIconSrc(app);
 
       const img = document.createElement('img');
       img.className = 'tab-icon';
@@ -1146,17 +1152,7 @@
     
     // Match apps
     const matchedApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => {
-      let iconSrc = 'assets/icons/chat.svg';
-      if (a.custom_icon) {
-        iconSrc = a.custom_icon;
-      } else if (a.icon && a.icon !== 'custom') {
-        iconSrc = `assets/icons/${a.icon}.svg`;
-      } else {
-        const lowerName = (a.name || '').toLowerCase();
-        if (lowerName.includes('cctv') || lowerName.includes('cam')) iconSrc = 'assets/icons/cctv.svg';
-        else if (lowerName.includes('github') || lowerName.includes('git')) iconSrc = 'assets/icons/github.svg';
-        else if (lowerName.includes('password') || lowerName.includes('key')) iconSrc = 'assets/icons/key.svg';
-      }
+      const iconSrc = resolveAppIconSrc(a);
       return {
         type: 'app',
         id: a.id,
@@ -1195,7 +1191,7 @@
       const isCmd = app.type === 'cmd';
       const iconMarkup = (isCmd && app.svg)
         ? `<div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${app.svg}</div>`
-        : `<img src="${app.icon}" onerror="this.src='assets/icons/web.svg'">`;
+        : `<img src="${app.icon}" class="tab-icon" onerror="this.src='assets/icons/web.svg'">`;
 
       item.innerHTML = `
         ${iconMarkup}

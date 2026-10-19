@@ -4,6 +4,15 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.2] - 2026-10-19
+
+### Diperbaiki (Fixed)
+- **Harmonisasi Icon Quick Switcher (Single Source of Truth resolveAppIconSrc)**: Mengatasi inkonsistensi visual di mana daftar Pindah Cepat (Quick Switcher Ctrl+K / Ctrl+P) menampilkan icon berbeda dari tab sidebar. Layanan resmi (seperti WhatsApp Business, Telegram, Gmail, dan Google Password Manager) kini 100% konsisten menampilkan icon vektor SVG resmi alih-alih favicon cache web yang buram atau salah.
+- **Pembersihan Polusi Database Favicon**: Mengeliminasi penyimpanan custom_icon liar pada katalog resmi yang sebelumnya tersimpan akibat penangkapan event page-favicon-updated dari subdomain eksternal. Layanan kustom (CCTV, GitHub) tetap mempertahankan icon favicon Base64 data URI mereka secara simetris di kedua tempat.
+- **Penyelarasan Styling Icon Quick Switcher**: Menyuntikkan kelas .tab-icon ke seluruh elemen img pada daftar Quick Switcher untuk keseragaman ukuran, rasio aspek, dan rendering tajam tanpa artefak.
+
+---
+
 ## [1.3.1] - 2026-10-19
 
 ### Diperbaiki (Fixed)
