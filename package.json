@@ -1,19 +1,21 @@
 {
   "name": "megabox",
   "version": "1.4.0",
-  "description": "Zero-bloat multi-app workspace: Rambox Pro capabilities without subscription, rock-solid stability on KDE Wayland without Ferdium bugs",
+  "description": "Zero-bloat multi-app desktop workspace: local-first, RAM-frugal, and rock-solid stability on Linux Wayland & Windows",
   "main": "src/main/index.js",
   "scripts": {
     "start": "bash megabox-launcher.sh",
     "test": "node tests/test_db.js"
   },
   "keywords": [
+    "electron",
     "workspace",
-    "rambox-alternative",
-    "ferdium-alternative",
-    "wayland-native",
-    "kde-plasma",
-    "zero-bloat"
+    "multi-messenger",
+    "whatsapp",
+    "telegram",
+    "wayland",
+    "zero-bloat",
+    "local-first"
   ],
   "author": "Hizam Nahari",
   "license": "MIT",

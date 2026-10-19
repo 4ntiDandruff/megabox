@@ -1,5 +1,5 @@
-// Megabox Vanilla DOM Controller (Rambox + Ferdium Synthesis)
-// Includes Ferdium 440+ Recipes Catalog, Live Search, Tab Context Menu, and Hibernation
+// Megabox Vanilla DOM Controller (Zero-Bloat Desktop Workspace Engine)
+// Includes 440+ Recipes Catalog, Live Search, Tab Context Menu, and Hibernation
 (function() {
   const tabsContainer = document.getElementById('tabs-container');
   const webviewsContainer = document.getElementById('webviews-container');
@@ -638,7 +638,7 @@
       };
       tab.appendChild(img);
 
-      // Notification Badge matching Ferdium
+      // Dynamic Notification Badge Controller
       const badge = document.createElement('span');
       badge.id = 'badge-' + app.id;
       badge.className = 'tab-badge';
@@ -648,7 +648,7 @@
       // Tab Click
       tab.onclick = () => selectApp(app.id);
 
-      // Right-click Custom Context Menu (Ferdium TabItem exact replica)
+      // Right-click Custom Context Menu
       tab.oncontextmenu = (e) => {
         e.preventDefault();
         showContextMenu(e.clientX, e.clientY, app);
@@ -1127,7 +1127,7 @@
   let filteredQuickApps = [];
 
 
-  // 2. Quick Switcher Logic (Ferdium quickSwitch & Rambox quickSwitcher)
+  // 2. Quick Switcher Logic (Workspace App Switcher)
   function openQuickSwitcher() {
     quickswitchModal.style.display = 'flex';
     quickswitchInput.value = '';

@@ -22,7 +22,7 @@
                                     |
     +-------------------------------+-------------------------------+
     v                                                               v
- [ RAMBOX HARDENED ENGINE ]                      [ FERDIUM & HOMARR ECOSYSTEM ]
+ [ ZERO-BLOAT WEB ENGINE  ]                      [ LOCAL & RECIPE ECOSYSTEM  ]
  - Chrome 133 User-Agent (Anti-Block)            - 481 Database Layanan Teruji
  - Multi-Instance & Multi-Akun Otomatis          - 31 Ekosistem AI (Muse, v0, Bolt)
  - Master Lock PIN (Layar Terkunci)              - Auto-Favicon Cache ke DB
@@ -48,12 +48,12 @@
 
 Bagi pengguna Linux, khususnya desktop modern **KDE Plasma Wayland**, membuka puluhan aplikasi komunikasi dan dashboard server (WhatsApp, Telegram, Discord, CCTV, Proxmox, Google Password Manager) memicu dua dilema besar:
 
-1. **Rambox (Jebakan Paywall & Berlangganan)**:
+1. **Aplikasi Proprietary Berbayar (Jebakan Paywall & Langganan)**:
    - Fitur esensial seperti pembatasan jumlah tab aplikasi, multi-akun mandiri, hibernasi penghemat RAM, dan isolasi proxy dikunci di balik biaya langganan tahunan.
-2. **Ferdium (Drama Macet & Berat di Wayland)**:
+2. **Aplikasi Multi-App Berbasis Framework Berat (Macet di Wayland)**:
    - Sering mengalami freeze rendering di KDE Wayland, tab loncat, WebAuthn mogok, dan beban memori shell membengkak hingga di atas 400MB hanya untuk kerangka React/MobX.
 
-**Megabox adalah solusi meja kerja**: Menggabungkan ketahanan bypass Rambox, kekayaan 481 resep katalog layanan terverifikasi (termasuk 31 ekosistem AI modern seperti Muse AI, v0 by Vercel, Bolt.new, Groq, Midjourney), dan koleksi ikon Homarr Dashboard Icons. Semuanya dirangkai dalam antarmuka **Pure Flat Utilitarian** dan **Vanilla DOM murni** yang ringkas, super cepat, dan 100% stabil di Linux Wayland.
+**Megabox adalah solusi meja kerja**: Menggabungkan ketahanan bypass user-agent modern, kekayaan 480+ resep katalog layanan terverifikasi (termasuk 31 ekosistem AI modern seperti Muse AI, v0 by Vercel, Bolt.new, Groq, Midjourney), dan koleksi ikon Homarr Dashboard Icons. Semuanya dirangkai dalam antarmuka **Pure Flat Utilitarian** dan **Vanilla DOM murni** yang ringkas, super cepat, dan 100% stabil di Linux Wayland.
 
 ---
 
@@ -78,7 +78,7 @@ Bagi pengguna Linux, khususnya desktop modern **KDE Plasma Wayland**, membuka pu
 
 Pengujian beban kerja nyata pada desktop harian:
 
-| Parameter Uji | Rambox (Free/Trial) | Ferdium (AppImage) | Megabox (Zero-Bloat) |
+| Parameter Uji | Workspace Proprietary | Alternatif Komunitas Lawas | Megabox (Zero-Bloat) |
 | :--- | :---: | :---: | :---: |
 | **Model Akses** | Langganan Berbayar | Gratis / Open Source | **100% Bebas Selamanya** |
 | **Kestabilan Wayland** | Rawan tearing XWayland | Sering freeze socket | **Stabil Native Ozone Socket** |
@@ -153,6 +153,16 @@ Bekerja 100% responsif di seluruh workstation—bahkan ketika kursor dan fokus k
 - [x] Universal Keyboard Shortcut Interceptor (Anti-Trap webview focus pada semua tombol pintas)
 - [ ] Profil terenkripsi mandiri via SQLite WAL
 - [ ] Mode picture-in-picture mengambang untuk pemantau CCTV meja servis
+
+---
+
+## 8. Lisensi & Pernyataan Merek (Trademark & Legal Notice)
+
+Perangkat lunak ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
+
+> **Pemberitahuan Merek Dagang (Trademark Disclaimer)**:  
+> Seluruh nama produk, merek dagang, logo, dan ikon pihak ketiga (termasuk *Rambox*, *Ferdium*, *WhatsApp*, *Telegram*, *Discord*, *Slack*, *Google*, dan lainnya) yang disebutkan dalam repositori atau dokumentasi ini merupakan hak milik dari masing-masing pemilik resminya.  
+> Penyebutan nama produk atau merek dalam repositori ini semata-mata bersifat deskriptif (*nominative fair use*) untuk keperluan identifikasi kompatibilitas, perbandingan performa, dan referensi rekayasa. Penggunaan nama tersebut tidak menyatakan maupun menyiratkan adanya afiliasi, sponsor, atau dukungan resmi dari pemilik merek terkait terhadap proyek Megabox ini.
 
 ---
 

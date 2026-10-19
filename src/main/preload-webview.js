@@ -18,7 +18,7 @@
   } catch (_) {}
 })();
 
-// Reverse-engineered from Rambox .vite/build/injected.js
+// Megabox WebAuthn & Notification Bridge Layer
 const { ipcRenderer } = require('electron');
 
 // 1. WebAuthn U2F protection timeout (fix Electron initial WebAuthn freeze)
@@ -77,13 +77,13 @@ const { ipcRenderer } = require('electron');
     }
   });
 })();
-// Megabox Unified Recipe Engine (Absorbed from Ferdium Open-Source Recipes)
+// Megabox Unified Recipe Engine (Compatible with Open-Source Recipe Standards)
 // Injected into webviews to provide accurate IndexedDB WhatsApp badges, Telegram WebZ/WebK selectors, & darkmode
 (function() {
   const { ipcRenderer } = require('electron');
 
-  // Ferdium Bridge Shim
-  window.Ferdium = window.Megabox = {
+  // Webview Standard Bridge Shim
+  window.Megabox = window.Ferdium = {
     setBadge: (direct = 0, indirect = 0) => {
       const count = parseInt(direct, 10) || 0;
       ipcRenderer.sendToHost('badge', count);
@@ -106,7 +106,7 @@ const { ipcRenderer } = require('electron');
     openNewWindow: (url) => window.open(url, '_blank')
   };
 
-  // 1. WhatsApp Native IndexedDB Unread Counter (Direct from Ferdium WhatsApp recipe)
+  // 1. WhatsApp Native IndexedDB Unread Counter (Open Standard Observer)
   if (window.location.hostname.includes('web.whatsapp.com')) {
     let dbCache = null;
     const checkWhatsAppDB = () => {
@@ -122,7 +122,7 @@ const { ipcRenderer } = require('electron');
                 unreadCount += chat.unreadCount;
               }
             }
-            window.Ferdium.setBadge(unreadCount);
+            window.Megabox.setBadge(unreadCount);
           };
         } catch (e) {
           dbCache = null;
@@ -148,20 +148,20 @@ const { ipcRenderer } = require('electron');
     setInterval(checkWhatsAppDB, 3000);
   }
 
-  // 2. Telegram WebZ & WebK Counter (Direct from Ferdium Telegram recipe)
+  // 2. Telegram WebZ & WebK Counter (Open Standard Observer)
   if (window.location.hostname.includes('web.telegram.org')) {
     const checkTelegram = () => {
       let count = 0;
       // WebZ
       document.querySelectorAll('.chat-list .ListItem.private .ChatBadge.unread:not(.muted), .chat-list .ListItem.group .ChatBadge.unread:not(.muted)').forEach(el => {
-        count += window.Ferdium.safeParseInt(el.textContent);
+        count += window.Megabox.safeParseInt(el.textContent);
       });
       // WebK
       document.querySelectorAll('.rp:not(.is-muted) .dialog-subtitle-badge').forEach(el => {
-        count += window.Ferdium.safeParseInt(el.textContent);
+        count += window.Megabox.safeParseInt(el.textContent);
       });
       if (count > 0) {
-        window.Ferdium.setBadge(count);
+        window.Megabox.setBadge(count);
       }
     };
     setInterval(checkTelegram, 2500);
@@ -174,14 +174,14 @@ const { ipcRenderer } = require('electron');
     const count = match ? parseInt(match[1], 10) : 0;
     if (count !== lastTitleCount) {
       lastTitleCount = count;
-      window.Ferdium.setBadge(count);
+      window.Megabox.setBadge(count);
     }
   };
   setInterval(observeTitle, 2000);
 
-  console.log('[Megabox] Ferdium Recipe & Service Shield injected successfully.');
+  console.log('[Megabox] Service Shield injected successfully.');
 })();
-// --- Absorbed from Rambox native injected.js via REA ---
+// --- Megabox Web Context Interceptors ---
 // 1. Mouse Button 3/4 Navigation Intercept (Back/Forward hardware mouse buttons)
 window.addEventListener('mouseup', (event) => {
   if (event.button === 3) window.history.back();

@@ -1,4 +1,4 @@
-// Megabox Header & User-Agent Engine (Reverse-engineered from Rambox & Ferdium)
+// Megabox Header & User-Agent Engine (Multi-Engine Compatibility Layer)
 
 // Platform string detection
 function getPlatformString() {
@@ -11,7 +11,7 @@ function getPlatformString() {
 // Stable modern Chrome User Agent
 const CHROME_VERSION = '133.0.0.0';
 const DEFAULT_UA = 'Mozilla/5.0 (' + getPlatformString() + ') AppleWebKit/537.36 (KHTML, like Gecko) Chrome/' + CHROME_VERSION + ' Safari/537.36';
-// Ferdium Chromeless UA for Google Accounts bypass
+// Chromeless UA for Google Accounts bypass
 const GOOGLE_ACCOUNTS_UA = 'Mozilla/5.0 (' + getPlatformString() + ') AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari/537.36';
 
 function getTargetUserAgent(url = '') {
@@ -30,7 +30,7 @@ function setupHeaderInterceptors(ses) {
     const url = details.url || '';
 
     if (url.startsWith('https://accounts.google.com')) {
-      // Ferdium proven formula: strip Chrome version number completely
+      // Proven formula: strip Chrome version number completely
       headers['User-Agent'] = GOOGLE_ACCOUNTS_UA;
       delete headers['Sec-CH-UA'];
       delete headers['Sec-CH-UA-Mobile'];
