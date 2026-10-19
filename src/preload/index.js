@@ -42,4 +42,9 @@ contextBridge.exposeInMainWorld('megabox', {
   onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status)),
   dispatchNotification: (title, body, icon) => ipcRenderer.invoke('notify:dispatch', { title, body, icon }),
 
+  // Update Notifier API
+  checkUpdatesManual: () => ipcRenderer.invoke('update:check-manual'),
+  dismissUpdate: (version) => ipcRenderer.invoke('update:dismiss', version),
+  onUpdateAvailable: (callback) => ipcRenderer.on('update:available', (_, data) => callback(data)),
+
 });

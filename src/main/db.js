@@ -99,6 +99,9 @@ function reorderApp(db, id, direction) {
 
 const defaultSettings = {
   language: 'en',
+    auto_check_updates: true,
+    dismissed_update_version: null,
+    dismissed_update_time: 0,
   hibernate_timeout_minutes: 15,
   close_to_tray: true,
   autostart: false

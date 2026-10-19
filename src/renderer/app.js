@@ -1692,7 +1692,18 @@
   const settingHibernateTimeout = document.getElementById('setting-hibernate-timeout');
   const settingCloseAction = document.getElementById('setting-close-action');
   const settingAutostart = document.getElementById('setting-autostart');
+  const settingAutoupdate = document.getElementById('setting-autoupdate');
   const settingsStatusSave = document.getElementById('settings-status-save');
+
+  // Update Notifier DOM Elements
+  const updateBanner = document.getElementById('update-banner');
+  const updateBannerText = document.getElementById('i18n-update-banner-text');
+  const btnUpdateDownload = document.getElementById('btn-update-download');
+  const btnUpdateLater = document.getElementById('btn-update-later');
+  const btnUpdateClose = document.getElementById('btn-update-close');
+  const btnCheckUpdates = document.getElementById('btn-check-updates');
+  const updateCheckStatusMsg = document.getElementById('update-check-status-msg');
+  let currentAvailableUpdate = null;
 
 
   // ==========================================
@@ -1791,7 +1802,19 @@
 
       // Quick Switcher & Catalog
       quick_placeholder: "Type a command or service name...",
-      catalog_badge_suffix: "Apps"
+      catalog_badge_suffix: "Apps",
+
+      // Update Notifier & Controls
+      row_autoupdate_title: "New Version Notifications",
+      row_autoupdate_desc: "Check GitHub releases in background and notify when updates are ready.",
+      btn_check_update_manual: "Check for Updates",
+      update_banner_text: "Megabox {version} is available — Update to enjoy the latest features.",
+      btn_update_download: "Download",
+      btn_update_later: "Later",
+      update_checking: "Checking for updates...",
+      update_latest_already: "You are using the latest version ({version}).",
+      update_new_found: "New version {version} is available for download!",
+      update_check_failed: "Failed to check for updates: "
     },
     id: {
       // Sidebar tooltips
@@ -1882,7 +1905,19 @@
 
       // Quick Switcher & Catalog
       quick_placeholder: "Ketik perintah atau nama aplikasi...",
-      catalog_badge_suffix: "Aplikasi"
+      catalog_badge_suffix: "Aplikasi",
+
+      // Update Notifier & Controls
+      row_autoupdate_title: "Pemberitahuan Versi Baru",
+      row_autoupdate_desc: "Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.",
+      btn_check_update_manual: "Periksa Pembaruan",
+      update_banner_text: "Megabox {version} telah tersedia — Perbarui untuk menikmati fitur terbaru.",
+      btn_update_download: "Unduh",
+      btn_update_later: "Nanti",
+      update_checking: "Memeriksa pembaruan...",
+      update_latest_already: "Anda sudah menggunakan versi terbaru ({version}).",
+      update_new_found: "Versi baru {version} telah tersedia untuk diunduh!",
+      update_check_failed: "Gagal memeriksa pembaruan: "
     }
   };
 
@@ -2070,6 +2105,23 @@
     const btnSettingsSidebar = document.getElementById('btn-settings');
     if (btnSettingsSidebar) btnSettingsSidebar.title = t.btn_settings_title;
 
+    // 9. Update Notifier & Settings Elements
+    const autoUpdateTitle = document.getElementById('i18n-row-autoupdate-title');
+    if (autoUpdateTitle) autoUpdateTitle.textContent = t.row_autoupdate_title;
+    const autoUpdateDesc = document.getElementById('i18n-row-autoupdate-desc');
+    if (autoUpdateDesc) autoUpdateDesc.textContent = t.row_autoupdate_desc;
+
+    const btnCheckUpdateSpan = document.getElementById('i18n-btn-check-updates');
+    if (btnCheckUpdateSpan) btnCheckUpdateSpan.textContent = t.btn_check_update_manual;
+    const btnUpdateDlSpan = document.getElementById('i18n-btn-update-download');
+    if (btnUpdateDlSpan) btnUpdateDlSpan.textContent = t.btn_update_download;
+    const btnUpdateLaterSpan = document.getElementById('i18n-btn-update-later');
+    if (btnUpdateLaterSpan) btnUpdateLaterSpan.textContent = t.btn_update_later;
+
+    if (updateBannerText && currentAvailableUpdate) {
+      updateBannerText.textContent = (t.update_banner_text || "Megabox {version} is available").replace('{version}', currentAvailableUpdate.version);
+    }
+
     console.log('[Megabox i18n] Language applied:', lang);
   }
 
@@ -2087,6 +2139,9 @@
       }
       if (settingAutostart) {
         settingAutostart.checked = Boolean(cfg.autostart);
+      }
+      if (settingAutoupdate) {
+        settingAutoupdate.checked = cfg.auto_check_updates !== false;
       }
       if (cfg.language) {
         applyLanguage(cfg.language);
@@ -2106,11 +2161,13 @@
       const closeToTray = settingCloseAction.value === 'tray';
       const autostart = Boolean(settingAutostart.checked);
 
+      const autoCheckUpdates = settingAutoupdate ? Boolean(settingAutoupdate.checked) : true;
       await window.megabox.saveSettings({
         language: currentLang,
         hibernate_timeout_minutes: mins,
         close_to_tray: closeToTray,
-        autostart: autostart
+        autostart: autostart,
+        auto_check_updates: autoCheckUpdates
       });
 
       if (settingsStatusSave) {
@@ -2125,6 +2182,113 @@
   if (settingHibernateTimeout) settingHibernateTimeout.onchange = persistSystemSettings;
   if (settingCloseAction) settingCloseAction.onchange = persistSystemSettings;
   if (settingAutostart) settingAutostart.onchange = persistSystemSettings;
+  if (settingAutoupdate) settingAutoupdate.onchange = persistSystemSettings;
+
+  // ==========================================
+  // MEGABOX UPDATE NOTIFIER CONTROLLER
+  // Floating Top Banner & Manual Check Engine
+  // ==========================================
+  function showUpdateBanner(data) {
+    if (!updateBanner || !data || !data.version) return;
+    currentAvailableUpdate = data;
+    const t = I18N[currentLang] || I18N.en;
+    if (updateBannerText) {
+      updateBannerText.textContent = (t.update_banner_text || "Megabox {version} is available").replace('{version}', data.version);
+    }
+    updateBanner.style.display = 'flex';
+  }
+
+  function hideUpdateBanner() {
+    if (!updateBanner) return;
+    updateBanner.style.display = 'none';
+  }
+
+  if (btnUpdateDownload) {
+    btnUpdateDownload.onclick = () => {
+      const url = (currentAvailableUpdate && currentAvailableUpdate.url) || 'https://github.com/4ntiDandruff/megabox/releases';
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal(url);
+      }
+      hideUpdateBanner();
+    };
+  }
+
+  async function dismissActiveUpdate() {
+    hideUpdateBanner();
+    if (currentAvailableUpdate && window.megabox && window.megabox.dismissUpdate) {
+      await window.megabox.dismissUpdate(currentAvailableUpdate.version);
+    }
+  }
+
+  if (btnUpdateLater) {
+    btnUpdateLater.onclick = dismissActiveUpdate;
+  }
+  if (btnUpdateClose) {
+    btnUpdateClose.onclick = dismissActiveUpdate;
+  }
+
+  if (window.megabox && window.megabox.onUpdateAvailable) {
+    window.megabox.onUpdateAvailable((data) => {
+      console.log('[Megabox Updater] Update available event received:', data);
+      showUpdateBanner(data);
+    });
+  }
+
+  if (btnCheckUpdates) {
+    btnCheckUpdates.onclick = async () => {
+      const t = I18N[currentLang] || I18N.en;
+      if (updateCheckStatusMsg) {
+        updateCheckStatusMsg.style.display = 'block';
+        updateCheckStatusMsg.style.background = 'rgba(56, 189, 248, 0.1)';
+        updateCheckStatusMsg.style.color = '#38bdf8';
+        updateCheckStatusMsg.style.border = '1px solid rgba(56, 189, 248, 0.2)';
+        updateCheckStatusMsg.textContent = t.update_checking;
+      }
+      btnCheckUpdates.disabled = true;
+
+      try {
+        if (window.megabox && window.megabox.checkUpdatesManual) {
+          const res = await window.megabox.checkUpdatesManual();
+          if (res.hasUpdate) {
+            showUpdateBanner(res);
+            if (updateCheckStatusMsg) {
+              updateCheckStatusMsg.style.background = 'rgba(16, 185, 129, 0.1)';
+              updateCheckStatusMsg.style.color = '#34d399';
+              updateCheckStatusMsg.style.border = '1px solid rgba(16, 185, 129, 0.2)';
+              updateCheckStatusMsg.textContent = (t.update_new_found || "New version {version} is available!").replace('{version}', res.version);
+            }
+          } else if (res.error) {
+            if (updateCheckStatusMsg) {
+              updateCheckStatusMsg.style.background = 'rgba(239, 68, 68, 0.1)';
+              updateCheckStatusMsg.style.color = '#f87171';
+              updateCheckStatusMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+              updateCheckStatusMsg.textContent = (t.update_check_failed || "Failed to check: ") + res.error;
+            }
+          } else {
+            if (updateCheckStatusMsg) {
+              updateCheckStatusMsg.style.background = 'rgba(255, 255, 255, 0.04)';
+              updateCheckStatusMsg.style.color = '#94a3b8';
+              updateCheckStatusMsg.style.border = '1px solid rgba(255, 255, 255, 0.08)';
+              updateCheckStatusMsg.textContent = (t.update_latest_already || "You are using the latest version ({version}).").replace('{version}', res.version || 'v1.5.0');
+            }
+          }
+        }
+      } catch (err) {
+        if (updateCheckStatusMsg) {
+          updateCheckStatusMsg.style.background = 'rgba(239, 68, 68, 0.1)';
+          updateCheckStatusMsg.style.color = '#f87171';
+          updateCheckStatusMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+          updateCheckStatusMsg.textContent = (t.update_check_failed || "Failed: ") + err.message;
+        }
+      } finally {
+        btnCheckUpdates.disabled = false;
+        setTimeout(() => {
+          if (updateCheckStatusMsg) updateCheckStatusMsg.style.display = 'none';
+        }, 6000);
+      }
+    };
+  }
+
 
   // Language Switcher Event Listeners
   const btnLangEn = document.getElementById('btn-lang-en');
@@ -2223,6 +2387,9 @@
   }
 
   window.addEventListener('DOMContentLoaded', init);
+  window._megabox_applyLanguage = applyLanguage;
+  window._megabox_showUpdateBanner = showUpdateBanner;
+  window._megabox_hideUpdateBanner = hideUpdateBanner;
 
   // --- Contextual Right Extension Drawer Controller ---
   const extensionDrawer = document.getElementById('extension-drawer');

@@ -1325,6 +1325,28 @@
   <!-- Webview Host Area (Clean White Background for Web Pages) -->
   
   <!-- Webview Host Area (Clean White Background for Web Pages) -->
+    <!-- Floating Top Update Banner (Rambox / VS Code Style) -->
+  <div id="update-banner" style="display: none; position: absolute; top: 0; left: 56px; right: 0; height: 38px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(16, 185, 129, 0.3); z-index: 40; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: transform 0.25s ease, opacity 0.25s ease;">
+    <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+      <span style="position: relative; display: flex; width: 8px; height: 8px;">
+        <span style="position: absolute; display: inline-flex; width: 100%; height: 100%; border-radius: 9999px; background-color: #34d399; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+        <span style="position: relative; display: inline-flex; border-radius: 9999px; width: 8px; height: 8px; background-color: #10b981;"></span>
+      </span>
+      <span id="i18n-update-banner-text" style="font-size: 11.5px; font-weight: 500; color: #f1f5f9; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+        Megabox update available.
+      </span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+      <button id="btn-update-download" type="button" style="background: #10b981; color: #064e3b; border: none; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 5px; cursor: pointer; transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+        <span id="i18n-btn-update-download">Download</span>
+      </button>
+      <button id="btn-update-later" type="button" style="background: transparent; color: #94a3b8; border: none; font-size: 11px; font-weight: 500; padding: 4px 8px; border-radius: 5px; cursor: pointer;">
+        <span id="i18n-btn-update-later">Later</span>
+      </button>
+      <button id="btn-update-close" type="button" style="background: transparent; color: #64748b; border: none; font-size: 15px; cursor: pointer; padding: 0 4px; line-height: 1;">&times;</button>
+    </div>
+  </div>
+
   <main id="webviews-container" class="webviews-container"></main>
 
 
@@ -1583,6 +1605,18 @@
               </label>
             </div>
 
+                        <!-- Row 4: Auto-Check Updates -->
+            <div class="apple-setting-row">
+              <div style="max-width: 400px;">
+                <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pemberitahuan Versi Baru</div>
+                <div id="i18n-row-autoupdate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.</div>
+              </div>
+              <label class="apple-switch-mint">
+                <input type="checkbox" id="setting-autoupdate" checked>
+                <span id="slider-autoupdate" class="apple-slider-mint"></span>
+              </label>
+            </div>
+
             <!-- Row 4: Clear Cache -->
             <div class="apple-setting-row">
               <div style="max-width: 400px;">
@@ -1664,12 +1698,19 @@
                 </div>
               </div>
 
-              <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button id="btn-check-updates" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #38bdf8;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                  <span id="i18n-btn-check-updates">Periksa Pembaruan</span>
+                </button>
+                <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                 <span>GitHub</span>
               </button>
+              </div>
             </div>
 
+            <div id="update-check-status-msg" style="font-size: 11px; line-height: 1.4; padding: 6px 10px; border-radius: 6px; display: none;"></div>
             <!-- Arsitektur Ringkas (Two Columns) -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
               <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">

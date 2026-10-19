@@ -5,6 +5,7 @@ const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
 const extensionsManager = require('./extensions-manager.js');
 const { translateText } = require('./translator.js');
+const { initUpdater } = require('./updater.js');
 const fs = require('fs');
 
 function checkGpuCacheConsistency() {
@@ -711,6 +712,7 @@ async function cacheFaviconToDataUri(iconUrl) {
   });
 
   createWindow();
+  initUpdater(mainWindow, db, { getSettings, saveSettings });
   createTray();
 
   app.on('activate', () => {
