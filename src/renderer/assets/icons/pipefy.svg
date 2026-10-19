@@ -7,6 +7,6 @@
 		tspan { white-space:pre }
 		.shp0 { fill: #ffffff;stroke: #ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width: 500 } 
 	</style>
-	<path id="Layer 1" class="shp0" d="M275 275L1147 275L1147 1147L275 1147L275 275Z" />
+	<path fill="#cbd5e1" id="Layer 1" class="shp0" d="M275 275L1147 275L1147 1147L275 1147L275 275Z" />
 	<use id="Pipefy-full-logo" href="#img1" transform="matrix(0.657,0,0,0.657,119,513)"/>
 </svg>

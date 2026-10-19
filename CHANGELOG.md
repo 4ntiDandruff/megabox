@@ -4,6 +4,14 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.6] - 2026-10-19
+
+### Diubah (Changed)
+- **Konsistensi Kontras Icon Global (Anti-Black-Sink)**: Mengaudit dan mengubah 163 asset SVG monokrom hitam menjadi palet terang (`#f1f5f9` / `#cbd5e1`) agar terlihat kontras dan tajam pada tema gelap, serta menerapkan drop-shadow protektif pada icon tab (`.tab-item img.tab-icon`) dan kartu katalog (`.service-card img`).
+- **Lucide SVG Command Palette Spotlight**: Mengganti fallback icon perintah sistem di QuickSwitcher (`cmd:dnd`, `cmd:catalog`, `cmd:settings`, `cmd:reload`) dengan inline native Lucide SVG putih tajam, meniadakan icon tameng gelap.
+
+---
+
 ## [1.2.5] - 2026-10-19
 
 ### Ditambahkan (Added)

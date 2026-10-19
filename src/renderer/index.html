@@ -151,6 +151,8 @@
       object-fit: contain;
       pointer-events: none;
       border-radius: 6px;
+      /* Anti-black-sink: guarantees visible outline and contrast against dark backgrounds */
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
     }
 
     .tab-item span.tab-fallback {
@@ -543,8 +545,8 @@
       height: 36px;
       object-fit: contain;
       flex-shrink: 0;
-      /* Subtle brightness filter so pure-black icons have visible contrast against dark themes */
-      filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.35));
+      /* Anti-black-sink: ensures visible outline and contrast for monochrome/dark icons */
+      filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.45));
     }
 
     .service-info {
@@ -805,6 +807,7 @@
       width: 24px;
       height: 24px;
       object-fit: contain;
+      filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
     }
 
   

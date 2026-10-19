@@ -21,16 +21,13 @@
        height="7.9586134"
        x="-0.010301496"
        y="17.032166" />
-    <path
-       style="display:inline;fill:#1d4b63;stroke:none"
+    <path fill="#cbd5e1"        style="display:inline;fill:#1d4b63;stroke:none"
        d="m 0,0 v 17 h 20 v 8 H 0 v 79 H 128 V 25 h -20 v -8 h 20 V 0 H 0 M 106,14 V 27 H 74 v 74 H 54 V 27 H 22 V 14 h 84 M 0,112 v 16 h 128 v -16 z"
        id="path1" />
-    <path
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:0.150588"
+    <path fill="#cbd5e1"        style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:0.150588"
        d="M 54.061176,63.924706 V 26.955294 H 38.098824 22.136471 V 20.48 14.004706 H 64 105.86353 V 20.48 26.955294 H 89.901176 73.938824 V 63.924706 100.89412 H 64 54.061176 Z"
        id="path4" />
-    <path
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:0.150588"
+    <path fill="#cbd5e1"        style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:0.150588"
        d="M 54.061176,63.924706 V 26.955294 H 38.098824 22.136471 V 20.48 14.004706 H 64 105.86353 V 20.48 26.955294 H 89.901176 73.938824 V 63.924706 100.89412 H 64 54.061176 Z"
        id="path5" />
     <rect

@@ -23,9 +23,9 @@
     <g class="layer">
         <title>Layer 5</title>
         <g id="svg_4">
-            <circle cx="94.512235" cy="64.888373" fill="#ed9ff4" id="svg_5" r="45.947662" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="2"/>
-            <circle cx="94.512235" cy="67.416129" fill="#000000" id="svg_6" r="27.421291" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="2"/>
-            <circle cx="133.066652" cy="38.129528" fill="#ffffff" id="svg_10" r="2.236069" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="0" transform="matrix(2.36481, 0.460277, -0.437926, 2.4855, -222.707, -98.7136)"/>
+            <circle cx="94.512235" cy="64.888373" fill="#ed9ff4" id="svg_5" r="45.947662" stroke="#f1f5f9" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="2"/>
+            <circle cx="94.512235" cy="67.416129" fill="#f1f5f9" id="svg_6" r="27.421291" stroke="#f1f5f9" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="2"/>
+            <circle cx="133.066652" cy="38.129528" fill="#ffffff" id="svg_10" r="2.236069" stroke="#f1f5f9" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="0" transform="matrix(2.36481, 0.460277, -0.437926, 2.4855, -222.707, -98.7136)"/>
         </g>
     </g>
 <script xmlns="" id="bw-fido2-page-script"/></svg>

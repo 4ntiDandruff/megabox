@@ -1011,24 +1011,37 @@
 
   // System command palette actions
   const systemCommands = [
-    { id: 'cmd:dnd', name: 'Mode Konsentrasi / DND (Toggle)', subtitle: 'Senyapkan notifikasi dan suara seketika', icon: 'assets/icons/bell.svg', action: () => toggleDNDMode() },
-    { id: 'cmd:catalog', name: 'Tambah Aplikasi (Buka Katalog)', subtitle: 'Jelajahi dan pasang layanan baru', icon: 'assets/icons/chat.svg', action: () => openCatalog() },
-    { id: 'cmd:settings', name: 'Pengaturan & Profil Akun', subtitle: 'Konfigurasi sinkronisasi cloud dan avatar', icon: 'assets/icons/settings.svg', action: () => openSettingsModal() },
-    { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', icon: 'assets/icons/reload.svg', action: () => reloadActiveApp() }
+    { id: 'cmd:dnd', name: 'Mode Konsentrasi / DND (Toggle)', subtitle: 'Senyapkan notifikasi dan suara seketika', svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>', action: () => toggleDNDMode() },
+    { id: 'cmd:catalog', name: 'Tambah Aplikasi (Buka Katalog)', subtitle: 'Jelajahi dan pasang layanan baru', svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>', action: () => openCatalog() },
+    { id: 'cmd:settings', name: 'Pengaturan & Profil Akun', subtitle: 'Konfigurasi sinkronisasi cloud dan avatar', svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>', action: () => openSettingsModal() },
+    { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', svg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>', action: () => reloadActiveApp() }
   ];
 
   function renderQuickSwitchList() {
     const q = quickswitchInput.value.toLowerCase().trim();
     
     // Match apps
-    const matchedApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => ({
-      type: 'app',
-      id: a.id,
-      name: a.name,
-      subtitle: a.url,
-      icon: a.icon !== 'custom' ? `assets/icons/${a.icon}.svg` : 'assets/icons/chat.svg',
-      action: () => selectApp(a.id)
-    }));
+    const matchedApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => {
+      let iconSrc = 'assets/icons/chat.svg';
+      if (a.custom_icon) {
+        iconSrc = a.custom_icon;
+      } else if (a.icon && a.icon !== 'custom') {
+        iconSrc = `assets/icons/${a.icon}.svg`;
+      } else {
+        const lowerName = (a.name || '').toLowerCase();
+        if (lowerName.includes('cctv') || lowerName.includes('cam')) iconSrc = 'assets/icons/cctv.svg';
+        else if (lowerName.includes('github') || lowerName.includes('git')) iconSrc = 'assets/icons/github.svg';
+        else if (lowerName.includes('password') || lowerName.includes('key')) iconSrc = 'assets/icons/key.svg';
+      }
+      return {
+        type: 'app',
+        id: a.id,
+        name: a.name,
+        subtitle: a.url,
+        icon: iconSrc,
+        action: () => selectApp(a.id)
+      };
+    });
 
     // Match system commands
     const matchedCommands = systemCommands.filter(c => c.name.toLowerCase().includes(q) || c.subtitle.toLowerCase().includes(q)).map(c => ({
@@ -1036,7 +1049,7 @@
       id: c.id,
       name: c.name,
       subtitle: c.subtitle,
-      icon: c.icon,
+      svg: c.svg,
       action: c.action
     }));
 
@@ -1055,11 +1068,13 @@
       const item = document.createElement('div');
       item.className = 'quickswitch-item' + (idx === quickSwitchIndex ? ' is-selected' : '');
       
-      const iconSrc = app.icon;
       const isCmd = app.type === 'cmd';
+      const iconMarkup = (isCmd && app.svg)
+        ? `<div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${app.svg}</div>`
+        : `<img src="${app.icon}" onerror="this.src='assets/icons/web.svg'">`;
 
       item.innerHTML = `
-        <img src="${iconSrc}" onerror="this.src='assets/icons/shield.svg'">
+        ${iconMarkup}
         <div style="flex:1;overflow:hidden;">
           <div style="font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;">
             <span>${app.name}</span>

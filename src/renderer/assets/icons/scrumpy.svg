@@ -30,14 +30,14 @@
         <use xlink:href="#iconsvg-b"/>
       </mask>
       <use fill="#0E70CD" fill-rule="nonzero" opacity="0" xlink:href="#iconsvg-b"/>
-      <path fill="#000" fill-rule="nonzero" d="M91.5336788,157.046632 C56.6321244,159.264249 26.3937824,147.720207 7.18134715,118.497409 C9.616949,127.504627 -0.512993623,127.388494 4.21497239,135 C21.8134249,163.331575 48.7944175,195.834588 101.93505,193.637744 C157.656543,191.334208 178.669064,156.668495 188.656367,116.925858 C169.112326,147.97249 127.533679,154.746114 91.5336788,157.046632 Z" mask="url(#iconsvg-c)" opacity=".25"/>
+      <path fill="#f1f5f9" fill-rule="nonzero" d="M91.5336788,157.046632 C56.6321244,159.264249 26.3937824,147.720207 7.18134715,118.497409 C9.616949,127.504627 -0.512993623,127.388494 4.21497239,135 C21.8134249,163.331575 48.7944175,195.834588 101.93505,193.637744 C157.656543,191.334208 178.669064,156.668495 188.656367,116.925858 C169.112326,147.97249 127.533679,154.746114 91.5336788,157.046632 Z" mask="url(#iconsvg-c)" opacity=".25"/>
     </g>
     <g transform="rotate(-4 96.814 89.617)">
-      <use fill="#000" filter="url(#iconsvg-d)" xlink:href="#iconsvg-e"/>
+      <use fill="#f1f5f9" filter="url(#iconsvg-d)" xlink:href="#iconsvg-e"/>
       <use fill="#FFF" xlink:href="#iconsvg-e"/>
     </g>
     <g>
-      <use fill="#000" filter="url(#iconsvg-f)" xlink:href="#iconsvg-g"/>
+      <use fill="#f1f5f9" filter="url(#iconsvg-f)" xlink:href="#iconsvg-g"/>
       <use fill="#FFF" xlink:href="#iconsvg-g"/>
     </g>
   </g>
