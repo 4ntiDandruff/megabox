@@ -42,22 +42,7 @@ let isQuitting = false;
 let syncDebounceTimer = null;
 
 function triggerAutoSync() {
-  if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
-  syncDebounceTimer = setTimeout(async () => {
-    try {
-      const apps = getApps(db);
-      const settings = getSettings(db);
-      const res = await sync.pushWorkspace(apps, settings);
-      if (!res.skipped) {
-        console.log('[AutoSync] Workspace synced to cloud successfully:', res.version_hash);
-        if (mainWindow) {
-          mainWindow.webContents.send('sync:status-updated', sync.getSyncStatus());
-        }
-      }
-    } catch (err) {
-      console.warn('[AutoSync] Cloud sync skipped/failed (offline-first):', err.message);
-    }
-  }, 3000); // Debounce 3 detik
+  // Offline & Local-First: cloud auto-push dinonaktifkan demi privasi lokal
 }
 
 function createTray() {
@@ -397,6 +382,93 @@ async function cacheFaviconToDataUri(iconUrl) {
       return { success: true };
     } catch (err) {
       console.error(`[Proxy Error] Dynamic setProxy failed:`, err);
+      return { success: false, error: err.message };
+    }
+  });
+
+  // Local-First JSON Backup Handlers
+  ipcMain.handle('backup:export', async () => {
+    try {
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const defaultFileName = `megabox-backup-${dateStr}.json`;
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        title: 'Ekspor Cadangan Konfigurasi Megabox',
+        defaultPath: path.join(app.getPath('downloads'), defaultFileName),
+        filters: [{ name: 'JSON Backup', extensions: ['json'] }]
+      });
+
+      if (canceled || !filePath) {
+        return { success: false, canceled: true };
+      }
+
+      const backupData = {
+        app_name: 'Megabox Workspace',
+        version: 1,
+        exported_at: new Date().toISOString(),
+        apps: getApps(db),
+        settings: getSettings(db)
+      };
+
+      const tmpPath = filePath + '.tmp';
+      fs.writeFileSync(tmpPath, JSON.stringify(backupData, null, 2), 'utf-8');
+      fs.renameSync(tmpPath, filePath);
+
+      return { success: true, filePath, count: backupData.apps.length };
+    } catch (err) {
+      console.error('[Backup Export Error]', err);
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('backup:import', async () => {
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+        title: 'Pilih File Cadangan Megabox (.json)',
+        filters: [{ name: 'JSON Backup', extensions: ['json'] }],
+        properties: ['openFile']
+      });
+
+      if (canceled || !filePaths || filePaths.length === 0) {
+        return { success: false, canceled: true };
+      }
+
+      const filePath = filePaths[0];
+      const raw = fs.readFileSync(filePath, 'utf-8');
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        return { success: false, error: 'File bukan format JSON yang valid.' };
+      }
+
+      if (!parsed || !Array.isArray(parsed.apps)) {
+        return { success: false, error: 'Struktur cadangan tidak cocok (properti apps tidak ditemukan).' };
+      }
+
+      const currentData = db.read();
+      currentData.apps = parsed.apps.map((s, idx) => ({
+        id: s.id || ('app_' + Date.now() + '_' + idx),
+        name: s.name || 'Untitled Service',
+        url: s.url || 'about:blank',
+        icon: s.icon || 'globe',
+        custom_icon: s.custom_icon || null,
+        partition: s.partition || ('persist:' + (s.id || idx)),
+        order_index: s.order_index !== undefined ? s.order_index : idx,
+        is_enabled: s.is_enabled !== undefined ? s.is_enabled : 1,
+        proxy: s.proxy || ''
+      }));
+
+      if (parsed.settings && typeof parsed.settings === 'object') {
+        currentData.settings = Object.assign({}, currentData.settings || {}, parsed.settings);
+      }
+
+      db.write(currentData);
+      mainWindow.webContents.send('apps:updated', getApps(db));
+      mainWindow.webContents.send('settings:updated', getSettings(db));
+
+      return { success: true, count: currentData.apps.length, filePath };
+    } catch (err) {
+      console.error('[Backup Import Error]', err);
       return { success: false, error: err.message };
     }
   });

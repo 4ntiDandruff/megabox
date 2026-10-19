@@ -1478,7 +1478,7 @@
           </button>
           <button id="tab-nav-sync" type="button" class="neo-tab-dark">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
-            <span>Cloud Megapass</span>
+            <span>Cadangan & Data</span>
           </button>
           <button id="tab-nav-about" type="button" class="neo-tab-dark">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -1561,56 +1561,44 @@
           
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
-              Koneksi & Sinkronisasi Profil
+              Penyimpanan & Cadangan Mandiri (Local-First)
             </div>
             <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #30D158; box-shadow: 0 0 6px #30D158;"></span>
-              <span id="sync-badge-status" style="font-size: 11px; color: #f4f4f6; font-weight: 600;">Belum Terhubung</span>
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #38bdf8;"></span>
+              <span style="font-size: 11px; color: #f4f4f6; font-weight: 600;">100% Privat Lokal</span>
             </div>
           </div>
 
-          <!-- Logged Out State: Auth Form -->
-          <div id="sync-auth-box" class="apple-group-card" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
-              Sinkronkan urutan tab dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% tersimpan aman di perangkat lokal ini.
+          <!-- Explanation Plaque -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 13px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Privasi Tanpa Server Luar</span>
             </div>
-            
-            <div style="display: flex; gap: 10px;">
-              <input type="email" id="sync-input-email" placeholder="nama@gmail.com" class="apple-select-dark" style="flex: 1; padding: 9px 12px; font-size: 13px;">
-              <input type="password" id="sync-input-password" placeholder="Password" class="apple-select-dark" style="flex: 1; padding: 9px 12px; font-size: 13px;">
+            <div style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
+              Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.
             </div>
-
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <button id="btn-sync-login" type="button" class="btn-apple-cyan-solid" style="flex: 1;">Masuk Cloud</button>
-              <button id="btn-sync-register" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center;">Daftar Akun Baru</button>
-            </div>
-            <div id="sync-auth-msg" style="font-size: 12px; display: none;"></div>
           </div>
 
-          <!-- Logged In State: Connected Telemetry Plaque -->
-          <div id="sync-connected-box" class="apple-group-card" style="padding: 16px; border: 1px solid #238636; background: #131b15; display: none; flex-direction: column; gap: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: #1c2b20; border: 1px solid #2ea043; display: flex; align-items: center; justify-content: center; color: #3fb950;">
-                  <img id="sync-modal-avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;" alt="Avatar">
-                  <svg id="sync-modal-avatar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </div>
-                <div>
-                  <div id="sync-user-email" style="font-weight: 700; font-size: 14px; color: #ffffff;">user@domain.com</div>
-                  <div id="sync-time-info" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Sinkron terakhir: Baru saja</div>
-                </div>
-              </div>
-              <span id="sync-tier-badge" style="font-size: 11px; background: #1f242c; color: #58a6ff; padding: 2px 8px; border-radius: 4px; border: 1px solid #30363d; font-weight: 600; font-size: 10px; text-transform: uppercase;">PRO PLAN</span>
+          <!-- Action Buttons Card -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;">
+              Operasi Berkas Cadangan (.json)
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 2px;">
-              <button id="btn-sync-now" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 9px 16px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                <span>Sinkron Sekarang</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <button id="btn-backup-export" type="button" class="btn-apple-cyan-solid" style="padding: 11px 14px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Ekspor Cadangan</span>
               </button>
-              <button id="btn-sync-logout" type="button" style="padding: 9px 16px; background: #211c1d; color: #f85149; border: 1px solid #482327; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 120ms ease;">Keluar</button>
+
+              <button id="btn-backup-import" type="button" class="btn-apple-pill-dark" style="padding: 11px 14px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Impor Cadangan</span>
+              </button>
             </div>
-            <div id="sync-op-msg" style="font-size: 11px; color: #94a3b8;"></div>
+
+            <div id="backup-status-msg" style="font-size: 11px; color: #94a3b8; display: none; line-height: 1.4; padding: 8px 12px; border-radius: 6px; background: #16181c; border: 1px solid #272a30;"></div>
           </div>
 
         </div>
@@ -1641,7 +1629,38 @@
               Workspace multi-aplikasi zero-bloat: sintesis fitur Rambox & Ferdium hemat resource, kebal pemadaman daya via <strong>SQLite WAL</strong>, dan native Wayland.
             </div>
 
-            <!-- Bento Badge Grid -->
+            <!-- Card Dukungan & Traktir Kopi Komunitas -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #2e281e; background: #181512;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #2a2015; border: 1px solid #4a3820; display: flex; align-items: center; justify-content: center; color: #f59e0b;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                </div>
+                <div>
+                  <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Dukung Pengembangan Megabox</div>
+                  <div style="font-size: 11px; color: #d97706; margin-top: 1px;">Proyek Open Source Mandiri Tanpa Iklan</div>
+                </div>
+              </div>
+              <span style="font-size: 10px; background: #261e12; color: #f59e0b; padding: 2px 8px; border-radius: 4px; border: 1px solid #4a3820; font-weight: 700; text-transform: uppercase;">DONASI</span>
+            </div>
+
+            <div style="font-size: 11.5px; color: #cbd5e1; line-height: 1.5;">
+              Megabox dibangun dengan prinsip zero-bloat, hemat RAM, dan menghargai privasi pengguna. Jika aplikasi ini membantu produktivitas meja kerja Anda, Anda bisa mentraktir kopi kreator melalui Saweria atau GitHub Sponsors.
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 2px;">
+              <button id="btn-support-saweria" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px; color: #fef08a; border-color: rgba(245, 158, 11, 0.35);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <span>Traktir via Saweria</span>
+              </button>
+              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <span>GitHub Sponsors</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bento Badge Grid -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px;">
               <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
                 <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Tampilan</div>

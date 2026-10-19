@@ -1386,123 +1386,120 @@
   const btnSettingsClose = document.getElementById('btn-settings-close');
   const btnSettingsDone = document.getElementById('btn-settings-done');
 
-  const syncBadgeStatus = document.getElementById('sync-badge-status');
-  const syncAuthBox = document.getElementById('sync-auth-box');
-  const syncConnectedBox = document.getElementById('sync-connected-box');
-  const syncInputEmail = document.getElementById('sync-input-email');
-  const syncInputPassword = document.getElementById('sync-input-password');
-  const btnSyncLogin = document.getElementById('btn-sync-login');
-  const btnSyncRegister = document.getElementById('btn-sync-register');
-  const syncAuthMsg = document.getElementById('sync-auth-msg');
-  const syncUserEmail = document.getElementById('sync-user-email');
-  const syncTimeInfo = document.getElementById('sync-time-info');
-  const syncTierBadge = document.getElementById('sync-tier-badge');
-  const btnSyncNow = document.getElementById('btn-sync-now');
-  const btnSyncLogout = document.getElementById('btn-sync-logout');
-  const syncOpMsg = document.getElementById('sync-op-msg');
-  const avatarDefaultIcon = document.getElementById('avatar-default-icon');
-  const avatarUserImg = document.getElementById('avatar-user-img');
-  const avatarUserInitials = document.getElementById('avatar-user-initials');
-  const syncModalAvatarImg = document.getElementById('sync-modal-avatar-img');
-  const syncModalAvatarIcon = document.getElementById('sync-modal-avatar-icon');
+  // -------------------------------------------------------------------------
+  // LOCAL-FIRST BACKUP & COMMUNITY SUPPORT HANDLERS
+  // -------------------------------------------------------------------------
 
-  function updateProfileAvatar(email, customAvatarUrl = null) {
-    if (!email && !customAvatarUrl) {
-      if (avatarDefaultIcon) avatarDefaultIcon.style.display = 'block';
-      if (avatarUserImg) avatarUserImg.style.display = 'none';
-      if (avatarUserInitials) avatarUserInitials.style.display = 'none';
-      return;
-    }
+  // Local-first no-op sync stub (mencegah ReferenceError pada panggilan legacy)
+  function refreshSyncUI() {
+    // Sesi cloud ruko dinonaktifkan demi privasi lokal
+  }
 
-    const cleanEmail = (email || '').trim().toLowerCase();
-    const emailHash = md5(cleanEmail);
-    const targetUrl = customAvatarUrl || ('https://www.gravatar.com/avatar/' + emailHash + '?s=96&d=404');
+  const btnBackupExport = document.getElementById('btn-backup-export');
+  const btnBackupImport = document.getElementById('btn-backup-import');
+  const backupStatusMsg = document.getElementById('backup-status-msg');
+  const btnSupportSaweria = document.getElementById('btn-support-saweria');
+  const btnSupportGithub = document.getElementById('btn-support-github');
 
-    if (avatarUserImg) {
-      avatarUserImg.src = targetUrl;
-      avatarUserImg.onload = () => {
-        avatarUserImg.style.display = 'block';
-        if (avatarDefaultIcon) avatarDefaultIcon.style.display = 'none';
-        if (avatarUserInitials) avatarUserInitials.style.display = 'none';
-      };
-      avatarUserImg.onerror = () => {
-        if (customAvatarUrl && targetUrl === customAvatarUrl) {
-          avatarUserImg.src = 'https://www.gravatar.com/avatar/' + emailHash + '?s=96&d=404';
+  if (btnBackupExport) {
+    btnBackupExport.addEventListener('click', async () => {
+      if (!window.megabox || !window.megabox.exportBackup) return;
+      btnBackupExport.disabled = true;
+      try {
+        const res = await window.megabox.exportBackup();
+        if (res.canceled) {
+          btnBackupExport.disabled = false;
           return;
         }
-        avatarUserImg.style.display = 'none';
-        if (avatarUserInitials) avatarUserInitials.style.display = 'none';
-        if (avatarDefaultIcon) {
-          avatarDefaultIcon.style.display = 'block';
-          avatarDefaultIcon.style.color = 'var(--brand-primary)';
+        if (res.success) {
+          if (backupStatusMsg) {
+            backupStatusMsg.style.display = 'block';
+            backupStatusMsg.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+            backupStatusMsg.style.color = '#38bdf8';
+            backupStatusMsg.textContent = `Cadangan berhasil diekspor (${res.count} aplikasi) ke ${res.filePath}`;
+          }
+        } else {
+          if (backupStatusMsg) {
+            backupStatusMsg.style.display = 'block';
+            backupStatusMsg.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            backupStatusMsg.style.color = '#f87171';
+            backupStatusMsg.textContent = `Gagal ekspor: ${res.error || 'Terjadi kesalahan sistem'}`;
+          }
         }
-      };
-    }
-
-    if (syncModalAvatarImg) {
-      syncModalAvatarImg.src = targetUrl;
-      syncModalAvatarImg.onload = () => {
-        syncModalAvatarImg.style.display = 'block';
-        if (syncModalAvatarIcon) syncModalAvatarIcon.style.display = 'none';
-      };
-      syncModalAvatarImg.onerror = () => {
-        syncModalAvatarImg.style.display = 'none';
-        if (syncModalAvatarIcon) syncModalAvatarIcon.style.display = 'block';
-      };
-    }
-  }
-
-  async function refreshSyncUI() {
-    if (!window.megabox || !window.megabox.getSyncStatus) return;
-    try {
-      const status = await window.megabox.getSyncStatus();
-      if (status.logged_in && status.user) {
-        updateProfileAvatar(status.user.email, status.user.avatar_url);
-
-        if (syncBadgeStatus) {
-          syncBadgeStatus.textContent = 'Terhubung';
-          syncBadgeStatus.style.background = 'rgba(92,184,92,0.15)';
-          syncBadgeStatus.style.color = 'var(--brand-success)';
-          syncBadgeStatus.style.borderColor = 'rgba(92,184,92,0.3)';
+      } catch (err) {
+        if (backupStatusMsg) {
+          backupStatusMsg.style.display = 'block';
+          backupStatusMsg.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          backupStatusMsg.style.color = '#f87171';
+          backupStatusMsg.textContent = `Error: ${err.message}`;
         }
-        if (syncAuthBox) syncAuthBox.style.display = 'none';
-        if (syncConnectedBox) syncConnectedBox.style.display = 'flex';
-        if (syncUserEmail) syncUserEmail.textContent = status.user.email;
-        if (syncTierBadge) syncTierBadge.textContent = (status.user.tier || 'Gratis').toUpperCase();
-        if (syncTimeInfo) {
-          const syncDate = status.last_sync ? new Date(status.last_sync).toLocaleTimeString() : 'Baru saja';
-          syncTimeInfo.textContent = 'Sinkron terakhir: ' + syncDate + ' (' + (status.device_name || 'PC Ini') + ')';
-        }
-      } else {
-        updateProfileAvatar(null);
-
-        if (syncBadgeStatus) {
-          syncBadgeStatus.textContent = 'Belum Terhubung';
-          syncBadgeStatus.style.background = 'rgba(255,255,255,0.08)';
-          syncBadgeStatus.style.color = 'var(--text-muted)';
-        }
-        if (syncAuthBox) syncAuthBox.style.display = 'flex';
-        if (syncConnectedBox) syncConnectedBox.style.display = 'none';
+      } finally {
+        btnBackupExport.disabled = false;
       }
-    } catch (e) {
-      console.warn('Failed to refresh sync UI:', e);
-    }
+    });
   }
 
-  // Settings Modal Navigation & Controller (Flat Slate Architecture)
+  if (btnBackupImport) {
+    btnBackupImport.addEventListener('click', async () => {
+      if (!window.megabox || !window.megabox.importBackup) return;
+      btnBackupImport.disabled = true;
+      try {
+        const res = await window.megabox.importBackup();
+        if (res.canceled) {
+          btnBackupImport.disabled = false;
+          return;
+        }
+        if (res.success) {
+          if (backupStatusMsg) {
+            backupStatusMsg.style.display = 'block';
+            backupStatusMsg.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+            backupStatusMsg.style.color = '#4ade80';
+            backupStatusMsg.textContent = `Berhasil memulihkan ${res.count} aplikasi dari berkas cadangan!`;
+          }
+        } else {
+          if (backupStatusMsg) {
+            backupStatusMsg.style.display = 'block';
+            backupStatusMsg.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            backupStatusMsg.style.color = '#f87171';
+            backupStatusMsg.textContent = `Gagal impor: ${res.error || 'Format tidak didukung'}`;
+          }
+        }
+      } catch (err) {
+        if (backupStatusMsg) {
+          backupStatusMsg.style.display = 'block';
+          backupStatusMsg.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          backupStatusMsg.style.color = '#f87171';
+          backupStatusMsg.textContent = `Error: ${err.message}`;
+        }
+      } finally {
+        btnBackupImport.disabled = false;
+      }
+    });
+  }
+
+  // Donation / Sponsor Click Handlers
+  if (btnSupportSaweria) {
+    btnSupportSaweria.addEventListener('click', () => {
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal('https://saweria.co/4ntiDandruff');
+      }
+    });
+  }
+
+  if (btnSupportGithub) {
+    btnSupportGithub.addEventListener('click', () => {
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal('https://github.com/sponsors/4ntiDandruff');
+      }
+    });
+  }
+
   const tabNavGeneral = document.getElementById('tab-nav-general');
   const tabNavSync = document.getElementById('tab-nav-sync');
   const tabNavAbout = document.getElementById('tab-nav-about');
   const secGeneral = document.getElementById('section-settings-general');
   const secSync = document.getElementById('section-settings-sync');
   const secAbout = document.getElementById('section-settings-about');
-
-  const settingHibernateTimeout = document.getElementById('setting-hibernate-timeout');
-  const settingCloseAction = document.getElementById('setting-close-action');
-  const settingAutostart = document.getElementById('setting-autostart');
-  const btnClearCache = document.getElementById('btn-clear-cache');
-  const clearCacheMsg = document.getElementById('clear-cache-msg');
-  const settingsStatusSave = document.getElementById('settings-status-save');
 
   function switchSettingsTab(tabName) {
     const tabs = [
@@ -1531,6 +1528,11 @@
   if (tabNavGeneral) tabNavGeneral.onclick = () => switchSettingsTab('general');
   if (tabNavSync) tabNavSync.onclick = () => switchSettingsTab('sync');
   if (tabNavAbout) tabNavAbout.onclick = () => switchSettingsTab('about');
+
+  const settingHibernateTimeout = document.getElementById('setting-hibernate-timeout');
+  const settingCloseAction = document.getElementById('setting-close-action');
+  const settingAutostart = document.getElementById('setting-autostart');
+  const settingsStatusSave = document.getElementById('settings-status-save');
 
   async function loadSystemSettings() {
     if (!window.megabox || !window.megabox.getSettings) return;
@@ -1606,6 +1608,9 @@
     };
   }
 
+  const btnClearCache = document.getElementById('btn-clear-cache');
+  const clearCacheMsg = document.getElementById('clear-cache-msg');
+
   if (btnClearCache) {
     btnClearCache.onclick = async () => {
       btnClearCache.disabled = true;
@@ -1653,109 +1658,6 @@
     settingsModal.onclick = (e) => {
       if (e.target === settingsModal) settingsModal.style.display = 'none';
     };
-  }
-
-  if (btnSyncLogin) {
-    btnSyncLogin.onclick = async () => {
-      const email = syncInputEmail.value.trim();
-      const password = syncInputPassword.value.trim();
-      if (!email || !password) {
-        syncAuthMsg.style.display = 'block';
-        syncAuthMsg.style.color = '#ef4444';
-        syncAuthMsg.textContent = 'Email dan password wajib diisi';
-        return;
-      }
-      btnSyncLogin.disabled = true;
-      btnSyncLogin.textContent = 'Memproses...';
-      try {
-        const res = await window.megabox.loginSync(email, password);
-        if (res.success) {
-          syncAuthMsg.style.display = 'none';
-          await refreshSyncUI();
-        } else {
-          syncAuthMsg.style.display = 'block';
-          syncAuthMsg.style.color = '#ef4444';
-          syncAuthMsg.textContent = res.error || 'Gagal masuk akun';
-        }
-      } catch (err) {
-        syncAuthMsg.style.display = 'block';
-        syncAuthMsg.style.color = '#ef4444';
-        syncAuthMsg.textContent = err.message;
-      } finally {
-        btnSyncLogin.disabled = false;
-        btnSyncLogin.textContent = 'Masuk Cloud';
-      }
-    };
-  }
-
-  if (btnSyncRegister) {
-    btnSyncRegister.onclick = async () => {
-      const email = syncInputEmail.value.trim();
-      const password = syncInputPassword.value.trim();
-      if (!email || !password) {
-        syncAuthMsg.style.display = 'block';
-        syncAuthMsg.style.color = '#ef4444';
-        syncAuthMsg.textContent = 'Email dan password wajib diisi';
-        return;
-      }
-      btnSyncRegister.disabled = true;
-      btnSyncRegister.textContent = 'Mendaftar...';
-      try {
-        const res = await window.megabox.registerSync(email, password);
-        if (res.success) {
-          syncAuthMsg.style.display = 'none';
-          await refreshSyncUI();
-        } else {
-          syncAuthMsg.style.display = 'block';
-          syncAuthMsg.style.color = '#ef4444';
-          syncAuthMsg.textContent = res.error || 'Gagal mendaftar';
-        }
-      } catch (err) {
-        syncAuthMsg.style.display = 'block';
-        syncAuthMsg.style.color = '#ef4444';
-        syncAuthMsg.textContent = err.message;
-      } finally {
-        btnSyncRegister.disabled = false;
-        btnSyncRegister.textContent = 'Daftar Baru';
-      }
-    };
-  }
-
-  if (btnSyncLogout) {
-    btnSyncLogout.onclick = async () => {
-      await window.megabox.logoutSync();
-      await refreshSyncUI();
-    };
-  }
-
-  if (btnSyncNow) {
-    btnSyncNow.onclick = async () => {
-      btnSyncNow.disabled = true;
-      btnSyncNow.innerHTML = '<span>Menyelaraskan...</span>';
-      try {
-        const res = await window.megabox.syncNow();
-        if (res.success) {
-          syncOpMsg.textContent = '[+] Berhasil disinkronkan (' + res.count + ' tab & preferensi)!';
-          syncOpMsg.style.color = 'var(--brand-success)';
-          await refreshSyncUI();
-        } else {
-          syncOpMsg.textContent = '[-] ' + (res.error || 'Gagal sinkron');
-          syncOpMsg.style.color = '#ef4444';
-        }
-      } catch (err) {
-        syncOpMsg.textContent = '[-] Error: ' + err.message;
-        syncOpMsg.style.color = '#ef4444';
-      } finally {
-        btnSyncNow.disabled = false;
-        btnSyncNow.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span>Sinkron</span>';
-      }
-    };
-  }
-
-  if (window.megabox && window.megabox.onSyncStatusUpdated) {
-    window.megabox.onSyncStatusUpdated(() => {
-      refreshSyncUI();
-    });
   }
 
   window.addEventListener('DOMContentLoaded', init);

@@ -21,6 +21,10 @@ contextBridge.exposeInMainWorld('megabox', {
   saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
   clearCache: () => ipcRenderer.invoke('system:clear-cache'),
 
+  // Local-First Backup API
+  exportBackup: () => ipcRenderer.invoke('backup:export'),
+  importBackup: () => ipcRenderer.invoke('backup:import'),
+
   // Cloud Sync API
   getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
   loginSync: (email, password) => ipcRenderer.invoke('sync:login', { email, password }),
