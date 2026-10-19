@@ -1034,31 +1034,25 @@
     }
 
     /* ============================================================ */
-    /* MEGAPASS OS DARK APPLE NEOGLASS SETTINGS MODAL (Umbrel Style)*/
-    /* Deep Midnight Slate (#090E1A / #0F1626) + Electric Cyan      */
+    /* FLAT MINIMALIST SETTINGS MODAL (Zero-Glow, Zero-3D, Clean)   */
+    /* Solid Neutral Charcoal / Slate with Crisp 1px Borders        */
     /* ============================================================ */
     .crystal-modal-box {
       width: 100%;
-      max-width: 680px;
-      min-height: 540px;
+      max-width: 660px;
+      min-height: 520px;
       max-height: 85vh;
       display: flex;
       flex-direction: column;
-      background: linear-gradient(145deg, rgba(16, 24, 40, 0.88) 0%, rgba(10, 15, 26, 0.94) 100%);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      box-shadow: 
-        0 24px 60px -12px rgba(0, 0, 0, 0.85),
-        0 8px 24px -4px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
-        inset 0 -1px 0 0 rgba(0, 0, 0, 0.35);
+      background: #18191c;
+      border: 1px solid #2d3036;
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
       overflow: hidden;
-      color: #f8fafc;
+      color: #f1f5f9;
     }
 
-    /* Sleek Dark Scrollbar for Megabox Modal (Panel Megapass standard) */
+    /* Minimalist Flat Scrollbar */
     #settings-modal *::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -1067,22 +1061,22 @@
       background: transparent;
     }
     #settings-modal *::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 4px;
+      background: #2e323b;
+      border-radius: 3px;
     }
     #settings-modal *::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.22);
+      background: #3e4450;
     }
 
-
+    /* Flat Segmented Tab Bar */
     .neo-groove-dark {
-      background: rgba(6, 10, 20, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 4px;
+      background: #121316;
+      border: 1px solid #282a30;
+      border-radius: 8px;
+      padding: 3px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .neo-tab-dark {
@@ -1091,43 +1085,37 @@
       gap: 7px;
       padding: 6px 14px;
       font-size: 12px;
-      font-weight: 600;
-      border-radius: 8px;
+      font-weight: 500;
+      border-radius: 6px;
       background: transparent;
-      color: rgba(255, 255, 255, 0.60);
+      color: #8b949e;
       border: 1px solid transparent;
       cursor: pointer;
       user-select: none;
-      touch-action: manipulation;
-      transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: color 100ms ease, background-color 100ms ease;
     }
 
     .neo-tab-dark:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .neo-tab-dark:active {
-      transform: scale(0.97);
+      color: #f0f6fc;
+      background: #1f2126;
     }
 
     .neo-tab-dark.is-active {
-      background: rgba(255, 255, 255, 0.12) !important;
+      background: #282b32 !important;
       color: #ffffff !important;
-      border: 1px solid rgba(255, 255, 255, 0.20) !important;
-      font-weight: 700 !important;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+      border: 1px solid #383d47 !important;
+      font-weight: 600 !important;
     }
 
     .neo-tab-dark.is-active svg {
-      color: #06B6D4 !important;
+      color: #ffffff !important;
     }
 
+    /* Flat Section Cards */
     .apple-group-card {
-      background: rgba(6, 10, 20, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 14px rgba(0, 0, 0, 0.25);
+      background: #151619;
+      border: 1px solid #26282e;
+      border-radius: 10px;
       overflow: hidden;
     }
 
@@ -1136,22 +1124,23 @@
       justify-content: space-between;
       align-items: center;
       padding: 13px 16px;
-      transition: background-color 120ms ease;
+      transition: background-color 100ms ease;
     }
 
     .apple-setting-row:not(:last-child) {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid #202227;
     }
 
     .apple-setting-row:hover {
-      background-color: rgba(255, 255, 255, 0.02);
+      background-color: #1a1b20;
     }
 
+    /* Flat Modern Switch */
     .apple-switch-mint {
       position: relative;
       display: inline-block;
-      width: 44px;
-      height: 24px;
+      width: 40px;
+      height: 22px;
       flex-shrink: 0;
       cursor: pointer;
     }
@@ -1166,84 +1155,82 @@
     .apple-slider-mint {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
-      border-radius: 24px;
+      background-color: #2a2d34;
+      border: 1px solid #3a3e47;
+      border-radius: 22px;
+      transition: background-color 150ms ease, border-color 150ms ease;
     }
 
     .apple-slider-mint::before {
       position: absolute;
       content: '';
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
       left: 2px;
       bottom: 2px;
-      background-color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      background-color: #c9d1d9;
       border-radius: 50%;
+      transition: transform 150ms ease, background-color 150ms ease;
     }
 
     .apple-switch-mint input:checked + .apple-slider-mint {
-      background-color: #10B981 !important;
-      border-color: #10B981 !important;
+      background-color: #238636 !important;
+      border-color: #2ea043 !important;
     }
 
     .apple-switch-mint input:checked + .apple-slider-mint::before {
-      transform: translateX(20px);
+      transform: translateX(18px);
+      background-color: #ffffff !important;
     }
 
+    /* Flat Clean Inputs & Selects */
     .apple-select-dark {
-      background: rgba(6, 10, 20, 0.75);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.04);
+      background: #111215;
+      color: #f0f6fc;
+      border: 1px solid #30343d;
       padding: 6px 12px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
       outline: none;
       cursor: pointer;
-      transition: border-color 140ms ease, box-shadow 140ms ease;
+      transition: border-color 100ms ease;
     }
 
     .apple-select-dark:focus {
-      border-color: #06B6D4;
-      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.25);
+      border-color: #58a6ff;
     }
 
     .apple-select-dark option {
-      background-color: #0B1220;
-      color: #ffffff;
+      background-color: #16181d;
+      color: #f0f6fc;
     }
 
+    /* Flat Clean Buttons */
     .btn-apple-pill-dark {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 6px 14px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.06);
-      color: #f1f5f9;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      font-weight: 500;
+      background: #21242b;
+      color: #e6edf3;
+      border: 1px solid #323640;
       cursor: pointer;
       user-select: none;
-      touch-action: manipulation;
-      transition: background-color 120ms ease, border-color 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: background-color 100ms ease, border-color 100ms ease;
     }
 
     .btn-apple-pill-dark:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.20);
+      background: #2b2f38;
+      border-color: #424754;
       color: #ffffff;
     }
 
     .btn-apple-pill-dark:active {
-      transform: scale(0.97);
+      background: #1c1e23;
     }
 
     .btn-apple-cyan-solid {
@@ -1252,27 +1239,24 @@
       justify-content: center;
       gap: 6px;
       padding: 7px 16px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
-      font-weight: 700;
-      background: #06B6D4;
-      color: #090E1A;
-      border: 1px solid #06B6D4;
-      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.30);
+      font-weight: 600;
+      background: #238636;
+      color: #ffffff;
+      border: 1px solid #2ea043;
       cursor: pointer;
       user-select: none;
-      touch-action: manipulation;
-      transition: background-color 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 120ms ease;
+      transition: background-color 100ms ease, border-color 100ms ease;
     }
 
     .btn-apple-cyan-solid:hover {
-      background: #22D3EE;
-      border-color: #22D3EE;
-      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.45);
+      background: #2ea043;
+      border-color: #3fb950;
     }
 
     .btn-apple-cyan-solid:active {
-      transform: scale(0.97);
+      background: #196c2e;
     }
   </style>
 </head>
@@ -1464,15 +1448,15 @@
 
 
 
-  <!-- Settings & Preferences Modal (Cupertino Dark NeoGlass v2.1) -->
-  <div id="settings-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+  <!-- Settings & Preferences Modal (Cupertino Flat Minimalist v2.1) -->
+  <div id="settings-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.75);">
     <div class="crystal-modal-box">
       
       <!-- Modal Header (Frosted Acrylic Top Bar) -->
-      <div style="padding: 18px 24px 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 14px;">
+      <div style="padding: 16px 20px 14px 20px; border-bottom: 1px solid #282a30; background: #16171a; display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 32px; height: 32px; border-radius: 9px; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; color: #06B6D4;">
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; color: #e6edf3;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <circle cx="12" cy="12" r="3"></circle>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -1484,7 +1468,7 @@
             </div>
           </div>
           
-          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 120ms ease, color 120ms ease; font-size: 16px; line-height: 1;">&times;</button>
+          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid #2d3036; color: #8b949e; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; line-height: 1;">&times;</button>
         </div>
 
         <!-- Cupertino Segmented Tab Recessed Well -->
@@ -1605,10 +1589,10 @@
           </div>
 
           <!-- Logged In State: Connected Telemetry Plaque -->
-          <div id="sync-connected-box" class="apple-group-card" style="padding: 18px; border: 1px solid rgba(48, 209, 88, 0.35); background: linear-gradient(180deg, rgba(48, 209, 88, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); display: none; flex-direction: column; gap: 16px;">
+          <div id="sync-connected-box" class="apple-group-card" style="padding: 16px; border: 1px solid #238636; background: #131b15; display: none; flex-direction: column; gap: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(48, 209, 88, 0.15); border: 1px solid rgba(48, 209, 88, 0.3); display: flex; align-items: center; justify-content: center; color: #30D158;">
+                <div style="width: 32px; height: 32px; border-radius: 6px; background: #1c2b20; border: 1px solid #2ea043; display: flex; align-items: center; justify-content: center; color: #3fb950;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
                 <div>
@@ -1616,7 +1600,7 @@
                   <div id="sync-time-info" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Sinkron terakhir: Baru saja</div>
                 </div>
               </div>
-              <span id="sync-tier-badge" style="font-size: 11px; background: rgba(6, 182, 212, 0.15); color: #22D3EE; padding: 4px 12px; border-radius: 9999px; border: 1px solid rgba(6, 182, 212, 0.35); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">PRO PLAN</span>
+              <span id="sync-tier-badge" style="font-size: 11px; background: #1f242c; color: #58a6ff; padding: 2px 8px; border-radius: 4px; border: 1px solid #30363d; font-weight: 600; font-size: 10px; text-transform: uppercase;">PRO PLAN</span>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 2px;">
@@ -1624,7 +1608,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                 <span>Sinkron Sekarang</span>
               </button>
-              <button id="btn-sync-logout" type="button" style="padding: 9px 16px; background: rgba(255, 55, 95, 0.12); color: #FF375F; border: 1px solid rgba(255, 55, 95, 0.25); border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 120ms ease;">Keluar</button>
+              <button id="btn-sync-logout" type="button" style="padding: 9px 16px; background: #211c1d; color: #f85149; border: 1px solid #482327; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 120ms ease;">Keluar</button>
             </div>
             <div id="sync-op-msg" style="font-size: 11px; color: #94a3b8;"></div>
           </div>
@@ -1638,11 +1622,11 @@
           <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div style="display: flex; align-items: center; gap: 14px;">
-                <img src="assets/megabox.png" style="width: 46px; height: 46px; border-radius: 12px; background: rgba(255,255,255,0.06); padding: 6px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                <img src="assets/megabox.png" style="width: 46px; height: 46px; border-radius: 8px; background: #21242b; padding: 5px; border: 1px solid #30343d;">
                 <div>
                   <div style="font-size: 16px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px;">
                     <span>Megabox Workspace</span>
-                    <span style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(48,209,88,0.15); color: #30D158; border: 1px solid rgba(48,209,88,0.3); font-weight: 700;">v1.3.3 PROD</span>
+                    <span style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #1a231d; color: #3fb950; border: 1px solid #238636; font-weight: 600;">v1.3.3 PROD</span>
                   </div>
                   <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
                 </div>
@@ -1659,15 +1643,15 @@
 
             <!-- Bento Badge Grid -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px;">
-              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
                 <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Tampilan</div>
-                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Dark NeoGlass</div>
+                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Flat Minimalist</div>
               </div>
-              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
                 <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Ketahanan Daya</div>
                 <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Power-Loss Proof</div>
               </div>
-              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
                 <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Lisensi</div>
                 <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">MIT Open Source</div>
               </div>
@@ -1681,7 +1665,7 @@
                 <div style="font-size: 14px; font-weight: 700; color: #ffffff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
                 <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
               </div>
-              <span style="font-size: 11px; background: rgba(6, 182, 212, 0.15); color: #22D3EE; padding: 3px 10px; border-radius: 9999px; border: 1px solid rgba(6, 182, 212, 0.35); font-weight: 700;">BNSP & BMY Certified</span>
+              <span style="font-size: 11px; background: #1a2228; color: #58a6ff; padding: 2px 8px; border-radius: 4px; border: 1px solid #30363d; font-weight: 600; font-size: 11px;">BNSP & BMY Certified</span>
             </div>
 
             <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
@@ -1735,8 +1719,8 @@
       </div>
 
       <!-- Modal Footer (Acrylic Bottom Bar) -->
-      <div style="padding: 14px 24px; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); display: flex; justify-content: space-between; align-items: center;">
-        <span id="settings-status-save" style="font-size: 12px; color: #30D158; font-weight: 600; display: none; align-items: center; gap: 6px;">
+      <div style="padding: 12px 20px; border-top: 1px solid #282a30; background: #16171a; display: flex; justify-content: space-between; align-items: center;">
+        <span id="settings-status-save" style="font-size: 12px; color: #3fb950; font-weight: 600; display: none; align-items: center; gap: 6px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
           <span>Tersimpan otomatis</span>
         </span>
