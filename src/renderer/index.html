@@ -1628,130 +1628,94 @@
         </div>
 
         <!-- SECTION 3: TENTANG APLIKASI (PROFIL REKAYASA & MEGAPASS) -->
-        <div id="section-settings-about" style="display: none; flex-direction: column; gap: 16px;">
+        <div id="section-settings-about" style="display: none; flex-direction: column; gap: 14px;">
           
-          <!-- Card 1: Produk & Identitas Rekayasa -->
-          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+          <!-- Hero Banner: Identitas Software & Craftsmanship (Monochrome Sleek) -->
+          <div style="background: linear-gradient(180deg, #18191d 0%, #131417 100%); border: 1px solid #282a30; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div style="display: flex; align-items: center; gap: 14px;">
-                <img src="assets/megabox.png" style="width: 46px; height: 46px; border-radius: 8px; background: #21242b; padding: 5px; border: 1px solid #30343d;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0d0e11; border: 1px solid #2d3038; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px;">
+                  <img src="assets/megabox.png" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
                 <div>
-                  <div style="font-size: 16px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px;">
-                    <span>Megabox Workspace</span>
-                    <span style="font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #1a231d; color: #3fb950; border: 1px solid #238636; font-weight: 600;">v1.3.3 PROD</span>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 16px; font-weight: 700; color: #f8fafc; letter-spacing: -0.01em;">Megabox</span>
+                    <span style="font-size: 10px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 1px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;">v1.3.3</span>
                   </div>
-                  <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
+                  <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
                 </div>
               </div>
-              <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 5px 12px; font-size: 11px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <span>GitHub Repo</span>
+
+              <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <span>GitHub</span>
               </button>
             </div>
-            
-            <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
-              Workspace multi-aplikasi zero-bloat: sintesis fitur Rambox & Ferdium hemat resource, kebal pemadaman daya via <strong>SQLite WAL</strong>, dan native Wayland.
-            </div>
 
-            <!-- Card Dukungan & Traktir Kopi Komunitas -->
-          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #2e281e; background: #181512;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #2a2015; border: 1px solid #4a3820; display: flex; align-items: center; justify-content: center; color: #f59e0b;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-                </div>
-                <div>
-                  <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Dukung Pengembangan Megabox</div>
-                  <div style="font-size: 11px; color: #d97706; margin-top: 1px;">Proyek Open Source Mandiri Tanpa Iklan</div>
-                </div>
+            <!-- Arsitektur Ringkas (Two Columns) -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
+                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Arsitektur</div>
+                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Local-First JSON</div>
               </div>
-              <span style="font-size: 10px; background: #261e12; color: #f59e0b; padding: 2px 8px; border-radius: 4px; border: 1px solid #4a3820; font-weight: 700; text-transform: uppercase;">DONASI</span>
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
+                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Ketahanan</div>
+                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Atomic File Write</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
+                <div style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Lisensi</div>
+                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">MIT Open Source</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Dukungan Sukarela (Elegan, Tenang, Tidak Mengemis) -->
+          <div style="background: #151619; border: 1px solid #282a30; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
+                Dukungan Sukarela
+              </div>
+              <span style="font-size: 10px; color: #cbd5e1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 4px;">Bebas Iklan & Pelacak</span>
             </div>
 
-            <div style="font-size: 11.5px; color: #cbd5e1; line-height: 1.5;">
-              Megabox dibangun dengan prinsip zero-bloat, hemat RAM, dan menghargai privasi pengguna. Jika aplikasi ini membantu produktivitas meja kerja Anda, Anda bisa mentraktir kopi kreator melalui QRIS atau GitHub Sponsors.
+            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.5;">
+              Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 2px;">
-              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px; color: #fef08a; border-color: rgba(245, 158, 11, 0.35);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
+              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 7px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 <span>Donasi via QRIS</span>
               </button>
-              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 8px 14px; font-size: 11.5px;">
+              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #94a3b8; gap: 7px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 <span>GitHub Sponsors</span>
               </button>
             </div>
           </div>
 
-          <!-- Bento Badge Grid -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px;">
-              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
-                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Tampilan</div>
-                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Flat Minimalist</div>
-              </div>
-              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
-                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Ketahanan Daya</div>
-                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Power-Loss Proof</div>
-              </div>
-              <div style="background: #18191d; padding: 8px 10px; border-radius: 6px; border: 1px solid #26282e;">
-                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Lisensi</div>
-                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">MIT Open Source</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2: Profil Teknisi & Kredensial Resmi -->
-          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+          <!-- Card 3: Profil Rekayasa & Bengkel Teknisi -->
+          <div style="background: #151619; border: 1px solid #282a30; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-size: 14px; font-weight: 700; color: #ffffff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+                <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Hizam Nahari</div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 1px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
               </div>
-              <span style="font-size: 11px; background: #1a2228; color: #58a6ff; padding: 2px 8px; border-radius: 4px; border: 1px solid #30363d; font-weight: 600; font-size: 11px;">BNSP & BMY Certified</span>
+              <span style="font-size: 10.5px; color: #38bdf8; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600;">BNSP & BMY Certified</span>
             </div>
 
-            <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
-              Dibuat oleh praktisi hardware bersertifikasi: spesialis motherboard chip-level, injeksi tegangan, flash EEPROM, dan sysadmin Linux bare-metal.
+            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.55;">
+              Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.
             </div>
 
-            <!-- List Kredensial Terverifikasi -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">BNSP Reparasi Ponsel</div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">BMY Motherboard Laptop</div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">10 Sertifikasi Resmi</div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">12+ Tahun Pengalaman</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Solusi & Layanan Servis Megapass -->
-          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="font-size: 13px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Solusi Teknis & Servis Profesional Megapass</div>
-            
-            <div style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
-              Melayani servis motherboard laptop, perbaikan smartphone, pemulihan sistem OS, dan arsitektur IT efisien di Sidoarjo serta remote mesh.
-            </div>
-
-            <!-- Call-to-Action Link Buttons -->
-            <div style="display: flex; gap: 10px; margin-top: 4px;">
-              <button id="btn-about-portfolio" type="button" class="btn-apple-cyan-solid" style="flex: 1; padding: 9px 14px;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <!-- Tautan Web & Portofolio -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 <span>Portofolio & Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 9px 14px;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                 <span>megapass.web.id</span>
               </button>
             </div>
