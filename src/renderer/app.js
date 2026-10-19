@@ -1600,11 +1600,11 @@
         if (res.success) {
           clearCacheMsg.style.display = 'block';
           clearCacheMsg.style.color = '#22c55e';
-          clearCacheMsg.textContent = '[+] Cache Bersih';
+          clearCacheMsg.textContent = '[+] Cache Chromium & GPU berhasil dikosongkan!';
         } else {
           clearCacheMsg.style.display = 'block';
           clearCacheMsg.style.color = '#ef4444';
-          clearCacheMsg.textContent = '[-] Gagal';
+          clearCacheMsg.textContent = '[-] Gagal: ' + res.error;
         }
       } catch (err) {
         clearCacheMsg.style.display = 'block';
