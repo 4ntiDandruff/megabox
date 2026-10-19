@@ -1564,6 +1564,33 @@
   if (settingCloseAction) settingCloseAction.onchange = persistSystemSettings;
   if (settingAutostart) settingAutostart.onchange = persistSystemSettings;
 
+    // Tentang / About external portfolio and links
+  const btnAboutGithub = document.getElementById('btn-about-github');
+  const btnAboutPortfolio = document.getElementById('btn-about-portfolio');
+  const btnAboutMegapass = document.getElementById('btn-about-megapass');
+
+  if (btnAboutGithub) {
+    btnAboutGithub.onclick = () => {
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal('https://github.com/4ntiDandruff/megabox');
+      }
+    };
+  }
+  if (btnAboutPortfolio) {
+    btnAboutPortfolio.onclick = () => {
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal('https://megapass.web.id/teknisi/');
+      }
+    };
+  }
+  if (btnAboutMegapass) {
+    btnAboutMegapass.onclick = () => {
+      if (window.megabox && window.megabox.openExternal) {
+        window.megabox.openExternal('https://megapass.web.id');
+      }
+    };
+  }
+
   if (btnClearCache) {
     btnClearCache.onclick = async () => {
       btnClearCache.disabled = true;

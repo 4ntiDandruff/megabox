@@ -1358,32 +1358,105 @@
           </div>
         </div>
 
-        <!-- SECTION 3: TENTANG APLIKASI -->
-        <div id="section-settings-about" style="display:none; flex-direction:column; gap:14px;">
-          <div style="background:#18181b; padding:20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; align-items:center; gap:14px;">
-              <img src="assets/megabox.png" style="width:48px; height:48px; border-radius:10px; background:#27272a; padding:6px; border:1px solid rgba(255,255,255,0.1);">
-              <div>
-                <div style="font-size:16px; font-weight:700; color:#fff;">Megabox Multi-App Workspace</div>
-                <div style="font-size:12px; color:#3b82f6; font-weight:600; margin-top:2px;">Versi 1.3.2 (Production Build)</div>
+        <!-- SECTION 3: TENTANG APLIKASI (PROFIL REKAYASA & MEGAPASS) -->
+        <div id="section-settings-about" style="display:none; flex-direction:column; gap:16px;">
+          
+          <!-- Card 1: Produk & Identitas Rekayasa -->
+          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <img src="assets/megabox.png" style="width:46px; height:46px; border-radius:10px; background:#27272a; padding:6px; border:1px solid rgba(255,255,255,0.1);">
+                <div>
+                  <div style="font-size:16px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                    <span>Megabox Workspace</span>
+                    <span style="font-size:10px; padding:2px 8px; border-radius:10px; background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.3); font-weight:700;">v1.3.3 PROD</span>
+                  </div>
+                  <div style="font-size:12px; color:#a1a1aa; margin-top:2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
+                </div>
               </div>
+              <button id="btn-about-github" type="button" style="display:flex; align-items:center; gap:6px; padding:6px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <span>GitHub Repo</span>
+              </button>
             </div>
             
-            <div style="font-size:12px; color:#a1a1aa; line-height:1.6; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
-              Ruang kerja aplikasi multi-layanan zero-bloat tanpa langganan premium, dioptimalkan khusus untuk kestabilan Linux Wayland (KDE Plasma) dan perlindungan pemadaman listrik tiba-tiba (SQLite WAL / Atomic Safe State).
+            <div style="font-size:12px; color:#d4d4d8; line-height:1.6; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
+              Megabox lahir dari kebutuhan fisik meja servis: menggabungkan fleksibilitas Rambox & Ferdium tanpa pemborosan RAM, tanpa langganan berbayar, kebal terhadap mati lampu tiba-tiba berkat proteksi <strong>SQLite WAL Fortress</strong>, dan stabil beroperasi di Linux Wayland (KDE Plasma).
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:6px; font-size:11px;">
-              <div style="background:#27272a; padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); color:#a1a1aa;">
-                <span style="color:#71717a; display:block;">Arsitektur Tampilan:</span>
-                <span style="color:#f4f4f5; font-weight:600;">Pure Flat Slate (No Glass / No Glow)</span>
+            <!-- Arsitektur Badge Grid -->
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:2px;">
+              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Tampilan</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Pure Flat Slate</div>
               </div>
-              <div style="background:#27272a; padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); color:#a1a1aa;">
-                <span style="color:#71717a; display:block;">Penyimpanan Konfigurasi:</span>
-                <span style="color:#f4f4f5; font-weight:600;">Atomic JSON / SQLite WAL</span>
+              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Ketahanan Daya</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Power-Loss Proof</div>
+              </div>
+              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Lisensi</div>
+                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">MIT Open Source</div>
               </div>
             </div>
           </div>
+
+          <!-- Card 2: Profil Teknisi & Kredensial Resmi -->
+          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:14px; font-weight:700; color:#fff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
+                <div style="font-size:11px; color:#a1a1aa; margin-top:2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+              </div>
+              <span style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700;">BNSP & BMY Certified</span>
+            </div>
+
+            <div style="font-size:12px; color:#d4d4d8; line-height:1.6;">
+              Didesain langsung oleh praktisi teknisi perangkat keras bersertifikasi nasional dengan pengalaman 12+ tahun di ranah triase motherboard chip-level, injeksi tegangan mikroskopik, flash EEPROM, serta arsitektur software zero-bloat Linux bare-metal.
+            </div>
+
+            <!-- List Kredensial Terverifikasi -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BNSP Reparasi Ponsel</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BMY Motherboard Laptop</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">10 Sertifikasi Resmi</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">12+ Tahun Pengalaman</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Soft-Selling Solusi & Layanan Servis Megapass -->
+          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:13px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.5px;">Solusi Teknis & Servis Profesional Megapass</div>
+            
+            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
+              Butuh perbaikan hardware laptop/HP yang rumit, pemulihan sistem Windows dari Linux, atau perancangan arsitektur IT hemat resource tanpa server bengkak? Tim teknisi Megapass siap melayani di workshop maupun remote servicing.
+            </div>
+
+            <!-- Call-to-Action Link Buttons -->
+            <div style="display:flex; gap:10px; margin-top:4px;">
+              <button id="btn-about-portfolio" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                <span>Lihat Portofolio & Sertifikat</span>
+              </button>
+              <button id="btn-about-megapass" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>Kunjungi megapass.web.id</span>
+              </button>
+            </div>
+          </div>
+
         </div>
 
       </div>

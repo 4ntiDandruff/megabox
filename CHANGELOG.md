@@ -4,6 +4,15 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.4] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Etalase Rekayasa & Soft-Selling Servis Megapass pada Tab 'Tentang'**: Memperkaya konten tab Tentang dengan profil arsitek & Kepala Teknisi Hizam Nahari (Megapass Intra Solusindo, Sidoarjo), memamerkan 12+ tahun pengalaman dan kredensial resmi terverifikasi (Sertifikasi BNSP Reparasi Ponsel, BMY Hardware Motherboard Laptop, dan 10 sertifikasi teknis lainnya).
+- **Tautan Cepat Portofolio & Ekosistem Zero-Bloat**: Menambahkan tombol langsung menuju repositori GitHub Megabox (`github.com/4ntiDandruff/megabox`), laman portofolio & pembuktian sertifikat (`megapass.web.id/teknisi/`), serta situs resmi Megapass (`megapass.web.id`) untuk penanganan perbaikan hardware tingkat lanjut dan konsultasi sistem.
+- **Kartu Arsitektur Produk Zero-Bloat**: Menampilkan metrik arsitektur sistem (Pure Flat Slate, Power-Loss Proof via SQLite WAL Fortress, dan lisensi MIT) dalam tata letak flat card yang terstruktur rapi.
+
+---
+
 ## [1.3.3] - 2026-10-19
 
 ### Ditambahkan (Added)
