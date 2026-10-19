@@ -1,6 +1,6 @@
 {
   "name": "megabox",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "Zero-bloat multi-app desktop workspace: local-first, RAM-frugal, and rock-solid stability on Linux Wayland & Windows",
   "main": "src/main/index.js",
   "scripts": {

@@ -1,162 +1,183 @@
-# <div align="center">Megabox</div>
-
 <div align="center">
 
-**Ruang Kerja Multi-Aplikasi Linux Zero-Bloat: Stabilitas Solid di Wayland Tanpa Beban Langganan**
+# Megabox Workspace
 
-[![Platform](https://img.shields.io/badge/Platform-Linux%20Wayland%20%7C%20X11-blue.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
-[![Engine](https://img.shields.io/badge/Engine-Electron%2033%20%2B%20Ozone-purple.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
-[![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](LICENSE)
-[![Zero-Bloat](https://img.shields.io/badge/Zero--Bloat-Vanilla%20DOM-orange.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
+### Ruang Kerja Multi-Aplikasi Zero-Bloat, Hemat RAM, & Local-First untuk Linux & Windows
+*Dirancang dari ketelitian logika teknisi perangkat keras: ringan, kebal pemadaman listrik mendadak, dan 100% bebas biaya langganan.*
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform: Linux Wayland / Windows](https://img.shields.io/badge/Platform-Wayland%20%7C%20Windows-emerald.svg)](#)
+[![RAM Footprint: ~85MB](https://img.shields.io/badge/Base%20RAM-~85MB-purple.svg)](#)
+[![Data: 100% Local JSON](https://img.shields.io/badge/Data-Local--First%20JSON-amber.svg)](#)
+[![Status: Production Ready](https://img.shields.io/badge/Status-v1.4.0%20Stable-success.svg)](#)
 
 </div>
 
 ---
 
-## 1. Topologi Sirkuit Megabox
+## 1. Topologi Sirkuit & Arsitektur Sistem
+
+Megabox menyatukan puluhan aplikasi web kerja harian (WhatsApp, Telegram, Discord, Gmail, Gemini, ChatGPT, CCTV, GitHub) ke dalam satu jendela desktop terpadu tanpa membebani prosesor maupun memori komputer.
 
 ```
- +------------------------------------------------------------------------+
- |                      MEGABOX RUNTIME ARCHITECTURE                      |
- +------------------------------------------------------------------------+
-                                    |
-    +-------------------------------+-------------------------------+
-    v                                                               v
- [ ZERO-BLOAT WEB ENGINE  ]                      [ LOCAL & RECIPE ECOSYSTEM  ]
- - Chrome 133 User-Agent (Anti-Block)            - 481 Database Layanan Teruji
- - Multi-Instance & Multi-Akun Otomatis          - 31 Ekosistem AI (Muse, v0, Bolt)
- - Master Lock PIN (Layar Terkunci)              - Auto-Favicon Cache ke DB
-    |                                                               |
-    +-------------------------------+-------------------------------+
-                                    |
-                                    v
-                +---------------------------------------+
-                |        ELECTRON LINUX RUNTIME         |
-                +---------------------------------------+
-                | * Socket Ozone Wayland Auto-Detect    |
-                | * Pure Flat UI (Nol Glow/Glassmorphism|
-                | * Vanilla DOM State (Nol React/Vite)  |
-                | * Atomic JSON POSIX Store (Anti-Korup)|
-                | * Hibernasi RAM Idle Tab (Hemat 78%)  |
-                | * Base Shell RAM: ~85MB (Cold Start)  |
-                +---------------------------------------+
++-----------------------------------------------------------------------------------+
+|                           MEGABOX DESKTOP WORKBENCH                               |
+|                                                                                   |
+|  [ KIRI: SIDEBAR FLAT ]             [ KANAN: MULTI-PARTITION WEBVIEW CONTAINER ]  |
+|  +-------------------+              +-------------------------------------------+ |
+|  | (*) WhatsApp Bus. | ------------>| [wv-wa-biz]   Partition: persist:wa_biz   | |
+|  | (*) Telegram Web  | ------------>| [wv-tg-web]   Partition: persist:tg_web   | |
+|  | (*) CCTV Stream   | ------------>| [wv-cctv]     Partition: persist:cctv     | |
+|  | (+) Tambah 2-Input|              |                                           | |
+|  |                   |              | * Isolasi Cookie & Session Antar-Akun     | |
+|  |                   |              | * Webview IPC Bridge (Badge Counter)      | |
+|  |                   |              | * Anti-Trap Universal Global Shortcut     | |
+|  |                   |              | * Tooltip Terjemahan Instan (ID <-> EN)   | |
+|  |                   |              +-------------------------------------------+ |
+|  |                   |                                                            |
+|  | [Avatar Ungu Box] | ------------> [ Modal Pengaturan / Backup / Donasi QRIS ]  |
+|  +-------------------+                                                            |
++-----------------------------------------------------------------------------------+
+                                         |
+                                         v
++-----------------------------------------------------------------------------------+
+|                     MESIN DATA LOKAL & CORE RUNTIME                               |
+|                                                                                   |
+|  * POSIX Atomic JSON Storage (~/.config/megabox/megabox-config.json)              |
+|  * Pure Vanilla DOM Controller (Nol React / Nol Webpack / Zero Build-Step)        |
+|  * Native Ozone Wayland Socket (Anti-Crash & Anti-Flicker di KDE Plasma)          |
+|  * Google PA API Relay Node.js (Kebal Blokir CSP WhatsApp/GitHub)                 |
+|  * Hibernasi Otomatis Tab Idle (Pangkas Penggunaan RAM Hingga 78%)                |
+|  * Cadangan Mandiri: 1-Klik Ekspor / Impor JSON (Data Milik Anda 100%)            |
++-----------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 2. Bedah Masalah Riil & Solusi Meja Kerja (PAS)
+## 2. Masalah Nyata di Lapangan & Solusi Meja Kerja
 
-Bagi pengguna Linux, khususnya desktop modern **KDE Plasma Wayland**, membuka puluhan aplikasi komunikasi dan dashboard server (WhatsApp, Telegram, Discord, CCTV, Proxmox, Google Password Manager) memicu dua dilema besar:
+Bagi teknisi servis, programmer, dan operator workstation yang terbiasa membuka belasan tab komunikasi dan dashboard teknis seharian, aplikasi multi-chat yang beredar saat ini memicu dua kendala besar:
 
-1. **Aplikasi Proprietary Berbayar (Jebakan Paywall & Langganan)**:
-   - Fitur esensial seperti pembatasan jumlah tab aplikasi, multi-akun mandiri, hibernasi penghemat RAM, dan isolasi proxy dikunci di balik biaya langganan tahunan.
-2. **Aplikasi Multi-App Berbasis Framework Berat (Macet di Wayland)**:
-   - Sering mengalami freeze rendering di KDE Wayland, tab loncat, WebAuthn mogok, dan beban memori shell membengkak hingga di atas 400MB hanya untuk kerangka React/MobX.
+1. **Jebakan Paywall & Langganan Bulanan**:
+   - Fitur-fitur penting seperti menambah banyak akun, pemisahan proxy per-layanan, hibernasi tab agar RAM tidak habis, dan pencarian cepat dikunci di balik biaya langganan tahunan berbayar.
+2. **Framework Raksasa yang Berat & Sering Macet di Linux Wayland**:
+   - Dibangun di atas tumpukan React/MobX yang memakan RAM lebih dari 400MB sebelum membuka pesan apa pun. Di Linux modern (Wayland), aplikasi jenis ini rawan mengalami freeze layar, kursor loncat, hingga freeze WebAuthn.
 
-**Megabox adalah solusi meja kerja**: Menggabungkan ketahanan bypass user-agent modern, kekayaan 480+ resep katalog layanan terverifikasi (termasuk 31 ekosistem AI modern seperti Muse AI, v0 by Vercel, Bolt.new, Groq, Midjourney), dan koleksi ikon Homarr Dashboard Icons. Semuanya dirangkai dalam antarmuka **Pure Flat Utilitarian** dan **Vanilla DOM murni** yang ringkas, super cepat, dan 100% stabil di Linux Wayland.
+**Megabox memecahkan seluruh masalah di atas**:
+Menggabungkan kebebasan **100% Open Source**, antarmuka **Pure Flat Utilitarian** yang tenang di mata, dan konsumsi memori awal ultra-hemat (**~85MB**) dengan ketahanan berkas setara standar bengkel perangkat keras.
 
 ---
 
 ## 3. Bedah Komponen Teknis (Yang Artinya...)
 
-- **Pure Flat Utilitarian Interface**:
-  * *Yang artinya:* Seluruh efek blur kaca (glassmorphism), gradien warna semu, dan glow box-shadow ungu telah dibersihkan tuntas. Tampilan menggunakan latar pekat solid dengan garis batas 1px yang tegas dan bersih, tidak membuat mata cepat lelah di meja servis.
-- **Form Pemasangan 2-Input & Auto Sesi Pribadi**:
-  * *Yang artinya:* Menambah aplikasi web kustom kini instan tanpa dropdown teknis yang membingungkan. Cukup masukkan nama dan tautan web, sistem otomatis mengatur partisi sesi pribadi terisolasi agar login multi-akun tidak saling tertimpa.
-- **Auto-Generate Favicon Cache ke Database**:
-  * *Yang artinya:* Website custom otomatis mengambil icon resolusi tinggi via Google S2 64px API dan root `/favicon.ico`, mengonversinya menjadi Base64 Data URI, dan menyimpannya permanen di database lokal. Icon tidak pernah hilang saat aplikasi dibuka kembali.
+- **Local-First JSON & Cadangan Mandiri (Ekspor / Impor 1-Klik)**:
+  * *Yang artinya:* Seluruh konfigurasi tab, urutan akun, dan setelan disimpan 100% di komputer lokal Anda (`~/.config/megabox/megabox-config.json`). Anda tidak perlu takut server luar down, tidak ada risiko data disadap, dan Anda bisa memindahkan seluruh tatanan ruang kerja ke laptop baru cukup dengan satu berkas JSON.
+- **Terjemahan Instan Dua Arah (ID ↔ EN & Multi-Bahasa) Kebal CSP**:
+  * *Yang artinya:* Cukup blok teks pesan chat bahasa Inggris di WhatsApp atau Telegram, maka kotak terjemahan bahasa Indonesia langsung melayang di atas kursor lengkap dengan tombol **Salin** satu klik. Jika teks yang diblok bahasa Indonesia, sistem otomatis membaliknya ke bahasa Inggris. Bekerja tanpa hambatan karena diproses langsung di level engine OS, kebal terhadap blokir CSP WhatsApp/GitHub.
+- **Foto Profil Workspace Lokal (Default Icon Ungu Megabox)**:
+  * *Yang artinya:* Tampilan sidebar langsung memiliki identitas khas Megabox sejak detik pertama. Anda bebas menggantinya dengan foto pribadi kapan saja lewat tombol **Pilih Foto** yang membuka file explorer OS secara instan.
+- **Atomic POSIX File Write (Aman dari Mati Lampu Mendadak)**:
+  * *Yang artinya:* Setiap kali data ditulis, sistem menulisnya ke berkas sementara terlebih dahulu sebelum mengganti berkas utama secara atomik. Meskipun listrik ruko tiba-tiba padam atau colokan tercabut, konfigurasi aplikasi tidak akan pernah rusak (*zero-byte corrupt proof*).
+- **Penambah Layanan 2-Input & Isolasi Akun Mandiri**:
+  * *Yang artinya:* Anda bisa memasang 5 akun WhatsApp atau 3 akun Telegram sekaligus di satu layar. Cukup ketik nama dan masukkan alamat web, sistem otomatis memisahkan ruang partisi penyimpanannya agar sesi login tidak saling tertimpa.
+- **Katalog Terkurasi 480+ Layanan & Auto-Favicon Cache**:
+  * *Yang artinya:* Tersedia resep siap pakai untuk ratusan layanan kerja, perpesanan, hingga platform AI terkini (Muse AI, Gemini, Groq, Bolt, v0). Untuk alamat web custom, Megabox otomatis mengambil favicon dan menyimpannya permanen di database lokal.
 - **Vanilla DOM State Engine (Nol Framework JS)**:
-  * *Yang artinya:* Tidak ada overhead compiler React atau bundler berat. Waktu buka aplikasi langsung instan (<0.6 detik) dan penggunaan memori awal terpangkas hemat hingga ~85MB.
-- **Ozone Wayland Native Socket Detector**:
-  * *Yang artinya:* Layar tidak akan berkedip, tidak buram karena scaling XWayland, dan tidak pernah crash saat dipindah antar-monitor.
-- **Atomic POSIX Storage (`megabox-config.json`)**:
-  * *Yang artinya:* Pengaturan dan tab Anda aman 100% dari kerusakan berkas nol-byte meskipun listrik ruko tiba-tiba padam saat aplikasi sedang aktif.
+  * *Yang artinya:* Tidak ada tumpukan kompilator React atau runtime virtual DOM yang memboroskan resource. Aplikasi langsung terbuka dalam sekejap (<0.6 detik) dan sangat ringan bagi prosesor komputer lama maupun prosesor modern.
 
 ---
 
-## 4. Metrik Tolok Ukur Hardware (AMD Ryzen 2200G - Kubuntu Wayland)
+## 4. Tolok Ukur Beban Hardware Nyata (Benchmark Workbench)
 
-Pengujian beban kerja nyata pada desktop harian:
+Hasil uji coba komparasi pada komputer kerja harian (**AMD Ryzen 3 2200G • RAM 21GB • Kubuntu Wayland**):
 
-| Parameter Uji | Workspace Proprietary | Alternatif Komunitas Lawas | Megabox (Zero-Bloat) |
+| Tolok Ukur Hardware | Software Proprietary Berbayar | Multi-App Komunitas Lawas | Megabox Workspace |
 | :--- | :---: | :---: | :---: |
-| **Model Akses** | Langganan Berbayar | Gratis / Open Source | **100% Bebas Selamanya** |
-| **Kestabilan Wayland** | Rawan tearing XWayland | Sering freeze socket | **Stabil Native Ozone Socket** |
-| **Beban RAM Awal** | ~380 MB | ~420 MB | **~85 MB (Pangkas 78%)** |
-| **Waktu Cold Start** | ~4.2 detik | ~5.1 detik | **< 0.6 detik** |
-| **Pilihan Layanan** | Dibatasi paket trial | 440+ Layanan | **481 Layanan + Auto Favicon** |
-| **Gaya Antarmuka** | Berwarna & Glow | Kaca / Glassmorphism | **Pure Flat Utilitarian** |
-| **Bahasa Antarmuka** | Inggris Campur | Inggris | **Bahasa Indonesia Ringkas (<=2 Kata)** |
+| **Model Biaya** | Langganan Berulang () | Bebas / Open Source | **100% Gratis & Terbuka Selamanya** |
+| **Kedaulatan Data** | Cloud Vendor Tertutup | Server Eksternal Berat | **100% Local-First di Komputer Anda** |
+| **Beban RAM Awal (Cold Start)** | ~380 MB | ~420 MB | **~85 MB (Pangkas 78%)** |
+| **Waktu Siap Pakai** | ~4.2 detik | ~5.1 detik | **< 0.6 detik (Buka Seketika)** |
+| **Kestabilan Wayland Linux** | Rawan tearing XWayland | Sering freeze socket | **Stabil Native Ozone Socket** |
+| **Fitur Terjemahan Chat** | Berbayar / Butuh Ekstensi | Sering error CSP webview | **Terpasang Langsung (Auto-Flip ID ↔ EN)** |
+| **Cadangan Data** | Terkunci di akun cloud | Database server rumit | **Berkas JSON Mandiri 1-Klik** |
+| **Pilihan Layanan** | Dibatasi paket trial | 440+ Layanan | **480+ Layanan + Auto Favicon** |
 
 ---
 
-## 5. Struktur Berkas Repositori
+## 5. Tombol Pintas Workstation (Universal Anti-Trap)
+
+Seluruh tombol pintas di bawah ini dirancang kebal interupsi (*anti-trap*), sehingga tetap berfungsi normal meskipun kursor Anda sedang aktif mengetik di dalam WhatsApp, Gmail, maupun editor web:
+
+| Tombol Pintas | Tindakan Kerja Cepat |
+| :--- | :--- |
+| `Alt + 1` s/d `Alt + 9` | Pindah seketika ke tab aplikasi nomor 1 hingga 9 |
+| `Alt + ↑` / `Alt + ↓` | Geser urutan tab aktif naik atau turun |
+| `Alt + ←` / `Alt + →` | Navigasi mundur atau maju pada riwayat tab aktif |
+| `Ctrl + K` / `Ctrl + P` | Buka kotak pencarian cepat (Quick Switcher) |
+| `Ctrl + N` | Buka jendela tambah layanan dan katalog resep |
+| `Ctrl + R` / `F5` | Muat ulang (*reload*) tab aktif |
+| `Alt + S` | Mode bagi layar 1x2 (*Split Screen*) |
+| `Alt + E` | Buka / tutup laci ekstensi per-layanan |
+| `Alt + Shift + D` | Mode fokus hening (Senyapkan seluruh audio & notifikasi) |
+| `Escape` | Tutup jendela modal, menu klik kanan, atau laci samping |
+
+---
+
+## 6. Pohon Direktori Repositori
 
 ```
 megabox/
-├── megabox-launcher.sh      # Skrip peluncur pintar (auto-detect Wayland/X11)
-├── package.json             # Konfigurasi dependensi Electron v1.3.0
+├── megabox-launcher.sh          # Peluncur cerdas pendeteksi Wayland / X11
+├── package.json                 # Metadata runtime Electron v1.4.2
 ├── src/
-│   ├── main/                # Backend proses Electron
-│   │   ├── index.js         # Lifecycle window, IPC gateway, & auto favicon resolver
-│   │   ├── db.js            # Penyimpanan atomic POSIX JSON
-│   │   ├── extensions.js    # Pengelola ekstensi WebExtensions
-│   │   └── sync-client.js   # Protokol sinkronisasi profil multi-perangkat
+│   ├── main/                    # Engine Backend Electron (Node.js)
+│   │   ├── index.js             # Window lifecycle, native dialogs, & IPC gateway
+│   │   ├── db.js                # Penyimpanan berkas atomic POSIX JSON
+│   │   ├── extensions.js        # Multi-engine user-agent & header interceptors
+│   │   ├── extensions-manager.js# Katalog ekstensi workstation
+│   │   └── translator.js        # Mesin relay terjemahan Google PA/GTX (CORS-free)
 │   ├── preload/
-│   │   └── index.js         # Jembatan IPC aman (contextBridge)
-│   └── renderer/            # Tampilan antarmuka pengguna
-│       ├── index.html       # Struktur antarmuka flat murni Bahasa Indonesia
-│       ├── app.js           # Pengendali tab, modal, context menu, & favicons
+│   │   └── index.js             # Jembatan IPC aman (contextBridge)
+│   └── renderer/                # Antarmuka Pengguna Flat Utilitarian
+│       ├── index.html           # Struktur layout flat monokrom & modal pengaturan
+│       ├── app.js               # Pengendali tab DOM, quick switcher, & context menu
 │       └── assets/
-│           ├── icons/       # Koleksi 480+ vektor SVG resmi Homarr & AI
-│           └── recipes-catalog.json # Katalog database 481 resep layanan
+│           ├── icons/           # Koleksi 480+ icon SVG resmi Homarr & AI
+│           ├── megabox.png      # Identitas visual & avatar default Megabox
+│           ├── qris.png         # Kartu QRIS resmi standar nasional tanpa twibbon
+│           └── recipes-catalog.json # Basis data 480+ resep aplikasi siap pasang
+└── docs/
+    └── superpowers/plans/       # Catatan blueprint rekayasa teknis terstruktur
 ```
 
 ---
 
-## 6. Uji Coba Cepat di Terminal (Smoke Test)
+## 7. Menjalankan Langsung di Terminal (Smoke Test)
 
-### Menjalankan Langsung di Linux
 ```bash
-# Clone repositori
+# 1. Unduh repositori
 git clone https://github.com/4ntiDandruff/megabox.git
 cd megabox
 
-# Jalankan Megabox (Otomatis menyesuaikan Wayland atau X11)
+# 2. Pasang dependensi jika belum ada
+npm install
+
+# 3. Jalankan aplikasi (Otomatis mendeteksi lingkungan Wayland atau X11)
 bash megabox-launcher.sh
 ```
 
-### Tombol Pintas Meja Kerja (Universal Anti-Trap)
-Bekerja 100% responsif di seluruh workstation—bahkan ketika kursor dan fokus keyboard sedang berada di dalam aplikasi tamu (WhatsApp, Gmail, Telegram):
-- `Alt + 1` s/d `Alt + 9` : Pindah cepat antar-tab layanan 1 hingga 9
-- `Alt + ↑` / `Alt + ↓` : Pindah urutan tab naik atau turun (Reorder)
-- `Alt + ←` / `Alt + →` : Navigasi riwayat tab aktif (Kembali / Maju)
-- `Ctrl + R` / `F5` : Muat ulang layanan aktif seketika
-- `Ctrl + K` / `Ctrl + P` : Buka bilah pencarian cepat (Quick Switcher)
-- `Ctrl + N` : Buka katalog tambah layanan baru
-- `Alt + S` : Mode bagi layar 1x2 (Split Screen)
-- `Alt + E` : Buka / tutup laci ekstensi per-layanan
-- `Alt + Shift + D` : Mode fokus tenang / DND (Senyapkan audio dan notifikasi)
-- `Escape` : Tutup menu konteks, modal dialog, atau laci aktif
+---
+
+## 8. Dukungan Sukarela & Donasi Komunitas
+
+Megabox dikembangkan sebagai proyek perangkat lunak mandiri yang bebas dari iklan, bebas dari pelacak (*trackers*), dan bebas dari paywall. Jika perangkat lunak ini mempermudah alur kerja Anda sehari-hari, Anda dapat memberikan apresiasi sukarela:
+
+- **Donasi via QRIS Nasional**: Buka menu **Pengaturan \rightarrow Tentang \rightarrow Donasi via QRIS** untuk memindai kartu QRIS resmi Megabox (dapat dipindai dari BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, dan seluruh perbankan nasional).
+- **GitHub Sponsors**: Melalui profil resmi [GitHub 4ntiDandruff](https://github.com/4ntiDandruff).
 
 ---
 
-## 7. Rencana Pengembangan (Roadmap)
-
-- [x] Kerangka kerja Vanilla DOM ultra-ringan pengganti React/MobX
-- [x] Akselerasi Ozone Wayland native anti-crash di Linux
-- [x] Antarmuka Pure Flat Utilitarian (Pembersihan tuntas efek glow dan glassmorphism)
-- [x] Multi-akun & multi-instance tanpa batas dengan partisi otomatis
-- [x] Pustaka ikon 480+ SVG resolusi tinggi dan ekspansi 31 layanan AI (Muse AI, v0, Bolt, Groq)
-- [x] Auto-generate favicon dan penyimpanan permanen ke database lokal
-- [x] Simplifikasi form konfigurasi menjadi 2-input ringkas
-- [x] Universal Keyboard Shortcut Interceptor (Anti-Trap webview focus pada semua tombol pintas)
-- [ ] Profil terenkripsi mandiri via SQLite WAL
-- [ ] Mode picture-in-picture mengambang untuk pemantau CCTV meja servis
-
----
-
-## 8. Lisensi & Pernyataan Merek (Trademark & Legal Notice)
+## 9. Lisensi & Pernyataan Merek (Trademark & Legal Notice)
 
 Perangkat lunak ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
 
@@ -168,7 +189,7 @@ Perangkat lunak ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
 
 <div align="center">
 
-**Megapass Intra Solusindo * Sidoarjo, Indonesia**  
+**Megapass Intra Solusindo • Sidoarjo, Indonesia**  
 *Membangun software dengan ketelitian logika teknisi perangkat keras: Ringan, Tangguh, dan Nol-Bloat.*
 
 </div>
