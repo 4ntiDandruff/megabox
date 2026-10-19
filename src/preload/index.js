@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('megabox', {
   manualPushSync: () => ipcRenderer.invoke('sync:manual-push'),
   manualPullSync: () => ipcRenderer.invoke('sync:manual-pull'),
   focusWindow: () => ipcRenderer.invoke('window:focus'),
-  onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status))
+  onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status)),
+  dispatchNotification: (title, body, icon) => ipcRenderer.invoke('notify:dispatch', { title, body, icon }),
 
 });

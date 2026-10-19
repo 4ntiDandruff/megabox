@@ -85,7 +85,7 @@ const { ipcRenderer } = require('electron');
   const { ipcRenderer } = require('electron');
 
   // Ferdium Bridge Shim
-  window.Ferdium = {
+  window.Ferdium = window.Megabox = {
     setBadge: (direct = 0, indirect = 0) => {
       const count = parseInt(direct, 10) || 0;
       ipcRenderer.sendToHost('badge', count);

@@ -4,6 +4,19 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.3] - 2026-10-19
+
+### Dihapus (Removed)
+- **Eliminasi Direktori Dead Legacy src/recipes/**: Menghapus 36 file skrip resep wrapper Ferdium lawas (WhatsApp, Telegram, Discord, Slack, Messenger, Gmail, Todoist, Google Keep) yang tidak pernah dipanggil oleh runtime utama Megabox. Memangkas disk footprint sebesar 428 KB.
+- **Pembersihan Dead Functions & Unused Handlers**: Menghapus fungsi toggleMuteApp dan listener ctxMute yang tersisa di app.js.
+
+### Diperbaiki (Fixed)
+- **Penyelarasan Bridge Notifikasi Native D-Bus**: Membuka jalur bridge dispatchNotification dari webview melalui preload IPC ke handler native notify:dispatch utama (dilengkapi circuit breaker 500ms anti-freeze Wayland).
+- **Sinkronisasi User-Agent Versi Chrome**: Menyelaraskan fallback defaultUA di renderer dengan Chrome v133 yang aktif di backend header interceptor.
+- **Prediktabilitas Pintasan Tambah Layanan**: Memperbaiki pemanggilan selector btn-add-open pada event keyboard Ctrl+N agar konsisten di seluruh sesi.
+
+---
+
 ## [1.2.2] - 2026-10-19
 
 ### Dihapus (Removed)

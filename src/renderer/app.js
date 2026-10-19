@@ -37,8 +37,6 @@
   const ctxReload = document.getElementById('ctx-reload');
   const ctxHome = document.getElementById('ctx-home');
   const ctxOpenBrowser = document.getElementById('ctx-open-browser');
-  const ctxMute = document.getElementById('ctx-mute');
-  const ctxMuteLabel = document.getElementById('ctx-mute-label');
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
   const ctxTile = document.getElementById('ctx-tile');
@@ -55,7 +53,7 @@
   const appLastAccessed = {};
   const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 mins idle hibernate to free RAM
 
-  const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+  const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
   async function init() {
     setupEventListeners();
@@ -126,7 +124,7 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault();
-        const btn = document.getElementById(btn-add-open);
+        const btn = document.getElementById('btn-add-open');
         if (btn) btn.click();
       }
       if (e.key === 'Escape') {
@@ -204,17 +202,8 @@
         }
         hideContextMenu();
       };
-    }
 
-    if (ctxMute) {
-      ctxMute.onclick = () => {
-        if (contextTargetApp) {
-          toggleMuteApp(contextTargetApp.id);
-        }
-        hideContextMenu();
-      };
     }
-
     if (ctxHibernate) {
       ctxHibernate.onclick = () => {
         if (contextTargetApp) {
@@ -555,6 +544,10 @@
           }
           if (event.channel === 'notification') {
             console.log('[Megabox Notification]', app.name, event.args[0]);
+            if (!isDndActive && window.megabox && typeof window.megabox.dispatchNotification === 'function') {
+              const notifData = event.args[0] || {};
+              window.megabox.dispatchNotification(notifData.title || app.name, notifData.options ? notifData.options.body : '', notifData.options ? notifData.options.icon : null);
+            }
           }
         });
 
@@ -680,10 +673,6 @@
     ctxName.textContent = app.name;
 
     const wv = document.getElementById('wv-' + app.id);
-    if (ctxMuteLabel && wv) {
-      const isMuted = wv.isAudioMuted();
-      ctxMuteLabel.textContent = isMuted ? 'Bunyikan' : 'Bisukan';
-    }
 
     const isHibernated = wv ? (wv.dataset.hibernated === 'true') : false;
     if (ctxHibernateLabel) {
@@ -762,20 +751,6 @@
       badge.classList.remove('active');
     }
   }
-
-  function toggleMuteApp(id) {
-    const wv = document.getElementById('wv-' + id);
-    const tab = document.getElementById('tab-' + id);
-    if (wv) {
-      const current = wv.isAudioMuted();
-      wv.setAudioMuted(!current);
-      if (tab) {
-        if (!current) tab.classList.add('is-muted');
-        else tab.classList.remove('is-muted');
-      }
-    }
-  }
-
   function toggleHibernateApp(id) {
     const app = apps.find(a => a.id === id);
     const wv = document.getElementById('wv-' + id);
