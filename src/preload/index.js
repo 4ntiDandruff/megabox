@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('megabox', {
   openExternal: (url) => shell.openExternal(url),
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
+  onShortcutAction: (callback) => ipcRenderer.on('shortcut:action', (_, data) => callback(data)),
   
   // Extensions API
   getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),

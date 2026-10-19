@@ -68,6 +68,91 @@
   }
 
   function setupEventListeners() {
+
+    // Unified Shortcut Dispatcher (handles IPC from Main/Webviews as well as local Renderer keys)
+    function dispatchShortcutAction(data) {
+      if (!data || !data.action) return;
+      const { action, dir, index } = data;
+
+      switch (action) {
+        case 'switch-tab': {
+          if (typeof index === 'number' && apps[index]) {
+            selectApp(apps[index].id);
+          }
+          break;
+        }
+        case 'reorder-active-app': {
+          const targetApp = contextTargetApp || apps.find(a => a.id === activeAppId);
+          if (targetApp && window.megabox && window.megabox.reorderApp) {
+            hideContextMenu();
+            window.megabox.reorderApp(targetApp.id, dir || 'up');
+          }
+          break;
+        }
+        case 'nav-history': {
+          const targetId = (contextTargetApp && contextTargetApp.id) || activeAppId;
+          if (targetId) {
+            const wv = document.getElementById('wv-' + targetId);
+            if (wv) {
+              if (dir === 'back' && wv.canGoBack && wv.canGoBack()) wv.goBack();
+              if (dir === 'forward' && wv.canGoForward && wv.canGoForward()) wv.goForward();
+            }
+          }
+          hideContextMenu();
+          break;
+        }
+        case 'reload-active': {
+          if (contextTargetApp) {
+            const wv = document.getElementById('wv-' + contextTargetApp.id);
+            if (wv) wv.reload();
+            hideContextMenu();
+          } else {
+            reloadActiveApp();
+          }
+          break;
+        }
+        case 'quick-switch': {
+          if (quickswitchModal.style.display === 'flex') {
+            closeQuickSwitcher();
+          } else {
+            openQuickSwitcher();
+          }
+          break;
+        }
+        case 'open-catalog': {
+          openCatalog();
+          break;
+        }
+        case 'toggle-dnd': {
+          toggleDNDMode();
+          break;
+        }
+        case 'toggle-extensions': {
+          if (typeof toggleExtensionDrawer === 'function') {
+            toggleExtensionDrawer();
+          }
+          break;
+        }
+        case 'toggle-split': {
+          if (typeof toggleTileView === 'function') {
+            toggleTileView();
+          }
+          break;
+        }
+        case 'escape': {
+          catalogModal.style.display = 'none';
+          configureModal.style.display = 'none';
+          const settingsModal = document.getElementById('settings-modal');
+          if (settingsModal) settingsModal.style.display = 'none';
+          if (typeof closeQuickSwitcher === 'function') closeQuickSwitcher();
+          if (typeof closeExtensionDrawer === 'function') closeExtensionDrawer();
+          hideContextMenu();
+          break;
+        }
+      }
+    }
+    window.dispatchShortcutAction = dispatchShortcutAction;
+
     // Open Service Catalog / Tambah Aplikasi via delegation on tabsContainer
     tabsContainer.addEventListener('click', (e) => {
       const btn = e.target.closest('#btn-add-open');
@@ -117,30 +202,49 @@
     // Control bar
     btnReload.onclick = reloadActiveApp;
 
-    // Global keyboard shortcuts
+    // Local Renderer Keyboard Shortcuts Router
     window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+      const isCtrl = Boolean(e.ctrlKey || e.metaKey);
+      const isAlt = Boolean(e.altKey);
+      const isShift = Boolean(e.shiftKey);
+      const key = e.key;
+
+      if (isAlt && !isCtrl && !isShift && key >= '1' && key <= '9') {
         e.preventDefault();
-        reloadActiveApp();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        dispatchShortcutAction({ action: 'switch-tab', index: parseInt(key, 10) - 1 });
+      } else if (isAlt && !isCtrl && !isShift && (key === 'ArrowUp' || key === 'Up')) {
         e.preventDefault();
-        const btn = document.getElementById('btn-add-open');
-        if (btn) btn.click();
-      }
-      if (e.key === 'Escape') {
-        catalogModal.style.display = 'none';
-        configureModal.style.display = 'none';
-        if (typeof closeQuickSwitcher === 'function') closeQuickSwitcher();
-        hideContextMenu();
-      }
-      // Alt+1 to Alt+9 switch tab
-      if (e.altKey && e.key >= '1' && e.key <= '9') {
-        const idx = parseInt(e.key, 10) - 1;
-        if (apps[idx]) {
-          e.preventDefault();
-          selectApp(apps[idx].id);
-        }
+        dispatchShortcutAction({ action: 'reorder-active-app', dir: 'up' });
+      } else if (isAlt && !isCtrl && !isShift && (key === 'ArrowDown' || key === 'Down')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'reorder-active-app', dir: 'down' });
+      } else if (isAlt && !isCtrl && !isShift && (key === 'ArrowLeft' || key === 'Left')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'nav-history', dir: 'back' });
+      } else if (isAlt && !isCtrl && !isShift && (key === 'ArrowRight' || key === 'Right')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'nav-history', dir: 'forward' });
+      } else if ((isCtrl && !isAlt && (key === 'r' || key === 'R')) || key === 'F5') {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'reload-active' });
+      } else if (isCtrl && !isAlt && (key === 'k' || key === 'K' || key === 'p' || key === 'P')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'quick-switch' });
+      } else if (isCtrl && !isAlt && (key === 'n' || key === 'N')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'open-catalog' });
+      } else if (isAlt && isShift && !isCtrl && (key === 'D' || key === 'd')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'toggle-dnd' });
+      } else if (isAlt && !isShift && !isCtrl && (key === 'e' || key === 'E')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'toggle-extensions' });
+      } else if (isAlt && !isCtrl && (key === 's' || key === 'S')) {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'toggle-split' });
+      } else if (key === 'Escape') {
+        e.preventDefault();
+        dispatchShortcutAction({ action: 'escape' });
       }
     });
 
@@ -274,7 +378,26 @@
       window.megabox.onReloadActive(() => {
         reloadActiveApp();
       });
+      if (window.megabox.onShortcutAction) {
+        window.megabox.onShortcutAction((data) => {
+          dispatchShortcutAction(data);
+        });
+      }
     }
+  }
+
+  function openCatalog() {
+    catalogSearchInput.value = '';
+    activeCatalogCategory = 'all';
+    const categoryContainer = document.getElementById('catalog-category-pills');
+    if (categoryContainer) {
+      categoryContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('is-active'));
+      const firstPill = categoryContainer.querySelector('[data-cat="all"]');
+      if (firstPill) firstPill.classList.add('is-active');
+    }
+    filterCatalog();
+    catalogModal.style.display = 'flex';
+    setTimeout(() => catalogSearchInput.focus(), 100);
   }
 
   async function loadRecipesCatalog() {
@@ -1141,38 +1264,7 @@
   quickswitchModal.onclick = (e) => {
     if (e.target === quickswitchModal) closeQuickSwitcher();
   };
-  // Global Keyboard Shortcuts
-  window.addEventListener('keydown', (e) => {
-    // Ctrl+K or Ctrl+P -> Quick Switcher
-    if (e.ctrlKey && (e.key === 'k' || e.key === 'p')) {
-      e.preventDefault();
-      quickswitchModal.style.display === 'flex' ? closeQuickSwitcher() : openQuickSwitcher();
-    }
-    // Escape -> Close Extension Drawer if open
-    if (e.key === 'Escape') {
-      if (extensionDrawer && extensionDrawer.classList.contains('is-open')) {
-        closeExtensionDrawer();
-        return;
-      }
-    }
-
-    // Alt+2 -> Toggle Split Screen 1x2
-    if (e.altKey && (e.key === '2' || e.key === '@')) {
-      e.preventDefault();
-      toggleTileView();
-    }
-    // Alt+E -> Toggle Contextual Extension Drawer
-    if (e.altKey && (e.key === 'e' || e.key === 'E')) {
-      e.preventDefault();
-      toggleExtensionDrawer();
-    }
-    // Alt+Shift+D -> Toggle DND Concentration Mode
-    if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
-      e.preventDefault();
-      toggleDNDMode();
-    }
-  });
-
+  // Note: All global keyboard shortcuts routed through unified dispatchShortcutAction
 
     
   // Settings & Cloud Sync UI Logic

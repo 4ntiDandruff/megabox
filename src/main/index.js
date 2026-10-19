@@ -476,6 +476,76 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
+
+  // Universal Keyboard Shortcut Interceptor for Main Window and all Guest Webviews
+  function handleInputShortcut(input) {
+    if (input.type !== "keyDown") return null;
+    const isCtrl = Boolean(input.control || input.meta);
+    const isAlt = Boolean(input.alt);
+    const isShift = Boolean(input.shift);
+    const key = input.key;
+
+    // Alt + 1..9 (Switch tab directly)
+    if (isAlt && !isCtrl && !isShift && key >= "1" && key <= "9") {
+      return { action: "switch-tab", index: parseInt(key, 10) - 1 };
+    }
+    // Alt + ArrowUp / Up (Pindah Naik)
+    if (isAlt && !isCtrl && !isShift && (key === "ArrowUp" || key === "Up")) {
+      return { action: "reorder-active-app", dir: "up" };
+    }
+    // Alt + ArrowDown / Down (Pindah Turun)
+    if (isAlt && !isCtrl && !isShift && (key === "ArrowDown" || key === "Down")) {
+      return { action: "reorder-active-app", dir: "down" };
+    }
+    // Alt + ArrowLeft / Left (Kembali)
+    if (isAlt && !isCtrl && !isShift && (key === "ArrowLeft" || key === "Left")) {
+      return { action: "nav-history", dir: "back" };
+    }
+    // Alt + ArrowRight / Right (Maju)
+    if (isAlt && !isCtrl && !isShift && (key === "ArrowRight" || key === "Right")) {
+      return { action: "nav-history", dir: "forward" };
+    }
+    // Ctrl + R / F5 (Muat Ulang Layanan)
+    if ((isCtrl && !isAlt && (key === "r" || key === "R")) || key === "F5") {
+      return { action: "reload-active" };
+    }
+    // Ctrl + K / Ctrl + P (Quick Switcher)
+    if (isCtrl && !isAlt && (key === "k" || key === "K" || key === "p" || key === "P")) {
+      return { action: "quick-switch" };
+    }
+    // Ctrl + N (Tambah Layanan / Katalog)
+    if (isCtrl && !isAlt && (key === "n" || key === "N")) {
+      return { action: "open-catalog" };
+    }
+    // Alt + Shift + D (Toggle DND)
+    if (isAlt && isShift && !isCtrl && (key === "D" || key === "d")) {
+      return { action: "toggle-dnd" };
+    }
+    // Alt + E (Toggle Extension Drawer)
+    if (isAlt && !isShift && !isCtrl && (key === "e" || key === "E")) {
+      return { action: "toggle-extensions" };
+    }
+    // Alt + S (Toggle Split Screen 1x2, disambiguated from Alt+2)
+    if (isAlt && !isCtrl && (key === "s" || key === "S")) {
+      return { action: "toggle-split" };
+    }
+    // Escape (Close Dialogs / Drawers / Context Menu)
+    if (key === "Escape") {
+      return { action: "escape" };
+    }
+    return null;
+  }
+
+  app.on("web-contents-created", (event, contents) => {
+    contents.on("before-input-event", (e, input) => {
+      const match = handleInputShortcut(input);
+      if (match && mainWindow && !mainWindow.isDestroyed()) {
+        e.preventDefault();
+        mainWindow.webContents.send("shortcut:action", match);
+      }
+    });
+  });
+
   createWindow();
   createTray();
 

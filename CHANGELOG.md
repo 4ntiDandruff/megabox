@@ -4,6 +4,22 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.1] - 2026-10-19
+
+### Diperbaiki (Fixed)
+- **Universal Keyboard Shortcut Interceptor (Anti-Focus-Trap Chromium Webview)**: Mengatasi masalah fatal di mana Chromium guest `<webview>` (seperti WhatsApp Web, GitHub, Gmail) menelan seluruh event keyboard sehingga shortcut `Alt+↑`, `Alt+↓`, `Alt+←`, `Alt+→`, `Ctrl+R`, `Alt+1..9`, dan `Ctrl+K` tidak pernah sampai ke renderer induk saat webview sedang aktif.
+- **IPC Gateway Global `before-input-event`**: Mengaitkan listener `before-input-event` pada level proses utama (`app.on('web-contents-created')`) yang mencegat seluruh masukan shortcut secara native sebelum browser webview sempat memblokirnya, lalu mengirimkannya via IPC (`shortcut:action`) ke router tunggal `dispatchShortcutAction`.
+- **Resolusi Konflik Shortcut Split Screen**: Menghilangkan tabrakan antara `Alt+2` (pindah ke tab nomor 2) dan mode Split Screen 1x2 yang sebelumnya dipicu oleh tombol yang sama. Mode split screen kini memiliki shortcut tersendiri yang jelas: `Alt+S` (lengkap dengan badge di menu konteks).
+- **Penambahan Penanganan Shortcut Menu Konteks**:
+  - `Alt+↑` (ArrowUp): Pindah urutan tab aktif ke atas secara instan.
+  - `Alt+↓` (ArrowDown): Pindah urutan tab aktif ke bawah secara instan.
+  - `Alt+←` (ArrowLeft): Navigasi riwayat kembali (`goBack()`).
+  - `Alt+→` (ArrowRight): Navigasi riwayat maju (`goForward()`).
+  - `Ctrl+R` / `F5`: Reload webview layanan yang sedang dipilih.
+  - `Escape`: Menutup menu konteks, laci ekstensi, modal form, dan quick switcher dalam satu ketukan tombol.
+
+---
+
 ## [1.3.0] - 2026-10-19
 
 ### Ditambahkan (Added)

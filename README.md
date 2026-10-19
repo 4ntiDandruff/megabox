@@ -126,13 +126,18 @@ cd megabox
 bash megabox-launcher.sh
 ```
 
-### Tombol Pintas Meja Kerja
-- `Alt + 1` s/d `Alt + 9` : Pindah cepat antar-layanan aktif
-- `Alt + Panah Atas / Bawah` : Pindah urutan tab naik atau turun
-- `Ctrl + K` / `Ctrl + P` : Buka bilah pencarian layanan (Pindah Cepat)
-- `Ctrl + L` : Gembok workstation seketika (PIN Default: `1234`)
-- `Ctrl + R` : Muat ulang layanan aktif
-- `Alt + Shift + D` : Mode fokus tenang (bisukan seluruh notifikasi suara)
+### Tombol Pintas Meja Kerja (Universal Anti-Trap)
+Bekerja 100% responsif di seluruh workstation—bahkan ketika kursor dan fokus keyboard sedang berada di dalam aplikasi tamu (WhatsApp, Gmail, Telegram):
+- `Alt + 1` s/d `Alt + 9` : Pindah cepat antar-tab layanan 1 hingga 9
+- `Alt + ↑` / `Alt + ↓` : Pindah urutan tab naik atau turun (Reorder)
+- `Alt + ←` / `Alt + →` : Navigasi riwayat tab aktif (Kembali / Maju)
+- `Ctrl + R` / `F5` : Muat ulang layanan aktif seketika
+- `Ctrl + K` / `Ctrl + P` : Buka bilah pencarian cepat (Quick Switcher)
+- `Ctrl + N` : Buka katalog tambah layanan baru
+- `Alt + S` : Mode bagi layar 1x2 (Split Screen)
+- `Alt + E` : Buka / tutup laci ekstensi per-layanan
+- `Alt + Shift + D` : Mode fokus tenang / DND (Senyapkan audio dan notifikasi)
+- `Escape` : Tutup menu konteks, modal dialog, atau laci aktif
 
 ---
 
@@ -145,6 +150,7 @@ bash megabox-launcher.sh
 - [x] Pustaka ikon 480+ SVG resolusi tinggi dan ekspansi 31 layanan AI (Muse AI, v0, Bolt, Groq)
 - [x] Auto-generate favicon dan penyimpanan permanen ke database lokal
 - [x] Simplifikasi form konfigurasi menjadi 2-input ringkas
+- [x] Universal Keyboard Shortcut Interceptor (Anti-Trap webview focus pada semua tombol pintas)
 - [ ] Profil terenkripsi mandiri via SQLite WAL
 - [ ] Mode picture-in-picture mengambang untuk pemantau CCTV meja servis
 
