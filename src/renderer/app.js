@@ -248,7 +248,7 @@
         if (contextTargetApp) {
           const target = contextTargetApp;
           hideContextMenu();
-          openConfigureForm(target.name, target.url, target.icon, target.proxy, target.partition_type, target.id);
+          openConfigureForm(target.name, target.url, target.icon, target.id);
         } else {
           hideContextMenu();
         }
@@ -431,7 +431,7 @@
     });
   }
 
-  function openConfigureForm(name, url, icon, proxy = '', partitionType = 'private', existingId = null) {
+  function openConfigureForm(name, url, icon, existingId = null) {
     if (existingId) {
       formModalTitle.textContent = `Ubah Layanan ${name}`;
       if (inputServiceId) inputServiceId.value = existingId;
@@ -442,8 +442,6 @@
     inputServiceName.value = name;
     inputServiceUrl.value = url;
     inputServiceIcon.value = icon;
-    if (inputServiceProxy) inputServiceProxy.value = proxy || '';
-    if (inputServicePartition) inputServicePartition.value = partitionType || 'private';
     configureModal.style.display = 'flex';
     setTimeout(() => inputServiceName.focus(), 100);
   }
@@ -949,9 +947,9 @@
     
     // Multi-account guarantee: If not editing existing, generate unique ID
     const id = existing ? existing.id : ('app_' + icon + '_' + Date.now());
-    const proxy = inputServiceProxy ? inputServiceProxy.value.trim() : '';
-    const partType = inputServicePartition ? inputServicePartition.value : 'private';
-    const partitionStr = partType === 'shared' ? 'persist:workspace_shared' : ('persist:' + id);
+    const proxy = existing ? (existing.proxy || '') : '';
+    const partType = 'private'; // Auto-default: setiap tab/aplikasi memiliki sesi pribadi terisolasi
+    const partitionStr = existing ? existing.partition : ('persist:' + id);
 
     const newApp = {
       id: id,
@@ -988,8 +986,6 @@
   const quickswitchModal = document.getElementById('quickswitch-modal');
   const quickswitchInput = document.getElementById('quickswitch-input');
   const quickswitchList = document.getElementById('quickswitch-list');
-  const inputServiceProxy = document.getElementById('input-service-proxy');
-  const inputServicePartition = document.getElementById('input-service-partition');
 
   let quickSwitchIndex = 0;
   let filteredQuickApps = [];

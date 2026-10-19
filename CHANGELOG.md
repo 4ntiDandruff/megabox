@@ -4,6 +4,14 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.9] - 2026-10-19
+
+### Diubah (Changed)
+- **Simplifikasi Form Tambah/Ubah Layanan (Zero Friction)**: Mengeliminasi field dropdown 'Isolasi Sesi' dan input 'Proxy Jaringan' yang membingungkan dan jarang terpakai. Form kini ringkas dengan 2 input utama: 'Nama Layanan' dan 'Alamat Web'.
+- **Otomasi Default Sesi Pribadi (Zero-Touch Multi-Akun)**: Seluruh penambahan layanan kini 100% otomatis menggunakan sesi pribadi terisolasi (`persist:app_...`) di latar belakang tanpa menuntut konfigurasi manual dari user, menjamin dukungan multi-akun alami tanpa kebocoran session atau cookies antar-tab.
+
+---
+
 ## [1.2.8] - 2026-10-19
 
 ### Ditambahkan (Added)
