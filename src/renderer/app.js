@@ -1387,6 +1387,90 @@
   const btnSettingsDone = document.getElementById('btn-settings-done');
 
   // -------------------------------------------------------------------------
+
+  // -------------------------------------------------------------------------
+  // LOCAL-FIRST AVATAR CONTROLLER
+  // -------------------------------------------------------------------------
+  const sidebarAvatarImg = document.getElementById('avatar-user-img');
+  const sidebarAvatarDefaultIcon = document.getElementById('avatar-default-icon');
+  const settingsAvatarImg = document.getElementById('settings-avatar-img');
+  const settingsAvatarDefaultIcon = document.getElementById('settings-avatar-default-icon');
+  const btnPickAvatar = document.getElementById('btn-pick-avatar');
+  const btnResetAvatar = document.getElementById('btn-reset-avatar');
+
+  function renderAvatar(dataUrl) {
+    if (dataUrl) {
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.src = dataUrl;
+        sidebarAvatarImg.style.display = 'block';
+      }
+      if (sidebarAvatarDefaultIcon) sidebarAvatarDefaultIcon.style.display = 'none';
+
+      if (settingsAvatarImg) {
+        settingsAvatarImg.src = dataUrl;
+        settingsAvatarImg.style.display = 'block';
+      }
+      if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'none';
+    } else {
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.removeAttribute('src');
+        sidebarAvatarImg.style.display = 'none';
+      }
+      if (sidebarAvatarDefaultIcon) sidebarAvatarDefaultIcon.style.display = 'block';
+
+      if (settingsAvatarImg) {
+        settingsAvatarImg.removeAttribute('src');
+        settingsAvatarImg.style.display = 'none';
+      }
+      if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'block';
+    }
+  }
+
+  async function loadInitialAvatar() {
+    if (window.megabox && window.megabox.getAvatar) {
+      try {
+        const res = await window.megabox.getAvatar();
+        renderAvatar(res.avatar_url);
+      } catch (e) {
+        console.warn('[Avatar Load Failed]', e);
+      }
+    }
+  }
+
+  if (btnPickAvatar) {
+    btnPickAvatar.addEventListener('click', async () => {
+      if (!window.megabox || !window.megabox.pickAndSaveAvatar) return;
+      btnPickAvatar.disabled = true;
+      try {
+        const res = await window.megabox.pickAndSaveAvatar();
+        if (res.success && res.avatar_url) {
+          renderAvatar(res.avatar_url);
+        }
+      } catch (err) {
+        console.error('[Pick Avatar Error]', err);
+      } finally {
+        btnPickAvatar.disabled = false;
+      }
+    });
+  }
+
+  if (btnResetAvatar) {
+    btnResetAvatar.addEventListener('click', async () => {
+      if (!window.megabox || !window.megabox.resetAvatar) return;
+      try {
+        const res = await window.megabox.resetAvatar();
+        if (res.success) {
+          renderAvatar(null);
+        }
+      } catch (err) {
+        console.error('[Reset Avatar Error]', err);
+      }
+    });
+  }
+
+  // Load avatar immediately upon start
+  loadInitialAvatar();
+
   // LOCAL-FIRST BACKUP & COMMUNITY SUPPORT HANDLERS
   // -------------------------------------------------------------------------
 

@@ -25,6 +25,11 @@ contextBridge.exposeInMainWorld('megabox', {
   exportBackup: () => ipcRenderer.invoke('backup:export'),
   importBackup: () => ipcRenderer.invoke('backup:import'),
 
+  // Profile Avatar API (Local-First)
+  pickAndSaveAvatar: () => ipcRenderer.invoke('avatar:pick-and-save'),
+  resetAvatar: () => ipcRenderer.invoke('avatar:reset'),
+  getAvatar: () => ipcRenderer.invoke('avatar:get'),
+
   // Cloud Sync API
   getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
   loginSync: (email, password) => ipcRenderer.invoke('sync:login', { email, password }),

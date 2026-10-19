@@ -386,6 +386,70 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
+  // Profile Avatar IPC Handlers (Local File Picker & Storage)
+  ipcMain.handle('avatar:pick-and-save', async () => {
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+        title: 'Pilih Foto Profil (PNG, JPG, WEBP)',
+        filters: [{ name: 'Gambar', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'] }],
+        properties: ['openFile']
+      });
+
+      if (canceled || !filePaths || filePaths.length === 0) {
+        return { success: false, canceled: true };
+      }
+
+      const sourcePath = filePaths[0];
+      const ext = path.extname(sourcePath).toLowerCase();
+      const configDir = path.join(app.getPath('userData'));
+      if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+      }
+
+      const targetPath = path.join(configDir, `avatar${ext}`);
+      fs.copyFileSync(sourcePath, targetPath);
+
+      // Convert to base64 data URL so renderer can display without web security restriction
+      const fileBuffer = fs.readFileSync(targetPath);
+      let mimeType = 'image/png';
+      if (ext === '.jpg' || ext === '.jpeg') mimeType = 'image/jpeg';
+      else if (ext === '.webp') mimeType = 'image/webp';
+      else if (ext === '.svg') mimeType = 'image/svg+xml';
+
+      const dataUrl = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
+
+      // Save to local database settings
+      const settings = getSettings(db);
+      settings.avatar_data_url = dataUrl;
+      saveSettings(db, settings);
+
+      return { success: true, avatar_url: dataUrl };
+    } catch (err) {
+      console.error('[Avatar Picker Error]', err);
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('avatar:reset', async () => {
+    try {
+      const settings = getSettings(db);
+      delete settings.avatar_data_url;
+      saveSettings(db, settings);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('avatar:get', async () => {
+    try {
+      const settings = getSettings(db);
+      return { avatar_url: settings.avatar_data_url || null };
+    } catch (err) {
+      return { avatar_url: null };
+    }
+  });
+
   // Local-First JSON Backup Handlers
   ipcMain.handle('backup:export', async () => {
     try {

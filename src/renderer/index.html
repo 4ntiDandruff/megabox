@@ -1498,7 +1498,31 @@
           </div>
 
           <!-- Grouped Island: Mac-Style Setting Inset -->
-          <div class="apple-group-card">
+                    <!-- Grouped Island: Profile Avatar Settings (Local-First) -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div id="settings-avatar-preview-box" style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; position: relative;">
+                <svg id="settings-avatar-default-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <img id="settings-avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
+              </div>
+              <div>
+                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Foto Profil Workspace</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Tampilkan foto pribadi di sidebar kiri bawah (100% lokal di komputer ini).</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-pick-avatar" type="button" class="btn-apple-cyan-solid" style="padding: 7px 14px; font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>Pilih Foto</span>
+              </button>
+              <button id="btn-reset-avatar" type="button" class="btn-apple-pill-dark" style="padding: 7px 12px; font-size: 11.5px; color: #94a3b8;">
+                <span>Hapus</span>
+              </button>
+            </div>
+          </div>
+
+<div class="apple-group-card">
             
             <!-- Row 1: Hibernation -->
             <div class="apple-setting-row">
