@@ -4,6 +4,7 @@ const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, save
 const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
 const extensionsManager = require('./extensions-manager.js');
+const { translateText } = require('./translator.js');
 const fs = require('fs');
 
 function checkGpuCacheConsistency() {
@@ -233,6 +234,12 @@ app.whenReady().then(() => {
   // Extensions Management IPC handlers
   ipcMain.handle('extensions:get-catalog', () => {
     return extensionsManager.getCatalog();
+  });
+
+  
+  // Instant Selection Translation Relay (Zero-CSP Node.js Engine)
+  ipcMain.handle('translate:perform', async (_, { text }) => {
+    return await translateText(text);
   });
 
   ipcMain.handle('extensions:toggle', async (_, { appId, extensionId, enabled }) => {

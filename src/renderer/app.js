@@ -722,6 +722,27 @@
               window.megabox.dispatchNotification(notifData.title || app.name, notifData.options ? notifData.options.body : '', notifData.options ? notifData.options.icon : null);
             }
           }
+          if (event.channel === 'translate:request') {
+            const req = event.args[0] || {};
+            const textToTranslate = req.text || '';
+            const reqId = req.requestId;
+
+            // Check if translation is enabled for this app partition
+            const appExtKey = 'megabox_ext_' + app.id;
+            let isExtEnabled = true;
+            try {
+              const prefs = JSON.parse(localStorage.getItem(appExtKey) || '{}');
+              if (prefs['translate'] !== undefined) isExtEnabled = prefs['translate'];
+            } catch (_) {}
+
+            if (isExtEnabled && window.megabox && typeof window.megabox.performTranslation === 'function') {
+              window.megabox.performTranslation(textToTranslate).then(res => {
+                wv.send('translate:response', { requestId: reqId, result: res });
+              }).catch(err => {
+                wv.send('translate:response', { requestId: reqId, result: { success: false, error: err.message } });
+              });
+            }
+          }
         });
 
         webviewsContainer.appendChild(wv);
@@ -1770,10 +1791,10 @@
 
   // Built-in Chromium extensions catalog for Megabox (Valid verified local SVGs)
   const extensionCatalog = [
+    { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
     { id: 'bitwarden', name: 'Bitwarden', desc: 'Pengelola sandi terenkripsi', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true },
-    { id: 'translate', name: 'Google Translate', desc: 'Terjemahan instan web', icon: 'assets/icons/google-translate.svg', enabledByDefault: false }
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true }
   ];
 
   function openExtensionDrawer() {

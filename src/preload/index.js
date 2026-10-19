@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('megabox', {
   
   // Extensions API
   getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),
+  performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
   toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
 
   // Settings & System API

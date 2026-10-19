@@ -6,13 +6,13 @@ class ExtensionsManager {
     this.extensionsDir = path.join(__dirname, '../../extensions');
     this.catalog = [
       {
-        id: 'simple-translate',
-        name: 'Simple Translate',
-        version: '3.1.0',
-        description: 'Terjemahkan teks terpilih seketika dengan tooltip melayang otomatis & pengaturan lengkap.',
-        icon: 'assets/icons/simple-translate.png',
+        id: 'translate',
+        name: 'Terjemahan Seleksi Teks',
+        version: '2.0.0',
+        description: 'Tooltip terjemahan instan dua arah (ID ↔ EN) kebal CSP saat teks diblok di chat atau dokumen.',
+        icon: 'assets/icons/google-translate.svg',
         builtin: true,
-        hasSettings: true
+        hasSettings: false
       },
       {
         id: 'ublock-origin',
