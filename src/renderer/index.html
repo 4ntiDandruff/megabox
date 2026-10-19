@@ -141,17 +141,6 @@
       box-shadow: 0 0 8px rgba(114, 102, 240, 0.6);
     }
 
-    .tab-item.is-muted::after {
-      content: '';
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: #f43f5e;
-    }
-
     .tab-item.is-hibernated {
       opacity: 0.6;
     }
@@ -296,11 +285,6 @@
     .sidebar-btn:hover {
       background-color: rgba(255, 255, 255, 0.06);
       color: #ffffff;
-    }
-
-    .sidebar-btn.is-muted {
-      color: #f43f5e;
-      background-color: rgba(244, 63, 94, 0.15);
     }
 
     .sidebar-btn svg {
@@ -821,45 +805,6 @@
       width: 24px;
       height: 24px;
       object-fit: contain;
-    }
-
-    /* Privacy Lock Screen */
-    .lock-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(18, 18, 18, 0.98);
-      backdrop-filter: blur(20px);
-      z-index: 999;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-    }
-
-    .lock-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 32px;
-      background: #222222;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.8);
-    }
-
-    .lock-input {
-      letter-spacing: 6px;
-      font-size: 24px;
-      text-align: center;
-      width: 200px;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: #181818;
-      color: #ffffff;
-      outline: none;
     }
 
   

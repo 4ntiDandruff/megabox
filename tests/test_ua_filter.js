@@ -1,10 +1,11 @@
 const assert = require('assert');
 const { getTargetUserAgent } = require('../src/main/extensions.js');
 
-// 1. Google accounts must return genuine Chrome UA
+// 1. Google accounts must return proven Chromeless UA (without Chrome version to bypass OAuth block)
 const googleUrl = 'https://accounts.google.com/signin/v2/identifier';
 const googleUa = getTargetUserAgent(googleUrl);
-assert(googleUa.includes('Chrome/'), 'Google URL must use Chrome User-Agent');
+assert(googleUa.includes('Chrome'), 'Google URL must contain Chrome Safari family');
+assert(!googleUa.includes('Chrome/'), 'Google URL must not contain specific Chrome/ version (Chromeless formula)');
 assert(!googleUa.includes('Electron'), 'Google URL must not contain Electron identifier');
 
 // 2. WhatsApp Web must use full modern Desktop Chrome UA

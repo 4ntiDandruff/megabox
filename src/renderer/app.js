@@ -5,9 +5,6 @@
   const webviewsContainer = document.getElementById('webviews-container');
   const btnAddOpen = document.getElementById('btn-add-open');
   const btnReload = document.getElementById('btn-reload');
-  const btnMute = document.getElementById('btn-mute');
-  const iconMuteUnmuted = document.getElementById('icon-mute-unmuted');
-  const iconMuteMuted = document.getElementById('icon-mute-muted');
 
   const btnDnd = document.getElementById('btn-dnd');
   const iconDndOff = document.getElementById('icon-dnd-off');
@@ -54,7 +51,6 @@
   let activeAppId = null;
   let secondaryTiledAppId = null;
   let isTileModeActive = false;
-  let isGlobalMuted = false;
   let contextTargetApp = null;
   const appLastAccessed = {};
   const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 mins idle hibernate to free RAM
@@ -121,7 +117,6 @@
 
     // Control bar
     btnReload.onclick = reloadActiveApp;
-    if (btnMute) btnMute.onclick = toggleGlobalMute;
 
     // Global keyboard shortcuts
     window.addEventListener('keydown', (e) => {
@@ -908,24 +903,6 @@
     updateDndUI();
   }
 
-  function toggleGlobalMute() {
-    if (!activeAppId) return;
-    const wv = document.getElementById('wv-' + activeAppId);
-    if (wv) {
-      isGlobalMuted = !isGlobalMuted;
-      wv.setAudioMuted(isGlobalMuted);
-      if (isGlobalMuted) {
-        btnMute.classList.add('is-muted');
-        iconMuteUnmuted.style.display = 'none';
-        iconMuteMuted.style.display = 'block';
-      } else {
-        btnMute.classList.remove('is-muted');
-        iconMuteUnmuted.style.display = 'block';
-        iconMuteMuted.style.display = 'none';
-      }
-    }
-  }
-
   async function deleteAppById(id) {
     if (window.megabox) {
       await window.megabox.deleteApp(id);
@@ -991,27 +968,14 @@
   // DOM Elements for New Features
   const btnExtensions = document.getElementById('btn-extensions');
   const btnQuickSwitch = document.getElementById('btn-quickswitch');
-  const btnLock = document.getElementById('btn-lock');
   const quickswitchModal = document.getElementById('quickswitch-modal');
   const quickswitchInput = document.getElementById('quickswitch-input');
   const quickswitchList = document.getElementById('quickswitch-list');
-
-  const lockScreen = document.getElementById('lock-screen');
-  const lockPinInput = document.getElementById('lock-pin-input');
-  const lockError = document.getElementById('lock-error');
-
-  const wcBack = document.getElementById('wc-back');
-  const wcForward = document.getElementById('wc-forward');
-  const wcReload = document.getElementById('wc-reload');
-  const wcHome = document.getElementById('wc-home');
-  const wcActiveUrl = document.getElementById('wc-active-url');
-  const wcOpenExternal = document.getElementById('wc-open-external');
   const inputServiceProxy = document.getElementById('input-service-proxy');
   const inputServicePartition = document.getElementById('input-service-partition');
 
   let quickSwitchIndex = 0;
   let filteredQuickApps = [];
-  let DEFAULT_PIN = "1234"; // Default service PIN (can be customized)
 
 
   // 2. Quick Switcher Logic (Ferdium quickSwitch & Rambox quickSwitcher)
@@ -1033,8 +997,7 @@
     { id: 'cmd:dnd', name: 'Mode Konsentrasi / DND (Toggle)', subtitle: 'Senyapkan notifikasi dan suara seketika', icon: 'assets/icons/bell.svg', action: () => toggleDNDMode() },
     { id: 'cmd:catalog', name: 'Tambah Aplikasi (Buka Katalog)', subtitle: 'Jelajahi dan pasang layanan baru', icon: 'assets/icons/chat.svg', action: () => openCatalog() },
     { id: 'cmd:settings', name: 'Pengaturan & Profil Akun', subtitle: 'Konfigurasi sinkronisasi cloud dan avatar', icon: 'assets/icons/settings.svg', action: () => openSettingsModal() },
-    { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', icon: 'assets/icons/reload.svg', action: () => { if (wcReload) wcReload.click(); } },
-    { id: 'cmd:lock', name: 'Kunci Ruang Kerja (PIN Lock)', subtitle: 'Amankan workstation Megabox seketika', icon: 'assets/icons/lock.svg', action: () => lockWorkspace() }
+    { id: 'cmd:reload', name: 'Muat Ulang Layanan Aktif', subtitle: 'Reload tab webview yang sedang aktif', icon: 'assets/icons/reload.svg', action: () => reloadActiveApp() }
   ];
 
   function renderQuickSwitchList() {
@@ -1145,35 +1108,6 @@
   quickswitchModal.onclick = (e) => {
     if (e.target === quickswitchModal) closeQuickSwitcher();
   };
-
-  // 3. Privacy PIN Lock Screen Logic (trusted-subnet-auth-skill & Rambox lock)
-  function lockWorkspace() {
-    lockScreen.style.display = 'flex';
-    lockPinInput.value = '';
-    lockError.style.display = 'none';
-    setTimeout(() => lockPinInput.focus(), 20);
-  }
-
-  function unlockWorkspace() {
-    const entered = lockPinInput.value.trim();
-    if (entered === DEFAULT_PIN) {
-      lockScreen.style.display = 'none';
-      lockPinInput.value = '';
-      lockError.style.display = 'none';
-    } else {
-      lockError.style.display = 'block';
-      lockPinInput.value = '';
-      lockPinInput.focus();
-    }
-  }
-
-  // lockWorkspace removed
-  if (lockPinInput) {
-    lockPinInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') un// lockWorkspace disabled
-    });
-  }
-
   // Global Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
     // Ctrl+K or Ctrl+P -> Quick Switcher
@@ -1188,11 +1122,7 @@
         return;
       }
     }
-    // Ctrl+L -> Lock Workspace
-    if (e.ctrlKey && e.key === 'l') {
-      e.preventDefault();
-      // lockWorkspace disabled
-    }
+
     // Alt+2 -> Toggle Split Screen 1x2
     if (e.altKey && (e.key === '2' || e.key === '@')) {
       e.preventDefault();
@@ -1333,7 +1263,6 @@
   const settingsModal = document.getElementById('settings-modal');
   const btnSettingsClose = document.getElementById('btn-settings-close');
   const btnSettingsDone = document.getElementById('btn-settings-done');
-  const settingPinVal = document.getElementById('setting-pin-val');
 
   const syncBadgeStatus = document.getElementById('sync-badge-status');
   const syncAuthBox = document.getElementById('sync-auth-box');
@@ -1428,7 +1357,6 @@
     const settingAutoLockVal = document.getElementById('setting-autolock-val');
     btnSettings.onclick = async () => {
       settingsModal.style.display = 'flex';
-      if (settingPinVal) settingPinVal.value = DEFAULT_PIN;
       if (settingAutoLockVal) settingAutoLockVal.value = String(autoLockMinutes);
       await refreshSyncUI();
     };
@@ -1439,9 +1367,6 @@
     }
     if (btnSettingsDone) {
       btnSettingsDone.onclick = () => {
-        if (settingPinVal && settingPinVal.value.trim()) {
-          DEFAULT_PIN = settingPinVal.value.trim();
-        }
         if (settingAutoLockVal) {
           autoLockMinutes = parseInt(settingAutoLockVal.value, 10);
           localStorage.setItem('megabox_autolock_min', String(autoLockMinutes));
@@ -1685,39 +1610,5 @@
   // --- Idle Auto-Lock Timer with Active Audio Call Immunity ---
   let lastUserActivity = Date.now();
   let autoLockMinutes = parseInt(localStorage.getItem('megabox_autolock_min') || '10', 10);
-
-  function resetActivityTimer() {
-    lastUserActivity = Date.now();
-  }
-
-  window.addEventListener('mousemove', resetActivityTimer, { passive: true });
-  window.addEventListener('keydown', resetActivityTimer, { passive: true });
-  window.addEventListener('click', resetActivityTimer, { passive: true });
-
-  setInterval(() => {
-    if (!autoLockMinutes || autoLockMinutes <= 0) return;
-    if (lockScreen && lockScreen.style.display === 'flex') return;
-
-    const idleMs = Date.now() - lastUserActivity;
-    if (idleMs > autoLockMinutes * 60 * 1000) {
-      // Check audio call immunity
-      const webviews = document.querySelectorAll('webview');
-      let isCallActive = false;
-      webviews.forEach(wv => {
-        try {
-          if (typeof wv.isCurrentlyAudible === 'function' && wv.isCurrentlyAudible()) {
-            isCallActive = true;
-          }
-        } catch (_) {}
-      });
-
-      if (!isCallActive) {
-        console.log(`[Megabox AutoLock] Workstation idle for ${autoLockMinutes} mins. Locking automatically.`);
-        // lockWorkspace disabled
-      } else {
-        console.log('[Megabox AutoLock] Idle detected but active audio/call playing. Lock suppressed.');
-      }
-    }
-  }, 15000); // Check every 15s
 
 })();

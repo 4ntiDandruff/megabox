@@ -1,5 +1,4 @@
 // Megabox Header & User-Agent Engine (Reverse-engineered from Rambox & Ferdium)
-const os = require('os');
 
 // Platform string detection
 function getPlatformString() {

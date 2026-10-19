@@ -13,8 +13,6 @@ contextBridge.exposeInMainWorld('megabox', {
   // Extensions API
   getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),
   toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
-  openExtensionOptions: (extensionId) => ipcRenderer.invoke('extensions:open-options', extensionId),
-  getDarkReaderScript: () => ipcRenderer.invoke('extensions:get-darkreader-script'),
 
   // Cloud Sync API
   getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
@@ -24,9 +22,6 @@ contextBridge.exposeInMainWorld('megabox', {
   manualPushSync: () => ipcRenderer.invoke('sync:manual-push'),
   manualPullSync: () => ipcRenderer.invoke('sync:manual-pull'),
   focusWindow: () => ipcRenderer.invoke('window:focus'),
-  onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status)),
+  onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status))
 
-  minimizeWindow: () => ipcRenderer.send('window:minimize'),
-  maximizeWindow: () => ipcRenderer.send('window:maximize'),
-  closeWindow: () => ipcRenderer.send('window:close')
 });
