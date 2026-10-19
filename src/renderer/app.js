@@ -1400,7 +1400,6 @@
   const btnSyncNow = document.getElementById('btn-sync-now');
   const btnSyncLogout = document.getElementById('btn-sync-logout');
   const syncOpMsg = document.getElementById('sync-op-msg');
-  const syncStatusDot = document.getElementById('sync-status-dot');
   const avatarDefaultIcon = document.getElementById('avatar-default-icon');
   const avatarUserImg = document.getElementById('avatar-user-img');
   const avatarUserInitials = document.getElementById('avatar-user-initials');
@@ -1459,11 +1458,7 @@
       const status = await window.megabox.getSyncStatus();
       if (status.logged_in && status.user) {
         updateProfileAvatar(status.user.email, status.user.avatar_url);
-        if (syncStatusDot) {
-          syncStatusDot.style.background = '#22c55e'; // Green solid
-          syncStatusDot.style.boxShadow = '0 0 6px rgba(34, 197, 94, 0.4)';
-          syncStatusDot.title = 'Cloud Megapass: Terhubung & Tersinkron';
-        }
+
         if (syncBadgeStatus) {
           syncBadgeStatus.textContent = 'Terhubung';
           syncBadgeStatus.style.background = 'rgba(92,184,92,0.15)';
@@ -1480,11 +1475,7 @@
         }
       } else {
         updateProfileAvatar(null);
-        if (syncStatusDot) {
-          syncStatusDot.style.background = '#71717a'; // Gray muted
-          syncStatusDot.style.boxShadow = 'none';
-          syncStatusDot.title = 'Cloud Megapass: Belum Terhubung';
-        }
+
         if (syncBadgeStatus) {
           syncBadgeStatus.textContent = 'Belum Terhubung';
           syncBadgeStatus.style.background = 'rgba(255,255,255,0.08)';
