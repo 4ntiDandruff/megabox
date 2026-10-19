@@ -1418,6 +1418,7 @@
   const settingsAvatarDefaultIcon = document.getElementById('settings-avatar-default-icon');
   const btnPickAvatar = document.getElementById('btn-pick-avatar');
   const btnResetAvatar = document.getElementById('btn-reset-avatar');
+  const inputAvatarFile = document.getElementById('input-avatar-file');
 
   function renderAvatar(dataUrl) {
     if (dataUrl) {
@@ -1459,34 +1460,71 @@
   }
 
   if (btnPickAvatar) {
-    btnPickAvatar.addEventListener('click', async () => {
-      if (!window.megabox || !window.megabox.pickAndSaveAvatar) return;
-      btnPickAvatar.disabled = true;
-      try {
-        const res = await window.megabox.pickAndSaveAvatar();
-        if (res.success && res.avatar_url) {
-          renderAvatar(res.avatar_url);
-        }
-      } catch (err) {
-        console.error('[Pick Avatar Error]', err);
-      } finally {
-        btnPickAvatar.disabled = false;
+    btnPickAvatar.onclick = async () => {
+      console.log('[Avatar] btnPickAvatar clicked');
+      // Primary: Trigger native OS file picker input
+      if (inputAvatarFile) {
+        inputAvatarFile.click();
+        return;
       }
-    });
+
+      // Secondary fallback: Electron showOpenDialog
+      if (window.megabox && window.megabox.pickAndSaveAvatar) {
+        btnPickAvatar.disabled = true;
+        try {
+          const res = await window.megabox.pickAndSaveAvatar();
+          if (res && res.success && res.avatar_url) {
+            renderAvatar(res.avatar_url);
+          }
+        } catch (err) {
+          console.error('[Pick Avatar Error]', err);
+        } finally {
+          btnPickAvatar.disabled = false;
+        }
+      }
+    };
+  }
+
+  // Handle instant file selection from inputAvatarFile
+  if (inputAvatarFile) {
+    inputAvatarFile.onchange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64Data = event.target.result;
+        renderAvatar(base64Data);
+
+        // Persist via saveAvatarBase64
+        if (window.megabox && window.megabox.saveAvatarBase64) {
+          try {
+            await window.megabox.saveAvatarBase64(base64Data);
+            console.log('[Avatar] Base64 avatar saved successfully');
+          } catch (err) {
+            console.error('[Avatar] Failed to persist base64 avatar:', err);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+      // Reset input value so user can select the same file again if desired
+      inputAvatarFile.value = '';
+    };
   }
 
   if (btnResetAvatar) {
-    btnResetAvatar.addEventListener('click', async () => {
+    btnResetAvatar.onclick = async () => {
+      console.log('[Avatar] btnResetAvatar clicked');
       if (!window.megabox || !window.megabox.resetAvatar) return;
       try {
         const res = await window.megabox.resetAvatar();
-        if (res.success) {
+        if (res && res.success) {
           renderAvatar(null);
         }
       } catch (err) {
         console.error('[Reset Avatar Error]', err);
       }
-    });
+    };
   }
 
   // Load avatar immediately upon start

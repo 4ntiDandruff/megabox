@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog } = require('electron');
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
@@ -394,9 +394,33 @@ async function cacheFaviconToDataUri(iconUrl) {
   });
 
   // Profile Avatar IPC Handlers (Local File Picker & Storage)
-  ipcMain.handle('avatar:pick-and-save', async () => {
+  
+  // Save Base64 Avatar directly from Renderer file picker
+  ipcMain.handle('avatar:save-base64', async (_, { base64Data }) => {
     try {
-      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      if (!base64Data) return { success: false, error: 'Empty data' };
+      const configDir = path.join(app.getPath('userData'));
+      if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
+      const targetFile = path.join(configDir, 'avatar.png');
+      
+      const raw = base64Data.replace(/^data:image\/\w+;base64,/, '');
+      fs.writeFileSync(targetFile, Buffer.from(raw, 'base64'));
+
+      const settings = getSettings();
+      settings.avatar_url = base64Data;
+      saveSettings(settings);
+
+      return { success: true, avatar_url: base64Data };
+    } catch (err) {
+      console.error('[Avatar Base64 Save Error]', err);
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('avatar:pick-and-save', async () => {
+    console.log('[Main IPC] avatar:pick-and-save invoked');
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(null, {
         title: 'Pilih Foto Profil (PNG, JPG, WEBP)',
         filters: [{ name: 'Gambar', extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'] }],
         properties: ['openFile']
@@ -462,7 +486,7 @@ async function cacheFaviconToDataUri(iconUrl) {
     try {
       const dateStr = new Date().toISOString().slice(0, 10);
       const defaultFileName = `megabox-backup-${dateStr}.json`;
-      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow && !mainWindow.isDestroyed() ? mainWindow : null, {
         title: 'Ekspor Cadangan Konfigurasi Megabox',
         defaultPath: path.join(app.getPath('downloads'), defaultFileName),
         filters: [{ name: 'JSON Backup', extensions: ['json'] }]
@@ -493,7 +517,7 @@ async function cacheFaviconToDataUri(iconUrl) {
 
   ipcMain.handle('backup:import', async () => {
     try {
-      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      const { canceled, filePaths } = await dialog.showOpenDialog(null, {
         title: 'Pilih File Cadangan Megabox (.json)',
         filters: [{ name: 'JSON Backup', extensions: ['json'] }],
         properties: ['openFile']

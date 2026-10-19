@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld('megabox', {
 
   // Profile Avatar API (Local-First)
   pickAndSaveAvatar: () => ipcRenderer.invoke('avatar:pick-and-save'),
+  saveAvatarBase64: (base64Data) => ipcRenderer.invoke('avatar:save-base64', { base64Data }),
   resetAvatar: () => ipcRenderer.invoke('avatar:reset'),
   getAvatar: () => ipcRenderer.invoke('avatar:get'),
 
