@@ -64,11 +64,11 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #7266f0 0%, #4f46e5 100%);
+      background: #7266f0;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(114, 102, 240, 0.35);
+      box-shadow: none;
       margin-bottom: 12px;
       cursor: pointer;
     }
@@ -126,7 +126,7 @@
     .tab-item.is-active {
       background-color: var(--sidebar-active-bg);
       border-color: rgba(114, 102, 240, 0.45);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+      box-shadow: none;
     }
 
     .tab-item.is-active::before {
@@ -138,7 +138,7 @@
       width: 4px;
       background-color: var(--brand-primary);
       border-radius: 0 4px 4px 0;
-      box-shadow: 0 0 8px rgba(114, 102, 240, 0.6);
+      box-shadow: none;
     }
 
     .tab-item.is-hibernated {
@@ -152,8 +152,9 @@
       pointer-events: none;
       border-radius: 6px;
       /* Anti-black-sink: guarantees visible outline and contrast against dark backgrounds */
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
-    }
+      /* Flat crisp render without drop-shadow halo */
+      filter: none;
+}
 
     .tab-item span.tab-fallback {
       font-size: 13px;
@@ -178,7 +179,7 @@
       padding: 0 4px;
       border-radius: 9px;
       text-align: center;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      box-shadow: none;
       border: 1.5px solid var(--sidebar-bg);
       display: none;
     }
@@ -252,7 +253,7 @@
     .profile-avatar-btn:hover {
       transform: scale(1.08);
       border-color: var(--brand-primary);
-      box-shadow: 0 0 12px rgba(114, 102, 240, 0.35);
+      box-shadow: none;
     }
 
     .profile-avatar-btn img {
@@ -316,7 +317,7 @@
       width: 100% !important;
       height: 100% !important;
       border-radius: 4px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      box-shadow: none;
     }
 
     webview {
@@ -334,7 +335,6 @@
       position: fixed;
       inset: 0;
       background-color: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
       z-index: 999999;
       display: none;
       align-items: center;
@@ -347,10 +347,9 @@
       max-width: 880px;
       max-height: 88vh;
       background: #14171d;
-      background: radial-gradient(circle at top right, rgba(114, 102, 240, 0.08), transparent 40%), #14171d;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 18px;
-      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      box-shadow: none;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -387,11 +386,11 @@
       color: #ffffff;
     }
     .category-pill.is-active {
-      background: #7266f0;
-      border-color: #7266f0;
+      background: #2a2e39;
+      border-color: rgba(255, 255, 255, 0.2);
       color: #ffffff;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(114, 102, 240, 0.4);
+      box-shadow: none;
     }
     
     .featured-badge-pill {
@@ -399,9 +398,9 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      background: #20242c;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 1px 6px;
       border-radius: 4px;
     }
@@ -432,11 +431,11 @@
     .catalog-badge {
       font-size: 11px;
       font-weight: 600;
-      background: rgba(114, 102, 240, 0.2);
-      color: var(--brand-primary);
+      background: #20242c;
+      color: #94a3b8;
       padding: 2px 8px;
       border-radius: 12px;
-      border: 1px solid rgba(114, 102, 240, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .catalog-close {
@@ -471,7 +470,7 @@
     }
 
     .catalog-search:focus {
-      border-color: var(--brand-primary);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .catalog-search-icon {
@@ -503,28 +502,29 @@
     }
 
     .service-card {
-      background-color: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 12px;
+      background-color: #1a1d24;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
       padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.15s ease, border-color 0.15s ease;
       position: relative;
+      box-shadow: none;
     }
 
     .service-card:hover {
-      background-color: rgba(255, 255, 255, 0.07);
-      border-color: rgba(114, 102, 240, 0.5);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      background-color: #222631;
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: none;
+      box-shadow: none;
     }
 
     .service-card.is-featured-card {
-      background: linear-gradient(135deg, rgba(114, 102, 240, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-      border-color: rgba(114, 102, 240, 0.25);
+      background: #1a1d24;
+      border-color: rgba(255, 255, 255, 0.14);
     }
 
     .service-card-icon-wrapper {
@@ -546,8 +546,9 @@
       object-fit: contain;
       flex-shrink: 0;
       /* Anti-black-sink: ensures visible outline and contrast for monochrome/dark icons */
-      filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.45));
-    }
+      /* Flat crisp render without drop-shadow halo */
+      filter: none;
+}
 
     .service-info {
       flex: 1;
@@ -573,20 +574,23 @@
     }
 
     .btn-add-pill {
-      background-color: var(--brand-primary);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
+      background-color: #2b303c;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 6px 14px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       flex-shrink: 0;
-      transition: opacity 0.15s;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      box-shadow: none;
     }
 
     .btn-add-pill:hover {
-      opacity: 0.9;
+      background-color: #383f4f;
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
     }
 
     /* Custom App Bottom Banner in Catalog */
@@ -629,7 +633,7 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -695,7 +699,7 @@
       font-weight: 700;
       font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(114, 102, 240, 0.35);
+      box-shadow: none;
       transition: opacity 0.2s;
     }
 
@@ -707,11 +711,11 @@
     .custom-context-menu {
       position: fixed;
       background-color: #2b2b2b;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 8px;
       padding: 4px 0;
       min-width: 180px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: none;
       z-index: 200;
       display: none;
     }
@@ -758,9 +762,9 @@
       width: 100%;
       max-width: 520px;
       background-color: #202020;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 14px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      box-shadow: none;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -807,8 +811,9 @@
       width: 24px;
       height: 24px;
       object-fit: contain;
-      filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
-    }
+      /* Flat crisp render */
+      filter: none;
+}
 
   
     /* Contextual Right Slide-Over Extension Drawer (340px) */
@@ -834,7 +839,7 @@
       width: 320px;
       background: #14171d;
       border-left: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: -6px 0 20px rgba(0, 0, 0, 0.35);
+      box-shadow: none;
       z-index: 99995;
       display: flex;
       flex-direction: column;

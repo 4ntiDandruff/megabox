@@ -4,6 +4,14 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.7] - 2026-10-19
+
+### Diubah (Changed)
+- **Purge Total Efek Glow & Glassmorphism (Pure Flat Utilitarian)**: Menghapus seluruh radial-gradient, linear-gradient, dan glow box-shadow pada kartu katalog (`.service-card`), modal overlay (`backdrop-filter: blur`), logo sidebar, tab aktif, badge jumlah pesan, dan menu konteks. Antarmuka kini menganut prinsip flat murni dengan batas garis solid 1px ultra-halus (`rgba(255, 255, 255, 0.08)` hingga `0.12`) dan latar belakang pekat solid (`#1a1d24` / `#222631`) tanpa aura neon atau bias glassmorphic.
+- **Visual Rendering Tajam Flat Icon**: Menghapus filter drop-shadow ganda pada icon aplikasi tab sidebar (`.tab-item img.tab-icon`), kartu katalog, dan quickswitcher sehingga tepi icon tampil rata, tegas, dan natural sesuai prinsip desain utilitarian.
+
+---
+
 ## [1.2.6] - 2026-10-19
 
 ### Diubah (Changed)
