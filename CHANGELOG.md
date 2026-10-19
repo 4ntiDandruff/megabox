@@ -4,6 +4,18 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.2.8] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Ekspansi Katalog Layanan Modern & Ekosistem AI (481 Layanan)**: Menambahkan 22 layanan AI dan developer modern yang sangat dicari, meliputi Muse AI (https://muse.ai/), v0 by Vercel, Bolt.new, Microsoft Copilot, Groq Chat, Midjourney, Suno AI, Udio AI, ElevenLabs, Runway Gen-3, Pika Art, Krea AI, Phind AI, OpenRouter, Hugging Face, Replicate, Leonardo AI, Civitai, Gamma App, Cursor AI Docs, Blackbox AI, dan Google NotebookLM.
+- **Asset SVG Native Khusus Anti-Black-Sink**: Melengkapi seluruh layanan baru dengan file icon SVG murni 100% yang dioptimalkan untuk tema gelap dengan kontras presisi, tanpa bitmap buram, dan tanpa dependensi CDN eksternal.
+
+### Diubah (Changed)
+- **Reklasifikasi Kategori AI Terpadu**: Menata ulang layanan AI yang sebelumnya tercecer di kategori 'other' atau 'chat' (seperti HuggingChat, Le Chat Mistral, Poe AI, DeepAI, LobeChat) langsung ke dalam tab filter 'AI' sehingga filter menampilkan 31 layanan AI terkurasi rapi.
+- **Sinkronisasi Badge Total Katalog**: Memperbarui counter badge pada modal katalog menjadi 481 Layanan.
+
+---
+
 ## [1.2.7] - 2026-10-19
 
 ### Diubah (Changed)

@@ -493,7 +493,7 @@
     "version": "1.0.0",
     "url": "https://apps.abacus.ai/chatllm",
     "featured": false,
-    "category": "chat"
+    "category": "ai"
   },
   {
     "id": "chatra",
@@ -669,7 +669,7 @@
     "version": "1.0.0",
     "url": "https://deepai.org/",
     "featured": false,
-    "category": "other"
+    "category": "ai"
   },
   {
     "id": "deepl",
@@ -793,11 +793,11 @@
   },
   {
     "id": "duckduckgo-ai-chat",
-    "name": "DuckDuckGo AI Chat",
+    "name": "DuckDuckGo AI",
     "version": "1.0.0",
     "url": "https://duckduckgo.com/aichat",
     "featured": false,
-    "category": "chat"
+    "category": "ai"
   },
   {
     "id": "easy-redmine",
@@ -1473,11 +1473,11 @@
   },
   {
     "id": "hugging-chat",
-    "name": "Hugging Chat",
+    "name": "HuggingChat",
     "version": "1.0.0",
     "url": "https://huggingface.co/chat/",
-    "featured": false,
-    "category": "chat"
+    "featured": true,
+    "category": "ai"
   },
   {
     "id": "iberbox",
@@ -1797,7 +1797,7 @@
     "version": "1.0.0",
     "url": "https://lobechat.com/chat",
     "featured": false,
-    "category": "chat"
+    "category": "ai"
   },
   {
     "id": "localazy",
@@ -2001,11 +2001,11 @@
   },
   {
     "id": "mistral",
-    "name": "Le Chat by Mistral",
+    "name": "Le Chat (Mistral)",
     "version": "1.0.0",
     "url": "https://chat.mistral.ai/chat",
-    "featured": false,
-    "category": "chat"
+    "featured": true,
+    "category": "ai"
   },
   {
     "id": "monarch-money",
@@ -2505,11 +2505,11 @@
   },
   {
     "id": "poe",
-    "name": "poe",
+    "name": "Poe AI",
     "version": "1.0.1",
     "url": "https://poe.com/",
-    "featured": false,
-    "category": "other"
+    "featured": true,
+    "category": "ai"
   },
   {
     "id": "pomodoro-tracker",
@@ -3687,5 +3687,225 @@
     "url": "https://web.whatsapp.com",
     "icon": "whatsapp-business",
     "featured": true
+  },
+  {
+    "id": "muse-ai",
+    "name": "Muse AI",
+    "version": "1.0.0",
+    "url": "https://muse.ai/",
+    "icon": "muse-ai",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_muse_ai"
+  },
+  {
+    "id": "v0-dev",
+    "name": "v0 by Vercel",
+    "version": "1.0.0",
+    "url": "https://v0.dev/",
+    "icon": "v0-dev",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_v0_dev"
+  },
+  {
+    "id": "bolt-new",
+    "name": "Bolt.new",
+    "version": "1.0.0",
+    "url": "https://bolt.new/",
+    "icon": "bolt-new",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_bolt_new"
+  },
+  {
+    "id": "microsoft-copilot",
+    "name": "Microsoft Copilot",
+    "version": "1.0.0",
+    "url": "https://copilot.microsoft.com/",
+    "icon": "microsoft-copilot",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_ms_copilot"
+  },
+  {
+    "id": "groq",
+    "name": "Groq Chat",
+    "version": "1.0.0",
+    "url": "https://groq.com/",
+    "icon": "groq",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_groq"
+  },
+  {
+    "id": "midjourney",
+    "name": "Midjourney",
+    "version": "1.0.0",
+    "url": "https://www.midjourney.com/",
+    "icon": "midjourney",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_midjourney"
+  },
+  {
+    "id": "suno-ai",
+    "name": "Suno AI",
+    "version": "1.0.0",
+    "url": "https://suno.com/",
+    "icon": "suno-ai",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_suno"
+  },
+  {
+    "id": "udio-ai",
+    "name": "Udio AI",
+    "version": "1.0.0",
+    "url": "https://www.udio.com/",
+    "icon": "udio-ai",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_udio"
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "version": "1.0.0",
+    "url": "https://elevenlabs.io/",
+    "icon": "elevenlabs",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_elevenlabs"
+  },
+  {
+    "id": "runway-ml",
+    "name": "Runway Gen-3",
+    "version": "1.0.0",
+    "url": "https://runwayml.com/",
+    "icon": "runway-ml",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_runway"
+  },
+  {
+    "id": "pika-art",
+    "name": "Pika Art",
+    "version": "1.0.0",
+    "url": "https://pika.art/",
+    "icon": "pika-art",
+    "featured": false,
+    "category": "ai",
+    "partition": "persist:app_pika"
+  },
+  {
+    "id": "krea-ai",
+    "name": "Krea AI",
+    "version": "1.0.0",
+    "url": "https://www.krea.ai/",
+    "icon": "krea-ai",
+    "featured": false,
+    "category": "ai",
+    "partition": "persist:app_krea"
+  },
+  {
+    "id": "phind",
+    "name": "Phind AI",
+    "version": "1.0.0",
+    "url": "https://www.phind.com/",
+    "icon": "phind",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_phind"
+  },
+  {
+    "id": "openrouter",
+    "name": "OpenRouter",
+    "version": "1.0.0",
+    "url": "https://openrouter.ai/",
+    "icon": "openrouter",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_openrouter"
+  },
+  {
+    "id": "huggingface",
+    "name": "Hugging Face",
+    "version": "1.0.0",
+    "url": "https://huggingface.co/",
+    "icon": "huggingface",
+    "featured": true,
+    "category": "dev",
+    "partition": "persist:app_huggingface"
+  },
+  {
+    "id": "replicate",
+    "name": "Replicate",
+    "version": "1.0.0",
+    "url": "https://replicate.com/",
+    "icon": "replicate",
+    "featured": false,
+    "category": "dev",
+    "partition": "persist:app_replicate"
+  },
+  {
+    "id": "leonardo-ai",
+    "name": "Leonardo AI",
+    "version": "1.0.0",
+    "url": "https://leonardo.ai/",
+    "icon": "leonardo-ai",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:app_leonardo"
+  },
+  {
+    "id": "civitai",
+    "name": "Civitai",
+    "version": "1.0.0",
+    "url": "https://civitai.com/",
+    "icon": "civitai",
+    "featured": false,
+    "category": "ai",
+    "partition": "persist:app_civitai"
+  },
+  {
+    "id": "gamma-app",
+    "name": "Gamma App",
+    "version": "1.0.0",
+    "url": "https://gamma.app/",
+    "icon": "gamma-app",
+    "featured": true,
+    "category": "productivity",
+    "partition": "persist:app_gamma"
+  },
+  {
+    "id": "cursor-ai",
+    "name": "Cursor Forum / Docs",
+    "version": "1.0.0",
+    "url": "https://www.cursor.com/",
+    "icon": "cursor-ai",
+    "featured": false,
+    "category": "dev",
+    "partition": "persist:app_cursor"
+  },
+  {
+    "id": "blackbox-ai",
+    "name": "Blackbox AI",
+    "version": "1.0.0",
+    "url": "https://www.blackbox.ai/",
+    "icon": "blackbox-ai",
+    "featured": false,
+    "category": "ai",
+    "partition": "persist:app_blackbox"
+  },
+  {
+    "id": "notebooklm",
+    "name": "NotebookLM (Google)",
+    "version": "1.0.0",
+    "url": "https://notebooklm.google.com/",
+    "icon": "notebooklm",
+    "featured": true,
+    "category": "ai",
+    "partition": "persist:workspace_shared"
   }
 ]
