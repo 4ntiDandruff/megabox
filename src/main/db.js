@@ -96,11 +96,32 @@ function reorderApp(db, id, direction) {
   return data.apps;
 }
 
+
+const defaultSettings = {
+  hibernate_timeout_minutes: 15,
+  close_to_tray: true,
+  autostart: false
+};
+
+function getSettings(db) {
+  const data = db.read();
+  return Object.assign({}, defaultSettings, data.settings || {});
+}
+
+function saveSettings(db, newSettings) {
+  const data = db.read();
+  data.settings = Object.assign({}, defaultSettings, data.settings || {}, newSettings);
+  db.write(data);
+  return data.settings;
+}
+
 module.exports = {
   getDefaultDbPath,
   initDatabase,
   getApps,
   saveApp,
   deleteApp,
-  reorderApp
+  reorderApp,
+  getSettings,
+  saveSettings
 };

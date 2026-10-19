@@ -1,6 +1,6 @@
 {
   "name": "megabox",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Zero-bloat multi-app workspace: Rambox Pro capabilities without subscription, rock-solid stability on KDE Wayland without Ferdium bugs",
   "main": "src/main/index.js",
   "scripts": {

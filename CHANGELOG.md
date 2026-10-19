@@ -4,6 +4,20 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.3] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Panel Pengaturan Tabbed Pure Flat Modern**: Merombak total modal Pengaturan (Settings) menjadi tata letak modular 3-tab (Umum & Sistem, Cloud Megapass, dan Tentang Aplikasi) tanpa efek kaca (glassmorphism) dan tanpa border glow, konsisten dengan estetika flat gelap Megabox.
+- **Konfigurator Dinamis Hibernasi RAM Tab**: Pengguna kini dapat memilih durasi idle hibernasi otomatis (5 Menit, 15 Menit Bawaan, 30 Menit, 1 Jam, atau Nonaktifkan/Selalu Aktif) yang langsung disimpan ke database konfigurasi lokal dan mengontrol interval tidur webview secara dinamis.
+- **Pengaturan Perilaku Tutup Jendela (Close-to-Tray)**: Menambahkan saklar pilihan apakah tombol [x] jendela menyembunyikan aplikasi ke System Tray (agar notifikasi pesan tetap aktif) atau keluar secara total.
+- **Toggle Mulai Otomatis Saat Login (Linux Autostart)**: Menambahkan saklar flat toggle switch native yang mengendalikan startup desktop via API resmi Electron `setLoginItemSettings`.
+- **Tombol Pembersih Cache Web & GPU Satu Klik**: Fitur servis praktis untuk mengosongkan cache HTTP Chromium dan GPU Shader sementara secara instan tanpa merusak sesi login maupun cookie pengguna.
+
+### Diperbaiki (Fixed)
+- **Persistensi State Pengaturan Lokal**: Mengintegrasikan skema `getSettings` dan `saveSettings` pada layer `db.js` sehingga setiap perubahan pengaturan langsung tersimpan secara atomic dan aman dari pemadaman listrik mendadak (*power-loss proof*).
+
+---
+
 ## [1.3.2] - 2026-10-19
 
 ### Diperbaiki (Fixed)

@@ -52,12 +52,13 @@
   let isTileModeActive = false;
   let contextTargetApp = null;
   const appLastAccessed = {};
-  const HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // 15 mins idle hibernate to free RAM
+  let HIBERNATE_TIMEOUT_MS = 15 * 60 * 1000; // Dynamic idle timeout (0 = disabled)
 
   const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
   async function init() {
     setupEventListeners();
+    loadSystemSettings();
     await loadRecipesCatalog();
     
     loadApps();
@@ -979,6 +980,7 @@
   }
 
   function checkHibernation() {
+    if (HIBERNATE_TIMEOUT_MS <= 0) return; // Hibernasi dinonaktifkan
     const now = Date.now();
     apps.forEach(app => {
       if (app.id !== activeAppId) {
@@ -1472,9 +1474,128 @@
     }
   }
 
+  // Settings Modal Navigation & Controller (Flat Slate Architecture)
+  const tabNavGeneral = document.getElementById('tab-nav-general');
+  const tabNavSync = document.getElementById('tab-nav-sync');
+  const tabNavAbout = document.getElementById('tab-nav-about');
+  const secGeneral = document.getElementById('section-settings-general');
+  const secSync = document.getElementById('section-settings-sync');
+  const secAbout = document.getElementById('section-settings-about');
+
+  const settingHibernateTimeout = document.getElementById('setting-hibernate-timeout');
+  const settingCloseAction = document.getElementById('setting-close-action');
+  const settingAutostart = document.getElementById('setting-autostart');
+  const btnClearCache = document.getElementById('btn-clear-cache');
+  const clearCacheMsg = document.getElementById('clear-cache-msg');
+  const settingsStatusSave = document.getElementById('settings-status-save');
+
+  function switchSettingsTab(tabName) {
+    const tabs = [
+      { id: 'general', btn: tabNavGeneral, sec: secGeneral },
+      { id: 'sync', btn: tabNavSync, sec: secSync },
+      { id: 'about', btn: tabNavAbout, sec: secAbout }
+    ];
+    tabs.forEach(t => {
+      if (!t.btn || !t.sec) return;
+      if (t.id === tabName) {
+        t.btn.classList.add('is-active');
+        t.btn.style.background = '#27272a';
+        t.btn.style.color = '#fff';
+        t.btn.style.borderColor = 'rgba(255,255,255,0.12)';
+        t.sec.style.display = 'flex';
+      } else {
+        t.btn.classList.remove('is-active');
+        t.btn.style.background = 'transparent';
+        t.btn.style.color = '#a1a1aa';
+        t.btn.style.borderColor = 'transparent';
+        t.sec.style.display = 'none';
+      }
+    });
+  }
+
+  if (tabNavGeneral) tabNavGeneral.onclick = () => switchSettingsTab('general');
+  if (tabNavSync) tabNavSync.onclick = () => switchSettingsTab('sync');
+  if (tabNavAbout) tabNavAbout.onclick = () => switchSettingsTab('about');
+
+  async function loadSystemSettings() {
+    if (!window.megabox || !window.megabox.getSettings) return;
+    try {
+      const cfg = await window.megabox.getSettings();
+      if (settingHibernateTimeout) {
+        settingHibernateTimeout.value = String(cfg.hibernate_timeout_minutes ?? 15);
+        const mins = parseInt(settingHibernateTimeout.value, 10);
+        HIBERNATE_TIMEOUT_MS = mins > 0 ? mins * 60 * 1000 : 0;
+      }
+      if (settingCloseAction) {
+        settingCloseAction.value = cfg.close_to_tray === false ? 'quit' : 'tray';
+      }
+      if (settingAutostart) {
+        settingAutostart.checked = Boolean(cfg.autostart);
+      }
+    } catch (e) {
+      console.warn('[Settings Load Failed]', e);
+    }
+  }
+
+  async function persistSystemSettings() {
+    if (!window.megabox || !window.megabox.saveSettings) return;
+    try {
+      const mins = parseInt(settingHibernateTimeout.value, 10);
+      HIBERNATE_TIMEOUT_MS = mins > 0 ? mins * 60 * 1000 : 0;
+      const closeToTray = settingCloseAction.value === 'tray';
+      const autostart = Boolean(settingAutostart.checked);
+
+      await window.megabox.saveSettings({
+        hibernate_timeout_minutes: mins,
+        close_to_tray: closeToTray,
+        autostart: autostart
+      });
+
+      if (settingsStatusSave) {
+        settingsStatusSave.style.display = 'inline-block';
+        setTimeout(() => { settingsStatusSave.style.display = 'none'; }, 2000);
+      }
+    } catch (e) {
+      console.warn('[Settings Save Failed]', e);
+    }
+  }
+
+  if (settingHibernateTimeout) settingHibernateTimeout.onchange = persistSystemSettings;
+  if (settingCloseAction) settingCloseAction.onchange = persistSystemSettings;
+  if (settingAutostart) settingAutostart.onchange = persistSystemSettings;
+
+  if (btnClearCache) {
+    btnClearCache.onclick = async () => {
+      btnClearCache.disabled = true;
+      btnClearCache.innerHTML = '<span>Membersihkan...</span>';
+      try {
+        const res = await window.megabox.clearCache();
+        if (res.success) {
+          clearCacheMsg.style.display = 'block';
+          clearCacheMsg.style.color = '#22c55e';
+          clearCacheMsg.textContent = '[+] Cache Chromium & GPU berhasil dikosongkan!';
+        } else {
+          clearCacheMsg.style.display = 'block';
+          clearCacheMsg.style.color = '#ef4444';
+          clearCacheMsg.textContent = '[-] Gagal: ' + res.error;
+        }
+      } catch (err) {
+        clearCacheMsg.style.display = 'block';
+        clearCacheMsg.style.color = '#ef4444';
+        clearCacheMsg.textContent = '[-] Error: ' + err.message;
+      } finally {
+        btnClearCache.disabled = false;
+        btnClearCache.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg><span>Bersihkan Cache</span>';
+        // Clear cache message stays visible until modal closes
+      }
+    };
+  }
+
   if (btnSettings && settingsModal) {
     btnSettings.onclick = async () => {
       settingsModal.style.display = 'flex';
+      switchSettingsTab('general');
+      await loadSystemSettings();
       await refreshSyncUI();
     };
     if (btnSettingsClose) {

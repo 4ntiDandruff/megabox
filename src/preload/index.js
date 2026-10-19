@@ -16,6 +16,11 @@ contextBridge.exposeInMainWorld('megabox', {
   getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),
   toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
 
+  // Settings & System API
+  getSettings: () => ipcRenderer.invoke('settings:get'),
+  saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
+  clearCache: () => ipcRenderer.invoke('system:clear-cache'),
+
   // Cloud Sync API
   getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
   loginSync: (email, password) => ipcRenderer.invoke('sync:login', { email, password }),

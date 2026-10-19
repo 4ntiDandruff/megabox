@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
-const { initDatabase, getApps, saveApp, deleteApp, reorderApp } = require('./db.js');
+const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const sync = require('./sync-client.js');
 const extensionsManager = require('./extensions-manager.js');
@@ -157,9 +157,12 @@ function createWindow() {
 
   mainWindow.on('close', (event) => {
     if (!isQuitting) {
-      event.preventDefault();
-      mainWindow.hide();
-      return false;
+      const currentSettings = db ? getSettings(db) : { close_to_tray: true };
+      if (currentSettings.close_to_tray !== false) {
+        event.preventDefault();
+        mainWindow.hide();
+        return false;
+      }
     }
   });
 }
@@ -476,6 +479,40 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
+
+
+  // System Settings IPC Handlers
+  ipcMain.handle('settings:get', () => {
+    return getSettings(db);
+  });
+
+  ipcMain.handle('settings:save', (_, newSettings) => {
+    const updated = saveSettings(db, newSettings);
+    // Apply autostart if toggled
+    if (typeof newSettings.autostart === 'boolean') {
+      try {
+        app.setLoginItemSettings({
+          openAtLogin: newSettings.autostart,
+          path: process.execPath,
+          args: [path.join(__dirname, '../../')]
+        });
+      } catch (err) {
+        console.warn('[Autostart] setLoginItemSettings error:', err.message);
+      }
+    }
+    return updated;
+  });
+
+  ipcMain.handle('system:clear-cache', async () => {
+    try {
+      if (session.defaultSession) {
+        await session.defaultSession.clearCache();
+      }
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
 
   // Universal Keyboard Shortcut Interceptor for Main Window and all Guest Webviews
   function handleInputShortcut(input) {

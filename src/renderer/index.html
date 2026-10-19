@@ -988,6 +988,50 @@
       transform: translateX(16px);
     }
 
+  
+    /* Flat Toggle Switch for Settings Modal */
+    .flat-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      cursor: pointer;
+    }
+    .flat-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+    .flat-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #3f3f46;
+      transition: background-color .2s;
+      border-radius: 24px;
+    }
+    .flat-slider::before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #ffffff;
+      transition: transform .2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+    }
+    .flat-switch input:checked + .flat-slider {
+      background-color: #22c55e !important;
+    }
+    .flat-switch input:checked + .flat-slider::before {
+      transform: translateX(20px);
+    }
+    .settings-tab-btn:hover {
+      background: #27272a !important;
+      color: #fff !important;
+    }
   </style>
 </head>
 <body>
@@ -1176,88 +1220,182 @@
 
 
 
-  <!-- Settings & Preferences Modal (Ferdium / Rambox Clean Panel) -->
+  <!-- Settings & Preferences Modal (Pure Flat Slate Architecture) -->
   <div id="settings-modal" class="modal-overlay">
-    <div class="modal-box-catalog" style="max-width: 640px;">
-      <div class="catalog-header">
+    <div class="modal-box-catalog" style="max-width: 680px; min-height: 540px; max-height: 85vh; display: flex; flex-direction: column;">
+      
+      <!-- Modal Header -->
+      <div class="catalog-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
         <div class="catalog-title-row">
-          <div class="catalog-title">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="catalog-title" style="display:flex; align-items:center; gap:10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span>Pengaturan</span>
+            <span style="font-weight:700; font-size:16px; letter-spacing:0.2px;">Pengaturan Sistem</span>
           </div>
           <button id="btn-settings-close" class="catalog-close">&times;</button>
         </div>
+
+        <!-- Navigation Tabs inside Settings Modal -->
+        <div style="display:flex; gap:6px; margin-top:14px;">
+          <button id="tab-nav-general" type="button" class="settings-tab-btn is-active" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.12); cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Umum & Sistem</span>
+          </button>
+          <button id="tab-nav-sync" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+            <span>Cloud Megapass</span>
+          </button>
+          <button id="tab-nav-about" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span>Tentang</span>
+          </button>
+        </div>
       </div>
 
-      <div style="padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+      <!-- Tab Content Area -->
+      <div style="flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:20px;">
         
-        <!-- General Section -->
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Manajemen Memori</h4>
+        <!-- SECTION 1: UMUM & SISTEM -->
+        <div id="section-settings-general" style="display:flex; flex-direction:column; gap:16px;">
           
-
-
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#1e1e1e; padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
-            <div>
-              <div style="font-weight:600; font-size:14px;">Hemat Memori</div>
-              <div style="font-size:12px; color:var(--text-muted);">Tidurkan tab saat tidak aktif</div>
+          <!-- Hibernation Setting -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div style="max-width:380px;">
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Hemat Memori (Hibernasi Otomatis)</div>
+              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
             </div>
-            <span style="font-size:12px; background:rgba(92,184,92,0.15); color:var(--brand-success); padding:3px 10px; border-radius:12px; border:1px solid rgba(92,184,92,0.3); font-weight:600;">15 Menit</span>
+            <select id="setting-hibernate-timeout" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
+              <option value="5">5 Menit</option>
+              <option value="15" selected>15 Menit (Bawaan)</option>
+              <option value="30">30 Menit</option>
+              <option value="60">1 Jam</option>
+              <option value="0">Nonaktifkan (Selalu Aktif)</option>
+            </select>
           </div>
+
+          <!-- Close Action Setting -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div style="max-width:380px;">
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Perilaku Tombol Tutup [x]</div>
+              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+            </div>
+            <select id="setting-close-action" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
+              <option value="tray" selected>Sembunyikan ke Tray</option>
+              <option value="quit">Keluar dari Aplikasi</option>
+            </select>
+          </div>
+
+          <!-- Startup Setting -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div style="max-width:380px;">
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Mulai Otomatis Saat Login</div>
+              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+            </div>
+            <label class="flat-switch">
+              <input type="checkbox" id="setting-autostart">
+              <span id="slider-autostart" class="flat-slider"></span>
+            </label>
+          </div>
+
+          <!-- Maintenance / Flush Cache -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <div style="max-width:380px;">
+              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Pembersih Cache Web & GPU</div>
+              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+            </div>
+            <button id="btn-clear-cache" type="button" style="display:flex; align-items:center; gap:6px; padding:7px 12px; background:#27272a; color:#f4f4f5; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+              <span>Bersihkan Cache</span>
+            </button>
+          </div>
+          <div id="clear-cache-msg" style="font-size:11px; display:none;"></div>
+
         </div>
 
-        <!-- Sinkronisasi Akun (SaaS Multi-Device) -->
-        <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- SECTION 2: CLOUD MEGAPASS -->
+        <div id="section-settings-sync" style="display:none; flex-direction:column; gap:14px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h4 style="font-size:13px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; letter-spacing:0.5px; margin:0;">Sinkronisasi Akun</h4>
-            <span id="sync-badge-status" style="font-size:11px; padding:2px 8px; border-radius:12px; background:rgba(255,255,255,0.08); color:var(--text-muted); font-weight:600;">Belum Terhubung</span>
+            <div style="font-size:13px; font-weight:600; color:#f4f4f5;">Status Sinkronisasi</div>
+            <span id="sync-badge-status" style="font-size:11px; padding:3px 10px; border-radius:12px; background:rgba(255,255,255,0.08); color:#a1a1aa; font-weight:600; border:1px solid rgba(255,255,255,0.1);">Belum Terhubung</span>
           </div>
 
           <!-- Logged Out State: Auth Form -->
-          <div id="sync-auth-box" style="background:#1e1e1e; padding:16px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-              Sinkronkan urutan tab, custom proxy, dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% aman di laptop ini.
+          <div id="sync-auth-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
+              Sinkronkan urutan tab dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% tersimpan aman di perangkat lokal ini.
             </div>
             
-            <div style="display:flex; gap:8px;">
-              <input type="email" id="sync-input-email" placeholder="Email akun Megabox" style="flex:1; padding:8px 12px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px;">
-              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:8px 12px; border-radius:6px; background:#2a2a2a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px;">
+            <div style="display:flex; gap:10px;">
+              <input type="email" id="sync-input-email" placeholder="Email akun Megabox" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
+              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
             </div>
 
-            <div style="display:flex; gap:8px; align-items:center;">
-              <button id="btn-sync-login" type="button" style="flex:1; padding:8px 14px; background:var(--brand-primary); color:#fff; border:none; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Masuk Cloud</button>
-              <button id="btn-sync-register" type="button" style="flex:1; padding:8px 14px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Daftar Baru</button>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button id="btn-sync-login" type="button" style="flex:1; padding:9px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Masuk Cloud</button>
+              <button id="btn-sync-register" type="button" style="flex:1; padding:9px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Daftar Akun Baru</button>
             </div>
             <div id="sync-auth-msg" style="font-size:12px; display:none;"></div>
           </div>
 
           <!-- Logged In State: Connected Info & Actions -->
-          <div id="sync-connected-box" style="background:#1e1e1e; padding:16px; border-radius:10px; border:1px solid rgba(92,184,92,0.25); display:none; flex-direction:column; gap:12px;">
+          <div id="sync-connected-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(34,197,94,0.3); display:none; flex-direction:column; gap:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
                 <div id="sync-user-email" style="font-weight:700; font-size:14px; color:#fff;">user@domain.com</div>
-                <div id="sync-time-info" style="font-size:11px; color:var(--text-muted); margin-top:2px;">Tersinkron: Baru saja</div>
+                <div id="sync-time-info" style="font-size:11px; color:#a1a1aa; margin-top:3px;">Sinkron terakhir: Baru saja</div>
               </div>
-              <span id="sync-tier-badge" style="font-size:11px; background:rgba(114,102,240,0.2); color:var(--brand-primary); padding:3px 10px; border-radius:12px; border:1px solid rgba(114,102,240,0.4); font-weight:700; text-transform:uppercase;">Free Plan</span>
+              <span id="sync-tier-badge" style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700; text-transform:uppercase;">Free Plan</span>
             </div>
 
-            <div style="display:flex; gap:8px; margin-top:4px;">
-              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unggah</button>
-              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unduh</button>
-              <button id="btn-sync-logout" type="button" style="padding:7px 12px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
+            <div style="display:flex; gap:10px; margin-top:4px;">
+              <button id="btn-sync-manual-push" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unggah ke Cloud</button>
+              <button id="btn-sync-manual-pull" type="button" style="flex:1; padding:8px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Unduh dari Cloud</button>
+              <button id="btn-sync-logout" type="button" style="padding:8px 14px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
             </div>
-            <div id="sync-op-msg" style="font-size:11px; color:var(--text-muted);"></div>
+            <div id="sync-op-msg" style="font-size:11px; color:#a1a1aa;"></div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: TENTANG APLIKASI -->
+        <div id="section-settings-about" style="display:none; flex-direction:column; gap:14px;">
+          <div style="background:#18181b; padding:20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <img src="assets/megabox.png" style="width:48px; height:48px; border-radius:10px; background:#27272a; padding:6px; border:1px solid rgba(255,255,255,0.1);">
+              <div>
+                <div style="font-size:16px; font-weight:700; color:#fff;">Megabox Multi-App Workspace</div>
+                <div style="font-size:12px; color:#3b82f6; font-weight:600; margin-top:2px;">Versi 1.3.2 (Production Build)</div>
+              </div>
+            </div>
+            
+            <div style="font-size:12px; color:#a1a1aa; line-height:1.6; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+              Ruang kerja aplikasi multi-layanan zero-bloat tanpa langganan premium, dioptimalkan khusus untuk kestabilan Linux Wayland (KDE Plasma) dan perlindungan pemadaman listrik tiba-tiba (SQLite WAL / Atomic Safe State).
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:6px; font-size:11px;">
+              <div style="background:#27272a; padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); color:#a1a1aa;">
+                <span style="color:#71717a; display:block;">Arsitektur Tampilan:</span>
+                <span style="color:#f4f4f5; font-weight:600;">Pure Flat Slate (No Glass / No Glow)</span>
+              </div>
+              <div style="background:#27272a; padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); color:#a1a1aa;">
+                <span style="color:#71717a; display:block;">Penyimpanan Konfigurasi:</span>
+                <span style="color:#f4f4f5; font-weight:600;">Atomic JSON / SQLite WAL</span>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <div class="modal-actions" style="padding:16px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#1d1d1d;">
-        <button id="btn-settings-done" class="btn-submit" style="width:100%;">Simpan</button>
+      <!-- Modal Footer -->
+      <div class="modal-actions" style="padding:14px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#18181b; display:flex; justify-content:space-between; align-items:center;">
+        <span id="settings-status-save" style="font-size:12px; color:#22c55e; font-weight:600; display:none;">Tersimpan otomatis</span>
+        <div style="display:flex; gap:10px; margin-left:auto;">
+          <button id="btn-settings-done" type="button" style="padding:8px 20px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Tutup</button>
+        </div>
       </div>
+
     </div>
   </div>
 
