@@ -1,12 +1,11 @@
+# <div align="center">Megabox</div>
+
 <div align="center">
 
-# Megabox
+**Ruang Kerja Multi-Aplikasi Linux Zero-Bloat: Stabilitas Solid di Wayland Tanpa Beban Langganan**
 
-### Solusi Ruang Kerja Multi-Layanan Ringan & Tangguh untuk Linux
-**Fitur Kelas Pro Tanpa Langganan • Stabil & Kebal Macet di KDE Wayland • Ikon Presisi Homarr**
-
-[![Platform](https://img.shields.io/badge/Platform-Linux%20(Wayland%20%7C%20X11)-22D3EE?style=flat-square&logo=linux&logoColor=white)](https://github.com/4ntiDandruff/megabox)
-[![Desktop](https://img.shields.io/badge/Desktop-KDE%20Wayland%20Native-7266F0?style=flat-square&logo=kde&logoColor=white)](https://kde.org/)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20Wayland%20%7C%20X11-blue.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
+[![Engine](https://img.shields.io/badge/Engine-Electron%2033%20%2B%20Ozone-purple.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
 [![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](LICENSE)
 [![Zero-Bloat](https://img.shields.io/badge/Zero--Bloat-Vanilla%20DOM-orange.svg?style=flat-square)](https://github.com/4ntiDandruff/megabox)
 
@@ -17,29 +16,30 @@
 ## 1. Topologi Sirkuit Megabox
 
 ```
- ┌────────────────────────────────────────────────────────────────────────┐
- │                      MEGABOX RUNTIME ARCHITECTURE                      │
- └────────────────────────────────────────────────────────────────────────┘
-                                    │
-    ┌───────────────────────────────┴───────────────────────────────┐
-    ▼                                                               ▼
+ +------------------------------------------------------------------------+
+ |                      MEGABOX RUNTIME ARCHITECTURE                      |
+ +------------------------------------------------------------------------+
+                                    |
+    +-------------------------------+-------------------------------+
+    v                                                               v
  [ RAMBOX HARDENED ENGINE ]                      [ FERDIUM & HOMARR ECOSYSTEM ]
- - Chrome 128 User-Agent (Anti-Block)            - 459+ Database Layanan Teruji
- - Shared Workspace (Cookie & SSO)               - 3.650+ Dashboard Vector Icons
- - Master Lock PIN (Layar Terkunci)              - Cache Favicon Scraping Mandiri
-    │                                                               │
-    └───────────────────────────────┬───────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────┐
-                │        ELECTRON LINUX RUNTIME         │
-                ├───────────────────────────────────────┤
-                │ • Socket Ozone Wayland Auto-Detect    │
-                │ • Vanilla DOM State (Nol React/Vite)  │
-                │ • Atomic JSON POSIX Store (Anti-Korup)│
-                │ • Hibernasi RAM Idle Tab (Hemat 78%)  │
-                │ • Base Shell RAM: ~85MB (Cold Start)  │
-                └───────────────────────────────────────┘
+ - Chrome 133 User-Agent (Anti-Block)            - 481 Database Layanan Teruji
+ - Multi-Instance & Multi-Akun Otomatis          - 31 Ekosistem AI (Muse, v0, Bolt)
+ - Master Lock PIN (Layar Terkunci)              - Auto-Favicon Cache ke DB
+    |                                                               |
+    +-------------------------------+-------------------------------+
+                                    |
+                                    v
+                +---------------------------------------+
+                |        ELECTRON LINUX RUNTIME         |
+                +---------------------------------------+
+                | * Socket Ozone Wayland Auto-Detect    |
+                | * Pure Flat UI (Nol Glow/Glassmorphism|
+                | * Vanilla DOM State (Nol React/Vite)  |
+                | * Atomic JSON POSIX Store (Anti-Korup)|
+                | * Hibernasi RAM Idle Tab (Hemat 78%)  |
+                | * Base Shell RAM: ~85MB (Cold Start)  |
+                +---------------------------------------+
 ```
 
 ---
@@ -49,30 +49,32 @@
 Bagi pengguna Linux, khususnya desktop modern **KDE Plasma Wayland**, membuka puluhan aplikasi komunikasi dan dashboard server (WhatsApp, Telegram, Discord, CCTV, Proxmox, Google Password Manager) memicu dua dilema besar:
 
 1. **Rambox (Jebakan Paywall & Berlangganan)**:
-   - Fitur esensial seperti pembatasan jumlah tab aplikasi, hibernasi penghemat RAM, dan isolasi proxy dikunci di balik biaya langganan tahunan.
+   - Fitur esensial seperti pembatasan jumlah tab aplikasi, multi-akun mandiri, hibernasi penghemat RAM, dan isolasi proxy dikunci di balik biaya langganan tahunan.
 2. **Ferdium (Drama Macet & Berat di Wayland)**:
    - Sering mengalami freeze rendering di KDE Wayland, tab loncat, WebAuthn mogok, dan beban memori shell membengkak hingga di atas 400MB hanya untuk kerangka React/MobX.
 
-**Megabox adalah solusi meja kerja**: Menggabungkan ketahanan bypass Rambox, kekayaan 459+ resep Ferdium, dan koleksi ikon Homarr Dashboard Icons. Semuanya dirangkai dalam antarmuka **Vanilla DOM murni** yang ringkas, super cepat, dan 100% stabil di Linux Wayland.
+**Megabox adalah solusi meja kerja**: Menggabungkan ketahanan bypass Rambox, kekayaan 481 resep katalog layanan terverifikasi (termasuk 31 ekosistem AI modern seperti Muse AI, v0 by Vercel, Bolt.new, Groq, Midjourney), dan koleksi ikon Homarr Dashboard Icons. Semuanya dirangkai dalam antarmuka **Pure Flat Utilitarian** dan **Vanilla DOM murni** yang ringkas, super cepat, dan 100% stabil di Linux Wayland.
 
 ---
 
 ## 3. Bedah Komponen Teknis (Yang Artinya...)
 
+- **Pure Flat Utilitarian Interface**:
+  * *Yang artinya:* Seluruh efek blur kaca (glassmorphism), gradien warna semu, dan glow box-shadow ungu telah dibersihkan tuntas. Tampilan menggunakan latar pekat solid dengan garis batas 1px yang tegas dan bersih, tidak membuat mata cepat lelah di meja servis.
+- **Form Pemasangan 2-Input & Auto Sesi Pribadi**:
+  * *Yang artinya:* Menambah aplikasi web kustom kini instan tanpa dropdown teknis yang membingungkan. Cukup masukkan nama dan tautan web, sistem otomatis mengatur partisi sesi pribadi terisolasi agar login multi-akun tidak saling tertimpa.
+- **Auto-Generate Favicon Cache ke Database**:
+  * *Yang artinya:* Website custom otomatis mengambil icon resolusi tinggi via Google S2 64px API dan root `/favicon.ico`, mengonversinya menjadi Base64 Data URI, dan menyimpannya permanen di database lokal. Icon tidak pernah hilang saat aplikasi dibuka kembali.
 - **Vanilla DOM State Engine (Nol Framework JS)**:
   * *Yang artinya:* Tidak ada overhead compiler React atau bundler berat. Waktu buka aplikasi langsung instan (<0.6 detik) dan penggunaan memori awal terpangkas hemat hingga ~85MB.
 - **Ozone Wayland Native Socket Detector**:
   * *Yang artinya:* Layar tidak akan berkedip, tidak buram karena scaling XWayland, dan tidak pernah crash saat dipindah antar-monitor.
-- **Shared Workspace & Cookie Sharing**:
-  * *Yang artinya:* Login satu akun Google atau portal SSO kantor langsung aktif di seluruh layanan terkait tanpa perlu ketik ulang sandi berulang kali.
-- **Cache Favicon Cerdas & Vector Lock**:
-  * *Yang artinya:* Website custom otomatis menyimpan favicon unik tanpa reset saat restart, sementara layanan resmi (seperti Google Password Manager) terkunci paten dengan ikon multi-warna aslinya tanpa tertimpa logo G.
 - **Atomic POSIX Storage (`megabox-config.json`)**:
   * *Yang artinya:* Pengaturan dan tab Anda aman 100% dari kerusakan berkas nol-byte meskipun listrik ruko tiba-tiba padam saat aplikasi sedang aktif.
 
 ---
 
-## 4. Metrik Tolok Ukur Hardware (AMD Ryzen 2200G • Kubuntu Wayland)
+## 4. Metrik Tolok Ukur Hardware (AMD Ryzen 2200G - Kubuntu Wayland)
 
 Pengujian beban kerja nyata pada desktop harian:
 
@@ -82,7 +84,8 @@ Pengujian beban kerja nyata pada desktop harian:
 | **Kestabilan Wayland** | Rawan tearing XWayland | Sering freeze socket | **Stabil Native Ozone Socket** |
 | **Beban RAM Awal** | ~380 MB | ~420 MB | **~85 MB (Pangkas 78%)** |
 | **Waktu Cold Start** | ~4.2 detik | ~5.1 detik | **< 0.6 detik** |
-| **Pilihan Layanan** | Dibatasi paket trial | 440+ Layanan | **459+ Layanan + Custom Web** |
+| **Pilihan Layanan** | Dibatasi paket trial | 440+ Layanan | **481 Layanan + Auto Favicon** |
+| **Gaya Antarmuka** | Berwarna & Glow | Kaca / Glassmorphism | **Pure Flat Utilitarian** |
 | **Bahasa Antarmuka** | Inggris Campur | Inggris | **Bahasa Indonesia Ringkas (<=2 Kata)** |
 
 ---
@@ -92,21 +95,21 @@ Pengujian beban kerja nyata pada desktop harian:
 ```
 megabox/
 ├── megabox-launcher.sh      # Skrip peluncur pintar (auto-detect Wayland/X11)
-├── package.json             # Konfigurasi dependensi Electron
+├── package.json             # Konfigurasi dependensi Electron v1.3.0
 ├── src/
 │   ├── main/                # Backend proses Electron
-│   │   ├── index.js         # Lifecycle window, IPC gateway, & proxy routing
+│   │   ├── index.js         # Lifecycle window, IPC gateway, & auto favicon resolver
 │   │   ├── db.js            # Penyimpanan atomic POSIX JSON
 │   │   ├── extensions.js    # Pengelola ekstensi WebExtensions
 │   │   └── sync-client.js   # Protokol sinkronisasi profil multi-perangkat
 │   ├── preload/
 │   │   └── index.js         # Jembatan IPC aman (contextBridge)
 │   └── renderer/            # Tampilan antarmuka pengguna
-│       ├── index.html       # Struktur antarmuka ringkas Bahasa Indonesia
+│       ├── index.html       # Struktur antarmuka flat murni Bahasa Indonesia
 │       ├── app.js           # Pengendali tab, modal, context menu, & favicons
 │       └── assets/
-│           ├── icons/       # Koleksi 450+ vektor SVG resmi Homarr
-│           └── recipes-catalog.json # Katalog database 459+ resep layanan
+│           ├── icons/       # Koleksi 480+ vektor SVG resmi Homarr & AI
+│           └── recipes-catalog.json # Katalog database 481 resep layanan
 ```
 
 ---
@@ -125,6 +128,7 @@ bash megabox-launcher.sh
 
 ### Tombol Pintas Meja Kerja
 - `Alt + 1` s/d `Alt + 9` : Pindah cepat antar-layanan aktif
+- `Alt + Panah Atas / Bawah` : Pindah urutan tab naik atau turun
 - `Ctrl + K` / `Ctrl + P` : Buka bilah pencarian layanan (Pindah Cepat)
 - `Ctrl + L` : Gembok workstation seketika (PIN Default: `1234`)
 - `Ctrl + R` : Muat ulang layanan aktif
@@ -136,10 +140,11 @@ bash megabox-launcher.sh
 
 - [x] Kerangka kerja Vanilla DOM ultra-ringan pengganti React/MobX
 - [x] Akselerasi Ozone Wayland native anti-crash di Linux
-- [x] Partisi bersama (*Shared Workspace*) untuk auto-login Google SSO
-- [x] Pustaka ikon 450+ SVG resolusi tinggi Homarr Dashboard Icons
-- [x] Cache favicon cerdas untuk website custom
-- [x] Audit copywriting antarmuka maksimal 2 kata Bahasa Indonesia
+- [x] Antarmuka Pure Flat Utilitarian (Pembersihan tuntas efek glow dan glassmorphism)
+- [x] Multi-akun & multi-instance tanpa batas dengan partisi otomatis
+- [x] Pustaka ikon 480+ SVG resolusi tinggi dan ekspansi 31 layanan AI (Muse AI, v0, Bolt, Groq)
+- [x] Auto-generate favicon dan penyimpanan permanen ke database lokal
+- [x] Simplifikasi form konfigurasi menjadi 2-input ringkas
 - [ ] Profil terenkripsi mandiri via SQLite WAL
 - [ ] Mode picture-in-picture mengambang untuk pemantau CCTV meja servis
 
@@ -147,7 +152,7 @@ bash megabox-launcher.sh
 
 <div align="center">
 
-**Megapass Intra Solusindo • Sidoarjo, Indonesia**  
+**Megapass Intra Solusindo * Sidoarjo, Indonesia**  
 *Membangun software dengan ketelitian logika teknisi perangkat keras: Ringan, Tangguh, dan Nol-Bloat.*
 
 </div>
