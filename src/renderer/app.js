@@ -1420,32 +1420,22 @@
   const btnResetAvatar = document.getElementById('btn-reset-avatar');
   const inputAvatarFile = document.getElementById('input-avatar-file');
 
+  const DEFAULT_MEGABOX_AVATAR = 'assets/megabox.png';
+
   function renderAvatar(dataUrl) {
-    if (dataUrl) {
-      if (sidebarAvatarImg) {
-        sidebarAvatarImg.src = dataUrl;
-        sidebarAvatarImg.style.display = 'block';
-      }
-      if (sidebarAvatarDefaultIcon) sidebarAvatarDefaultIcon.style.display = 'none';
+    const avatarSrc = dataUrl || DEFAULT_MEGABOX_AVATAR;
 
-      if (settingsAvatarImg) {
-        settingsAvatarImg.src = dataUrl;
-        settingsAvatarImg.style.display = 'block';
-      }
-      if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'none';
-    } else {
-      if (sidebarAvatarImg) {
-        sidebarAvatarImg.removeAttribute('src');
-        sidebarAvatarImg.style.display = 'none';
-      }
-      if (sidebarAvatarDefaultIcon) sidebarAvatarDefaultIcon.style.display = 'block';
-
-      if (settingsAvatarImg) {
-        settingsAvatarImg.removeAttribute('src');
-        settingsAvatarImg.style.display = 'none';
-      }
-      if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'block';
+    if (sidebarAvatarImg) {
+      sidebarAvatarImg.src = avatarSrc;
+      sidebarAvatarImg.style.display = 'block';
     }
+    if (sidebarAvatarDefaultIcon) sidebarAvatarDefaultIcon.style.display = 'none';
+
+    if (settingsAvatarImg) {
+      settingsAvatarImg.src = avatarSrc;
+      settingsAvatarImg.style.display = 'block';
+    }
+    if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'none';
   }
 
   async function loadInitialAvatar() {

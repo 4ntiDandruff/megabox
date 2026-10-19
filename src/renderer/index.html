@@ -1274,12 +1274,12 @@
     <div class="sidebar-bottom">
       
             <button id="btn-settings" class="profile-avatar-btn" title="Pengaturan Akun" style="position:relative;">
-        <div id="avatar-container" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-          <svg id="avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-primary);">
+        <div id="avatar-container" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:50%;">
+          <svg id="avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:var(--brand-primary);">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
-          <img id="avatar-user-img" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Avatar">
+          <img id="avatar-user-img" src="assets/megabox.png" style="display:block; width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Avatar">
           <span id="avatar-user-initials" class="profile-avatar-initials" style="display:none;">ME</span>
         </div>
 
@@ -1502,8 +1502,8 @@
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 14px;">
               <div id="settings-avatar-preview-box" style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; position: relative;">
-                <svg id="settings-avatar-default-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--brand-primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <img id="settings-avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
+                <svg id="settings-avatar-default-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:var(--brand-primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <img id="settings-avatar-img" src="assets/megabox.png" style="display: block; width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
               </div>
               <div>
                 <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Foto Profil Workspace</div>
