@@ -1032,6 +1032,221 @@
       background: #27272a !important;
       color: #fff !important;
     }
+
+    /* ============================================================ */
+    /* CUPERTINO OBSIDIAN CRYSTAL SETTINGS MODAL (v2.1 Dark Glass)   */
+    /* ============================================================ */
+    .crystal-modal-box {
+      width: 100%;
+      max-width: 680px;
+      min-height: 540px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      background: rgba(22, 22, 26, 0.88);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      box-shadow: 
+        0 24px 60px -12px rgba(0, 0, 0, 0.75),
+        0 8px 24px -4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      color: #f4f4f6;
+    }
+
+    .neo-groove-dark {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .neo-tab-dark {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      background: transparent;
+      color: #94a3b8;
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .neo-tab-dark:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .neo-tab-dark:active {
+      transform: scale(0.97);
+    }
+
+    .neo-tab-dark.is-active {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+    }
+
+    .apple-group-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .apple-setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 16px;
+      transition: background-color 120ms ease;
+    }
+
+    .apple-setting-row:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .apple-setting-row:hover {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .apple-switch-mint {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .apple-switch-mint input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+
+    .apple-slider-mint {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+      border-radius: 24px;
+    }
+
+    .apple-slider-mint::before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+    }
+
+    .apple-switch-mint input:checked + .apple-slider-mint {
+      background-color: #30D158 !important;
+      border-color: #30D158 !important;
+    }
+
+    .apple-switch-mint input:checked + .apple-slider-mint::before {
+      transform: translateX(20px);
+    }
+
+    .apple-select-dark {
+      background: rgba(0, 0, 0, 0.4);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.06);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .apple-select-dark:focus {
+      border-color: #0071E3;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25);
+    }
+
+    .btn-apple-pill-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f4f4f6;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: background-color 120ms ease, border-color 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-apple-pill-dark:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .btn-apple-pill-dark:active {
+      transform: scale(0.97);
+    }
+
+    .btn-apple-blue-solid {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #0071E3;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 2px 6px rgba(0, 113, 227, 0.35);
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: background-color 120ms ease, transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-apple-blue-solid:hover {
+      background: #0077ED;
+    }
+
+    .btn-apple-blue-solid:active {
+      background: #0062C4;
+      transform: scale(0.97);
+    }
+
   </style>
 </head>
 <body>
@@ -1222,241 +1437,268 @@
 
 
 
-  <!-- Settings & Preferences Modal (Pure Flat Slate Architecture) -->
-  <div id="settings-modal" class="modal-overlay">
-    <div class="modal-box-catalog" style="max-width: 680px; min-height: 540px; max-height: 85vh; display: flex; flex-direction: column;">
+  <!-- Settings & Preferences Modal (Cupertino Obsidian Crystal v2.1) -->
+  <div id="settings-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div class="crystal-modal-box">
       
-      <!-- Modal Header -->
-      <div class="catalog-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
-        <div class="catalog-title-row">
-          <div class="catalog-title" style="display:flex; align-items:center; gap:10px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            <span style="font-weight:700; font-size:16px; letter-spacing:0.2px;">Pengaturan Sistem</span>
+      <!-- Modal Header (Frosted Acrylic Top Bar) -->
+      <div style="padding: 18px 24px 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 9px; background: rgba(0, 113, 227, 0.15); border: 1px solid rgba(0, 113, 227, 0.3); display: flex; align-items: center; justify-content: center; color: #0071E3;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </div>
+            <div>
+              <span style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ffffff;">Pengaturan Megabox</span>
+              <div style="font-size: 11px; color: #94a3b8; margin-top: 1px;">Sistem, Profil Cloud, dan Arsitektur</div>
+            </div>
           </div>
-          <button id="btn-settings-close" class="catalog-close">&times;</button>
+          
+          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 120ms ease, color 120ms ease; font-size: 16px; line-height: 1;">&times;</button>
         </div>
 
-        <!-- Navigation Tabs inside Settings Modal -->
-        <div style="display:flex; gap:6px; margin-top:14px;">
-          <button id="tab-nav-general" type="button" class="settings-tab-btn is-active" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.12); cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <!-- Cupertino Segmented Tab Recessed Well -->
+        <div class="neo-groove-dark">
+          <button id="tab-nav-general" type="button" class="neo-tab-dark is-active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
             <span>Umum & Sistem</span>
           </button>
-          <button id="tab-nav-sync" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+          <button id="tab-nav-sync" type="button" class="neo-tab-dark">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
             <span>Cloud Megapass</span>
           </button>
-          <button id="tab-nav-about" type="button" class="settings-tab-btn" style="display:flex; align-items:center; gap:6px; padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:transparent; color:#a1a1aa; border:1px solid transparent; cursor:pointer;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <button id="tab-nav-about" type="button" class="neo-tab-dark">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             <span>Tentang</span>
           </button>
         </div>
       </div>
 
       <!-- Tab Content Area -->
-      <div style="flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:20px;">
+      <div style="flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 18px;">
         
         <!-- SECTION 1: UMUM & SISTEM -->
-        <div id="section-settings-general" style="display:flex; flex-direction:column; gap:16px;">
+        <div id="section-settings-general" style="display: flex; flex-direction: column; gap: 16px;">
           
-          <!-- Hibernation Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Hemat Memori (Hibernasi Otomatis)</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
-            </div>
-            <select id="setting-hibernate-timeout" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
-              <option value="5">5 Menit</option>
-              <option value="15" selected>15 Menit (Bawaan)</option>
-              <option value="30">30 Menit</option>
-              <option value="60">1 Jam</option>
-              <option value="0">Nonaktifkan (Selalu Aktif)</option>
-            </select>
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
+            Performa Host & Perilaku Sistem
           </div>
 
-          <!-- Close Action Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Perilaku Tombol Tutup [x]</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+          <!-- Grouped Island: Mac-Style Setting Inset -->
+          <div class="apple-group-card">
+            
+            <!-- Row 1: Hibernation -->
+            <div class="apple-setting-row">
+              <div style="max-width: 400px;">
+                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+              </div>
+              <select id="setting-hibernate-timeout" class="apple-select-dark">
+                <option value="5">5 Menit</option>
+                <option value="15" selected>15 Menit (Bawaan)</option>
+                <option value="30">30 Menit</option>
+                <option value="60">1 Jam</option>
+                <option value="0">Nonaktifkan (Selalu Aktif)</option>
+              </select>
             </div>
-            <select id="setting-close-action" style="background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; outline:none; cursor:pointer;">
-              <option value="tray" selected>Sembunyikan ke Tray</option>
-              <option value="quit">Keluar dari Aplikasi</option>
-            </select>
-          </div>
 
-          <!-- Startup Setting -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Mulai Otomatis Saat Login</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+            <!-- Row 2: Close Action -->
+            <div class="apple-setting-row">
+              <div style="max-width: 400px;">
+                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+              </div>
+              <select id="setting-close-action" class="apple-select-dark">
+                <option value="tray" selected>Sembunyikan ke Tray</option>
+                <option value="quit">Keluar dari Aplikasi</option>
+              </select>
             </div>
-            <label class="flat-switch">
-              <input type="checkbox" id="setting-autostart">
-              <span id="slider-autostart" class="flat-slider"></span>
-            </label>
-          </div>
 
-          <!-- Maintenance / Flush Cache -->
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#18181b; padding:14px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-            <div style="max-width:380px;">
-              <div style="font-weight:600; font-size:13px; color:#f4f4f5;">Pembersih Cache Web & GPU</div>
-              <div style="font-size:11px; color:#a1a1aa; margin-top:2px; line-height:1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+            <!-- Row 3: Autostart -->
+            <div class="apple-setting-row">
+              <div style="max-width: 400px;">
+                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+              </div>
+              <label class="apple-switch-mint">
+                <input type="checkbox" id="setting-autostart">
+                <span id="slider-autostart" class="apple-slider-mint"></span>
+              </label>
             </div>
-            <button id="btn-clear-cache" type="button" style="display:flex; align-items:center; gap:6px; padding:7px 12px; background:#27272a; color:#f4f4f5; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-              <span>Bersihkan Cache</span>
-            </button>
+
+            <!-- Row 4: Clear Cache -->
+            <div class="apple-setting-row">
+              <div style="max-width: 400px;">
+                <div style="font-weight: 600; font-size: 13px; color: #ffffff;">Pembersih Cache Web & GPU</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+              </div>
+              <button id="btn-clear-cache" type="button" class="btn-apple-pill-dark">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                <span>Bersihkan Cache</span>
+              </button>
+            </div>
+
           </div>
-          <div id="clear-cache-msg" style="font-size:11px; display:none;"></div>
+          <div id="clear-cache-msg" style="font-size: 11px; display: none; padding-left: 4px;"></div>
 
         </div>
 
         <!-- SECTION 2: CLOUD MEGAPASS -->
-        <div id="section-settings-sync" style="display:none; flex-direction:column; gap:14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="font-size:13px; font-weight:600; color:#f4f4f5;">Status Sinkronisasi</div>
-            <span id="sync-badge-status" style="font-size:11px; padding:3px 10px; border-radius:12px; background:rgba(255,255,255,0.08); color:#a1a1aa; font-weight:600; border:1px solid rgba(255,255,255,0.1);">Belum Terhubung</span>
+        <div id="section-settings-sync" style="display: none; flex-direction: column; gap: 14px;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
+              Koneksi & Sinkronisasi Profil
+            </div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #30D158; box-shadow: 0 0 6px #30D158;"></span>
+              <span id="sync-badge-status" style="font-size: 11px; color: #f4f4f6; font-weight: 600;">Belum Terhubung</span>
+            </div>
           </div>
 
           <!-- Logged Out State: Auth Form -->
-          <div id="sync-auth-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
+          <div id="sync-auth-box" class="apple-group-card" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
               Sinkronkan urutan tab dan preferensi antar-PC otomatis via Cloud Megapass. Sesi chat & cookie tetap 100% tersimpan aman di perangkat lokal ini.
             </div>
             
-            <div style="display:flex; gap:10px;">
-              <input type="email" id="sync-input-email" placeholder="nama@gmail.com" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
-              <input type="password" id="sync-input-password" placeholder="Password" style="flex:1; padding:9px 12px; border-radius:6px; background:#27272a; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; outline:none;">
+            <div style="display: flex; gap: 10px;">
+              <input type="email" id="sync-input-email" placeholder="nama@gmail.com" class="apple-select-dark" style="flex: 1; padding: 9px 12px; font-size: 13px;">
+              <input type="password" id="sync-input-password" placeholder="Password" class="apple-select-dark" style="flex: 1; padding: 9px 12px; font-size: 13px;">
             </div>
 
-            <div style="display:flex; gap:10px; align-items:center;">
-              <button id="btn-sync-login" type="button" style="flex:1; padding:9px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Masuk Cloud</button>
-              <button id="btn-sync-register" type="button" style="flex:1; padding:9px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Daftar Akun Baru</button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button id="btn-sync-login" type="button" class="btn-apple-blue-solid" style="flex: 1;">Masuk Cloud</button>
+              <button id="btn-sync-register" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center;">Daftar Akun Baru</button>
             </div>
-            <div id="sync-auth-msg" style="font-size:12px; display:none;"></div>
+            <div id="sync-auth-msg" style="font-size: 12px; display: none;"></div>
           </div>
 
-          <!-- Logged In State: Connected Info & Actions -->
-          <div id="sync-connected-box" style="background:#18181b; padding:16px; border-radius:8px; border:1px solid rgba(34,197,94,0.3); display:none; flex-direction:column; gap:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <div id="sync-user-email" style="font-weight:700; font-size:14px; color:#fff;">user@domain.com</div>
-                <div id="sync-time-info" style="font-size:11px; color:#a1a1aa; margin-top:3px;">Sinkron terakhir: Baru saja</div>
+          <!-- Logged In State: Connected Telemetry Plaque -->
+          <div id="sync-connected-box" class="apple-group-card" style="padding: 18px; border: 1px solid rgba(48, 209, 88, 0.35); background: linear-gradient(180deg, rgba(48, 209, 88, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%); display: none; flex-direction: column; gap: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(48, 209, 88, 0.15); border: 1px solid rgba(48, 209, 88, 0.3); display: flex; align-items: center; justify-content: center; color: #30D158;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div>
+                  <div id="sync-user-email" style="font-weight: 700; font-size: 14px; color: #ffffff;">user@domain.com</div>
+                  <div id="sync-time-info" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Sinkron terakhir: Baru saja</div>
+                </div>
               </div>
-              <span id="sync-tier-badge" style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700; text-transform:uppercase;">Free Plan</span>
+              <span id="sync-tier-badge" style="font-size: 11px; background: rgba(0, 113, 227, 0.18); color: #64D2FF; padding: 4px 12px; border-radius: 9999px; border: 1px solid rgba(0, 113, 227, 0.4); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">PRO PLAN</span>
             </div>
 
-            <div style="display:flex; gap:10px; margin-top:4px;">
-              <button id="btn-sync-now" type="button" style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:9px 16px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:background 0.15s;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                <span>Sinkron</span>
+            <div style="display: flex; gap: 10px; margin-top: 2px;">
+              <button id="btn-sync-now" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 9px 16px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span>Sinkron Sekarang</span>
               </button>
-              <button id="btn-sync-logout" type="button" style="padding:9px 16px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">Keluar</button>
+              <button id="btn-sync-logout" type="button" style="padding: 9px 16px; background: rgba(255, 55, 95, 0.12); color: #FF375F; border: 1px solid rgba(255, 55, 95, 0.25); border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 120ms ease;">Keluar</button>
             </div>
-            <div id="sync-op-msg" style="font-size:11px; color:#a1a1aa;"></div>
+            <div id="sync-op-msg" style="font-size: 11px; color: #94a3b8;"></div>
           </div>
+
         </div>
 
         <!-- SECTION 3: TENTANG APLIKASI (PROFIL REKAYASA & MEGAPASS) -->
-        <div id="section-settings-about" style="display:none; flex-direction:column; gap:16px;">
+        <div id="section-settings-about" style="display: none; flex-direction: column; gap: 16px;">
           
           <!-- Card 1: Produk & Identitas Rekayasa -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <img src="assets/megabox.png" style="width:46px; height:46px; border-radius:10px; background:#27272a; padding:6px; border:1px solid rgba(255,255,255,0.1);">
+          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <img src="assets/megabox.png" style="width: 46px; height: 46px; border-radius: 12px; background: rgba(255,255,255,0.06); padding: 6px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                 <div>
-                  <div style="font-size:16px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                  <div style="font-size: 16px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px;">
                     <span>Megabox Workspace</span>
-                    <span style="font-size:10px; padding:2px 8px; border-radius:10px; background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.3); font-weight:700;">v1.3.3 PROD</span>
+                    <span style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(48,209,88,0.15); color: #30D158; border: 1px solid rgba(48,209,88,0.3); font-weight: 700;">v1.3.3 PROD</span>
                   </div>
-                  <div style="font-size:12px; color:#a1a1aa; margin-top:2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
+                  <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Beban RAM Terukur</div>
                 </div>
               </div>
-              <button id="btn-about-github" type="button" style="display:flex; align-items:center; gap:6px; padding:6px 12px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;">
+              <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 5px 12px; font-size: 11px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                 <span>GitHub Repo</span>
               </button>
             </div>
             
-            <div style="font-size:12px; color:#d4d4d8; line-height:1.6; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
+            <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
               Workspace multi-aplikasi zero-bloat: sintesis fitur Rambox & Ferdium hemat resource, kebal pemadaman daya via <strong>SQLite WAL</strong>, dan native Wayland.
             </div>
 
-            <!-- Arsitektur Badge Grid -->
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:2px;">
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Tampilan</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Pure Flat Slate</div>
+            <!-- Bento Badge Grid -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px;">
+              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Tampilan</div>
+                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Obsidian Crystal</div>
               </div>
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Ketahanan Daya</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">Power-Loss Proof</div>
+              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Ketahanan Daya</div>
+                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">Power-Loss Proof</div>
               </div>
-              <div style="background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <div style="color:#71717a; font-size:10px; text-transform:uppercase; font-weight:700;">Lisensi</div>
-                <div style="color:#f4f4f5; font-size:11px; font-weight:600; margin-top:1px;">MIT Open Source</div>
+              <div style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <div style="color: #64748b; font-size: 10px; text-transform: uppercase; font-weight: 700;">Lisensi</div>
+                <div style="color: #f4f4f6; font-size: 11px; font-weight: 600; margin-top: 1px;">MIT Open Source</div>
               </div>
             </div>
           </div>
 
           <!-- Card 2: Profil Teknisi & Kredensial Resmi -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-size:14px; font-weight:700; color:#fff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
-                <div style="font-size:11px; color:#a1a1aa; margin-top:2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+                <div style="font-size: 14px; font-weight: 700; color: #ffffff;">Arsitek & Kepala Teknisi: Hizam Nahari</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
               </div>
-              <span style="font-size:11px; background:rgba(59,130,246,0.15); color:#60a5fa; padding:3px 10px; border-radius:12px; border:1px solid rgba(59,130,246,0.3); font-weight:700;">BNSP & BMY Certified</span>
+              <span style="font-size: 11px; background: rgba(0, 113, 227, 0.15); color: #64D2FF; padding: 3px 10px; border-radius: 9999px; border: 1px solid rgba(0, 113, 227, 0.3); font-weight: 700;">BNSP & BMY Certified</span>
             </div>
 
-            <div style="font-size:12px; color:#d4d4d8; line-height:1.6;">
+            <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
               Dibuat oleh praktisi hardware bersertifikasi: spesialis motherboard chip-level, injeksi tegangan, flash EEPROM, dan sysadmin Linux bare-metal.
             </div>
 
             <!-- List Kredensial Terverifikasi -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BNSP Reparasi Ponsel</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">BNSP Reparasi Ponsel</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">BMY Motherboard Laptop</div>
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">BMY Motherboard Laptop</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">10 Sertifikasi Resmi</div>
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">10 Sertifikasi Resmi</div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; background:#27272a; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                <div style="font-size:11px; color:#f4f4f5; font-weight:600;">12+ Tahun Pengalaman</div>
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <div style="font-size: 11px; color: #f4f4f6; font-weight: 600;">12+ Tahun Pengalaman</div>
               </div>
             </div>
           </div>
 
-          <!-- Card 3: Soft-Selling Solusi & Layanan Servis Megapass -->
-          <div style="background:#18181b; padding:18px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px;">
-            <div style="font-size:13px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.5px;">Solusi Teknis & Servis Profesional Megapass</div>
+          <!-- Card 3: Solusi & Layanan Servis Megapass -->
+          <div class="apple-group-card" style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 13px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em;">Solusi Teknis & Servis Profesional Megapass</div>
             
-            <div style="font-size:12px; color:#a1a1aa; line-height:1.5;">
+            <div style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
               Melayani servis motherboard laptop, perbaikan smartphone, pemulihan sistem OS, dan arsitektur IT efisien di Sidoarjo serta remote mesh.
             </div>
 
             <!-- Call-to-Action Link Buttons -->
-            <div style="display:flex; gap:10px; margin-top:4px;">
-              <button id="btn-about-portfolio" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#3b82f6; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+            <div style="display: flex; gap: 10px; margin-top: 4px;">
+              <button id="btn-about-portfolio" type="button" class="btn-apple-blue-solid" style="flex: 1; padding: 9px 14px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                <span>Lihat Portofolio & Sertifikat</span>
+                <span>Portofolio & Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" style="flex:1; display:flex; justify-content:center; align-items:center; gap:8px; padding:10px 14px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="flex: 1; justify-content: center; padding: 9px 14px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>Kunjungi megapass.web.id</span>
+                <span>megapass.web.id</span>
               </button>
             </div>
           </div>
@@ -1465,11 +1707,14 @@
 
       </div>
 
-      <!-- Modal Footer -->
-      <div class="modal-actions" style="padding:14px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#18181b; display:flex; justify-content:space-between; align-items:center;">
-        <span id="settings-status-save" style="font-size:12px; color:#22c55e; font-weight:600; display:none;">Tersimpan otomatis</span>
-        <div style="display:flex; gap:10px; margin-left:auto;">
-          <button id="btn-settings-done" type="button" style="padding:8px 20px; background:#27272a; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; font-weight:600; font-size:13px; cursor:pointer;">Tutup</button>
+      <!-- Modal Footer (Acrylic Bottom Bar) -->
+      <div style="padding: 14px 24px; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); display: flex; justify-content: space-between; align-items: center;">
+        <span id="settings-status-save" style="font-size: 12px; color: #30D158; font-weight: 600; display: none; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Tersimpan otomatis</span>
+        </span>
+        <div style="display: flex; gap: 10px; margin-left: auto;">
+          <button id="btn-settings-done" type="button" class="btn-apple-pill-dark" style="padding: 7px 22px;">Selesai</button>
         </div>
       </div>
 

@@ -1509,15 +1509,15 @@
       if (!t.btn || !t.sec) return;
       if (t.id === tabName) {
         t.btn.classList.add('is-active');
-        t.btn.style.background = '#27272a';
-        t.btn.style.color = '#fff';
-        t.btn.style.borderColor = 'rgba(255,255,255,0.12)';
+        t.btn.style.removeProperty('background');
+        t.btn.style.removeProperty('color');
+        t.btn.style.removeProperty('border-color');
         t.sec.style.display = 'flex';
       } else {
         t.btn.classList.remove('is-active');
-        t.btn.style.background = 'transparent';
-        t.btn.style.color = '#a1a1aa';
-        t.btn.style.borderColor = 'transparent';
+        t.btn.style.removeProperty('background');
+        t.btn.style.removeProperty('color');
+        t.btn.style.removeProperty('border-color');
         t.sec.style.display = 'none';
       }
     });
