@@ -128,7 +128,7 @@ Seluruh tombol pintas di bawah ini dirancang kebal interupsi (*anti-trap*), sehi
 ```
 megabox/
 ├── megabox-launcher.sh          # Peluncur cerdas pendeteksi Wayland / X11
-├── package.json                 # Metadata runtime Electron v1.4.2
+├── package.json                 # Metadata runtime Electron v1.5.0
 ├── src/
 │   ├── main/                    # Engine Backend Electron (Node.js)
 │   │   ├── index.js             # Window lifecycle, native dialogs, & IPC gateway
@@ -168,7 +168,20 @@ bash megabox-launcher.sh
 
 ---
 
-## 8. Dukungan Sukarela & Donasi Komunitas
+## 8. Peta Jalan Multi-OS & Kompatibilitas Lintas Platform (Roadmap)
+
+Megabox dibangun dengan prinsip arsitektur bebas dependensi biner C++ kompilasi lokal (*zero native C++ bindings*). Seluruh lapisan logika aplikasi (*main*, *preload*, dan *renderer*) murni menggunakan JavaScript, HTML5, dan CSS standar yang dieksekusi di atas runtime Chromium/Node.js, sehingga memiliki fondasi portabilitas tinggi untuk multi-OS:
+
+- **Linux (Tervalidasi Penuh di Workstation)**:
+  * **Wayland & X11**: Kompatibel 100% di berbagai Desktop Environment modern (KDE Plasma, GNOME, XFCE, Cinnamon, MATE). Script peluncur cerdas (`megabox-launcher.sh`) otomatis mengaktifkan soket Ozone Wayland saat sesi Wayland terdeteksi, atau beralih ke fallback X11 secara mulus.
+- **Windows 10 / 11 (Tahap Rilis Berikutnya)**:
+  * Karena arsitektur penyimpanan database berbasis path sistem universal (`app.getPath("userData")` yang otomatis memetakan ke `%APPDATA%\megabox`), aplikasi ini siap dibundel menjadi installer tunggal Windows (`.exe` via `electron-builder`) langsung dari workstation Linux tanpa perlu merombak kode sumber.
+- **macOS (Apple Silicon & Intel - Target Portabilitas)**:
+  * Rencana jangka panjang mencakup penyediaan paket bundle `.dmg` / `.app` untuk ekosistem macOS. Walaupun meja kerja pengembang saat ini tidak memiliki perangkat Mac fisik untuk pengujian harian (*air-gapped workbench*), rancangan antarmuka bergaya *Apple Liquid / Monokrom Utilitarian* dan ketiadaan dependensi sistem spesifik Linux membuat logika intinya siap dijalankan di macOS begitu tahap pengemasan rilis multi-platform dibuka.
+
+---
+
+## 9. Dukungan Sukarela & Donasi Komunitas
 
 Megabox dikembangkan sebagai proyek perangkat lunak mandiri yang bebas dari iklan, bebas dari pelacak (*trackers*), dan bebas dari paywall. Jika perangkat lunak ini mempermudah alur kerja Anda sehari-hari, Anda dapat memberikan apresiasi sukarela:
 
@@ -177,7 +190,7 @@ Megabox dikembangkan sebagai proyek perangkat lunak mandiri yang bebas dari ikla
 
 ---
 
-## 9. Lisensi & Pernyataan Merek (Trademark & Legal Notice)
+## 10. Lisensi & Pernyataan Merek (Trademark & Legal Notice)
 
 Perangkat lunak ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
 
