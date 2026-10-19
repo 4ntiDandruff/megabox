@@ -4,6 +4,18 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.5.0] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Dukungan Dwibahasa Reaktif (ID - EN Dual Language Engine)**: Mengintegrasikan kamus dwibahasa terisolasi (`I18N`) dengan saklar *Segmented Pill* `[ English | Indonesia ]` di tab General Pengaturan. Beralih instan 100% tanpa reload window.
+- **Persistensi Pilihan Bahasa ke JSON Database & Backup**: Konfigurasi bahasa aktif tersimpan otomatis dalam `settings.language` pada `megabox-config.json` dan ikut tercadangkan secara permanen saat ekspor/impor cadangan data.
+
+### Diperbaiki (Fixed)
+- **Konsistensi Copywriting Murni Tanpa Percampuran Istilah**: Menyelaraskan seluruh label pada header modal, navigasi tab, context menu webview, kartu cadangan data, info arsitektur, hingga status alert agar 100% konsisten berbahasa Inggris saat mode EN dan 100% bahasa Indonesia saat mode ID.
+- **Pembersihan Interaksi & Tautan Eksternal**: Menghubungkan tombol GitHub repository dan portofolio dengan IPC native `system:open-external`, serta memastikan modal QRIS donasi bersih tanpa gangguan layout.
+
+---
+
 ## [1.4.2] - 2026-10-19
 
 ### Ditambahkan (Added)
