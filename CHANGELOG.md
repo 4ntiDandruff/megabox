@@ -4,6 +4,15 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.3.8] - 2026-10-19
+
+### Ditambahkan (Added)
+- **Indikator Visual Sinkronisasi Cloud**: Menambahkan dot status real-time pada avatar profil pengguna di sidebar (hijau solid menyala ketika terhubung dan tersinkron, abu-abu ketika offline).
+- **Sinkronisasi Pengaturan Sistem (Settings Sync)**: Menyelaraskan preferensi sistem (timeout hibernasi tab, aksi close-to-tray, dan autostart) ke dalam payload cloud sync secara otomatis saat disimpan dan memulihkannya saat startup/login.
+- **Plafon Kuota Unlimited Akun Owner (Pro Tier)**: Meningkatkan kapasitas layanan cloud sync hingga 999 aplikasi untuk akun owner terverifikasi pada backend server SQLite WAL.
+
+---
+
 ## [1.3.6] - 2026-10-19
 
 ### Diperbaiki & Disesuaikan (Refined)

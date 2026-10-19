@@ -46,7 +46,8 @@ function triggerAutoSync() {
   syncDebounceTimer = setTimeout(async () => {
     try {
       const apps = getApps(db);
-      const res = await sync.pushWorkspace(apps);
+      const settings = getSettings(db);
+      const res = await sync.pushWorkspace(apps, settings);
       if (!res.skipped) {
         console.log('[AutoSync] Workspace synced to cloud successfully:', res.version_hash);
         if (mainWindow) {
@@ -175,23 +176,30 @@ app.whenReady().then(() => {
   const status = sync.getSyncStatus();
   if (status.logged_in) {
     sync.pullWorkspace().then(res => {
-      if (res.exists && res.layout && res.layout.services && res.layout.services.length > 0) {
-        console.log('[Sync Startup] Applying cloud workspace layout...');
+      if (res.exists && res.layout) {
         const currentData = db.read();
-        currentData.apps = res.layout.services.map((s, idx) => ({
-          id: s.id,
-          name: s.name,
-          url: s.url,
-          icon: s.icon || 'globe',
-          custom_icon: s.custom_icon || null,
-          partition: 'persist:' + s.id,
-          order_index: s.order_index !== undefined ? s.order_index : idx,
-          is_enabled: 1,
-          proxy: s.proxy || ''
-        }));
+        if (res.layout.services && res.layout.services.length > 0) {
+          console.log('[Sync Startup] Applying cloud workspace layout...');
+          currentData.apps = res.layout.services.map((s, idx) => ({
+            id: s.id,
+            name: s.name,
+            url: s.url,
+            icon: s.icon || 'globe',
+            custom_icon: s.custom_icon || null,
+            partition: 'persist:' + s.id,
+            order_index: s.order_index !== undefined ? s.order_index : idx,
+            is_enabled: 1,
+            proxy: s.proxy || ''
+          }));
+        }
+        if (res.layout.settings && typeof res.layout.settings === 'object') {
+          console.log('[Sync Startup] Applying cloud system settings...');
+          currentData.settings = Object.assign({}, currentData.settings || {}, res.layout.settings);
+        }
         db.write(currentData);
         if (mainWindow) {
           mainWindow.webContents.send('apps:updated', getApps(db));
+          mainWindow.webContents.send('settings:updated', getSettings(db));
         }
       }
     }).catch(err => {
@@ -420,7 +428,7 @@ async function cacheFaviconToDataUri(iconUrl) {
         mainWindow.webContents.send('apps:updated', getApps(db));
       } else {
         // First time cloud user -> push local apps to cloud
-        await sync.pushWorkspace(getApps(db));
+        await sync.pushWorkspace(getApps(db), getSettings(db));
       }
       return { success: true, user: res.user };
     } catch (err) {
@@ -432,7 +440,7 @@ async function cacheFaviconToDataUri(iconUrl) {
     try {
       const res = await sync.register(email, password);
       // Immediately push local apps to new cloud account
-      await sync.pushWorkspace(getApps(db));
+      await sync.pushWorkspace(getApps(db), getSettings(db));
       return { success: true, user: res.user };
     } catch (err) {
       return { success: false, error: err.message };
@@ -446,7 +454,7 @@ async function cacheFaviconToDataUri(iconUrl) {
 
   ipcMain.handle('sync:manual-push', async () => {
     try {
-      const res = await sync.pushWorkspace(getApps(db));
+      const res = await sync.pushWorkspace(getApps(db), getSettings(db));
       return { success: true, data: res };
     } catch (err) {
       return { success: false, error: err.message };
@@ -456,22 +464,28 @@ async function cacheFaviconToDataUri(iconUrl) {
   ipcMain.handle('sync:manual-pull', async () => {
     try {
       const res = await sync.pullWorkspace();
-      if (res.exists && res.layout && res.layout.services) {
+      if (res.exists && res.layout) {
         const currentData = db.read();
-        currentData.apps = res.layout.services.map((s, idx) => ({
-          id: s.id,
-          name: s.name,
-          url: s.url,
-          icon: s.icon || 'globe',
-          custom_icon: s.custom_icon || null,
-          partition: 'persist:' + s.id,
-          order_index: s.order_index !== undefined ? s.order_index : idx,
-          is_enabled: 1,
-          proxy: s.proxy || ''
-        }));
+        if (res.layout.services && res.layout.services.length > 0) {
+          currentData.apps = res.layout.services.map((s, idx) => ({
+            id: s.id,
+            name: s.name,
+            url: s.url,
+            icon: s.icon || 'globe',
+            custom_icon: s.custom_icon || null,
+            partition: 'persist:' + s.id,
+            order_index: s.order_index !== undefined ? s.order_index : idx,
+            is_enabled: 1,
+            proxy: s.proxy || ''
+          }));
+        }
+        if (res.layout.settings && typeof res.layout.settings === 'object') {
+          currentData.settings = Object.assign({}, currentData.settings || {}, res.layout.settings);
+        }
         db.write(currentData);
         mainWindow.webContents.send('apps:updated', getApps(db));
-        return { success: true, count: res.layout.services.length };
+        mainWindow.webContents.send('settings:updated', getSettings(db));
+        return { success: true, count: res.layout.services ? res.layout.services.length : 0 };
       }
       return { success: false, error: 'Belum ada data workspace di cloud' };
     } catch (err) {
@@ -489,6 +503,7 @@ async function cacheFaviconToDataUri(iconUrl) {
   ipcMain.handle('settings:save', (_, newSettings) => {
     const updated = saveSettings(db, newSettings);
     // Apply autostart if toggled
+    triggerAutoSync();
     if (typeof newSettings.autostart === 'boolean') {
       try {
         app.setLoginItemSettings({
