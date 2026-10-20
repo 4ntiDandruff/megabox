@@ -1656,11 +1656,8 @@
       <div style="padding: 16px 20px 14px 20px; border-bottom: 1px solid #282a30; background: #16171a; display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 28px; height: 28px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; color: #e6edf3;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
+              <img src="assets/icons8/settings_header.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Settings">
             </div>
             <div>
               <span id="i18n-settings-title" style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ffffff;">Pengaturan Megabox</span>
@@ -1674,19 +1671,19 @@
         <!-- Cupertino Segmented Tab Recessed Well -->
         <div class="neo-groove-dark">
           <button id="tab-nav-general" type="button" class="neo-tab-dark is-active">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <img src="assets/icons8/tab_general.png" style="width: 16px; height: 16px; object-fit: contain;" alt="General">
             <span>Umum & Sistem</span>
           </button>
           <button id="tab-nav-vault" type="button" class="neo-tab-dark">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <img src="assets/icons8/tab_vault.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Vault">
             <span>Megawarden</span>
           </button>
           <button id="tab-nav-sync" type="button" class="neo-tab-dark">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+            <img src="assets/icons8/tab_sync.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Sync">
             <span>Cadangan & Data</span>
           </button>
           <button id="tab-nav-about" type="button" class="neo-tab-dark">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <img src="assets/icons8/tab_about.png" style="width: 16px; height: 16px; object-fit: contain;" alt="About">
             <span>Tentang</span>
           </button>
         </div>
@@ -1702,11 +1699,8 @@
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; padding: 4px;">
+                  <img src="assets/icons8/lock_screen.png" style="width: 26px; height: 26px; object-fit: contain;" alt="Lock">
                 </div>
                 <div>
                   <div id="i18n-card-lock-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Kunci Layar Workspace (Master Password / PIN)</div>
@@ -1766,8 +1760,8 @@
                               <!-- Grouped Island: Interface Language Switch (ID / EN) -->
           <div class="apple-group-card" style="padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 12px; max-width: 440px;">
-              <div class="apple-squircle-icon apple-squircle-blue">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <div class="apple-squircle-icon apple-squircle-blue" style="padding: 3px;">
+                <img src="assets/icons8/language.png" style="width: 24px; height: 24px; object-fit: contain;" alt="Language">
               </div>
               <div>
                 <div id="i18n-card-lang-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Bahasa Antarmuka (Interface Language)</div>
@@ -1801,7 +1795,7 @@
             <div style="display: flex; gap: 8px;">
               <input type="file" id="input-avatar-file" accept="image/*" style="display: none;">
               <button id="btn-pick-avatar" type="button" class="btn-apple-cyan-solid" style="padding: 7px 14px; font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <img src="assets/icons8/avatar.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Photo">
                 <span>Pilih Foto</span>
               </button>
               <button id="btn-reset-avatar" type="button" class="btn-apple-pill-dark" style="padding: 7px 12px; font-size: 11.5px; color: #94a3b8;">
@@ -1814,9 +1808,14 @@
             
             <!-- Row 1: Hibernation -->
             <div class="apple-setting-row">
-              <div style="max-width: 400px;">
-                <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
-                <div id="i18n-row-hibernate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+              <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
+                <div class="apple-squircle-icon apple-squircle-purple" style="padding: 3px;">
+                  <img src="assets/icons8/memory_saver.png" style="width: 22px; height: 22px; object-fit: contain;" alt="RAM">
+                </div>
+                <div>
+                  <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
+                  <div id="i18n-row-hibernate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+                </div>
               </div>
               <select id="setting-hibernate-timeout" class="apple-select-dark">
                 <option value="5">5 Menit</option>
@@ -1829,9 +1828,14 @@
 
             <!-- Row 2: Close Action -->
             <div class="apple-setting-row">
-              <div style="max-width: 400px;">
-                <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
-                <div id="i18n-row-close-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+              <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
+                <div class="apple-squircle-icon apple-squircle-slate" style="padding: 3px;">
+                  <img src="assets/icons8/window_close.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Close">
+                </div>
+                <div>
+                  <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
+                  <div id="i18n-row-close-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+                </div>
               </div>
               <select id="setting-close-action" class="apple-select-dark">
                 <option value="tray" selected>Sembunyikan ke Tray</option>
@@ -1841,9 +1845,14 @@
 
             <!-- Row 3: Autostart -->
             <div class="apple-setting-row">
-              <div style="max-width: 400px;">
-                <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
-                <div id="i18n-row-autostart-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+              <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
+                <div class="apple-squircle-icon apple-squircle-amber" style="padding: 3px;">
+                  <img src="assets/icons8/autostart.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Autostart">
+                </div>
+                <div>
+                  <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
+                  <div id="i18n-row-autostart-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+                </div>
               </div>
               <label class="apple-switch-mint">
                 <input type="checkbox" id="setting-autostart">
@@ -1853,9 +1862,14 @@
 
                         <!-- Row 4: Auto-Check Updates -->
             <div class="apple-setting-row">
-              <div style="max-width: 400px;">
-                <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pemberitahuan Versi Baru</div>
-                <div id="i18n-row-autoupdate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.</div>
+              <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
+                <div class="apple-squircle-icon apple-squircle-blue" style="padding: 3px;">
+                  <img src="assets/icons8/notification.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Notification">
+                </div>
+                <div>
+                  <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pemberitahuan Versi Baru</div>
+                  <div id="i18n-row-autoupdate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.</div>
+                </div>
               </div>
               <label class="apple-switch-mint">
                 <input type="checkbox" id="setting-autoupdate" checked>
@@ -1863,14 +1877,19 @@
               </label>
             </div>
 
-            <!-- Row 4: Clear Cache -->
+            <!-- Row 5: Clear Cache -->
             <div class="apple-setting-row">
-              <div style="max-width: 400px;">
-                <div id="i18n-card-cache-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pembersih Cache Web & GPU</div>
-                <div id="i18n-card-cache-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+              <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
+                <div class="apple-squircle-icon apple-squircle-emerald" style="padding: 3px;">
+                  <img src="assets/icons8/clean_cache.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Clean">
+                </div>
+                <div>
+                  <div id="i18n-card-cache-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pembersih Cache Web & GPU</div>
+                  <div id="i18n-card-cache-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+                </div>
               </div>
-              <button id="btn-clear-cache" type="button" class="btn-apple-pill-dark">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+              <button id="btn-clear-cache" type="button" class="btn-apple-pill-dark" style="gap: 6px;">
+                <img src="assets/icons8/clean_cache.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Clean">
                 <span>Bersihkan Cache</span>
               </button>
             </div>
@@ -1888,10 +1907,8 @@
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: #16181c; border: 1px solid #282c35;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; padding: 4px;">
+                  <img src="assets/icons8/tab_vault.png" style="width: 26px; height: 26px; object-fit: contain;" alt="Megawarden">
                 </div>
                 <div>
                   <div style="font-weight: 600; font-size: 13.5px; color: #ffffff; display: flex; align-items: center; gap: 8px;">
@@ -1902,16 +1919,16 @@
                 </div>
               </div>
               <div style="display: flex; gap: 8px;">
-                <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary" style="gap: 7px;">
+                  <img src="assets/icons8/import_data.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Import">
                   <span>Impor Google CSV</span>
                 </button>
-                <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary" style="gap: 7px;">
+                  <img src="assets/icons8/export_data.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Export">
                   <span>Ekspor CSV</span>
                 </button>
-                <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary" style="gap: 7px;">
+                  <img src="assets/icons8/add_vault.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Add">
                   <span>Tambah Sandi</span>
                 </button>
               </div>
@@ -1921,9 +1938,7 @@
             <div style="display: flex; gap: 12px; align-items: center; margin-top: 2px;">
               <div style="flex: 1; position: relative;">
                 <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 34px; font-size: 12px; height: 36px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position: absolute; left: 11px; top: 11px;">
-                  <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+                <img src="assets/icons8/search.png" style="width: 15px; height: 15px; object-fit: contain; position: absolute; left: 11px; top: 10.5px; opacity: 0.7;" alt="Search">
               </div>
               <div id="vault-items-counter" style="font-size: 11.5px; color: #38bdf8; font-weight: 600; padding: 6px 12px; border-radius: 6px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); white-space: nowrap;">0 Kredensial</div>
             </div>
@@ -1950,7 +1965,7 @@
           <!-- Explanation Plaque -->
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
             <div style="font-size: 13px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <img src="assets/icons8/lock_screen.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Privacy">
               <span id="i18n-card-privacy-title">Privasi Tanpa Server Luar</span>
             </div>
             <div id="i18n-card-privacy-desc" style="font-size: 12px; color: #94a3b8; line-height: 1.6;">Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.</div>
@@ -1963,13 +1978,13 @@
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <button id="btn-backup-export" type="button" class="crystal-btn-primary" style="padding: 10px 16px; font-size: 12px; font-weight: 600;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <button id="btn-backup-export" type="button" class="crystal-btn-primary" style="padding: 10px 16px; font-size: 12px; font-weight: 600; gap: 8px;">
+                <img src="assets/icons8/export_data.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Export">
                 <span>Ekspor Cadangan (.json)</span>
               </button>
 
-              <button id="btn-backup-import" type="button" class="crystal-btn-secondary" style="padding: 10px 16px; font-size: 12px; font-weight: 500;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <button id="btn-backup-import" type="button" class="crystal-btn-secondary" style="padding: 10px 16px; font-size: 12px; font-weight: 500; gap: 8px;">
+                <img src="assets/icons8/import_data.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Import">
                 <span>Impor Cadangan (.json)</span>
               </button>
             </div>
@@ -2000,11 +2015,11 @@
 
               <div style="display: flex; gap: 8px; align-items: center;">
                 <button id="btn-check-updates" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #38bdf8;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                  <img src="assets/icons8/updates.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Updates">
                   <span id="i18n-btn-check-updates">Periksa Pembaruan</span>
                 </button>
                 <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <img src="assets/icons8/star_github.png" style="width: 14px; height: 14px; object-fit: contain;" alt="GitHub">
                 <span>GitHub</span>
               </button>
               </div>
@@ -2040,12 +2055,12 @@
             <div id="i18n-card-support-desc" style="font-size: 11.5px; color: #94a3b8; line-height: 1.5;">Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.</div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
-              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 7px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 8px;">
+                <img src="assets/icons8/heart_donate.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Donate">
                 <span>Donasi via QRIS</span>
               </button>
-              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 7px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 8px;">
+                <img src="assets/icons8/star_github.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Star">
                 <span>Bintang di GitHub</span>
               </button>
             </div>
@@ -2065,12 +2080,12 @@
 
             <!-- Tautan Web & Portofolio -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
-              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 6px;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 7px;">
+                <img src="assets/icons8/certificate.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Certificate">
                 <span>Portofolio & Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 6px;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 7px;">
+                <img src="assets/icons8/globe_web.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Web">
                 <span>megapass.web.id</span>
               </button>
             </div>
