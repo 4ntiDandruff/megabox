@@ -478,6 +478,24 @@ window.__megabox_preload_loaded = true;
       );
     }
 
+    
+    function updateDropdownPosition() {
+      if (!activeDropdown || !lastActiveInput || !lastActiveInput.isConnected) return;
+      const rect = lastActiveInput.getBoundingClientRect();
+      // If input is scrolled completely out of view, hide dropdown
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        removeDropdown();
+        return;
+      }
+      const elWidth = rect.width > 0 ? rect.width : (lastActiveInput.offsetWidth || 300);
+      const elLeft = rect.left > 0 ? rect.left : Math.max(8, lastActiveInput.offsetLeft || 100);
+      const elBottom = rect.bottom > 0 ? rect.bottom : ((rect.top > 0 ? rect.top : lastActiveInput.offsetTop || 200) + (lastActiveInput.offsetHeight || 45));
+
+      activeDropdown.style.left = `${Math.max(8, elLeft)}px`;
+      activeDropdown.style.top = `${elBottom + 6}px`;
+      activeDropdown.style.width = `${Math.max(260, Math.min(360, elWidth))}px`;
+    }
+
     function removeDropdown() {
       if (activeDropdown && activeDropdown.parentNode) {
         activeDropdown.parentNode.removeChild(activeDropdown);
@@ -672,9 +690,16 @@ window.__megabox_preload_loaded = true;
       }
     }, true);
 
-    // Close dropdown on window resize or scroll
-    window.addEventListener("scroll", removeDropdown, true);
-    window.addEventListener("resize", removeDropdown, true);
+    // Reposition dropdown on window resize or scroll so it follows the input smoothly!
+    function onScrollOrResize(e) {
+      // If user scrolls INSIDE the suggestion dropdown list, do not reposition or close
+      if (e.target && (e.target.id === "megawarden-suggestion-overlay" || e.target.closest("#megawarden-suggestion-overlay"))) {
+        return;
+      }
+      updateDropdownPosition();
+    }
+    window.addEventListener("scroll", onScrollOrResize, true);
+    window.addEventListener("resize", onScrollOrResize, true);
 
     // Auto-capture submission
     function captureLogin(sourceEvent) {
