@@ -191,6 +191,10 @@
           configureModal.style.display = 'none';
           const settingsModal = document.getElementById('settings-modal');
           if (settingsModal) settingsModal.style.display = 'none';
+          const dlPopover = document.getElementById("download-history-popover");
+          if (dlPopover) dlPopover.style.display = "none";
+          const qrisModal = document.getElementById("qris-modal");
+          if (qrisModal) qrisModal.style.display = "none";
           if (typeof closeQuickSwitcher === 'function') closeQuickSwitcher();
           if (typeof closeExtensionDrawer === 'function') closeExtensionDrawer();
           hideContextMenu();
@@ -2564,9 +2568,9 @@
           <div class="ext-name">${ext.name}</div>
           <div class="ext-desc">${ext.desc}</div>
         </div>
-        <label class="switch">
+        <label class="apple-switch-mint">
           <input type="checkbox" ${isEnabled ? 'checked' : ''} data-ext="${ext.id}">
-          <span class="slider"></span>
+          <span class="apple-slider-mint"></span>
         </label>
       `;
 
