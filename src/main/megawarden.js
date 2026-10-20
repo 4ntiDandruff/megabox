@@ -121,18 +121,34 @@ function getRootDomain(hostname) {
   return parts.slice(-2).join('.');
 }
 
-// Normalize domain for fuzzy URL matching
-function extractDomain(urlStr) {
-  if (!urlStr) return '';
+// Normalize domain for fuzzy URL matching and Android App URL parsing
+function extractDomain(urlStr, nameStr = '') {
+  if (!urlStr && !nameStr) return '';
+  let clean = (urlStr || '').trim();
+
+  // Handle Google Password Manager Android app URLs (android://hash@package.name/)
+  if (clean.startsWith('android://')) {
+    if (nameStr && nameStr.includes('.') && !nameStr.startsWith('http')) {
+      clean = nameStr.trim();
+    } else {
+      try {
+        const u = new URL(clean);
+        if (u.hostname) return u.hostname.toLowerCase();
+      } catch (_) {
+        const m = clean.match(/@([^/]+)/);
+        if (m) return m[1].toLowerCase();
+      }
+    }
+  }
+
   try {
-    let clean = urlStr.trim();
     if (!clean.startsWith('http://') && !clean.startsWith('https://')) {
       clean = 'https://' + clean;
     }
     const parsed = new URL(clean);
     return parsed.hostname.toLowerCase().replace(/^www\./, '');
   } catch (_) {
-    return urlStr.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
+    return clean.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
   }
 }
 
@@ -165,7 +181,7 @@ class MegawardenVault {
     const items = readEncryptedVault(pw);
 
     const now = Date.now();
-    const domain = extractDomain(entry.url || entry.domain || entry.name);
+    const domain = extractDomain(entry.url || entry.domain || entry.name, entry.name);
 
     if (entry.id) {
       const idx = items.findIndex(i => i.id === entry.id);
@@ -187,7 +203,7 @@ class MegawardenVault {
 
     // New item or check if exists by domain + username to update
     const existingIdx = items.findIndex(i => 
-      extractDomain(i.url || i.domain) === domain && 
+      extractDomain(i.url || i.domain, i.name) === domain && 
       i.username.toLowerCase() === entry.username.trim().toLowerCase()
     );
 
@@ -237,7 +253,7 @@ class MegawardenVault {
 
     // Exact domain match, sub-domain match, or shared root domain match
     const matches = items.filter(item => {
-      const itemDomain = extractDomain(item.url || item.domain);
+      const itemDomain = extractDomain(item.url || item.domain, item.name);
       if (!itemDomain) return false;
       const itemRoot = getRootDomain(itemDomain);
       return targetDomain === itemDomain || 
@@ -293,12 +309,12 @@ class MegawardenVault {
       const name = nameIdx !== -1 ? String(row[nameIdx] || '').trim() : '';
       const note = noteIdx !== -1 ? String(row[noteIdx] || '').trim() : '';
 
-      const domain = extractDomain(url || name);
+      const domain = extractDomain(url || name, name);
       const displayName = name || domain || 'Akun';
 
       // Duplicate check (by domain + username)
       const existing = currentItems.find(item => 
-        extractDomain(item.url || item.domain) === domain && 
+        extractDomain(item.url || item.domain, item.name) === domain && 
         item.username.toLowerCase() === username.toLowerCase()
       );
 

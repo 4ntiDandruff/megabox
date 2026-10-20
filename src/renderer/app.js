@@ -3146,52 +3146,85 @@
     };
   }
 
-  // Import Google CSV
-  if (btnVaultImportCsv && vaultFileInput) {
-    btnVaultImportCsv.onclick = () => vaultFileInput.click();
-    vaultFileInput.onchange = (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (evt) => {
-        const text = evt.target.result;
+  // Import Google CSV (Uses OS Native Dialog with Fallback)
+  if (btnVaultImportCsv) {
+    btnVaultImportCsv.onclick = async () => {
+      if (window.megabox && typeof window.megabox.vaultPickAndImportCsv === "function") {
         try {
-          const res = await window.megabox.vaultImportCsv(text);
+          const res = await window.megabox.vaultPickAndImportCsv();
+          if (res && res.canceled) return;
           if (res && res.success) {
-            showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager!`, "success");
+            showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager! (Total ${res.total} akun)`, "success");
             loadMegawardenVault();
           } else {
-            alert("Gagal impor CSV: " + (res.error || "Format tidak valid"));
+            alert("Gagal impor CSV: " + (res.error || "Format berkas tidak valid"));
           }
         } catch (err) {
-          alert("Gagal membaca berkas CSV: " + err.message);
-        } finally {
-          vaultFileInput.value = "";
+          alert("Gagal membuka file dialog: " + err.message);
         }
-      };
-      reader.readAsText(file);
+      } else if (vaultFileInput) {
+        vaultFileInput.click();
+      }
     };
+
+    if (vaultFileInput) {
+      vaultFileInput.onchange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (evt) => {
+          const text = evt.target.result;
+          try {
+            const res = await window.megabox.vaultImportCsv(text);
+            if (res && res.success) {
+              showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager!`, "success");
+              loadMegawardenVault();
+            } else {
+              alert("Gagal impor CSV: " + (res.error || "Format tidak valid"));
+            }
+          } catch (err) {
+            alert("Gagal membaca berkas CSV: " + err.message);
+          } finally {
+            vaultFileInput.value = "";
+          }
+        };
+        reader.readAsText(file);
+      };
+    }
   }
 
-  // Export CSV
+  // Export CSV (Uses OS Native Save Dialog with Fallback)
   if (btnVaultExportCsv) {
     btnVaultExportCsv.onclick = async () => {
-      if (!window.megabox || typeof window.megabox.vaultExportCsv !== "function") return;
-      try {
-        const res = await window.megabox.vaultExportCsv();
-        if (res && res.success && res.csv) {
-          const blob = new Blob([res.csv], { type: "text/csv;charset=utf-8;" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `megawarden-passwords-${new Date().toISOString().slice(0,10)}.csv`;
-          link.click();
-          URL.revokeObjectURL(url);
-          showGlobalToast("Ekspor berkas CSV berhasil diunduh", "success");
+      if (window.megabox && typeof window.megabox.vaultExportCsvToFile === "function") {
+        try {
+          const res = await window.megabox.vaultExportCsvToFile();
+          if (res && res.canceled) return;
+          if (res && res.success) {
+            showGlobalToast("Cadangan sandi CSV berhasil disimpan ke disk!", "success");
+          } else {
+            alert("Gagal menyimpan berkas: " + (res.error || "Terjadi kesalahan"));
+          }
+        } catch (err) {
+          alert("Gagal mengekspor: " + err.message);
         }
-      } catch (err) {
-        alert("Gagal ekspor: " + err.message);
+      } else if (window.megabox && typeof window.megabox.vaultExportCsv === "function") {
+        try {
+          const res = await window.megabox.vaultExportCsv();
+          if (res && res.success && res.csv) {
+            const blob = new Blob([res.csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `megawarden-passwords-${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showGlobalToast("Ekspor berkas CSV berhasil diunduh", "success");
+          }
+        } catch (err) {
+          alert("Gagal ekspor: " + err.message);
+        }
       }
     };
   }

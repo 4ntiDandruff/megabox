@@ -817,6 +817,47 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
+  
+  ipcMain.handle("megawarden:pick-and-import-csv", async () => {
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow && !mainWindow.isDestroyed() ? mainWindow : null, {
+        title: "Pilih File Ekspor Google Password Manager (.csv)",
+        filters: [{ name: "CSV Passwords", extensions: ["csv", "txt"] }],
+        properties: ["openFile"]
+      });
+
+      if (canceled || !filePaths || filePaths.length === 0) {
+        return { success: false, canceled: true };
+      }
+
+      const filePath = filePaths[0];
+      const raw = fs.readFileSync(filePath, "utf-8");
+      return megawarden.importCsv(raw);
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle("megawarden:export-csv-to-file", async () => {
+    try {
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow && !mainWindow.isDestroyed() ? mainWindow : null, {
+        title: "Simpan Cadangan Sandi Megawarden (.csv)",
+        defaultPath: "megawarden-passwords-" + new Date().toISOString().slice(0, 10) + ".csv",
+        filters: [{ name: "CSV Passwords", extensions: ["csv"] }]
+      });
+
+      if (canceled || !filePath) {
+        return { success: false, canceled: true };
+      }
+
+      const csv = megawarden.exportCsv();
+      fs.writeFileSync(filePath, csv, "utf-8");
+      return { success: true, filePath };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
   ipcMain.handle("megawarden:import-csv", async (_, { csvContent }) => {
     try {
       const result = megawarden.importCsv(csvContent);

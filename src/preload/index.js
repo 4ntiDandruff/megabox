@@ -29,6 +29,8 @@ contextBridge.exposeInMainWorld('megabox', {
   vaultDelete: (id) => ipcRenderer.invoke("megawarden:delete", id),
   vaultFindForUrl: (url) => ipcRenderer.invoke("megawarden:find-for-url", { url }),
   vaultGeneratePassword: (options) => ipcRenderer.invoke("megawarden:generate-password", options),
+    vaultPickAndImportCsv: () => ipcRenderer.invoke("megawarden:pick-and-import-csv"),
+  vaultExportCsvToFile: () => ipcRenderer.invoke("megawarden:export-csv-to-file"),
   vaultImportCsv: (csvContent) => ipcRenderer.invoke("megawarden:import-csv", { csvContent }),
   vaultExportCsv: () => ipcRenderer.invoke("megawarden:export-csv"),
 
