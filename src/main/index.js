@@ -897,16 +897,21 @@ async function cacheFaviconToDataUri(iconUrl) {
         return { success: false, error: "Kata sandi saat ini salah" };
       }
     }
-    if (!newPassword || newPassword.trim() === "") {
-      // Remove password lock
-      settings.lock_password_hash = null;
-      saveSettings(db, settings);
-      return { success: true, removed: true };
+    const oldHash = currentHash;
+    let nextHash = null;
+    if (newPassword && newPassword.trim() !== "") {
+      nextHash = crypto.createHash("sha256").update(String(newPassword)).digest("hex");
     }
-    const newHash = crypto.createHash("sha256").update(String(newPassword)).digest("hex");
-    settings.lock_password_hash = newHash;
+    if (megawarden && typeof megawarden.rekey === "function") {
+      try {
+        megawarden.rekey(oldHash, nextHash);
+      } catch (err) {
+        console.warn("[Megawarden] Vault rekey warning:", err.message);
+      }
+    }
+    settings.lock_password_hash = nextHash;
     saveSettings(db, settings);
-    return { success: true, protected: true };
+    return { success: true, protected: Boolean(nextHash), removed: !nextHash };
   });
 
   ipcMain.handle("lock:status", async () => {

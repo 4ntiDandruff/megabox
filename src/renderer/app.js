@@ -822,6 +822,31 @@
               });
             }
           }
+          if (event.channel === 'megawarden:request-credentials') {
+            const data = event.args[0] || {};
+            const reqUrl = data.url || wv.src || '';
+            if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
+              window.megabox.vaultFindForUrl(reqUrl).then(res => {
+                if (res && res.success && res.matches && res.matches.length > 0) {
+                  // Send top credential match to webview
+                  const cred = res.matches[0];
+                  wv.send('megawarden:autofill-data', {
+                    username: cred.username,
+                    password: cred.password
+                  });
+                  console.log('[Megawarden] Autofill dispatched to', app.name, cred.username);
+                }
+              }).catch(err => {
+                console.warn('[Megawarden] Autofill query failed:', err.message);
+              });
+            }
+          }
+          if (event.channel === 'megawarden:save-prompt') {
+            const data = event.args[0] || {};
+            if (typeof window.handleMegawardenPrompt === 'function') {
+              window.handleMegawardenPrompt(data);
+            }
+          }
         });
 
         webviewsContainer.appendChild(wv);
@@ -2839,6 +2864,7 @@
   let pendingVaultPrompt = null;
   let cachedVaultItems = [];
 
+  window.handleMegawardenPrompt = handleMegawardenPrompt;
   function handleMegawardenPrompt(data) {
     if (!data || !data.password || !data.username) return;
     pendingVaultPrompt = data;
@@ -3016,8 +3042,20 @@
       btnCopyPass.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
       btnCopyPass.onclick = (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(item.password);
-        showGlobalToast("Kata sandi disalin ke clipboard", "success");
+        const pwdToCopy = item.password;
+        navigator.clipboard.writeText(pwdToCopy).then(() => {
+          showGlobalToast("Kata sandi disalin (dibersihkan dlm 30d)", "success");
+          if (window._megawarden_clear_timer) clearTimeout(window._megawarden_clear_timer);
+          window._megawarden_clear_timer = setTimeout(async () => {
+            try {
+              const current = await navigator.clipboard.readText();
+              if (current === pwdToCopy) {
+                await navigator.clipboard.writeText("");
+                console.log("[Megawarden] Clipboard automatically cleared for security.");
+              }
+            } catch (_) {}
+          }, 30000);
+        });
       };
 
       // Edit item

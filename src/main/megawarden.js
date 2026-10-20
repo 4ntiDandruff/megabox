@@ -388,6 +388,14 @@ class MegawardenVault {
     }
     return result;
   }
+
+  // Re-encrypt entire vault with new master password hash
+  rekey(oldMasterPassword, newMasterPassword) {
+    const items = readEncryptedVault(oldMasterPassword);
+    const vaultPath = getVaultPath();
+    if (!fs.existsSync(vaultPath)) return true;
+    return writeEncryptedVault(items, newMasterPassword);
+  }
 }
 
 // RFC 4180 CSV Parser (Handles quoted fields, commas, and newlines cleanly)
