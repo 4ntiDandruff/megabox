@@ -1180,19 +1180,54 @@
       transform: scale(0.97);
     }
     .vault-item-row {
-      background: #14161a;
-      border: 1px solid #23262f;
-      border-radius: 8px;
-      padding: 9px 14px;
+      background: rgba(22, 24, 29, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      transition: background-color 120ms ease, border-color 120ms ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .vault-item-row:hover {
-      background: #1a1c22;
-      border-color: #343946;
+      background: rgba(30, 34, 42, 0.9);
+      border-color: rgba(56, 189, 248, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      transform: translateY(-1px);
+    }
+    .vault-action-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .vault-action-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .vault-action-btn:active {
+      transform: scale(0.92);
+    }
+    .vault-action-btn.copy-pass:hover {
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .vault-action-btn.danger:hover {
+      color: #f87171;
+      border-color: rgba(248, 113, 113, 0.4);
+      background: rgba(248, 113, 113, 0.12);
     }
 
     
@@ -2118,7 +2153,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
 
 
 
@@ -2143,7 +2177,7 @@
   </div>
 
   <!-- Megawarden Entry Edit / Add Modal -->
-  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.8); z-index: 100000;">
+  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.8); z-index: 1000001;">
     <div class="crystal-modal-box" style="width: 440px; max-width: 95vw;">
       <div style="padding: 16px 20px 14px; border-bottom: 1px solid #282a30; background: #16171a; display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -2198,5 +2232,6 @@
   <!-- Hidden File Input for CSV Import -->
   <input type="file" id="vault-csv-file-input" accept=".csv,text/csv" style="display: none;">
 
+  <script src="app.js"></script>
 </body>
 </html>

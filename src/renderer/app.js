@@ -2779,9 +2779,8 @@
       const btnCopyUser = document.createElement("button");
       btnCopyUser.type = "button";
       btnCopyUser.title = "Salin Nama Pengguna";
-      btnCopyUser.className = "crystal-btn-secondary";
-      btnCopyUser.style.cssText = "padding: 5px 8px; font-size: 11px;";
-      btnCopyUser.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+      btnCopyUser.className = "vault-action-btn";
+      btnCopyUser.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
       btnCopyUser.onclick = (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(item.username);
@@ -2792,21 +2791,20 @@
       const btnCopyPass = document.createElement("button");
       btnCopyPass.type = "button";
       btnCopyPass.title = "Salin Kata Sandi";
-      btnCopyPass.className = "crystal-btn-secondary";
-      btnCopyPass.style.cssText = "padding: 5px 8px; font-size: 11px; color: #38bdf8;";
-      btnCopyPass.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+      btnCopyPass.className = "vault-action-btn copy-pass";
+      btnCopyPass.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
       btnCopyPass.onclick = (e) => {
         e.stopPropagation();
         const pwdToCopy = item.password;
         navigator.clipboard.writeText(pwdToCopy).then(() => {
-          showGlobalToast("Kata sandi disalin (dibersihkan dlm 30d)", "success");
+          showGlobalToast("Kata sandi disalin (aman dlm 30d)", "success");
           if (window._megawarden_clear_timer) clearTimeout(window._megawarden_clear_timer);
           window._megawarden_clear_timer = setTimeout(async () => {
             try {
               const current = await navigator.clipboard.readText();
               if (current === pwdToCopy) {
                 await navigator.clipboard.writeText("");
-                console.log("[Megawarden] Clipboard automatically cleared for security.");
+                console.log("[Megawarden] Clipboard otomatis dibersihkan.");
               }
             } catch (_) {}
           }, 30000);
@@ -2817,18 +2815,19 @@
       const btnEdit = document.createElement("button");
       btnEdit.type = "button";
       btnEdit.title = "Edit Akun";
-      btnEdit.className = "crystal-btn-secondary";
-      btnEdit.style.cssText = "padding: 5px 8px; font-size: 11px;";
-      btnEdit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
-      btnEdit.onclick = () => openVaultModal(item);
+      btnEdit.className = "vault-action-btn";
+      btnEdit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+      btnEdit.onclick = (e) => {
+        e.stopPropagation();
+        openVaultModal(item);
+      };
 
       // Delete item
       const btnDelete = document.createElement("button");
       btnDelete.type = "button";
       btnDelete.title = "Hapus Akun";
-      btnDelete.className = "crystal-btn-secondary";
-      btnDelete.style.cssText = "padding: 5px 8px; font-size: 11px; color: #f87171;";
-      btnDelete.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+      btnDelete.className = "vault-action-btn danger";
+      btnDelete.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
       btnDelete.onclick = async (e) => {
         e.stopPropagation();
         if (confirm(`Hapus kredensial "${item.name || item.domain}" dari Megawarden?`)) {
