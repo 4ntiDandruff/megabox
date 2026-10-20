@@ -2510,7 +2510,6 @@
   const extensionCatalog = [
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
-    { id: 'bitwarden', name: 'Bitwarden', desc: 'Pengelola sandi terenkripsi', icon: 'assets/icons/bitwarden.svg', enabledByDefault: false },
     { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true }
   ];
 
