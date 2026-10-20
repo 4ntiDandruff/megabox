@@ -121,6 +121,79 @@ function createWindow() {
     setupHeaderInterceptors(ses);
   });
 
+  // Webview WebContents Attachment Hook (Workaround for Electron #40674 & Intercepting Shortcuts)
+  mainWindow.webContents.on('did-attach-webview', (event, webviewWebContents) => {
+    webviewWebContents.on('before-input-event', (inputEvent, input) => {
+      if (input.type !== 'keyDown') return;
+      const isCtrl = input.control || input.meta;
+      const isShift = input.shift;
+
+      // Zoom In: Ctrl + Plus, Ctrl + Shift + Equal, Ctrl + Equal
+      if (isCtrl && !input.alt && (input.key === '+' || input.key === '=' || input.code === 'NumpadAdd' || input.code === 'Equal')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'zoom-in' });
+        return;
+      }
+      // Zoom Out: Ctrl + Minus, Ctrl + Shift + Minus, NumpadSubtract
+      if (isCtrl && !input.alt && (input.key === '-' || input.key === '_' || input.code === 'NumpadSubtract' || input.code === 'Minus')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'zoom-out' });
+        return;
+      }
+      // Zoom Reset: Ctrl + 0, Numpad0
+      if (isCtrl && !input.alt && !isShift && (input.key === '0' || input.code === 'Numpad0' || input.code === 'Digit0')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'zoom-reset' });
+        return;
+      }
+      // Lock Screen: Ctrl + Shift + L
+      if (isCtrl && isShift && !input.alt && (input.key === 'L' || input.key === 'l')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'lock-workspace' });
+        return;
+      }
+      // Quick Switcher: Ctrl + K or Ctrl + P
+      if (isCtrl && !input.alt && !isShift && (input.key === 'k' || input.key === 'K' || input.key === 'p' || input.key === 'P')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'quick-switch' });
+        return;
+      }
+      // Open Catalog: Ctrl + N
+      if (isCtrl && !input.alt && !isShift && (input.key === 'n' || input.key === 'N')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'open-catalog' });
+        return;
+      }
+      // Reload: Ctrl + R or F5
+      if ((isCtrl && !input.alt && (input.key === 'r' || input.key === 'R')) || input.key === 'F5') {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'reload-active' });
+        return;
+      }
+      // Tab Switching: Alt + 1..9
+      if (input.alt && !isCtrl && !isShift && input.key >= '1' && input.key <= '9') {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'switch-tab', index: parseInt(input.key, 10) - 1 });
+        return;
+      }
+      // Reorder Tabs: Alt + Up / Alt + Down
+      if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowUp' || input.key === 'Up')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'reorder-active-app', dir: 'up' });
+        return;
+      }
+      if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowDown' || input.key === 'Down')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'reorder-active-app', dir: 'down' });
+        return;
+      }
+      // Escape
+      if (input.key === 'Escape') {
+        mainWindow.webContents.send('shortcut:action', { action: 'escape' });
+      }
+    });
+  });
+
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
 
   mainWindow.once('ready-to-show', () => {
@@ -665,6 +738,46 @@ async function cacheFaviconToDataUri(iconUrl) {
   });
 
   // System Settings IPC Handlers
+  // Lock Screen IPC Handlers (Local-First Master Password / PIN)
+  ipcMain.handle("lock:verify", async (_, { password }) => {
+    const crypto = require("crypto");
+    const settings = getSettings(db);
+    const hash = settings.lock_password_hash;
+    if (!hash) return { success: true, is_protected: false };
+    const inputHash = crypto.createHash("sha256").update(String(password || "")).digest("hex");
+    return { success: inputHash === hash, is_protected: true };
+  });
+
+  ipcMain.handle("lock:set-password", async (_, { currentPassword, newPassword }) => {
+    const crypto = require("crypto");
+    const settings = getSettings(db);
+    const currentHash = settings.lock_password_hash;
+    if (currentHash) {
+      const inputHash = crypto.createHash("sha256").update(String(currentPassword || "")).digest("hex");
+      if (inputHash !== currentHash) {
+        return { success: false, error: "Kata sandi saat ini salah" };
+      }
+    }
+    if (!newPassword || newPassword.trim() === "") {
+      // Remove password lock
+      settings.lock_password_hash = null;
+      saveSettings(db, settings);
+      return { success: true, removed: true };
+    }
+    const newHash = crypto.createHash("sha256").update(String(newPassword)).digest("hex");
+    settings.lock_password_hash = newHash;
+    saveSettings(db, settings);
+    return { success: true, protected: true };
+  });
+
+  ipcMain.handle("lock:status", async () => {
+    const settings = getSettings(db);
+    return {
+      is_set: Boolean(settings.lock_password_hash),
+      idle_minutes: settings.lock_idle_minutes || 0
+    };
+  });
+
   ipcMain.handle('settings:get', () => {
     return getSettings(db);
   });

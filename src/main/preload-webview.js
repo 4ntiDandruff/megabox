@@ -389,3 +389,18 @@ document.addEventListener('keydown', (e) => {
 
   console.log("[Megabox] Simple Translate selection observer mounted via IPC Relay.");
 })();
+
+
+// Megabox Wheel Zoom Bridge (Ctrl + Wheel)
+(function initWheelZoomBridge() {
+  window.addEventListener("wheel", (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        ipcRenderer.sendToHost("webview-zoom", "in");
+      } else if (e.deltaY > 0) {
+        ipcRenderer.sendToHost("webview-zoom", "out");
+      }
+    }
+  }, { passive: false });
+})();

@@ -17,6 +17,11 @@ contextBridge.exposeInMainWorld('megabox', {
   performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
   toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
 
+  // Lock Screen API (Local-First Master Password / PIN)
+  verifyLockPassword: (password) => ipcRenderer.invoke("lock:verify", { password }),
+  setLockPassword: (currentPassword, newPassword) => ipcRenderer.invoke("lock:set-password", { currentPassword, newPassword }),
+  getLockStatus: () => ipcRenderer.invoke("lock:status"),
+
   // Settings & System API
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),

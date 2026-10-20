@@ -1318,6 +1318,12 @@
           <line x1="1" y1="1" x2="23" y2="23"></line>
         </svg>
       </button>
+      <button id="btn-lock" class="sidebar-btn" title="Kunci Megabox (Ctrl+Shift+L)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </button>
     </div>
 
   </aside>
@@ -1516,6 +1522,66 @@
         
         <!-- SECTION 1: UMUM & SISTEM -->
         <div id="section-settings-general" style="display: flex; flex-direction: column; gap: 16px;">
+
+          <!-- Grouped Island: Local Master Key / Password Lock (No Cloud Account Required) -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div id="i18n-card-lock-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Kunci Layar Workspace (Master Password / PIN)</div>
+                  <div id="i18n-card-lock-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Kunci workspace dengan sandi lokal saat meninggalkan komputer. Tanpa akun cloud.</div>
+                </div>
+              </div>
+              <div id="lock-status-badge" style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); font-size: 11px; font-weight: 600; color: #94a3b8;">
+                <span id="lock-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #64748b;"></span>
+                <span id="lock-status-text">Belum Aktif</span>
+              </div>
+            </div>
+
+            <!-- Lock Configuration Inputs -->
+            <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                  <label id="i18n-lock-pwd-label" style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">Kata Sandi Baru / PIN</label>
+                  <input type="password" id="input-new-lock-pwd" class="apple-input-dark" placeholder="Ketik kata sandi baru..." style="width: 100%; font-size: 12px; padding: 7px 12px;">
+                </div>
+                <div id="box-current-lock-pwd" style="display: none;">
+                  <label id="i18n-lock-curr-label" style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">Kata Sandi Saat Ini</label>
+                  <input type="password" id="input-curr-lock-pwd" class="apple-input-dark" placeholder="Konfirmasi sandi lama..." style="width: 100%; font-size: 12px; padding: 7px 12px;">
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <label id="i18n-lock-idle-label" style="font-size: 11.5px; color: #cbd5e1; font-weight: 500;">Kunci otomatis setelah idle:</label>
+                  <select id="setting-lock-idle" class="apple-select-dark" style="font-size: 11.5px; padding: 4px 10px;">
+                    <option value="0">Jangan Pernah (Manual Saja)</option>
+                    <option value="5">5 Menit</option>
+                    <option value="15">15 Menit</option>
+                    <option value="30">30 Menit</option>
+                    <option value="60">1 Jam</option>
+                  </select>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                  <button id="btn-remove-lock-pwd" type="button" class="btn-apple-pill-dark" style="display: none; padding: 6px 14px; font-size: 11.5px; color: #f43f5e;">
+                    Hapus Kunci
+                  </button>
+                  <button id="btn-save-lock-pwd" type="button" class="btn-apple-cyan-solid" style="padding: 6px 16px; font-size: 11.5px;">
+                    Simpan Sandi
+                  </button>
+                </div>
+              </div>
+              <div id="lock-save-msg" style="font-size: 11px; display: none; padding-left: 2px;"></div>
+            </div>
+          </div>
+
           
           <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
             Performa Host & Perilaku Sistem
@@ -1789,6 +1855,49 @@
         <div style="display: flex; gap: 10px; margin-left: auto;">
           <button id="btn-settings-done" type="button" class="btn-apple-pill-dark" style="padding: 7px 22px;">Selesai</button>
         </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Fullscreen Local Lock Overlay (Zero-Cloud Master Lock) -->
+  <div id="lock-overlay" style="display: none; position: fixed; inset: 0; background: rgba(14, 16, 20, 0.94); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); z-index: 999999; align-items: center; justify-content: center; padding: 24px;">
+    <div style="background: rgba(24, 25, 29, 0.85); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; width: 100%; max-width: 380px; padding: 32px 28px; display: flex; flex-direction: column; align-items: center; gap: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 1px 1px rgba(255,255,255,0.08); text-align: center;">
+      
+      <!-- Lock Avatar / Key Icon -->
+      <div style="position: relative;">
+        <div id="lock-screen-avatar-box" style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(0,0,0,0.4);">
+          <img id="lock-screen-avatar-img" src="assets/megabox.png" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Avatar">
+        </div>
+        <div style="position: absolute; bottom: -2px; right: -2px; width: 26px; height: 26px; border-radius: 50%; background: #38bdf8; border: 2px solid #18191d; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0b1220" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Title & Headline -->
+      <div>
+        <div style="font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: -0.01em;">Megabox Terkunci</div>
+        <div style="font-size: 12px; color: #94a3b8; margin-top: 4px; line-height: 1.4;">Masukkan kata sandi atau PIN master lokal untuk membuka kembali ruang kerja Anda.</div>
+      </div>
+
+      <!-- Unlock Form -->
+      <form id="form-unlock" style="width: 100%; display: flex; flex-direction: column; gap: 12px;" onsubmit="return false;">
+        <div style="position: relative; width: 100%;">
+          <input type="password" id="input-unlock-password" class="apple-input-dark" placeholder="Kata sandi atau PIN..." autofocus style="width: 100%; font-size: 14px; padding: 11px 16px; text-align: center; letter-spacing: 0.1em; border-radius: 10px; background: rgba(0,0,0,0.35); border-color: rgba(255,255,255,0.14);">
+        </div>
+        <div id="unlock-error-msg" style="font-size: 12px; color: #f43f5e; font-weight: 600; display: none;">Kata sandi tidak sesuai</div>
+
+        <button type="submit" id="btn-submit-unlock" class="btn-apple-cyan-solid" style="width: 100%; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+          <span>Buka Kunci Layar</span>
+        </button>
+      </form>
+
+      <div style="font-size: 11px; color: #64748b; line-height: 1.4;">
+        Proteksi 100% lokal di komputer Anda. Tanpa koneksi internet atau login server.
       </div>
 
     </div>
