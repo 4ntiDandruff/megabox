@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell, clipboard } = require('electron');
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
@@ -333,6 +333,247 @@ function createWindow() {
         mainWindow.webContents.send('shortcut:action', { action: 'escape' });
       }
     });
+
+    // Rambox-Style Native Context Menu for Webview Services
+    webviewWebContents.on('context-menu', (event, params) => {
+      event.preventDefault();
+
+      const pageUrl = params.pageURL || webviewWebContents.getURL() || '';
+      const hasTextSelection = Boolean(params.selectionText && params.selectionText.trim().length > 0);
+      const isEditable = Boolean(params.isEditable);
+      const { editFlags } = params;
+
+      const template = [];
+
+      // 1. Copy current URL
+      if (pageUrl) {
+        template.push({
+          label: 'Copy current URL',
+          click: () => {
+            clipboard.writeText(pageUrl);
+          }
+        });
+        template.push({ type: 'separator' });
+      }
+
+      // 2. Undo
+      if (isEditable || (editFlags && editFlags.canUndo)) {
+        template.push({
+          label: 'Undo',
+          accelerator: 'CmdOrCtrl+Z',
+          enabled: Boolean(editFlags && editFlags.canUndo),
+          click: () => webviewWebContents.undo()
+        });
+      }
+
+      // Cut / Copy / Paste (when applicable)
+      if (isEditable || hasTextSelection) {
+        if (editFlags && editFlags.canCut) {
+          template.push({
+            label: 'Cut',
+            accelerator: 'CmdOrCtrl+X',
+            click: () => webviewWebContents.cut()
+          });
+        }
+        if (hasTextSelection || (editFlags && editFlags.canCopy)) {
+          template.push({
+            label: 'Copy',
+            accelerator: 'CmdOrCtrl+C',
+            click: () => webviewWebContents.copy()
+          });
+        }
+        if (isEditable && editFlags && editFlags.canPaste) {
+          template.push({
+            label: 'Paste',
+            accelerator: 'CmdOrCtrl+V',
+            click: () => webviewWebContents.paste()
+          });
+        }
+      }
+
+      // 3. Select All
+      template.push({
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        enabled: Boolean(editFlags && editFlags.canSelectAll),
+        click: () => webviewWebContents.selectAll()
+      });
+
+      template.push({ type: 'separator' });
+
+      // 4. Navigation: Home, Reload, Back
+      template.push({
+        label: 'Home',
+        click: () => {
+          mainWindow.webContents.send('shortcut:action', { action: 'home-active' });
+        }
+      });
+      template.push({
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        click: () => webviewWebContents.reload()
+      });
+      template.push({
+        label: 'Back',
+        accelerator: 'Alt+Left',
+        enabled: webviewWebContents.navigationHistory ? webviewWebContents.navigationHistory.canGoBack() : webviewWebContents.canGoBack(),
+        click: () => {
+          if (webviewWebContents.navigationHistory && webviewWebContents.navigationHistory.canGoBack()) {
+            webviewWebContents.navigationHistory.goBack();
+          } else if (webviewWebContents.canGoBack && webviewWebContents.canGoBack()) {
+            webviewWebContents.goBack();
+          }
+        }
+      });
+
+      template.push({ type: 'separator' });
+
+      // 5. Save as..., Print, Zoom
+      template.push({
+        label: 'Save as...',
+        click: async () => {
+          try {
+            const pageTitle = (webviewWebContents.getTitle() || 'Webpage').replace(/[\/:*?"<>|]/g, '_');
+            const saveRes = await dialog.showSaveDialog(mainWindow, {
+              title: 'Save Webpage',
+              defaultPath: (webviewWebContents.getTitle() || "Webpage") + ".html",
+              filters: [{ name: 'Webpage, Complete', extensions: ['html', 'htm'] }]
+            });
+            if (!saveRes.canceled && saveRes.filePath) {
+              await webviewWebContents.savePage(saveRes.filePath, 'HTMLComplete');
+            }
+          } catch (err) {
+            console.warn('[Save Page Error]', err.message);
+          }
+        }
+      });
+
+      template.push({
+        label: 'Print',
+        click: () => {
+          webviewWebContents.print({}, (success, failureReason) => {
+            if (!success && failureReason && failureReason !== 'cancelled') {
+              console.warn('[Print Error]', failureReason);
+            }
+          });
+        }
+      });
+
+      template.push({
+        label: 'Zoom',
+        submenu: [
+          {
+            label: 'Zoom in',
+            accelerator: 'CmdOrCtrl+Plus',
+            click: () => {
+              mainWindow.webContents.send('shortcut:action', { action: 'zoom-in' });
+            }
+          },
+          {
+            label: 'Zoom out',
+            accelerator: 'CmdOrCtrl+-',
+            click: () => {
+              mainWindow.webContents.send('shortcut:action', { action: 'zoom-out' });
+            }
+          },
+          {
+            label: 'Reset zoom',
+            accelerator: 'CmdOrCtrl+0',
+            click: () => {
+              mainWindow.webContents.send('shortcut:action', { action: 'zoom-reset' });
+            }
+          }
+        ]
+      });
+
+      // 6. Extensions
+      template.push({
+        label: 'Extensions',
+        click: () => {
+          mainWindow.webContents.send('shortcut:action', { action: 'toggle-extensions' });
+        }
+      });
+
+      template.push({ type: 'separator' });
+
+      // 7. Search...
+      template.push({
+        label: 'Search...',
+        click: () => {
+          mainWindow.webContents.send('shortcut:action', { action: 'quick-switch' });
+        }
+      });
+
+      // 8. Set current URL as app's default
+      template.push({
+        label: "Set current URL as app's default",
+        click: () => {
+          mainWindow.webContents.send('webview:set-default-url', {
+            url: pageUrl
+          });
+        }
+      });
+
+      // 9. Spellcheck
+      const ses = webviewWebContents.session;
+      const spellCheckerEnabled = ses && typeof ses.isSpellCheckerEnabled === 'function' ? ses.isSpellCheckerEnabled() : true;
+      const availableLangs = [
+        { code: 'en-US', name: 'English (US)' },
+        { code: 'id', name: 'Bahasa Indonesia' }
+      ];
+      const currentSpellLangs = ses && typeof ses.getSpellCheckerLanguages === 'function' ? ses.getSpellCheckerLanguages() : ['en-US'];
+
+      const spellSubmenu = [
+        {
+          label: 'Pemeriksa Ejaan Aktif',
+          type: 'checkbox',
+          checked: spellCheckerEnabled,
+          click: (menuItem) => {
+            if (ses && typeof ses.setSpellCheckerEnabled === 'function') {
+              ses.setSpellCheckerEnabled(menuItem.checked);
+            }
+          }
+        },
+        { type: 'separator' }
+      ];
+
+      availableLangs.forEach(lang => {
+        spellSubmenu.push({
+          label: lang.name,
+          type: 'checkbox',
+          checked: currentSpellLangs.includes(lang.code),
+          click: (menuItem) => {
+            if (ses && typeof ses.setSpellCheckerLanguages === 'function') {
+              let nextLangs = menuItem.checked
+                ? [...currentSpellLangs, lang.code]
+                : currentSpellLangs.filter(l => l !== lang.code);
+              if (nextLangs.length === 0) nextLangs = ['en-US'];
+              ses.setSpellCheckerLanguages(nextLangs);
+            }
+          }
+        });
+      });
+
+      template.push({
+        label: 'Spellcheck',
+        submenu: spellSubmenu
+      });
+
+      // Contextual dictionary suggestions if user right-clicked a misspelled word
+      if (params.misspelledWord && params.dictionarySuggestions && params.dictionarySuggestions.length > 0) {
+        template.unshift({ type: 'separator' });
+        params.dictionarySuggestions.slice(0, 5).reverse().forEach(suggestion => {
+          template.unshift({
+            label: suggestion,
+            click: () => webviewWebContents.replaceMisspelling(suggestion)
+          });
+        });
+      }
+
+      const menu = Menu.buildFromTemplate(template);
+      menu.popup({ window: mainWindow });
+    });
+
   });
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));

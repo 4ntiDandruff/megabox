@@ -137,6 +137,17 @@
           hideContextMenu();
           break;
         }
+        case 'home-active': {
+          const targetId = (contextTargetApp && contextTargetApp.id) || activeAppId;
+          if (targetId) {
+            const currentApp = apps.find(a => a.id === targetId);
+            const wv = document.getElementById('wv-' + targetId);
+            if (wv && currentApp && currentApp.url) {
+              wv.loadURL(currentApp.url);
+            }
+          }
+          break;
+        }
         case 'reload-active': {
           if (contextTargetApp) {
             const wv = document.getElementById('wv-' + contextTargetApp.id);
@@ -427,6 +438,17 @@
       if (window.megabox.onShortcutAction) {
         window.megabox.onShortcutAction((data) => {
           dispatchShortcutAction(data);
+        });
+      }
+      if (window.megabox.onSetDefaultUrl) {
+        window.megabox.onSetDefaultUrl(async (data) => {
+          if (!data || !data.url || !activeAppId) return;
+          const currentApp = apps.find(a => a.id === activeAppId);
+          if (currentApp) {
+            currentApp.url = data.url;
+            await window.megabox.saveApp(currentApp);
+            showGlobalToast('URL default aplikasi diperbarui ke: ' + data.url, 'success');
+          }
         });
       }
     }
@@ -3264,4 +3286,56 @@
       });
     }
   }
+
+
+
+  // Global Toast Notification Helper (Apple Liquid Crystal Style)
+  function showGlobalToast(message, type = 'info') {
+    let container = document.getElementById('global-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'global-toast-container';
+      container.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; gap: 8px; pointer-events: none;';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'global-toast-pill';
+    toast.style.cssText = 'pointer-events: auto; min-width: 260px; max-width: 420px; padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(24px) saturate(190%); -webkit-backdrop-filter: blur(24px) saturate(190%); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; transform: translateY(12px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);';
+
+    let iconSvg = '';
+    if (type === 'success') {
+      toast.style.background = 'rgba(255, 255, 255, 0.94)';
+      toast.style.border = '1px solid rgba(52, 199, 89, 0.35)';
+      toast.style.color = '#1D1D1F';
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.2"><path d="M20 6L9 17l-5-5"></path></svg>';
+    } else if (type === 'danger') {
+      toast.style.background = 'rgba(255, 255, 255, 0.94)';
+      toast.style.border = '1px solid rgba(255, 59, 48, 0.35)';
+      toast.style.color = '#1D1D1F';
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+    } else {
+      toast.style.background = 'rgba(255, 255, 255, 0.94)';
+      toast.style.border = '1px solid rgba(0, 113, 227, 0.35)';
+      toast.style.color = '#1D1D1F';
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+    }
+
+    toast.innerHTML = '<div style="width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">' + iconSvg + '</div><div style="flex: 1; line-height: 1.4;">' + message + '</div>';
+
+    container.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    });
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 300);
+    }, 3200);
+  }
+  window.showGlobalToast = showGlobalToast;
 

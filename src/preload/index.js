@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('megabox', {
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   onShortcutAction: (callback) => ipcRenderer.on('shortcut:action', (_, data) => callback(data)),
+  onSetDefaultUrl: (callback) => ipcRenderer.on('webview:set-default-url', (_, data) => callback(data)),
   
   // Instant Selection Translation Relay (Zero-CSP Node.js Engine)
   performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
