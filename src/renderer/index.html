@@ -7,19 +7,30 @@
   <style>
     /* Megabox Utilitarian CSS Variables */
     :root {
-      --brand-primary: #7266f0;
-      --brand-primary-hover: #5e50ee;
-      --brand-danger: #d9534f;
-      --brand-success: #5cb85c;
+      --apple-blue: #0071E3;
+      --apple-blue-hover: #0077ED;
+      --apple-indigo: #5E5CE6;
+      --apple-mint: #34C759;
+      --apple-orange: #FF9F0A;
+      --apple-pink: #FF375F;
+      --apple-purple: #BF5AF2;
+      --apple-teal: #64D2FF;
+      --text-primary: #1D1D1F;
+      --text-secondary: #86868B;
+
+      --brand-primary: #0071E3;
+      --brand-primary-hover: #0077ED;
+      --brand-danger: #FF3B30;
+      --brand-success: #34C759;
       --sidebar-width: 72px;
-      --sidebar-bg: #1e1e1e;
-      --sidebar-active-bg: #2d2f31;
-      --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
-      --sidebar-border: rgba(255, 255, 255, 0.08);
-      --webview-bg: #ffffff;
-      --modal-bg: #242526;
-      --input-bg: #1a1a1a;
-      --text-muted: #94a3b8;
+      --sidebar-bg: rgba(255, 255, 255, 0.85);
+      --sidebar-active-bg: rgba(0, 113, 227, 0.10);
+      --sidebar-hover-bg: rgba(0, 0, 0, 0.05);
+      --sidebar-border: rgba(0, 0, 0, 0.08);
+      --webview-bg: #FFFFFF;
+      --modal-bg: rgba(255, 255, 255, 0.94);
+      --input-bg: #FFFFFF;
+      --text-muted: #86868B;
     }
 
     * {
@@ -33,9 +44,16 @@
       width: 100vw;
       display: flex;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--sidebar-bg);
-      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #F5F5F7;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(94, 92, 230, 0.12) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(0, 113, 227, 0.14) 0px, transparent 45%),
+        radial-gradient(at 50% 30%, rgba(255, 159, 10, 0.09) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(48, 209, 88, 0.10) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(255, 55, 95, 0.10) 0px, transparent 45%);
+      background-attachment: fixed;
+      color: #1D1D1F;
     }
 
     
@@ -49,8 +67,10 @@
     .sidebar {
       width: var(--sidebar-width);
       height: 100vh;
-      background-color: var(--sidebar-bg);
-      border-right: 1px solid var(--sidebar-border);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -336,7 +356,9 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.75);
+      background-color: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       z-index: 999999;
       display: none;
       align-items: center;
@@ -348,13 +370,16 @@
       width: 100%;
       max-width: 880px;
       max-height: 88vh;
-      background: #14171d;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      box-shadow: none;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.10);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      color: #1D1D1F;
     }
 
     /* Category Filter Bar */
@@ -369,9 +394,9 @@
       display: none;
     }
     .category-pill {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #86868B;
       font-size: 12px;
       font-weight: 500;
       padding: 5px 12px;
@@ -384,15 +409,15 @@
       gap: 6px;
     }
     .category-pill:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
+      background: rgba(0, 0, 0, 0.08);
+      color: #1D1D1F;
     }
     .category-pill.is-active {
-      background: #2a2e39;
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      background: #FFFFFF;
+      border-color: rgba(0, 0, 0, 0.12);
+      color: #0071E3;
       font-weight: 600;
-      box-shadow: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
     
     .featured-badge-pill {
@@ -400,8 +425,8 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      background: #20242c;
-      color: #94a3b8;
+      background: rgba(0, 113, 227, 0.08);
+      color: #0071E3;
       border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 1px 6px;
       border-radius: 4px;
@@ -409,7 +434,9 @@
 
     .catalog-header {
       padding: 20px 24px 16px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -424,7 +451,7 @@
     .catalog-title {
       font-size: 19px;
       font-weight: 700;
-      color: #ffffff;
+      color: #1D1D1F;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -433,8 +460,8 @@
     .catalog-badge {
       font-size: 11px;
       font-weight: 600;
-      background: #20242c;
-      color: #94a3b8;
+      background: rgba(0, 113, 227, 0.08);
+      color: #0071E3;
       padding: 2px 8px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -504,29 +531,47 @@
     }
 
     .service-card {
-      background-color: #1a1d24;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
       padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      box-shadow: none;
     }
 
     .service-card:hover {
-      background-color: #222631;
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: none;
-      box-shadow: none;
+      background-color: #FFFFFF;
+      border-color: rgba(0, 113, 227, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 113, 227, 0.08);
+      transform: translateY(-1px);
     }
 
     .service-card.is-featured-card {
-      background: #1a1d24;
-      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.98);
+      border-color: rgba(0, 113, 227, 0.22);
+    }
+
+    .service-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1D1D1F;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .service-meta {
+      font-size: 11px;
+      color: #86868B;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .service-card-icon-wrapper {
@@ -598,8 +643,9 @@
     /* Custom App Bottom Banner in Catalog */
     .catalog-footer {
       padding: 14px 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background-color: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(0, 0, 0, 0.07);
+      background-color: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -612,8 +658,10 @@
 
     .btn-custom-service {
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      color: #1D1D1F;
+      background: #FFFFFF;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       border-radius: 8px;
       padding: 8px 14px;
       font-size: 12px;
@@ -631,14 +679,17 @@
     .modal-box-form {
       width: 100%;
       max-width: 440px;
-      background-color: var(--modal-bg);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
       padding: 24px;
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.10);
       display: flex;
       flex-direction: column;
       gap: 16px;
+      color: #1D1D1F;
     }
 
     .form-group {
@@ -650,23 +701,24 @@
     .form-label {
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: #1D1D1F;
     }
 
     .form-input {
       width: 100%;
       padding: 10px 12px;
-      background-color: var(--input-bg);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background-color: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       border-radius: 8px;
-      color: #ffffff;
-      font-size: 14px;
+      color: #1D1D1F;
+      font-size: 13px;
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-
     .form-input:focus {
-      border-color: var(--brand-primary);
+      border-color: #0071E3;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
     }
 
     .modal-actions {
@@ -712,48 +764,53 @@
     /* Custom Right Click Context Menu */
     .custom-context-menu {
       position: fixed;
-      background-color: #2b2b2b;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      padding: 4px 0;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 4px;
       min-width: 180px;
-      box-shadow: none;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
       z-index: 200;
       display: none;
+      color: #1D1D1F;
     }
 
     .context-menu-item {
-      padding: 8px 16px;
-      font-size: 13px;
-      color: #f1f5f9;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      color: #1D1D1F;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: background-color 0.1s;
+      transition: background-color 0.1s ease, color 0.1s ease;
     }
 
     .context-menu-item:hover {
-      background-color: var(--brand-primary);
-      color: #ffffff;
+      background-color: #0071E3;
+      color: #FFFFFF;
     }
 
     .context-menu-item.danger:hover {
-      background-color: var(--brand-danger);
+      background-color: #FF3B30;
+      color: #FFFFFF;
     }
 
     .context-menu-divider {
       height: 1px;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(0, 0, 0, 0.07);
       margin: 4px 0;
     }
 
     .context-menu-header {
-      padding: 6px 16px;
-      font-size: 11px;
+      padding: 4px 12px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: #86868B;
       letter-spacing: 0.5px;
     }
   
@@ -763,13 +820,16 @@
     .quickswitch-box {
       width: 100%;
       max-width: 520px;
-      background-color: #202020;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      box-shadow: none;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.12);
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      color: #1D1D1F;
     }
 
     .quickswitch-input {
@@ -777,20 +837,11 @@
       box-sizing: border-box;
       padding: 14px 18px;
       font-size: 15px;
-      background: #282828;
+      background: rgba(255, 255, 255, 0.8);
       border: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      color: #1D1D1F;
       outline: none;
-    }
-
-    .quickswitch-list {
-      max-height: 320px;
-      overflow-y: auto;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
     }
 
     .quickswitch-item {
@@ -800,14 +851,15 @@
       padding: 8px 12px;
       border-radius: 8px;
       cursor: pointer;
-      color: #e2e8f0;
+      color: #1D1D1F;
       transition: background-color 0.1s;
     }
 
     .quickswitch-item:hover, .quickswitch-item.is-selected {
-      background-color: var(--brand-primary);
-      color: #ffffff;
+      background-color: rgba(0, 113, 227, 0.10);
+      color: #0071E3;
     }
+    .quickswitch-list { max-height: 320px; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
 
     .quickswitch-item img {
       width: 24px;
@@ -1046,12 +1098,18 @@
       max-height: 85vh;
       display: flex;
       flex-direction: column;
-      background: #18191c;
-      border: 1px solid #2d3036;
-      border-radius: 12px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.02),
+        0 8px 24px -4px rgba(0, 0, 0, 0.06),
+        0 24px 60px -12px rgba(0, 113, 227, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
       overflow: hidden;
-      color: #f1f5f9;
+      color: #1D1D1F;
     }
 
     /* Minimalist Flat Scrollbar */
@@ -1063,192 +1121,182 @@
       background: transparent;
     }
     #settings-modal *::-webkit-scrollbar-thumb {
-      background: #2e323b;
+      background: rgba(0, 0, 0, 0.15);
       border-radius: 3px;
     }
     #settings-modal *::-webkit-scrollbar-thumb:hover {
-      background: #3e4450;
+      background: rgba(0, 0, 0, 0.28);
     }
 
     /* Flat Segmented Tab Bar */
-    .neo-groove-dark {
-      background: #121316;
-      border: 1px solid #282a30;
-      border-radius: 8px;
+    .neo-groove-dark, .neo-groove {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
       padding: 3px;
       display: inline-flex;
       align-items: center;
       gap: 3px;
     }
 
-    .neo-tab-dark {
+    .neo-tab-dark, .neo-tab {
       display: flex;
       align-items: center;
       gap: 7px;
       padding: 6px 14px;
       font-size: 12px;
       font-weight: 500;
-      border-radius: 6px;
+      border-radius: 8px;
       background: transparent;
-      color: #8b949e;
+      color: #86868B;
       border: 1px solid transparent;
       cursor: pointer;
       user-select: none;
-      transition: color 100ms ease, background-color 100ms ease;
+      transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .neo-tab-dark:hover {
-      color: #f0f6fc;
-      background: #1f2126;
+    .neo-tab-dark:hover, .neo-tab:hover {
+      color: #1D1D1F;
+      background: rgba(255, 255, 255, 0.6);
     }
 
-    .neo-tab-dark.is-active {
-      background: #282b32 !important;
-      color: #ffffff !important;
-      border: 1px solid #383d47 !important;
+    .neo-tab-dark.is-active, .neo-tab.is-active {
+      background: #FFFFFF !important;
+      color: #1D1D1F !important;
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 #FFFFFF !important;
       font-weight: 600 !important;
     }
 
-    .neo-tab-dark.is-active svg {
-      color: #ffffff !important;
+    .neo-tab-dark.is-active svg, .neo-tab.is-active svg {
+      color: #0071E3 !important;
     }
 
     /* Flat Section Cards */
     
     /* Megawarden & Apple Liquid UI Classes */
-    .crystal-input {
-      background: #111215;
-      color: #f0f6fc;
-      border: 1px solid #30343d;
-      border-radius: 7px;
-      padding: 7px 12px;
+    .crystal-input, .apple-input-dark {
+      background: #FFFFFF !important;
+      color: #1D1D1F !important;
+      border: 1px solid rgba(0, 0, 0, 0.12) !important;
+      border-radius: 8px;
+      padding: 8px 12px;
       font-size: 12px;
       outline: none;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
       transition: border-color 140ms ease, box-shadow 140ms ease;
     }
-    .crystal-input:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    .crystal-input:focus, .apple-input-dark:focus {
+      border-color: #0071E3 !important;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15) !important;
     }
-    .crystal-input::placeholder {
-      color: #64748b;
+    .crystal-input::placeholder, .apple-input-dark::placeholder {
+      color: #86868B !important;
     }
-    .crystal-btn-primary {
+    .crystal-btn-primary, .btn-apple-cyan-solid {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #0071E3 !important;
+      color: #FFFFFF !important;
+      border: 1px solid #0071E3 !important;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0, 113, 227, 0.25);
+      transition: background-color 120ms ease, transform 80ms ease;
+    }
+    .crystal-btn-primary:hover, .btn-apple-cyan-solid:hover {
+      background: #0077ED !important;
+    }
+    .crystal-btn-primary:active, .btn-apple-cyan-solid:active {
+      transform: scale(0.97);
+    }
+    .crystal-btn-secondary, .btn-apple-pill-dark {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       padding: 6px 14px;
-      border-radius: 7px;
-      font-size: 11.5px;
-      font-weight: 600;
-      background: #0ea5e9;
-      color: #ffffff;
-      border: 1px solid #38bdf8;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 120ms ease, transform 80ms ease;
-    }
-    .crystal-btn-primary:hover {
-      background: #0284c7;
-    }
-    .crystal-btn-primary:active {
-      transform: scale(0.97);
-    }
-    .crystal-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 7px;
-      font-size: 11.5px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 500;
-      background: #1f2229;
-      color: #cbd5e1;
-      border: 1px solid #323743;
+      background: rgba(255, 255, 255, 0.94) !important;
+      color: #1D1D1F !important;
+      border: 1px solid rgba(0, 0, 0, 0.12) !important;
       cursor: pointer;
       user-select: none;
-      transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 80ms ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      transition: all 120ms ease;
     }
-    .crystal-btn-secondary:hover {
-      background: #2a2e38;
-      color: #ffffff;
-      border-color: #444a59;
+    .crystal-btn-secondary:hover, .btn-apple-pill-dark:hover {
+      background: #FFFFFF !important;
+      border-color: rgba(0, 0, 0, 0.2) !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     }
-    .crystal-btn-secondary:active {
+    .crystal-btn-secondary:active, .btn-apple-pill-dark:active {
       transform: scale(0.97);
     }
     .vault-item-row {
-      background: rgba(22, 24, 29, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
       padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
       transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .vault-item-row:hover {
-      background: rgba(30, 34, 42, 0.9);
-      border-color: rgba(56, 189, 248, 0.3);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      background: #FFFFFF;
+      border-color: rgba(0, 113, 227, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 113, 227, 0.08);
       transform: translateY(-1px);
     }
     .vault-action-btn {
       width: 28px;
       height: 28px;
-      border-radius: 6px;
+      border-radius: 7px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #86868B;
       cursor: pointer;
       transition: all 120ms ease;
     }
     .vault-action-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.08);
+      color: #1D1D1F;
+      border-color: rgba(0, 0, 0, 0.16);
     }
     .vault-action-btn:active {
       transform: scale(0.92);
     }
     .vault-action-btn.copy-pass:hover {
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.4);
-      background: rgba(56, 189, 248, 0.12);
+      color: #0071E3;
+      border-color: rgba(0, 113, 227, 0.3);
+      background: rgba(0, 113, 227, 0.08);
     }
     .vault-action-btn.danger:hover {
-      color: #f87171;
-      border-color: rgba(248, 113, 113, 0.4);
-      background: rgba(248, 113, 113, 0.12);
+      color: #FF3B30;
+      border-color: rgba(255, 59, 48, 0.3);
+      background: rgba(255, 59, 48, 0.08);
     }
 
     
     /* ============================================================ */
     /* Liquid Apple UI v2.1 Cupertino Dark Tokens & Elements       */
     /* ============================================================ */
-    .apple-input-dark {
-      background: #111215 !important;
-      color: #f0f6fc !important;
-      border: 1px solid #2d313a !important;
-      border-radius: 7px;
-      outline: none;
-      transition: border-color 140ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 140ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .apple-input-dark:focus {
-      border-color: #38bdf8 !important;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15) !important;
-    }
-    .apple-input-dark::placeholder {
-      color: #64748b !important;
-    }
+    
 
     /* Squircle Icon Plaque */
     .apple-squircle-icon {
@@ -1262,29 +1310,29 @@
       user-select: none;
     }
     .apple-squircle-blue {
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.22);
-      color: #38bdf8;
+      background: rgba(0, 113, 227, 0.08);
+      border: 1px solid rgba(0, 113, 227, 0.18);
+      color: #0071E3;
     }
     .apple-squircle-purple {
-      background: rgba(191, 90, 242, 0.1);
-      border: 1px solid rgba(191, 90, 242, 0.22);
-      color: #bf5af2;
+      background: rgba(191, 90, 242, 0.08);
+      border: 1px solid rgba(191, 90, 242, 0.2);
+      color: #BF5AF2;
     }
     .apple-squircle-amber {
-      background: rgba(255, 159, 10, 0.1);
-      border: 1px solid rgba(255, 159, 10, 0.22);
-      color: #ff9f0a;
+      background: rgba(255, 159, 10, 0.08);
+      border: 1px solid rgba(255, 159, 10, 0.2);
+      color: #FF9F0A;
     }
     .apple-squircle-emerald {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.22);
-      color: #34d399;
+      background: rgba(52, 199, 89, 0.08);
+      border: 1px solid rgba(52, 199, 89, 0.2);
+      color: #34C759;
     }
     .apple-squircle-slate {
-      background: rgba(148, 163, 184, 0.08);
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #86868B;
     }
 
     /* Spring Action Buttons */
@@ -1321,10 +1369,11 @@
     }
 
     .apple-group-card {
-      background: #151619;
-      border: 1px solid #26282e;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
     .apple-setting-row {
@@ -1336,11 +1385,11 @@
     }
 
     .apple-setting-row:not(:last-child) {
-      border-bottom: 1px solid #202227;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     .apple-setting-row:hover {
-      background-color: #1a1b20;
+      background-color: rgba(0, 0, 0, 0.02);
     }
 
     /* Flat Modern Switch */
@@ -1363,8 +1412,8 @@
     .apple-slider-mint {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #2a2d34;
-      border: 1px solid #3a3e47;
+      background-color: rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.06);
       border-radius: 22px;
       transition: background-color 150ms ease, border-color 150ms ease;
     }
@@ -1376,14 +1425,15 @@
       width: 16px;
       left: 2px;
       bottom: 2px;
-      background-color: #c9d1d9;
+      background-color: #FFFFFF;
       border-radius: 50%;
-      transition: transform 150ms ease, background-color 150ms ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+      transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease;
     }
 
     .apple-switch-mint input:checked + .apple-slider-mint {
-      background-color: #238636 !important;
-      border-color: #2ea043 !important;
+      background-color: #34C759 !important;
+      border-color: #30B050 !important;
     }
 
     .apple-switch-mint input:checked + .apple-slider-mint::before {
@@ -1393,25 +1443,26 @@
 
     /* Flat Clean Inputs & Selects */
     .apple-select-dark {
-      background: #111215;
-      color: #f0f6fc;
-      border: 1px solid #30343d;
+      background: #FFFFFF;
+      color: #1D1D1F;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       padding: 6px 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 500;
       outline: none;
       cursor: pointer;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
       transition: border-color 100ms ease;
     }
 
     .apple-select-dark:focus {
-      border-color: #58a6ff;
+      border-color: #0071E3;
     }
 
     .apple-select-dark option {
-      background-color: #16181d;
-      color: #f0f6fc;
+      background-color: #FFFFFF;
+      color: #1D1D1F;
     }
 
     /* Flat Clean Buttons */
@@ -1678,40 +1729,40 @@
 
 
   <!-- Settings & Preferences Modal (Cupertino Flat Minimalist v2.1) -->
-  <div id="settings-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.75);">
+  <div id="settings-modal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
     <div class="crystal-modal-box">
       
       <!-- Modal Header (Frosted Acrylic Top Bar) -->
-      <div style="padding: 16px 20px 14px 20px; border-bottom: 1px solid #282a30; background: #16171a; display: flex; flex-direction: column; gap: 12px;">
+      <div style="padding: 16px 20px 14px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 28px; height: 28px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
               <img src="assets/icons8/settings_header.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Settings">
             </div>
             <div>
-              <span id="i18n-settings-title" style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ffffff;">Pengaturan Megabox</span>
-              <div id="i18n-settings-subtitle" style="font-size: 11px; color: #94a3b8; margin-top: 1px;">Sistem, Cadangan Data, dan Arsitektur</div>
+              <span id="i18n-settings-title" style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #1D1D1F;">Pengaturan Megabox</span>
+              <div id="i18n-settings-subtitle" style="font-size: 11px; color: #86868B; margin-top: 1px;">Sistem, Cadangan Data, dan Arsitektur</div>
             </div>
           </div>
           
-          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid #2d3036; color: #8b949e; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; line-height: 1;">&times;</button>
+          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid rgba(0, 0, 0, 0.08); color: #86868B; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; line-height: 1;">&times;</button>
         </div>
 
         <!-- Cupertino Segmented Tab Recessed Well -->
-        <div class="neo-groove-dark">
-          <button id="tab-nav-general" type="button" class="neo-tab-dark is-active">
+        <div class="neo-groove">
+          <button id="tab-nav-general" type="button" class="neo-tab is-active">
             <img src="assets/icons8/tab_general.png" style="width: 16px; height: 16px; object-fit: contain;" alt="General">
             <span>Umum & Sistem</span>
           </button>
-          <button id="tab-nav-vault" type="button" class="neo-tab-dark">
+          <button id="tab-nav-vault" type="button" class="neo-tab">
             <img src="assets/icons8/tab_vault.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Vault">
             <span>Megawarden</span>
           </button>
-          <button id="tab-nav-sync" type="button" class="neo-tab-dark">
+          <button id="tab-nav-sync" type="button" class="neo-tab">
             <img src="assets/icons8/tab_sync.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Sync">
             <span>Cadangan & Data</span>
           </button>
-          <button id="tab-nav-about" type="button" class="neo-tab-dark">
+          <button id="tab-nav-about" type="button" class="neo-tab">
             <img src="assets/icons8/tab_about.png" style="width: 16px; height: 16px; object-fit: contain;" alt="About">
             <span>Tentang</span>
           </button>
@@ -1724,7 +1775,7 @@
         <!-- SECTION 1: UMUM & SISTEM -->
         <div id="section-settings-general" style="display: flex; flex-direction: column; gap: 16px;">
 
-          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #86868B; padding-left: 2px;">
             Performa Host & Perilaku Sistem
           </div>
 
@@ -1736,16 +1787,16 @@
                 <img src="assets/icons8/language.png" style="width: 24px; height: 24px; object-fit: contain;" alt="Language">
               </div>
               <div>
-                <div id="i18n-card-lang-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Bahasa Antarmuka (Interface Language)</div>
-                <div id="i18n-card-lang-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Pilih antara Bahasa Inggris (Bawaan) dan Bahasa Indonesia untuk antarmuka workspace.</div>
+                <div id="i18n-card-lang-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Bahasa Antarmuka (Interface Language)</div>
+                <div id="i18n-card-lang-desc" style="font-size: 11px; color: #86868B; margin-top: 2px;">Pilih antara Bahasa Inggris (Bawaan) dan Bahasa Indonesia untuk antarmuka workspace.</div>
               </div>
             </div>
 
-            <div style="display: flex; background: #121316; padding: 3px; border-radius: 8px; border: 1px solid #282a30; gap: 2px;">
-              <button id="btn-lang-en" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: #0ea5e9; color: #ffffff;">
+            <div style="display: flex; background: rgba(0, 0, 0, 0.05); padding: 3px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.06); gap: 2px;">
+              <button id="btn-lang-en" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: #0071E3; color: #1D1D1F;">
                 English
               </button>
-              <button id="btn-lang-id" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: transparent; color: #94a3b8;">
+              <button id="btn-lang-id" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: transparent; color: #86868B;">
                 Indonesia
               </button>
             </div>
@@ -1754,13 +1805,13 @@
           <!-- Grouped Island: Profile Avatar Settings (Local-First) -->
           <div class="apple-group-card" style="padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 14px;">
-              <div id="settings-avatar-preview-box" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #16181c; border: 1.5px solid #2e333d; display: flex; align-items: center; justify-content: center; position: relative;">
-                <svg id="settings-avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:#38bdf8;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <div id="settings-avatar-preview-box" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: rgba(0, 113, 227, 0.08); border: 1.5px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; position: relative;">
+                <svg id="settings-avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:#0071E3;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 <img id="settings-avatar-img" src="assets/megabox.png" style="display: block; width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
               </div>
               <div>
-                <div id="i18n-card-avatar-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Foto Profil Workspace</div>
-                <div id="i18n-card-avatar-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Tampilkan avatar kustom di pojok navigasi kiri bawah (100% lokal di NVMe).</div>
+                <div id="i18n-card-avatar-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Foto Profil Workspace</div>
+                <div id="i18n-card-avatar-desc" style="font-size: 11px; color: #86868B; margin-top: 2px;">Tampilkan avatar kustom di pojok navigasi kiri bawah (100% lokal di NVMe).</div>
               </div>
             </div>
 
@@ -1770,7 +1821,7 @@
                 <img src="assets/icons8/avatar.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Photo">
                 <span>Pilih Foto</span>
               </button>
-              <button id="btn-reset-avatar" type="button" class="btn-apple-pill-dark" style="padding: 7px 12px; font-size: 11.5px; color: #94a3b8;">
+              <button id="btn-reset-avatar" type="button" class="btn-apple-pill-dark" style="padding: 7px 12px; font-size: 11.5px; color: #86868B;">
                 <span>Hapus</span>
               </button>
             </div>
@@ -1785,8 +1836,8 @@
                   <img src="assets/icons8/memory_saver.png" style="width: 22px; height: 22px; object-fit: contain;" alt="RAM">
                 </div>
                 <div>
-                  <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Hemat Memori (Hibernasi Otomatis)</div>
-                  <div id="i18n-row-hibernate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
+                  <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Hemat Memori (Hibernasi Otomatis)</div>
+                  <div id="i18n-row-hibernate-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Tidurkan tab yang tidak aktif untuk menghemat RAM host. Tab yang memutar audio tidak akan ditidurkan.</div>
                 </div>
               </div>
               <select id="setting-hibernate-timeout" class="apple-select-dark">
@@ -1805,8 +1856,8 @@
                   <img src="assets/icons8/window_close.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Close">
                 </div>
                 <div>
-                  <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Perilaku Tombol Tutup [x]</div>
-                  <div id="i18n-row-close-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
+                  <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Perilaku Tombol Tutup [x]</div>
+                  <div id="i18n-row-close-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Tentukan apakah jendela disembunyikan ke System Tray agar notifikasi tetap aktif atau keluar dari program.</div>
                 </div>
               </div>
               <select id="setting-close-action" class="apple-select-dark">
@@ -1822,8 +1873,8 @@
                   <img src="assets/icons8/autostart.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Autostart">
                 </div>
                 <div>
-                  <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Mulai Otomatis Saat Login</div>
-                  <div id="i18n-row-autostart-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
+                  <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Mulai Otomatis Saat Login</div>
+                  <div id="i18n-row-autostart-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Jalankan Megabox secara otomatis saat komputer dinyalakan atau masuk sesi desktop.</div>
                 </div>
               </div>
               <label class="apple-switch-mint">
@@ -1839,8 +1890,8 @@
                   <img src="assets/icons8/notification.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Notification">
                 </div>
                 <div>
-                  <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pemberitahuan Versi Baru</div>
-                  <div id="i18n-row-autoupdate-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.</div>
+                  <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Pemberitahuan Versi Baru</div>
+                  <div id="i18n-row-autoupdate-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Periksa rilis GitHub di latar belakang dan beri tahu saat versi baru siap diunduh.</div>
                 </div>
               </div>
               <label class="apple-switch-mint">
@@ -1856,8 +1907,8 @@
                   <img src="assets/icons8/clean_cache.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Clean">
                 </div>
                 <div>
-                  <div id="i18n-card-cache-title" style="font-weight: 600; font-size: 13px; color: #ffffff;">Pembersih Cache Web & GPU</div>
-                  <div id="i18n-card-cache-desc" style="font-size: 11px; color: #94a3b8; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
+                  <div id="i18n-card-cache-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Pembersih Cache Web & GPU</div>
+                  <div id="i18n-card-cache-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
                 </div>
               </div>
               <button id="btn-clear-cache" type="button" class="btn-apple-pill-dark" style="gap: 6px;">
@@ -1876,18 +1927,18 @@
         <!-- SECTION 4: MEGAWARDEN PASSWORD VAULT -->
         <div id="section-settings-vault" style="display: none; flex-direction: column; gap: 16px;">
           <!-- Top summary card -->
-          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: #16181c; border: 1px solid #282c35;">
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.08);">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; padding: 4px;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; padding: 4px;">
                   <img src="assets/icons8/tab_vault.png" style="width: 26px; height: 26px; object-fit: contain;" alt="Megawarden">
                 </div>
                 <div>
-                  <div style="font-weight: 600; font-size: 13.5px; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+                  <div style="font-weight: 600; font-size: 13.5px; color: #1D1D1F; display: flex; align-items: center; gap: 8px;">
                     Megawarden Vault
-                    <span style="font-size: 10px; padding: 1.5px 6px; border-radius: 4px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 600; border: 1px solid rgba(56, 189, 248, 0.25);">AES-256-GCM</span>
+                    <span style="font-size: 10px; padding: 1.5px 6px; border-radius: 4px; background: rgba(0, 113, 227, 0.08); color: #0071E3; font-weight: 600; border: 1px solid rgba(0, 113, 227, 0.2);">AES-256-GCM</span>
                   </div>
-                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa cloud pihak ketiga.</div>
+                  <div style="font-size: 11px; color: #86868B; margin-top: 2px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa cloud pihak ketiga.</div>
                 </div>
               </div>
               <div style="display: flex; gap: 8px;">
@@ -1912,7 +1963,7 @@
                 <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 34px; font-size: 12px; height: 36px;">
                 <img src="assets/icons8/search.png" style="width: 15px; height: 15px; object-fit: contain; position: absolute; left: 11px; top: 10.5px; opacity: 0.7;" alt="Search">
               </div>
-              <div id="vault-items-counter" style="font-size: 11.5px; color: #38bdf8; font-weight: 600; padding: 6px 12px; border-radius: 6px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); white-space: nowrap;">0 Kredensial</div>
+              <div id="vault-items-counter" style="font-size: 11.5px; color: #0071E3; font-weight: 600; padding: 6px 12px; border-radius: 6px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); white-space: nowrap;">0 Kredensial</div>
             </div>
           </div>
 
@@ -1925,27 +1976,27 @@
         <div id="section-settings-sync" style="display: none; flex-direction: column; gap: 14px;">
           
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding-left: 2px;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #86868B; padding-left: 2px;">
               <span id="i18n-heading-backup">Penyimpanan & Cadangan Mandiri (Local-First)</span>
             </div>
-            <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #38bdf8;"></span>
-              <span id="i18n-badge-private-local" style="font-size: 11px; color: #f4f4f6; font-weight: 600;">100% Privat Lokal</span>
+            <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px; background: rgba(52, 199, 89, 0.08); border: 1px solid rgba(52, 199, 89, 0.2);">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #0071E3;"></span>
+              <span id="i18n-badge-private-local" style="font-size: 11px; color: #1D1D1F; font-weight: 600;">100% Privat Lokal</span>
             </div>
           </div>
 
           <!-- Explanation Plaque -->
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
-            <div style="font-size: 13px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+            <div style="font-size: 13px; font-weight: 600; color: #1D1D1F; display: flex; align-items: center; gap: 8px;">
               <img src="assets/icons8/tab_vault.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Privacy">
               <span id="i18n-card-privacy-title">Privasi Tanpa Server Luar</span>
             </div>
-            <div id="i18n-card-privacy-desc" style="font-size: 12px; color: #94a3b8; line-height: 1.6;">Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.</div>
+            <div id="i18n-card-privacy-desc" style="font-size: 12px; color: #86868B; line-height: 1.6;">Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.</div>
           </div>
 
           <!-- Action Buttons Card -->
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;">
+            <div style="font-size: 12px; font-weight: 700; color: #1D1D1F; text-transform: uppercase; letter-spacing: 0.04em;">
               <span id="i18n-card-backup-ops-title">Operasi Berkas Cadangan (.json)</span>
             </div>
 
@@ -1961,7 +2012,7 @@
               </button>
             </div>
 
-            <div id="backup-status-msg" style="font-size: 11px; color: #94a3b8; display: none; line-height: 1.4; padding: 8px 12px; border-radius: 6px; background: #16181c; border: 1px solid #272a30;"></div>
+            <div id="backup-status-msg" style="font-size: 11px; color: #86868B; display: none; line-height: 1.4; padding: 8px 12px; border-radius: 6px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); color: #0071E3;"></div>
           </div>
 
         </div>
@@ -1970,23 +2021,23 @@
         <div id="section-settings-about" style="display: none; flex-direction: column; gap: 14px;">
           
           <!-- Hero Banner: Identitas Software & Craftsmanship (Monochrome Sleek) -->
-          <div style="background: linear-gradient(180deg, #18191d 0%, #131417 100%); border: 1px solid #282a30; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 245, 255, 0.92) 100%); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 16px rgba(0, 113, 227, 0.05); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
               <div style="display: flex; align-items: center; gap: 14px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0d0e11; border: 1px solid #2d3038; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #FFFFFF; border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 2px 6px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px;">
                   <img src="assets/megabox.png" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div>
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 16px; font-weight: 700; color: #f8fafc; letter-spacing: -0.01em;">Megabox</span>
-                    <span style="font-size: 10px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 1px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;">v1.5.0</span>
+                    <span style="font-size: 16px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em;">Megabox</span>
+                    <span style="font-size: 10px; font-weight: 700; color: #0071E3; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); padding: 1px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;">v1.5.0</span>
                   </div>
-                  <div id="i18n-about-hero-sub" style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
+                  <div id="i18n-about-hero-sub" style="font-size: 11.5px; color: #86868B; margin-top: 2px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
                 </div>
               </div>
 
               <div style="display: flex; gap: 8px; align-items: center;">
-                <button id="btn-check-updates" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #38bdf8;">
+                <button id="btn-check-updates" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #0071E3;">
                   <img src="assets/icons8/updates.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Updates">
                   <span id="i18n-btn-check-updates">Periksa Pembaruan</span>
                 </button>
@@ -2000,38 +2051,38 @@
             <div id="update-check-status-msg" style="font-size: 11px; line-height: 1.4; padding: 6px 10px; border-radius: 6px; display: none;"></div>
             <!-- Arsitektur Ringkas (Two Columns) -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;">
-              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div id="i18n-card-arch-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Arsitektur</div>
-                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Local-First JSON</div>
+              <div style="background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.06); padding: 8px 10px; border-radius: 6px;">
+                <div id="i18n-card-arch-label" style="color: #86868B; font-size: 10px; font-weight: 700; text-transform: uppercase;">Arsitektur</div>
+                <div style="color: #1D1D1F; font-size: 11px; font-weight: 600; margin-top: 2px;">Local-First JSON</div>
               </div>
-              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div id="i18n-card-resilience-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Ketahanan</div>
-                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">Atomic File Write</div>
+              <div style="background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.06); padding: 8px 10px; border-radius: 6px;">
+                <div id="i18n-card-resilience-label" style="color: #86868B; font-size: 10px; font-weight: 700; text-transform: uppercase;">Ketahanan</div>
+                <div style="color: #1D1D1F; font-size: 11px; font-weight: 600; margin-top: 2px;">Atomic File Write</div>
               </div>
-              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 6px;">
-                <div id="i18n-card-license-label" style="color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase;">Lisensi</div>
-                <div style="color: #e2e8f0; font-size: 11px; font-weight: 600; margin-top: 2px;">MIT Open Source</div>
+              <div style="background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.06); padding: 8px 10px; border-radius: 6px;">
+                <div id="i18n-card-license-label" style="color: #86868B; font-size: 10px; font-weight: 700; text-transform: uppercase;">Lisensi</div>
+                <div style="color: #1D1D1F; font-size: 11px; font-weight: 600; margin-top: 2px;">MIT Open Source</div>
               </div>
             </div>
           </div>
 
           <!-- Card 2: Dukungan Sukarela (Elegan, Tenang, Tidak Mengemis) -->
-          <div style="background: #151619; border: 1px solid #282a30; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
+              <div style="font-size: 11px; font-weight: 700; color: #86868B; text-transform: uppercase; letter-spacing: 0.05em;">
                 <span id="i18n-heading-support">Dukungan Sukarela</span>
               </div>
-              <span id="i18n-badge-no-ads" style="font-size: 10px; color: #cbd5e1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 4px;">Bebas Iklan & Pelacak</span>
+              <span id="i18n-badge-no-ads" style="font-size: 10px; color: #cbd5e1; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.06); padding: 2px 7px; border-radius: 4px;">Bebas Iklan & Pelacak</span>
             </div>
 
-            <div id="i18n-card-support-desc" style="font-size: 11.5px; color: #94a3b8; line-height: 1.5;">Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.</div>
+            <div id="i18n-card-support-desc" style="font-size: 11.5px; color: #86868B; line-height: 1.5;">Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.</div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
-              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 8px;">
+              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
                 <img src="assets/icons8/heart_donate.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Donate">
                 <span>Donasi via QRIS</span>
               </button>
-              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #f8fafc; border-color: rgba(255,255,255,0.14); gap: 8px;">
+              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
                 <img src="assets/icons8/star_github.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Star">
                 <span>Bintang di GitHub</span>
               </button>
@@ -2039,24 +2090,24 @@
           </div>
 
           <!-- Card 3: Profil Rekayasa & Bengkel Teknisi -->
-          <div style="background: #151619; border: 1px solid #282a30; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-size: 13px; font-weight: 700; color: #ffffff;">Hizam Nahari</div>
-                <div id="i18n-card-dev-sub" style="font-size: 11px; color: #64748b; margin-top: 1px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
+                <div style="font-size: 13px; font-weight: 700; color: #1D1D1F;">Hizam Nahari</div>
+                <div id="i18n-card-dev-sub" style="font-size: 11px; color: #86868B; margin-top: 1px;">MEGAPASS Intra Solusindo • Sidoarjo, Jawa Timur</div>
               </div>
-              <span style="font-size: 10.5px; color: #38bdf8; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600;">BNSP & BMY Certified</span>
+              <span style="font-size: 10.5px; color: #0071E3; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); padding: 2px 8px; border-radius: 4px; font-weight: 600;">BNSP & BMY Certified</span>
             </div>
 
-            <div id="i18n-card-dev-desc" style="font-size: 11.5px; color: #94a3b8; line-height: 1.55;">Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.</div>
+            <div id="i18n-card-dev-desc" style="font-size: 11.5px; color: #86868B; line-height: 1.55;">Dirancang dari meja kerja teknisi perangkat keras bersertifikasi: memadukan keandalan fisik mesin (power-loss resistance), efisiensi kernel Linux, dan antarmuka zero-bloat.</div>
 
             <!-- Tautan Web & Portofolio -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
-              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 7px;">
+              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
                 <img src="assets/icons8/certificate.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Certificate">
                 <span>Portofolio & Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #e2e8f0; gap: 7px;">
+              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
                 <img src="assets/icons8/globe_web.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Web">
                 <span>megapass.web.id</span>
               </button>
@@ -2068,8 +2119,8 @@
       </div>
 
       <!-- Modal Footer (Acrylic Bottom Bar) -->
-      <div style="padding: 12px 20px; border-top: 1px solid #282a30; background: #16171a; display: flex; justify-content: space-between; align-items: center;">
-        <span id="settings-status-save" style="font-size: 12px; color: #3fb950; font-weight: 600; display: none; align-items: center; gap: 6px;">
+      <div style="padding: 12px 20px; border-top: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center;">
+        <span id="settings-status-save" style="font-size: 12px; color: #34C759; font-weight: 600; display: none; align-items: center; gap: 6px;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
           <span>Tersimpan otomatis</span>
         </span>
@@ -2082,11 +2133,13 @@
   </div>
 
   <!-- Quick Switcher Modal (Ctrl+K / Ctrl+P) -->
-  <div id="quickswitch-modal" class="modal-overlay">
+  <div 
+
+  <!-- Quick Switcher Modal id="quickswitch-modal" class="modal-overlay">
     <div class="quickswitch-box">
       <input type="text" id="quickswitch-input" class="quickswitch-input" placeholder="Pindah Layanan (Ctrl+K)...">
       <div id="quickswitch-list" class="quickswitch-list"></div>
-      <div style="padding:8px 14px;background:#181818;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;">
+      <div style="padding:8px 14px;background:rgba(255,255,255,0.85);border-top:1px solid rgba(0,0,0,0.07);color:#86868B;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;">
         <div style="display:flex;gap:12px;">
           <span><kbd style="background:#282828;padding:2px 5px;border-radius:3px;color:#bbb;">↑ ↓</kbd> Navigasi</span>
           <span><kbd style="background:#282828;padding:2px 5px;border-radius:3px;color:#bbb;">Enter</kbd> Pilih</span>
@@ -2119,7 +2172,7 @@
   </aside>
 
   <!-- MODAL POPUP QRIS (DONASI) -->
-  <div id="qris-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px;">
+  <div id="qris-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: #18191d; border: 1px solid #2e281e; border-radius: 12px; width: 100%; max-width: 340px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;">
       
       <!-- Close Button -->
@@ -2158,73 +2211,73 @@
 
   
   <!-- Megawarden Auto-Capture Prompt Toast (Apple Liquid Crystal) -->
-  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 22px; right: 24px; z-index: 99999; background: rgba(22, 25, 31, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08); width: 330px; padding: 14px 16px; color: #f8fafc; backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;">
+  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 22px; right: 24px; z-index: 99999; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.95); border-radius: 14px; box-shadow: 0 20px 48px rgba(0, 113, 227, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06); width: 330px; padding: 14px 16px; color: #1D1D1F; backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;">
     <div style="display: flex; align-items: flex-start; gap: 11px;">
-      <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
       </div>
       <div style="flex: 1; min-width: 0;">
-        <div id="toast-vault-title" style="font-size: 13px; font-weight: 600; color: #ffffff; letter-spacing: -0.01em;">Simpan sandi ke Megawarden?</div>
-        <div id="toast-vault-domain" style="font-size: 11px; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">example.com</div>
-        <div id="toast-vault-user" style="font-size: 11.5px; color: #e2e8f0; margin-top: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</div>
+        <div id="toast-vault-title" style="font-size: 13px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.01em;">Simpan sandi ke Megawarden?</div>
+        <div id="toast-vault-domain" style="font-size: 11px; color: #86868B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">example.com</div>
+        <div id="toast-vault-user" style="font-size: 11.5px; color: #1D1D1F; margin-top: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</div>
       </div>
-      <button id="toast-vault-btn-dismiss" type="button" style="background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; transition: color 0.15s;" title="Tutup">&times;</button>
+      <button id="toast-vault-btn-dismiss" type="button" style="background: transparent; border: none; color: #86868B; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; transition: color 0.15s;" title="Tutup">&times;</button>
     </div>
-    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px;">
-      <button id="toast-vault-btn-ignore" type="button" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #cbd5e1; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
-      <button id="toast-vault-btn-save" type="button" style="padding: 5px 14px; font-size: 11px; font-weight: 600; border-radius: 6px; background: #0284c7; border: 1px solid #38bdf8; color: #ffffff; cursor: pointer; transition: all 0.15s; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);">Simpan Sandi</button>
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(0, 0, 0, 0.07); padding-top: 10px;">
+      <button id="toast-vault-btn-ignore" type="button" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); color: #1D1D1F; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
+      <button id="toast-vault-btn-save" type="button" style="padding: 5px 14px; font-size: 11px; font-weight: 600; border-radius: 6px; background: #0071E3; border: 1px solid #0071E3; color: #FFFFFF; cursor: pointer; transition: all 0.15s; box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);">Simpan Sandi</button>
     </div>
   </div>
 
   <!-- Megawarden Entry Edit / Add Modal -->
-  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.8); z-index: 1000001;">
+  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 1000001;">
     <div class="crystal-modal-box" style="width: 440px; max-width: 95vw;">
-      <div style="padding: 16px 20px 14px; border-bottom: 1px solid #282a30; background: #16171a; display: flex; justify-content: space-between; align-items: center;">
+      <div style="padding: 16px 20px 14px; border-bottom: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; color: #10b981;">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.25); display: flex; align-items: center; justify-content: center; color: #34C759;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           </div>
           <div>
-            <div id="vault-modal-title" style="font-weight: 700; font-size: 14px; color: #ffffff;">Tambah Akun Megawarden</div>
-            <div style="font-size: 11px; color: #94a3b8;">Simpan kredensial login terenkripsi</div>
+            <div id="vault-modal-title" style="font-weight: 700; font-size: 14px; color: #1D1D1F;">Tambah Akun Megawarden</div>
+            <div style="font-size: 11px; color: #86868B;">Simpan kredensial login terenkripsi</div>
           </div>
         </div>
-        <button id="btn-vault-modal-close" type="button" style="width: 26px; height: 26px; border-radius: 6px; background: transparent; border: 1px solid #2d3036; color: #8b949e; cursor: pointer; font-size: 15px; line-height: 1;">&times;</button>
+        <button id="btn-vault-modal-close" type="button" style="width: 26px; height: 26px; border-radius: 6px; background: transparent; border: 1px solid rgba(0, 0, 0, 0.08); color: #86868B; cursor: pointer; font-size: 15px; line-height: 1;">&times;</button>
       </div>
       <div style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
         <input type="hidden" id="vault-form-id">
         <div>
-          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">Nama Layanan / Situs</label>
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Nama Layanan / Situs</label>
           <input id="vault-form-name" type="text" class="crystal-input" placeholder="contoh: Google, GitHub, Portal Servis" style="width: 100%; font-size: 12px;">
         </div>
         <div>
-          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">URL / Domain Web</label>
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">URL / Domain Web</label>
           <input id="vault-form-url" type="text" class="crystal-input" placeholder="https://accounts.google.com" style="width: 100%; font-size: 12px;">
         </div>
         <div>
-          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">Nama Pengguna / Email</label>
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Nama Pengguna / Email</label>
           <input id="vault-form-username" type="text" class="crystal-input" placeholder="user@gmail.com" style="width: 100%; font-size: 12px;">
         </div>
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <label style="font-size: 11px; color: #94a3b8; font-weight: 600;">Kata Sandi</label>
-            <button id="btn-vault-form-gen" type="button" style="background: none; border: none; color: #38bdf8; font-size: 11px; font-weight: 600; cursor: pointer; padding: 0;">Acak Sandi Kuat</button>
+            <label style="font-size: 11px; color: #86868B; font-weight: 600;">Kata Sandi</label>
+            <button id="btn-vault-form-gen" type="button" style="background: none; border: none; color: #0071E3; font-size: 11px; font-weight: 600; cursor: pointer; padding: 0;">Acak Sandi Kuat</button>
           </div>
           <div style="position: relative;">
             <input id="vault-form-password" type="password" class="crystal-input" placeholder="Kata sandi akun" style="width: 100%; font-size: 12px; padding-right: 36px;">
-            <button id="btn-vault-form-toggle-pwd" type="button" style="position: absolute; right: 8px; top: 8px; background: none; border: none; color: #64748b; cursor: pointer; padding: 0;">
+            <button id="btn-vault-form-toggle-pwd" type="button" style="position: absolute; right: 8px; top: 8px; background: none; border: none; color: #86868B; cursor: pointer; padding: 0;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             </button>
           </div>
         </div>
         <div>
-          <label style="font-size: 11px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 4px;">Catatan (Opsional)</label>
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Catatan (Opsional)</label>
           <textarea id="vault-form-note" class="crystal-input" rows="2" placeholder="Catatan pemulihan atau 2FA backup code" style="width: 100%; font-size: 12px; resize: none;"></textarea>
         </div>
       </div>
-      <div style="padding: 12px 20px; border-top: 1px solid #282a30; background: #141518; display: flex; justify-content: flex-end; gap: 8px;">
+      <div style="padding: 12px 20px; border-top: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; justify-content: flex-end; gap: 8px;">
         <button id="btn-vault-modal-cancel" type="button" class="crystal-btn-secondary" style="padding: 6px 14px; font-size: 12px;">Batal</button>
-        <button id="btn-vault-modal-save" type="button" class="crystal-btn-primary" style="padding: 6px 18px; font-size: 12px; background: #10b981; border-color: #059669;">Simpan Kredensial</button>
+        <button id="btn-vault-modal-save" type="button" class="crystal-btn-primary" style="padding: 6px 18px; font-size: 12px; background: #34C759 !important; border-color: #34C759 !important;">Simpan Kredensial</button>
       </div>
     </div>
   </div>

@@ -1638,7 +1638,7 @@
           if (backupStatusMsg) {
             backupStatusMsg.style.display = 'block';
             backupStatusMsg.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-            backupStatusMsg.style.color = '#38bdf8';
+            backupStatusMsg.style.color = '#0071E3';
             backupStatusMsg.textContent = `Cadangan berhasil diekspor (${res.count} aplikasi) ke ${res.filePath}`;
           }
         } else {
@@ -2017,18 +2017,18 @@
     const btnId = document.getElementById('btn-lang-id');
     if (btnEn && btnId) {
       if (lang === 'en') {
-        btnEn.style.background = '#38bdf8';
-        btnEn.style.color = '#0b1220';
+        btnEn.style.background = '#0071E3';
+        btnEn.style.color = '#FFFFFF';
         btnEn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
         btnId.style.background = 'transparent';
-        btnId.style.color = '#94a3b8';
+        btnId.style.color = '#86868B';
         btnId.style.boxShadow = 'none';
       } else {
-        btnId.style.background = '#38bdf8';
-        btnId.style.color = '#0b1220';
+        btnId.style.background = '#0071E3';
+        btnId.style.color = '#FFFFFF';
         btnId.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
         btnEn.style.background = 'transparent';
-        btnEn.style.color = '#94a3b8';
+        btnEn.style.color = '#86868B';
         btnEn.style.boxShadow = 'none';
       }
     }
@@ -2325,7 +2325,7 @@
       if (updateCheckStatusMsg) {
         updateCheckStatusMsg.style.display = 'block';
         updateCheckStatusMsg.style.background = 'rgba(56, 189, 248, 0.1)';
-        updateCheckStatusMsg.style.color = '#38bdf8';
+        updateCheckStatusMsg.style.color = '#0071E3';
         updateCheckStatusMsg.style.border = '1px solid rgba(56, 189, 248, 0.2)';
         updateCheckStatusMsg.textContent = t.update_checking;
       }
@@ -2723,10 +2723,10 @@
 
     if (items.length === 0) {
       vaultListContainer.innerHTML = `
-        <div style="padding: 32px 16px; text-align: center; color: #64748b; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <div style="padding: 32px 16px; text-align: center; color: #86868B; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           <span>Belum ada kredensial tersimpan di Megawarden.</span>
-          <span style="font-size: 11px; color: #475569;">Gunakan "Impor Google CSV" atau "Tambah Sandi" untuk memulai.</span>
+          <span style="font-size: 11px; color: #86868B;">Gunakan "Impor Google CSV" atau "Tambah Sandi" untuk memulai.</span>
         </div>
       `;
       return;
@@ -2741,7 +2741,7 @@
 
       const initialChar = (item.name || item.domain || "S").charAt(0).toUpperCase();
       const iconBox = document.createElement("div");
-      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 7px; background: #1c1f26; border: 1px solid #2d323e; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 700; font-size: 12px; flex-shrink: 0; user-select: none;";
+      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; color: #0071E3; font-weight: 700; font-size: 12px; flex-shrink: 0; user-select: none;";
       iconBox.textContent = initialChar;
 
       const textCol = document.createElement("div");
@@ -2751,19 +2751,19 @@
       titleLine.style.cssText = "display: flex; align-items: baseline; gap: 6px; min-width: 0;";
 
       const nameSpan = document.createElement("span");
-      nameSpan.style.cssText = "font-size: 12.5px; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+      nameSpan.style.cssText = "font-size: 12.5px; font-weight: 600; color: #1D1D1F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
       nameSpan.textContent = item.name || item.domain || "Akun";
       titleLine.appendChild(nameSpan);
 
       if (item.domain && item.domain !== item.name) {
         const domSpan = document.createElement("span");
-        domSpan.style.cssText = "font-size: 11px; color: #64748b; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+        domSpan.style.cssText = "font-size: 11px; color: #86868B; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
         domSpan.textContent = item.domain;
         titleLine.appendChild(domSpan);
       }
 
       const userLine = document.createElement("div");
-      userLine.style.cssText = "font-size: 11px; color: #94a3b8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;";
+      userLine.style.cssText = "font-size: 11px; color: #86868B; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;";
       userLine.textContent = item.username || "(tanpa username)";
 
       textCol.appendChild(titleLine);
