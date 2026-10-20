@@ -430,77 +430,278 @@ window.__megabox_preload_loaded = true;
 
 
 // ========================================================
-// Megawarden: Auto-Capture & Autofill Engine
+// Megawarden: Auto-Capture, Autofill & Suggestion Engine
 // ========================================================
 (function initMegawardenObserver() {
   try {
-    let autofilled = false;
+    let cachedCredentials = [];
+    let activeDropdown = null;
+    let lastActiveInput = null;
 
-    function findInputs() {
-      const passwordInputs = Array.from(document.querySelectorAll("input[type='password']"));
-      if (passwordInputs.length === 0) return null;
-
-      // Primary password field is usually visible
-      const pwInput = passwordInputs.find(i => i.offsetParent !== null) || passwordInputs[0];
-      const form = pwInput.closest("form") || document.body;
-
-      // Find user input
-      const candidates = Array.from(form.querySelectorAll("input[type='text'], input[type='email'], input[type='tel'], input:not([type])"));
-      const visibleCandidates = candidates.filter(i => i.offsetParent !== null && i !== pwInput);
-
-      let userInput = null;
-      for (const input of visibleCandidates) {
-        const idName = (input.id + " " + input.name + " " + (input.getAttribute("autocomplete") || "")).toLowerCase();
-        if (idName.includes("user") || idName.includes("login") || idName.includes("email") || idName.includes("account") || idName.includes("identifier")) {
-          userInput = input;
-          break;
-        }
-      }
-      if (!userInput && visibleCandidates.length > 0) {
-        userInput = visibleCandidates[0];
-      }
-
-      return { form, userInput, pwInput };
-    }
-
-    // 1. Request Auto-fill when page or form is ready
-    function tryAutofill() {
-      if (autofilled) return;
-      const inputs = findInputs();
-      if (!inputs || !inputs.pwInput) return;
-
+    // Request available credentials for current domain on load
+    function requestVaultCredentials() {
       const origin = window.location.href;
       ipcRenderer.sendToHost("megawarden:request-credentials", { url: origin });
     }
 
-    // Receive autofill credentials from host
-    ipcRenderer.on("megawarden:autofill-data", (_e, creds) => {
-      if (!creds || !creds.password) return;
-      const inputs = findInputs();
-      if (!inputs || !inputs.pwInput) return;
-
-      if (inputs.userInput && creds.username && !inputs.userInput.value) {
-        inputs.userInput.value = creds.username;
-        inputs.userInput.dispatchEvent(new Event("input", { bubbles: true }));
-        inputs.userInput.dispatchEvent(new Event("change", { bubbles: true }));
+    // Receive credentials from host
+    ipcRenderer.on("megawarden:autofill-data", (_e, data) => {
+      if (Array.isArray(data)) {
+        cachedCredentials = data;
+      } else if (data && typeof data === "object") {
+        cachedCredentials = [data];
+      } else {
+        cachedCredentials = [];
       }
 
-      if (!inputs.pwInput.value) {
-        inputs.pwInput.value = creds.password;
-        inputs.pwInput.dispatchEvent(new Event("input", { bubbles: true }));
-        inputs.pwInput.dispatchEvent(new Event("change", { bubbles: true }));
-        autofilled = true;
+      // If active input is focused, refresh suggestion dropdown
+      if (lastActiveInput && isCredentialInput(lastActiveInput)) {
+        showSuggestionDropdown(lastActiveInput);
       }
     });
 
-    // 2. Auto-capture submission
+    function isCredentialInput(input) {
+      if (!input || input.tagName !== "INPUT" || input.type === "hidden" || input.type === "submit" || input.type === "button") return false;
+      const type = (input.type || "text").toLowerCase();
+      if (type === "password") return true;
+
+      const meta = ((input.id || "") + " " + (input.name || "") + " " + (input.getAttribute("autocomplete") || "") + " " + (input.placeholder || "")).toLowerCase();
+      return (
+        type === "email" ||
+        meta.includes("user") ||
+        meta.includes("login") ||
+        meta.includes("email") ||
+        meta.includes("account") ||
+        meta.includes("identifier") ||
+        meta.includes("sandi") ||
+        meta.includes("password")
+      );
+    }
+
+    function removeDropdown() {
+      if (activeDropdown && activeDropdown.parentNode) {
+        activeDropdown.parentNode.removeChild(activeDropdown);
+      }
+      activeDropdown = null;
+    }
+
+    function showSuggestionDropdown(input) {
+      removeDropdown();
+      if (!cachedCredentials || cachedCredentials.length === 0) return;
+      if (!input || !input.isConnected) return;
+
+      const rect = input.getBoundingClientRect();
+      const elWidth = rect.width > 0 ? rect.width : (input.offsetWidth || 300);
+      const elLeft = rect.left > 0 ? rect.left : Math.max(8, input.offsetLeft || 100);
+      const elBottom = rect.bottom > 0 ? rect.bottom : ((rect.top > 0 ? rect.top : input.offsetTop || 200) + (input.offsetHeight || 45));
+
+
+      const isPassword = input.type === "password";
+
+      const dropdown = document.createElement("div");
+      dropdown.id = "megawarden-suggestion-overlay";
+      dropdown.style.cssText = `
+        position: fixed;
+        left: ${Math.max(8, elLeft)}px;
+        top: ${elBottom + 6}px;
+        width: ${Math.max(260, Math.min(360, elWidth))}px;
+        background: #14161a;
+        border: 1px solid #2d313a;
+        border-radius: 10px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(56, 189, 248, 0.15);
+        z-index: 2147483647;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #f1f5f9;
+        overflow: hidden;
+        animation: mw-fade-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      `;
+
+      // Header (100% Trusted Types safe without innerHTML)
+      const header = document.createElement("div");
+      header.style.cssText = `
+        padding: 7px 12px;
+        background: #181b22;
+        border-bottom: 1px solid #242832;
+        font-size: 11px;
+        font-weight: 600;
+        color: #38bdf8;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        user-select: none;
+      `;
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", "13");
+      svg.setAttribute("height", "13");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "#38bdf8");
+      svg.setAttribute("stroke-width", "2.2");
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z");
+      svg.appendChild(path);
+
+      const titleSpan = document.createElement("span");
+      titleSpan.textContent = "Megawarden Vault";
+
+      const countSpan = document.createElement("span");
+      countSpan.style.cssText = "margin-left: auto; font-size: 10px; color: #64748b; font-weight: 400;";
+      countSpan.textContent = `${cachedCredentials.length} akun`;
+
+      header.appendChild(svg);
+      header.appendChild(titleSpan);
+      header.appendChild(countSpan);
+      dropdown.appendChild(header);
+
+      // List container
+      const list = document.createElement("div");
+      list.style.cssText = "max-height: 200px; overflow-y: auto; padding: 4px;";
+
+      cachedCredentials.slice(0, 6).forEach((cred, idx) => {
+        const item = document.createElement("div");
+        item.style.cssText = `
+          padding: 8px 10px;
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: background 0.12s ease;
+        `;
+
+        item.onmouseenter = () => { item.style.background = "rgba(56, 189, 248, 0.12)"; };
+        item.onmouseleave = () => { item.style.background = "transparent"; };
+
+        item.onmousedown = (e) => {
+          e.preventDefault(); // Prevent input blur
+          fillCredential(input, cred, isPassword);
+          removeDropdown();
+        };
+
+        const iconBox = document.createElement("div");
+        iconBox.style.cssText = `
+          width: 24px;
+          height: 24px;
+          border-radius: 5px;
+          background: #1e222b;
+          border: 1px solid #2f3542;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #38bdf8;
+          font-weight: 700;
+          font-size: 11px;
+          flex-shrink: 0;
+        `;
+        iconBox.textContent = (cred.name || cred.username || "A").charAt(0).toUpperCase();
+
+        const textCol = document.createElement("div");
+        textCol.style.cssText = "min-width: 0; flex: 1;";
+
+        const titleLine = document.createElement("div");
+        titleLine.style.cssText = "font-size: 12px; font-weight: 500; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+        titleLine.textContent = cred.username || "(tanpa username)";
+
+        const subLine = document.createElement("div");
+        subLine.style.cssText = "font-size: 10.5px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+        subLine.textContent = cred.name ? `${cred.name} • ${cred.domain || ''}` : (cred.domain || 'Akun Tersimpan');
+
+        textCol.appendChild(titleLine);
+        textCol.appendChild(subLine);
+        item.appendChild(iconBox);
+        item.appendChild(textCol);
+        list.appendChild(item);
+      });
+
+      dropdown.appendChild(list);
+      document.documentElement.appendChild(dropdown);
+      activeDropdown = dropdown;
+    }
+
+    function fillCredential(activeInput, cred, isPassword) {
+      if (!cred) return;
+
+      // 1. Fill active input
+      if (isPassword) {
+        activeInput.value = cred.password;
+        activeInput.dispatchEvent(new Event("input", { bubbles: true }));
+        activeInput.dispatchEvent(new Event("change", { bubbles: true }));
+      } else {
+        activeInput.value = cred.username;
+        activeInput.dispatchEvent(new Event("input", { bubbles: true }));
+        activeInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+        // Also attempt to find password input in the same form/page
+        const form = activeInput.closest("form") || document.body;
+        const pw = form.querySelector("input[type='password']");
+        if (pw && cred.password) {
+          pw.value = cred.password;
+          pw.dispatchEvent(new Event("input", { bubbles: true }));
+          pw.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+    }
+
+    // Input Focus Listener
+    document.addEventListener("focusin", (e) => {
+      const target = e.target;
+      if (isCredentialInput(target)) {
+        lastActiveInput = target;
+        if (cachedCredentials.length === 0) {
+          requestVaultCredentials();
+        } else {
+          showSuggestionDropdown(target);
+        }
+      } else {
+        removeDropdown();
+      }
+    }, true);
+
+    // Input Click Listener
+    document.addEventListener("click", (e) => {
+      const target = e.target;
+      if (isCredentialInput(target)) {
+        lastActiveInput = target;
+        if (cachedCredentials.length > 0) {
+          showSuggestionDropdown(target);
+        } else {
+          requestVaultCredentials();
+        }
+      } else if (!e.target.closest("#megawarden-suggestion-overlay")) {
+        removeDropdown();
+      }
+    }, true);
+
+    // Close dropdown on window resize or scroll
+    window.addEventListener("scroll", removeDropdown, true);
+    window.addEventListener("resize", removeDropdown, true);
+
+    // Auto-capture submission
     function captureLogin(sourceEvent) {
       try {
-        const inputs = findInputs();
-        if (!inputs || !inputs.pwInput) return;
+        const passwordInputs = Array.from(document.querySelectorAll("input[type='password']"));
+        if (passwordInputs.length === 0) return;
 
-        const password = inputs.pwInput.value;
-        const username = inputs.userInput ? inputs.userInput.value : "";
+        const pwInput = passwordInputs.find(i => i.offsetParent !== null) || passwordInputs[0];
+        const form = pwInput.closest("form") || document.body;
+
+        const candidates = Array.from(form.querySelectorAll("input[type='text'], input[type='email'], input[type='tel'], input:not([type])"));
+        const visibleCandidates = candidates.filter(i => i.offsetParent !== null && i !== pwInput);
+
+        let userInput = null;
+        for (const input of visibleCandidates) {
+          const idName = (input.id + " " + input.name + " " + (input.getAttribute("autocomplete") || "")).toLowerCase();
+          if (idName.includes("user") || idName.includes("login") || idName.includes("email") || idName.includes("account") || idName.includes("identifier")) {
+            userInput = input;
+            break;
+          }
+        }
+        if (!userInput && visibleCandidates.length > 0) {
+          userInput = visibleCandidates[0];
+        }
+
+        const password = pwInput.value;
+        const username = userInput ? userInput.value : "";
         if (!password || password.length < 2) return;
 
         const url = window.location.href;
@@ -519,7 +720,6 @@ window.__megabox_preload_loaded = true;
 
     document.addEventListener("submit", captureLogin, true);
 
-    // Also listen to submit button click in case form doesn't fire submit event (modern SPAs)
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("button[type='submit'], input[type='submit'], button");
       if (!btn) return;
@@ -529,20 +729,17 @@ window.__megabox_preload_loaded = true;
       }
     }, true);
 
-    // Initial autofill trigger
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => setTimeout(tryAutofill, 500));
-    } else {
-      setTimeout(tryAutofill, 500);
-    }
+    // Initial credentials fetch
+    requestVaultCredentials();
 
-    // Dynamic SPA observer
-    const observer = new MutationObserver(() => {
-      if (!autofilled) tryAutofill();
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
 
-    console.log("[Megawarden Preload] Auto-capture & autofill engine active.");
+    window.__megawarden = {
+      getCached: () => cachedCredentials,
+      show: (el) => showSuggestionDropdown(el),
+      request: () => requestVaultCredentials()
+    };
+
+        console.log("[Megawarden Preload] Auto-capture, autofill & interactive suggestion engine active.");
   } catch (err) {
     console.error("[Megawarden Preload Error]:", err);
   }

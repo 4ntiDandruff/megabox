@@ -773,6 +773,16 @@
 
         // Listen to badge events from preload-webview bridge
         wv.addEventListener('dom-ready', () => {
+          // Proactively send credentials to webview on dom-ready
+          if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
+            const checkUrl = wv.src || app.url;
+            window.megabox.vaultFindForUrl(checkUrl).then(res => {
+              if (res && res.success && res.matches && res.matches.length > 0) {
+                wv.send('megawarden:autofill-data', res.matches);
+                console.log('[Megawarden] Proactively sent', res.matches.length, 'credentials on dom-ready to', app.name);
+              }
+            }).catch(() => {});
+          }
           if (isDndActive) {
             try { wv.setAudioMuted(true); } catch (_) {}
           }
@@ -824,18 +834,12 @@
           }
           if (event.channel === 'megawarden:request-credentials') {
             const data = event.args[0] || {};
-            const reqUrl = data.url || wv.src || '';
+            const reqUrl = data.url || wv.src || app.url || '';
             if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
               window.megabox.vaultFindForUrl(reqUrl).then(res => {
-                if (res && res.success && res.matches && res.matches.length > 0) {
-                  // Send top credential match to webview
-                  const cred = res.matches[0];
-                  wv.send('megawarden:autofill-data', {
-                    username: cred.username,
-                    password: cred.password
-                  });
-                  console.log('[Megawarden] Autofill dispatched to', app.name, cred.username);
-                }
+                const matches = (res && res.success && res.matches) ? res.matches : [];
+                wv.send('megawarden:autofill-data', matches);
+                console.log('[Megawarden] Sent', matches.length, 'matched credentials to', app.name);
               }).catch(err => {
                 console.warn('[Megawarden] Autofill query failed:', err.message);
               });
