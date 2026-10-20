@@ -1459,6 +1459,15 @@
         </svg>
       </button>
 
+      <button id="btn-downloads" class="sidebar-btn" title="Unduhan Berkas" style="position:relative;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span id="badge-downloads-count" style="display:none; position:absolute; top:4px; right:4px; min-width:14px; height:14px; border-radius:7px; background:#0071E3; color:#FFFFFF; font-size:9px; font-weight:700; align-items:center; justify-content:center; padding:0 3px; box-shadow:0 1px 3px rgba(0,113,227,0.4); line-height:14px; text-align:center;">0</span>
+      </button>
+
       <button id="btn-reload" class="sidebar-btn" title="Muat Ulang">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -2187,6 +2196,65 @@
 
   <!-- Hidden File Input for CSV Import -->
   <input type="file" id="vault-csv-file-input" accept=".csv,text/csv" style="display: none;">
+
+  <!-- Floating Download Progress Pill (Apple Cupertino Light Glass) -->
+  <div id="download-progress-pill" style="display:none; position:fixed; bottom:20px; right:24px; z-index:90; min-width:310px; max-width:380px; background:rgba(255, 255, 255, 0.94); backdrop-filter:blur(24px) saturate(190%); -webkit-backdrop-filter:blur(24px) saturate(190%); border:1px solid rgba(0, 113, 227, 0.25); border-radius:14px; box-shadow:0 8px 30px rgba(0, 0, 0, 0.12); padding:12px 16px; transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+      <div style="display:flex; align-items:center; gap:10px; overflow:hidden; flex:1;">
+        <div style="width:28px; height:28px; border-radius:8px; background:rgba(0, 113, 227, 0.1); border:1px solid rgba(0, 113, 227, 0.2); display:flex; align-items:center; justify-content:center; color:#0071E3; flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </div>
+        <div style="overflow:hidden; flex:1;">
+          <div id="dl-pill-filename" style="font-size:12px; font-weight:600; color:#1D1D1F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Mengunduh berkas...</div>
+          <div id="dl-pill-meta" style="font-size:10.5px; color:#86868B; margin-top:1px;">0 KB / 0 KB</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span id="dl-pill-percent" style="font-size:11.5px; font-weight:700; color:#0071E3;">0%</span>
+        <button id="dl-pill-btn-cancel" class="btn-apple-close" type="button" style="width:22px; height:22px;" title="Batalkan Unduhan">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Track & Bar -->
+    <div style="width:100%; height:4px; background:rgba(0,0,0,0.06); border-radius:2px; margin-top:10px; overflow:hidden;">
+      <div id="dl-pill-bar" style="width:0%; height:100%; background:#0071E3; border-radius:2px; transition:width 0.15s ease;"></div>
+    </div>
+  </div>
+
+  <!-- Download History Popover Flyout (Apple Cupertino Crystal) -->
+  <div id="download-history-popover" style="display:none; position:fixed; bottom:70px; left:72px; z-index:85; width:360px; max-height:480px; background:rgba(255, 255, 255, 0.94); backdrop-filter:blur(32px) saturate(190%); -webkit-backdrop-filter:blur(32px) saturate(190%); border:1px solid rgba(0, 0, 0, 0.1); border-radius:16px; box-shadow:0 12px 40px rgba(0, 0, 0, 0.15); flex-direction:column; overflow:hidden;">
+    <!-- Popover Header -->
+    <div style="padding:14px 18px; border-bottom:1px solid rgba(0, 0, 0, 0.07); background:rgba(255, 255, 255, 0.75); display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:24px; border-radius:6px; background:rgba(0, 113, 227, 0.08); border:1px solid rgba(0, 113, 227, 0.18); display:flex; align-items:center; justify-content:center; color:#0071E3;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#1D1D1F;">Riwayat Unduhan</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button id="btn-clear-dl-history" type="button" class="crystal-btn-secondary" style="padding:4px 10px; font-size:10.5px;" title="Bersihkan Catatan">Bersihkan</button>
+        <button id="btn-close-dl-popover" class="btn-apple-close" type="button" style="width:24px; height:24px;" title="Tutup">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Popover Body (List of items) -->
+    <div id="dl-history-list" style="padding:12px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height:400px;">
+      <!-- Populated dynamically by app.js -->
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

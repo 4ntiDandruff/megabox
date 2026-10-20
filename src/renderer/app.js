@@ -3024,3 +3024,244 @@
       }
     };
   }
+
+
+  // ==========================================
+  // Download Manager Client Logic (Zero-Bloat)
+  // ==========================================
+  const btnDownloads = document.getElementById('btn-downloads');
+  const badgeDlCount = document.getElementById('badge-downloads-count');
+  const dlProgressPill = document.getElementById('download-progress-pill');
+  const dlPillFilename = document.getElementById('dl-pill-filename');
+  const dlPillMeta = document.getElementById('dl-pill-meta');
+  const dlPillPercent = document.getElementById('dl-pill-percent');
+  const dlPillBar = document.getElementById('dl-pill-bar');
+  const dlPillBtnCancel = document.getElementById('dl-pill-btn-cancel');
+  const dlHistoryPopover = document.getElementById('download-history-popover');
+  const dlHistoryList = document.getElementById('dl-history-list');
+  const btnCloseDlPopover = document.getElementById('btn-close-dl-popover');
+  const btnClearDlHistory = document.getElementById('btn-clear-dl-history');
+
+  let activeDownloadId = null;
+  let activeDownloadCount = 0;
+
+  function formatBytes(bytes) {
+    if (!bytes || bytes <= 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function formatTimestamp(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' +
+           d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  function updateDownloadBadge() {
+    if (!badgeDlCount) return;
+    if (activeDownloadCount > 0) {
+      badgeDlCount.textContent = activeDownloadCount;
+      badgeDlCount.style.display = 'flex';
+    } else {
+      badgeDlCount.style.display = 'none';
+    }
+  }
+
+  async function renderDownloadHistory() {
+    if (!dlHistoryList || !window.megabox || typeof window.megabox.getDownloadHistory !== 'function') return;
+    try {
+      const res = await window.megabox.getDownloadHistory();
+      const list = (res && res.downloads) ? res.downloads : [];
+
+      if (list.length === 0) {
+        dlHistoryList.innerHTML = `
+          <div style="text-align: center; padding: 24px 10px; color: #86868B;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.8" style="margin: 0 auto 8px auto; display: block; opacity: 0.6;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <div style="font-size: 12px; font-weight: 500;">Belum ada riwayat unduhan</div>
+            <div style="font-size: 10.5px; opacity: 0.8; margin-top: 2px;">Berkas yang diunduh dari webview akan tercatat di sini</div>
+          </div>
+        `;
+        return;
+      }
+
+      dlHistoryList.innerHTML = list.map(item => {
+        const isSuccess = item.state === 'completed';
+        const stateColor = isSuccess ? '#34C759' : '#FF3B30';
+        const stateText = isSuccess ? 'Selesai' : (item.state === 'cancelled' ? 'Dibatalkan' : 'Gagal');
+
+        return `
+          <div class="vault-item-row" style="padding: 10px 12px; flex-direction: column; align-items: stretch; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1;">
+                <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.16); display: flex; align-items: center; justify-content: center; color: #0071E3; flex-shrink: 0;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                </div>
+                <div style="overflow: hidden; flex: 1;">
+                  <div style="font-size: 12px; font-weight: 600; color: #1D1D1F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.filename}">${item.filename}</div>
+                  <div style="font-size: 10.5px; color: #86868B; display: flex; align-items: center; gap: 6px; margin-top: 1px;">
+                    <span>${formatBytes(item.total_bytes || item.received_bytes)}</span>
+                    <span>&bull;</span>
+                    <span style="color: ${stateColor}; font-weight: 500;">${stateText}</span>
+                    <span>&bull;</span>
+                    <span>${formatTimestamp(item.timestamp)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 6px; border-top: 1px solid rgba(0, 0, 0, 0.05); padding-top: 6px;">
+              <button type="button" class="crystal-btn-secondary btn-dl-open-file" data-path="${item.path.replace(/"/g, '&quot;')}" style="padding: 3px 8px; font-size: 10.5px;">Buka Berkas</button>
+              <button type="button" class="crystal-btn-secondary btn-dl-show-folder" data-path="${item.path.replace(/"/g, '&quot;')}" style="padding: 3px 8px; font-size: 10.5px;">Tampilkan di Folder</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Attach file and folder open handlers
+      dlHistoryList.querySelectorAll('.btn-dl-open-file').forEach(btn => {
+        btn.onclick = async () => {
+          const filePath = btn.dataset.path;
+          if (window.megabox && typeof window.megabox.openDownloadFile === 'function') {
+            const res = await window.megabox.openDownloadFile(filePath);
+            if (!res || !res.success) {
+              alert(res && res.error ? res.error : 'Gagal membuka berkas.');
+            }
+          }
+        };
+      });
+
+      dlHistoryList.querySelectorAll('.btn-dl-show-folder').forEach(btn => {
+        btn.onclick = async () => {
+          const filePath = btn.dataset.path;
+          if (window.megabox && typeof window.megabox.showDownloadInFolder === 'function') {
+            const res = await window.megabox.showDownloadInFolder(filePath);
+            if (!res || !res.success) {
+              alert(res && res.error ? res.error : 'Gagal membuka folder.');
+            }
+          }
+        };
+      });
+    } catch (err) {
+      console.error('[Download History Render Error]', err);
+    }
+  }
+
+  // Sidebar Button Toggle Popover
+  if (btnDownloads && dlHistoryPopover) {
+    btnDownloads.onclick = (e) => {
+      e.stopPropagation();
+      const isVisible = dlHistoryPopover.style.display === 'flex';
+      if (isVisible) {
+        dlHistoryPopover.style.display = 'none';
+      } else {
+        dlHistoryPopover.style.display = 'flex';
+        renderDownloadHistory();
+      }
+    };
+
+    if (btnCloseDlPopover) {
+      btnCloseDlPopover.onclick = () => {
+        dlHistoryPopover.style.display = 'none';
+      };
+    }
+
+    if (btnClearDlHistory) {
+      btnClearDlHistory.onclick = async () => {
+        if (confirm('Bersihkan seluruh daftar riwayat unduhan? (Berkas fisik di folder Anda tidak akan terhapus)')) {
+          if (window.megabox && typeof window.megabox.clearDownloadHistory === 'function') {
+            await window.megabox.clearDownloadHistory();
+            renderDownloadHistory();
+          }
+        }
+      };
+    }
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (dlHistoryPopover.style.display === 'flex' && !dlHistoryPopover.contains(e.target) && !btnDownloads.contains(e.target)) {
+        dlHistoryPopover.style.display = 'none';
+      }
+    });
+  }
+
+  // Floating Pill Cancel Button
+  if (dlPillBtnCancel) {
+    dlPillBtnCancel.onclick = async () => {
+      if (activeDownloadId && window.megabox && typeof window.megabox.cancelDownload === 'function') {
+        await window.megabox.cancelDownload(activeDownloadId);
+        if (dlProgressPill) dlProgressPill.style.display = 'none';
+        activeDownloadId = null;
+        activeDownloadCount = Math.max(0, activeDownloadCount - 1);
+        updateDownloadBadge();
+      }
+    };
+  }
+
+  // Electron IPC Listeners for Downloads
+  if (window.megabox) {
+    if (typeof window.megabox.onDownloadStarted === 'function') {
+      window.megabox.onDownloadStarted((data) => {
+        activeDownloadId = data.id;
+        activeDownloadCount++;
+        updateDownloadBadge();
+
+        if (dlProgressPill) {
+          dlProgressPill.style.display = 'block';
+          if (dlPillFilename) dlPillFilename.textContent = data.filename || 'Mengunduh...';
+          if (dlPillMeta) dlPillMeta.textContent = `0 B / ${formatBytes(data.totalBytes)}`;
+          if (dlPillPercent) dlPillPercent.textContent = '0%';
+          if (dlPillBar) dlPillBar.style.width = '0%';
+        }
+      });
+    }
+
+    if (typeof window.megabox.onDownloadProgress === 'function') {
+      window.megabox.onDownloadProgress((data) => {
+        if (dlProgressPill && dlProgressPill.style.display !== 'none') {
+          if (dlPillFilename && data.filename) dlPillFilename.textContent = data.filename;
+          if (dlPillMeta) dlPillMeta.textContent = `${formatBytes(data.receivedBytes)} / ${formatBytes(data.totalBytes)}`;
+          const p = data.percent || 0;
+          if (dlPillPercent) dlPillPercent.textContent = `${p}%`;
+          if (dlPillBar) dlPillBar.style.width = `${p}%`;
+        }
+      });
+    }
+
+    if (typeof window.megabox.onDownloadCompleted === 'function') {
+      window.megabox.onDownloadCompleted((data) => {
+        activeDownloadCount = Math.max(0, activeDownloadCount - 1);
+        updateDownloadBadge();
+
+        if (dlProgressPill) {
+          const isSuccess = data.state === 'completed';
+          if (dlPillFilename) dlPillFilename.textContent = isSuccess ? `Selesai: ${data.filename}` : `Unduhan ${data.state}`;
+          if (dlPillPercent) dlPillPercent.textContent = isSuccess ? '100%' : 'Batal';
+          if (dlPillBar) {
+            dlPillBar.style.width = '100%';
+            dlPillBar.style.background = isSuccess ? '#34C759' : '#FF3B30';
+          }
+
+          // Auto-hide pill after 2.5 seconds
+          setTimeout(() => {
+            if (activeDownloadCount === 0) {
+              dlProgressPill.style.display = 'none';
+              if (dlPillBar) dlPillBar.style.background = '#0071E3';
+            }
+          }, 2500);
+        }
+
+        // Auto refresh history popover if open
+        if (dlHistoryPopover && dlHistoryPopover.style.display === 'flex') {
+          renderDownloadHistory();
+        }
+      });
+    }
+  }
+
