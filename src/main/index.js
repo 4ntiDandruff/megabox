@@ -108,12 +108,41 @@ function createWindow() {
       preload: path.join(__dirname, '../preload/index.js'),
       webviewTag: true,
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      sandbox: false
     }
   });
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
     console.log(`[Renderer Console] ${message} (line ${line})`);
+  });
+
+  // Global window before-input-event (ensures shortcuts work when main window / sidebar / tabs are focused)
+  mainWindow.webContents.on('before-input-event', (inputEvent, input) => {
+    if (input.type !== 'keyDown') return;
+    const isCtrl = input.control || input.meta;
+    const isShift = input.shift;
+
+    if (isCtrl && !input.alt && (input.key === '+' || input.key === '=' || input.code === 'NumpadAdd' || input.code === 'Equal')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'zoom-in' });
+      return;
+    }
+    if (isCtrl && !input.alt && (input.key === '-' || input.key === '_' || input.code === 'NumpadSubtract' || input.code === 'Minus')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'zoom-out' });
+      return;
+    }
+    if (isCtrl && !input.alt && !isShift && (input.key === '0' || input.code === 'Numpad0' || input.code === 'Digit0')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'zoom-reset' });
+      return;
+    }
+    if (isCtrl && isShift && !input.alt && (input.key === 'L' || input.key === 'l')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'lock-workspace' });
+      return;
+    }
   });
 
   setupHeaderInterceptors(session.defaultSession);

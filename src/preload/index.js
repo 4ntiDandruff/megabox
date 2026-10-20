@@ -1,6 +1,11 @@
 const { contextBridge, ipcRenderer, shell } = require('electron');
+const path = require('path');
+const { pathToFileURL } = require('url');
+
+const webviewPreloadUrl = pathToFileURL(path.join(__dirname, '../main/preload-webview.js')).href;
 
 contextBridge.exposeInMainWorld('megabox', {
+  webviewPreloadUrl: webviewPreloadUrl,
   getApps: () => ipcRenderer.invoke('apps:get'),
   saveApp: (app) => ipcRenderer.invoke('apps:save', app),
   cacheFavicon: (appId, iconUrl) => ipcRenderer.invoke('apps:cache-favicon', { appId, iconUrl }),

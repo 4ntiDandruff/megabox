@@ -391,16 +391,39 @@ document.addEventListener('keydown', (e) => {
 })();
 
 
-// Megabox Wheel Zoom Bridge (Ctrl + Wheel)
+// Flag preload loaded for health check
+window.__megabox_preload_loaded = true;
+
+// Megabox Webview Zoom Bridge (Ctrl + Wheel & IPC Sync with webFrame)
 (function initWheelZoomBridge() {
-  window.addEventListener("wheel", (e) => {
-    if (e.ctrlKey) {
-      e.preventDefault();
-      if (e.deltaY < 0) {
-        ipcRenderer.sendToHost("webview-zoom", "in");
-      } else if (e.deltaY > 0) {
-        ipcRenderer.sendToHost("webview-zoom", "out");
+  try {
+    const { webFrame } = require("electron");
+
+    window.__wheel_installed = true;
+
+    // Sync zoom level from host renderer
+    ipcRenderer.on("zoom:set", (_e, level) => {
+      try {
+        webFrame.setZoomLevel(typeof level === "number" ? level : 0);
+      } catch (_) {}
+    });
+
+    // Wheel zoom capture listener on window and document
+    const onWheelZoom = (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dir = e.deltaY < 0 ? "in" : "out";
+        try {
+          ipcRenderer.sendToHost("webview-zoom", dir);
+        } catch (_) {}
       }
-    }
-  }, { passive: false });
+    };
+
+    window.addEventListener("wheel", onWheelZoom, { passive: false, capture: true });
+    document.addEventListener("wheel", onWheelZoom, { passive: false, capture: true });
+    console.log("[Megabox Preload] Wheel zoom bridge successfully mounted.");
+  } catch (err) {
+    console.error("[Megabox Preload Error] initWheelZoomBridge:", err);
+  }
 })();

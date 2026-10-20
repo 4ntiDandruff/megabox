@@ -87,6 +87,7 @@
         target = 0;
       }
       wv.setZoomLevel(target);
+      try { wv.send("zoom:set", target); } catch (_) {}
       console.log("[Megabox Zoom]", activeAppId, dir, "Level:", target);
     } catch (err) {
       console.warn("[Megabox Zoom Error]", err);
@@ -737,7 +738,8 @@
         wv.src = app.url;
         wv.partition = app.partition || ('persist:' + app.id);
         wv.useragent = app.user_agent || defaultUA;
-        wv.setAttribute('preload', '../main/preload-webview.js');
+        const preloadUrl = (window.megabox && window.megabox.webviewPreloadUrl) ? window.megabox.webviewPreloadUrl : '../main/preload-webview.js';
+        wv.setAttribute('preload', preloadUrl);
         wv.setAttribute('allowpopups', '');
         wv.style.display = (activeAppId === app.id) ? 'flex' : 'none';
 
