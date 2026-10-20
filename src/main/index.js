@@ -2,8 +2,6 @@ const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, s
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
-const sync = require('./sync-client.js');
-const extensionsManager = require('./extensions-manager.js');
 const { translateText } = require('./translator.js');
 const { initUpdater } = require('./updater.js');
 const { MegawardenVault } = require('./megawarden.js');
@@ -43,11 +41,7 @@ let tray = null;
 let db = null;
 let megawarden = null;
 let isQuitting = false;
-let syncDebounceTimer = null;
-
-function triggerAutoSync() {
-  // Offline & Local-First: cloud auto-push dinonaktifkan demi privasi lokal
-}
+// Local-First architecture: fully offline, zero cloud overhead
 
 function createTray() {
   const iconPath = path.join(__dirname, '../renderer/assets/megabox.png');
@@ -142,8 +136,7 @@ function createWindow() {
     }
     if (isCtrl && isShift && !input.alt && (input.key === 'L' || input.key === 'l')) {
       inputEvent.preventDefault();
-      mainWindow.webContents.send('shortcut:action', { action: 'lock-workspace' });
-      return;
+            return;
     }
   });
 
@@ -175,12 +168,6 @@ function createWindow() {
       if (isCtrl && !input.alt && !isShift && (input.key === '0' || input.code === 'Numpad0' || input.code === 'Digit0')) {
         inputEvent.preventDefault();
         mainWindow.webContents.send('shortcut:action', { action: 'zoom-reset' });
-        return;
-      }
-      // Lock Screen: Ctrl + Shift + L
-      if (isCtrl && isShift && !input.alt && (input.key === 'L' || input.key === 'l')) {
-        inputEvent.preventDefault();
-        mainWindow.webContents.send('shortcut:action', { action: 'lock-workspace' });
         return;
       }
       // Quick Switcher: Ctrl + K or Ctrl + P
@@ -264,40 +251,7 @@ app.whenReady().then(() => {
   db = initDatabase();
   megawarden = new MegawardenVault(() => getSettings(db));
 
-  // Initial cloud sync pull if logged in
-  const status = sync.getSyncStatus();
-  if (status.logged_in) {
-    sync.pullWorkspace().then(res => {
-      if (res.exists && res.layout) {
-        const currentData = db.read();
-        if (res.layout.services && res.layout.services.length > 0) {
-          console.log('[Sync Startup] Applying cloud workspace layout...');
-          currentData.apps = res.layout.services.map((s, idx) => ({
-            id: s.id,
-            name: s.name,
-            url: s.url,
-            icon: s.icon || 'globe',
-            custom_icon: s.custom_icon || null,
-            partition: 'persist:' + s.id,
-            order_index: s.order_index !== undefined ? s.order_index : idx,
-            is_enabled: 1,
-            proxy: s.proxy || ''
-          }));
-        }
-        if (res.layout.settings && typeof res.layout.settings === 'object') {
-          console.log('[Sync Startup] Applying cloud system settings...');
-          currentData.settings = Object.assign({}, currentData.settings || {}, res.layout.settings);
-        }
-        db.write(currentData);
-        if (mainWindow) {
-          mainWindow.webContents.send('apps:updated', getApps(db));
-          mainWindow.webContents.send('settings:updated', getSettings(db));
-        }
-      }
-    }).catch(err => {
-      console.warn('[Sync Startup] Pull skipped/failed:', err.message);
-    });
-  }
+  // Local-First architecture: configuration loaded exclusively from local storage
 
     // Non-blocking Wayland Notification Relay with 500ms Circuit Breaker
   ipcMain.handle('notify:dispatch', async (_, { title, body, icon }) => {
@@ -337,10 +291,7 @@ app.whenReady().then(() => {
     });
   });
 
-  // Extensions Management IPC handlers
-  ipcMain.handle('extensions:get-catalog', () => {
-    return extensionsManager.getCatalog();
-  });
+
 
   
   // Instant Selection Translation Relay (Zero-CSP Node.js Engine)
@@ -426,7 +377,6 @@ async function cacheFaviconToDataUri(iconUrl) {
         appItem.custom_icon = dataUri;
         saveApp(db, appItem);
         mainWindow.webContents.send('apps:updated', getApps(db));
-        triggerAutoSync();
       }
       return { success: true, dataUri };
     }
@@ -466,7 +416,6 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
-    triggerAutoSync();
     return true;
   });
 
@@ -474,7 +423,6 @@ async function cacheFaviconToDataUri(iconUrl) {
     deleteApp(db, id);
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
-    triggerAutoSync();
     return true;
   });
 
@@ -482,7 +430,6 @@ async function cacheFaviconToDataUri(iconUrl) {
     reorderApp(db, id, dir);
     const updated = getApps(db);
     mainWindow.webContents.send('apps:updated', updated);
-    triggerAutoSync();
     return updated;
   });
 
@@ -674,100 +621,7 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
-  // Cloud Sync IPC Handlers
-  ipcMain.handle('sync:get-status', async () => {
-    if (sync.refreshUserProfile) await sync.refreshUserProfile();
-    return sync.getSyncStatus();
-  });
 
-  ipcMain.handle('sync:login', async (_, { email, password }) => {
-    try {
-      const res = await sync.login(email, password);
-      // Immediately pull upon login
-      const pullRes = await sync.pullWorkspace();
-      if (pullRes.exists && pullRes.layout && pullRes.layout.services && pullRes.layout.services.length > 0) {
-        const currentData = db.read();
-        currentData.apps = pullRes.layout.services.map((s, idx) => ({
-          id: s.id,
-          name: s.name,
-          url: s.url,
-          icon: s.icon || 'globe',
-          custom_icon: s.custom_icon || null,
-          partition: 'persist:' + s.id,
-          order_index: s.order_index !== undefined ? s.order_index : idx,
-          is_enabled: 1,
-          proxy: s.proxy || ''
-        }));
-        db.write(currentData);
-        mainWindow.webContents.send('apps:updated', getApps(db));
-      } else {
-        // First time cloud user -> push local apps to cloud
-        await sync.pushWorkspace(getApps(db), getSettings(db));
-      }
-      return { success: true, user: res.user };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  });
-
-  ipcMain.handle('sync:register', async (_, { email, password }) => {
-    try {
-      const res = await sync.register(email, password);
-      // Immediately push local apps to new cloud account
-      await sync.pushWorkspace(getApps(db), getSettings(db));
-      return { success: true, user: res.user };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  });
-
-  ipcMain.handle('sync:logout', async () => {
-    await sync.logout();
-    return { success: true };
-  });
-
-    ipcMain.handle('sync:now', async () => {
-    try {
-      const pullRes = await sync.pullWorkspace();
-      let restoredCount = 0;
-      if (pullRes.exists && pullRes.layout) {
-        const currentData = db.read();
-        if (pullRes.layout.services && pullRes.layout.services.length > 0) {
-          currentData.apps = pullRes.layout.services.map((s, idx) => ({
-            id: s.id,
-            name: s.name,
-            url: s.url,
-            icon: s.icon || 'globe',
-            custom_icon: s.custom_icon || null,
-            partition: 'persist:' + s.id,
-            order_index: s.order_index !== undefined ? s.order_index : idx,
-            is_enabled: 1,
-            proxy: s.proxy || ''
-          }));
-          restoredCount = currentData.apps.length;
-        }
-        if (pullRes.layout.settings && typeof pullRes.layout.settings === 'object') {
-          currentData.settings = Object.assign({}, currentData.settings || {}, pullRes.layout.settings);
-        }
-        db.write(currentData);
-        mainWindow.webContents.send('apps:updated', getApps(db));
-        mainWindow.webContents.send('settings:updated', getSettings(db));
-      }
-      
-      // Always backup current local state to cloud
-      const pushRes = await sync.pushWorkspace(getApps(db), getSettings(db));
-      if (mainWindow) {
-        mainWindow.webContents.send('sync:status-updated', sync.getSyncStatus());
-      }
-      return { 
-        success: true, 
-        count: restoredCount || getApps(db).length,
-        version_hash: pushRes.version_hash
-      };
-    } catch (err) {
-      return { success: false, error: err.message };
-    }
-  });
 
 
   // ==========================================
@@ -877,51 +731,6 @@ async function cacheFaviconToDataUri(iconUrl) {
   });
 
   // System Settings IPC Handlers
-  // Lock Screen IPC Handlers (Local-First Master Password / PIN)
-  ipcMain.handle("lock:verify", async (_, { password }) => {
-    const crypto = require("crypto");
-    const settings = getSettings(db);
-    const hash = settings.lock_password_hash;
-    if (!hash) return { success: true, is_protected: false };
-    const inputHash = crypto.createHash("sha256").update(String(password || "")).digest("hex");
-    return { success: inputHash === hash, is_protected: true };
-  });
-
-  ipcMain.handle("lock:set-password", async (_, { currentPassword, newPassword }) => {
-    const crypto = require("crypto");
-    const settings = getSettings(db);
-    const currentHash = settings.lock_password_hash;
-    if (currentHash) {
-      const inputHash = crypto.createHash("sha256").update(String(currentPassword || "")).digest("hex");
-      if (inputHash !== currentHash) {
-        return { success: false, error: "Kata sandi saat ini salah" };
-      }
-    }
-    const oldHash = currentHash;
-    let nextHash = null;
-    if (newPassword && newPassword.trim() !== "") {
-      nextHash = crypto.createHash("sha256").update(String(newPassword)).digest("hex");
-    }
-    if (megawarden && typeof megawarden.rekey === "function") {
-      try {
-        megawarden.rekey(oldHash, nextHash);
-      } catch (err) {
-        console.warn("[Megawarden] Vault rekey warning:", err.message);
-      }
-    }
-    settings.lock_password_hash = nextHash;
-    saveSettings(db, settings);
-    return { success: true, protected: Boolean(nextHash), removed: !nextHash };
-  });
-
-  ipcMain.handle("lock:status", async () => {
-    const settings = getSettings(db);
-    return {
-      is_set: Boolean(settings.lock_password_hash),
-      idle_minutes: settings.lock_idle_minutes || 0
-    };
-  });
-
   ipcMain.handle('settings:get', () => {
     return getSettings(db);
   });
@@ -929,7 +738,6 @@ async function cacheFaviconToDataUri(iconUrl) {
   ipcMain.handle('settings:save', (_, newSettings) => {
     const updated = saveSettings(db, newSettings);
     // Apply autostart if toggled
-    triggerAutoSync();
     if (typeof newSettings.autostart === 'boolean') {
       try {
         app.setLoginItemSettings({

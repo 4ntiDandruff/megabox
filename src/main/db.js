@@ -105,8 +105,6 @@ const defaultSettings = {
   hibernate_timeout_minutes: 15,
   close_to_tray: true,
   autostart: false,
-  lock_password_hash: null,
-  lock_idle_minutes: 0
 };
 
 function getSettings(db) {

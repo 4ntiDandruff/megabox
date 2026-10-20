@@ -47,7 +47,6 @@
 
   let apps = [];
   let recipesCatalog = [];
-  let isWorkspaceLocked = false;
   let activeAppId = null;
   let secondaryTiledAppId = null;
   let isTileModeActive = false;
@@ -63,7 +62,6 @@
     await loadRecipesCatalog();
     
     loadApps();
-    refreshSyncUI();
     setInterval(checkHibernation, 60000);
 
 
@@ -98,10 +96,6 @@
     // Unified Shortcut Dispatcher (handles IPC from Main/Webviews as well as local Renderer keys)
     function dispatchShortcutAction(data) {
       if (!data || !data.action) return;
-      if (typeof isWorkspaceLocked !== 'undefined' && isWorkspaceLocked) {
-        // While locked, reject all shortcuts to protect workspace
-        return;
-      }
       const { action, dir, index } = data;
 
       switch (action) {
@@ -115,12 +109,6 @@
         }
         case "zoom-reset": {
           zoomActiveApp("reset");
-          break;
-        }
-        case "lock-workspace": {
-          if (typeof lockWorkspace === "function") {
-            lockWorkspace();
-          }
           break;
         }
         case 'switch-tab': {
@@ -252,16 +240,12 @@
 
     // Local Renderer Keyboard Shortcuts Router
     window.addEventListener('keydown', (e) => {
-      if (typeof isWorkspaceLocked !== 'undefined' && isWorkspaceLocked) {
-        // While locked, do not intercept keys except for typing into password input
-        return;
-      }
       const isCtrl = Boolean(e.ctrlKey || e.metaKey);
       const isAlt = Boolean(e.altKey);
       const isShift = Boolean(e.shiftKey);
       const key = e.key;
 
-            // Megabox Webview Zoom & Local Screen Lock Shortcuts
+            // Megabox Webview Zoom Shortcuts
       if (isCtrl && !isAlt && (key === "+" || key === "=" || e.code === "NumpadAdd" || e.code === "Equal")) {
         e.preventDefault();
         dispatchShortcutAction({ action: "zoom-in" });
@@ -271,9 +255,6 @@
       } else if (isCtrl && !isAlt && !isShift && (key === "0" || e.code === "Numpad0" || e.code === "Digit0")) {
         e.preventDefault();
         dispatchShortcutAction({ action: "zoom-reset" });
-      } else if (isCtrl && isShift && !isAlt && (key === "L" || key === "l")) {
-        e.preventDefault();
-        dispatchShortcutAction({ action: "lock-workspace" });
       } else if (isAlt && !isCtrl && !isShift && key >= '1' && key <= '9') {
         e.preventDefault();
         dispatchShortcutAction({ action: 'switch-tab', index: parseInt(key, 10) - 1 });
@@ -1243,7 +1224,7 @@
     configureModal.style.display = 'none';
   }
 
-  // --- Additional Modules for Megabox: QuickSwitcher, WebControls, Per-Service Proxy, and Master PIN Lock ---
+  // --- Additional Modules for Megabox: QuickSwitcher, WebControls, Per-Service Proxy ---
 
   // DOM Elements for New Features
   const btnExtensions = document.getElementById('btn-extensions');
@@ -1545,10 +1526,6 @@
     }
     if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'none';
 
-    const lockAvatarImg = document.getElementById('lock-screen-avatar-img');
-    if (lockAvatarImg) {
-      lockAvatarImg.src = avatarSrc;
-    }
   }
 
   async function loadInitialAvatar() {
@@ -1636,10 +1613,7 @@
   // LOCAL-FIRST BACKUP & COMMUNITY SUPPORT HANDLERS
   // -------------------------------------------------------------------------
 
-  // Local-first no-op sync stub (mencegah ReferenceError pada panggilan legacy)
-  function refreshSyncUI() {
-    // Sesi cloud ruko dinonaktifkan demi privasi lokal
-  }
+// Local-First architecture: zero-cloud overhead
 
   const btnBackupExport = document.getElementById('btn-backup-export');
   const btnBackupImport = document.getElementById('btn-backup-import');
@@ -1827,7 +1801,6 @@
       // Sidebar tooltips
       add_service_title: "Add App (Ctrl+N)",
       btn_settings_title: "Workspace Settings",
-      btn_lock_title: "Lock Workspace (Ctrl+Shift+L)",
       btn_reload_title: "Reload App (Ctrl+R)",
       btn_dnd_quiet: "Focus Mode (Mute Notifications)",
       btn_dnd_active: "Focus Mode Active",
@@ -1931,7 +1904,6 @@
       // Sidebar tooltips
       add_service_title: "Tambah Aplikasi (Ctrl+N)",
       btn_settings_title: "Pengaturan Workspace",
-      btn_lock_title: "Kunci Megabox (Ctrl+Shift+L)",
       btn_reload_title: "Muat Ulang Aplikasi (Ctrl+R)",
       btn_dnd_quiet: "Mode Fokus (Senyapkan Notifikasi)",
       btn_dnd_active: "Mode Fokus Aktif",
@@ -2206,7 +2178,7 @@
     if (ctxDelete) ctxDelete.textContent = t.ctx_delete;
 
     // 7. Quick Switcher Input Placeholder
-    const quickInput = document.getElementById('quick-switcher-input');
+    const quickInput = document.getElementById('quickswitch-input');
     if (quickInput) quickInput.placeholder = t.quick_placeholder;
 
     // 8. Sidebar tooltips
@@ -2216,8 +2188,6 @@
     if (btnReloadSidebar) btnReloadSidebar.title = t.btn_reload_title;
     const btnSettingsSidebar = document.getElementById('btn-settings');
     if (btnSettingsSidebar) btnSettingsSidebar.title = t.btn_settings_title;
-    const btnLockElem = document.getElementById("btn-lock");
-    if (btnLockElem) btnLockElem.title = t.btn_lock_title || "Kunci Megabox (Ctrl+Shift+L)";
 
 
     // 9. Update Notifier & Settings Elements
@@ -2484,7 +2454,6 @@
       settingsModal.style.display = 'flex';
       switchSettingsTab('general');
       await loadSystemSettings();
-      await refreshSyncUI();
     };
     if (btnSettingsClose) {
       btnSettingsClose.onclick = () => {
@@ -2502,261 +2471,10 @@
   }
 
   
-  // ==========================================
-  // MEGABOX LOCAL-FIRST SCREEN LOCK ENGINE
-  // Zero-Cloud Master Password / PIN Protection
-  // ==========================================
-  const lockOverlay = document.getElementById("lock-overlay");
-  const formUnlock = document.getElementById("form-unlock");
-  const inputUnlockPassword = document.getElementById("input-unlock-password");
-  const unlockErrorMsg = document.getElementById("unlock-error-msg");
-  const btnLockSidebar = document.getElementById("btn-lock");
-
-  // Settings Card Elements
-  const lockStatusBadge = document.getElementById("lock-status-badge");
-  const lockStatusDot = document.getElementById("lock-status-dot");
-  const lockStatusText = document.getElementById("lock-status-text");
-  const inputNewLockPwd = document.getElementById("input-new-lock-pwd");
-  const boxCurrentLockPwd = document.getElementById("box-current-lock-pwd");
-  const inputCurrLockPwd = document.getElementById("input-curr-lock-pwd");
-  const settingLockIdle = document.getElementById("setting-lock-idle");
-  const btnSaveLockPwd = document.getElementById("btn-save-lock-pwd");
-  const btnRemoveLockPwd = document.getElementById("btn-remove-lock-pwd");
-  const lockSaveMsg = document.getElementById("lock-save-msg");
-
-  let isLockProtected = false;
-  let lastUserActivityTime = Date.now();
-  let lockIdleMinutes = 0;
-
-  async function checkLockStatus() {
-    if (!window.megabox || !window.megabox.getLockStatus) return;
-    try {
-      const status = await window.megabox.getLockStatus();
-      isLockProtected = Boolean(status.is_set);
-      lockIdleMinutes = parseInt(status.idle_minutes, 10) || 0;
-
-      if (settingLockIdle) {
-        settingLockIdle.value = String(lockIdleMinutes);
-      }
-      if (boxCurrentLockPwd) {
-        boxCurrentLockPwd.style.display = isLockProtected ? "block" : "none";
-      }
-      if (btnRemoveLockPwd) {
-        btnRemoveLockPwd.style.display = isLockProtected ? "inline-block" : "none";
-      }
-      if (lockStatusBadge && lockStatusDot && lockStatusText) {
-        if (isLockProtected) {
-          lockStatusBadge.style.background = "rgba(16, 185, 129, 0.12)";
-          lockStatusBadge.style.borderColor = "rgba(16, 185, 129, 0.3)";
-          lockStatusBadge.style.color = "#34d399";
-          lockStatusDot.style.background = "#10b981";
-          lockStatusText.textContent = (currentLang === "id") ? "Aktif Terlindungi" : "Protected";
-        } else {
-          lockStatusBadge.style.background = "rgba(255, 255, 255, 0.06)";
-          lockStatusBadge.style.borderColor = "rgba(255, 255, 255, 0.1)";
-          lockStatusBadge.style.color = "#94a3b8";
-          lockStatusDot.style.background = "#64748b";
-          lockStatusText.textContent = (currentLang === "id") ? "Belum Aktif" : "Not Configured";
-        }
-      }
-    } catch (e) {
-      console.warn("[Megabox Lock Status Error]", e);
-    }
-  }
-
-  function lockWorkspace() {
-    if (!lockOverlay) return;
-    isWorkspaceLocked = true;
-    const currentSidebarAvatar = document.getElementById("avatar-user-img");
-    const lockAvatarImg = document.getElementById("lock-screen-avatar-img");
-    if (currentSidebarAvatar && lockAvatarImg && currentSidebarAvatar.src) {
-      lockAvatarImg.src = currentSidebarAvatar.src;
-    }
-    lockOverlay.style.display = "flex";
-    if (unlockErrorMsg) unlockErrorMsg.style.display = "none";
-    if (inputUnlockPassword) {
-      inputUnlockPassword.value = "";
-      setTimeout(() => inputUnlockPassword.focus(), 120);
-    }
-    // Mute or pause audio if desired
-    console.log("[Megabox Lock] Workspace locked.");
-  }
-
-  async function unlockWorkspace(enteredPassword) {
-    if (!window.megabox || !window.megabox.verifyLockPassword) {
-      // Fallback: unlock immediately
-      if (lockOverlay) lockOverlay.style.display = "none";
-      isWorkspaceLocked = false;
-      return true;
-    }
-    try {
-      const res = await window.megabox.verifyLockPassword(enteredPassword);
-      if (res && res.success) {
-        if (lockOverlay) lockOverlay.style.display = "none";
-        isWorkspaceLocked = false;
-        if (inputUnlockPassword) inputUnlockPassword.value = "";
-        if (unlockErrorMsg) unlockErrorMsg.style.display = "none";
-        lastUserActivityTime = Date.now();
-        console.log("[Megabox Lock] Workspace successfully unlocked.");
-        return true;
-      } else {
-        if (unlockErrorMsg) {
-          unlockErrorMsg.textContent = (currentLang === "id") ? "Kata sandi salah. Silakan coba lagi." : "Incorrect master password. Try again.";
-          unlockErrorMsg.style.display = "block";
-        }
-        if (inputUnlockPassword) {
-          inputUnlockPassword.select();
-          inputUnlockPassword.focus();
-        }
-        return false;
-      }
-    } catch (e) {
-      console.error("[Megabox Unlock Error]", e);
-      return false;
-    }
-  }
-
-  // Activity tracking for idle lock
-  function recordUserActivity() {
-    lastUserActivityTime = Date.now();
-  }
-  window.addEventListener("mousemove", recordUserActivity, { passive: true });
-  window.addEventListener("mousedown", recordUserActivity, { passive: true });
-  window.addEventListener("keydown", recordUserActivity, { passive: true });
-
-  // Idle timer loop
-  setInterval(() => {
-    if (isWorkspaceLocked || !isLockProtected || lockIdleMinutes <= 0) return;
-    const idleMs = Date.now() - lastUserActivityTime;
-    if (idleMs >= lockIdleMinutes * 60 * 1000) {
-      console.log("[Megabox Lock] Idle timeout reached. Auto-locking workspace...");
-      lockWorkspace();
-    }
-  }, 10000);
-
-  // Bind Unlock Form
-  if (formUnlock) {
-    formUnlock.onsubmit = async (e) => {
-      e.preventDefault();
-      const pwd = inputUnlockPassword ? inputUnlockPassword.value : "";
-      await unlockWorkspace(pwd);
-    };
-  }
-
-  // Bind Sidebar Lock Button
-  if (btnLockSidebar) {
-    btnLockSidebar.onclick = () => {
-      lockWorkspace();
-    };
-  }
-
-  // Save Lock Settings
-  if (btnSaveLockPwd) {
-    btnSaveLockPwd.onclick = async () => {
-      const newPwd = inputNewLockPwd ? inputNewLockPwd.value : "";
-      const currPwd = inputCurrLockPwd ? inputCurrLockPwd.value : "";
-      const idleVal = settingLockIdle ? parseInt(settingLockIdle.value, 10) : 0;
-
-      if (!newPwd && !isLockProtected) {
-        if (lockSaveMsg) {
-          lockSaveMsg.style.display = "block";
-          lockSaveMsg.style.color = "#f43f5e";
-          lockSaveMsg.textContent = (currentLang === "id") ? "Ketik kata sandi atau PIN terlebih dahulu!" : "Please enter a new password or PIN!";
-        }
-        return;
-      }
-
-      btnSaveLockPwd.disabled = true;
-      try {
-        if (newPwd) {
-          const res = await window.megabox.setLockPassword(currPwd, newPwd);
-          if (!res.success) {
-            if (lockSaveMsg) {
-              lockSaveMsg.style.display = "block";
-              lockSaveMsg.style.color = "#f43f5e";
-              lockSaveMsg.textContent = res.error || ((currentLang === "id") ? "Gagal mengubah kata sandi" : "Failed to set password");
-            }
-            btnSaveLockPwd.disabled = false;
-            return;
-          }
-        }
-
-        // Persist idle timeout into settings
-        await window.megabox.saveSettings({
-          lock_idle_minutes: idleVal
-        });
-
-        lockIdleMinutes = idleVal;
-        if (inputNewLockPwd) inputNewLockPwd.value = "";
-        if (inputCurrLockPwd) inputCurrLockPwd.value = "";
-
-        if (lockSaveMsg) {
-          lockSaveMsg.style.display = "block";
-          lockSaveMsg.style.color = "#34d399";
-          lockSaveMsg.textContent = (currentLang === "id") ? "Pengaturan sandi berhasil disimpan!" : "Lock settings saved successfully!";
-          setTimeout(() => { lockSaveMsg.style.display = "none"; }, 3000);
-        }
-
-        await checkLockStatus();
-      } catch (err) {
-        console.error("[Megabox Lock Save Error]", err);
-      } finally {
-        btnSaveLockPwd.disabled = false;
-      }
-    };
-  }
-
-  // Remove Lock Password
-  if (btnRemoveLockPwd) {
-    btnRemoveLockPwd.onclick = async () => {
-      const currPwd = inputCurrLockPwd ? inputCurrLockPwd.value : "";
-      if (!currPwd) {
-        if (lockSaveMsg) {
-          lockSaveMsg.style.display = "block";
-          lockSaveMsg.style.color = "#f43f5e";
-          lockSaveMsg.textContent = (currentLang === "id") ? "Ketik kata sandi saat ini untuk konfirmasi penghapusan!" : "Enter current password to confirm removal!";
-        }
-        if (inputCurrLockPwd) inputCurrLockPwd.focus();
-        return;
-      }
-
-      btnRemoveLockPwd.disabled = true;
-      try {
-        const res = await window.megabox.setLockPassword(currPwd, "");
-        if (res && res.success) {
-          if (inputNewLockPwd) inputNewLockPwd.value = "";
-          if (inputCurrLockPwd) inputCurrLockPwd.value = "";
-          if (lockSaveMsg) {
-            lockSaveMsg.style.display = "block";
-            lockSaveMsg.style.color = "#34d399";
-            lockSaveMsg.textContent = (currentLang === "id") ? "Kunci layar berhasil dihapus!" : "Lock password removed!";
-            setTimeout(() => { lockSaveMsg.style.display = "none"; }, 3000);
-          }
-          await checkLockStatus();
-        } else {
-          if (lockSaveMsg) {
-            lockSaveMsg.style.display = "block";
-            lockSaveMsg.style.color = "#f43f5e";
-            lockSaveMsg.textContent = res.error || "Kata sandi saat ini salah";
-          }
-        }
-      } catch (e) {
-        console.error("[Megabox Lock Remove Error]", e);
-      } finally {
-        btnRemoveLockPwd.disabled = false;
-      }
-    };
-  }
-
-  // Hook into loadSystemSettings
-  checkLockStatus();
-
   window.addEventListener('DOMContentLoaded', init);
   window._megabox_applyLanguage = applyLanguage;
   window._megabox_showUpdateBanner = showUpdateBanner;
   window._megabox_hideUpdateBanner = hideUpdateBanner;
-  window._megabox_lockWorkspace = lockWorkspace;
-  window._megabox_isLocked = () => isWorkspaceLocked;
 
   // --- Contextual Right Extension Drawer Controller ---
   const extensionDrawer = document.getElementById('extension-drawer');

@@ -161,7 +161,7 @@ class MegawardenVault {
     if (typeof this.getSettingsFn === 'function') {
       try {
         const s = this.getSettingsFn();
-        return s.lock_password_hash || null;
+        return null;
       } catch (_) {}
     }
     return null;

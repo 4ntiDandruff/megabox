@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
@@ -17,27 +17,20 @@ contextBridge.exposeInMainWorld('megabox', {
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   onShortcutAction: (callback) => ipcRenderer.on('shortcut:action', (_, data) => callback(data)),
   
-  // Extensions API
-  getExtensionsCatalog: () => ipcRenderer.invoke('extensions:get-catalog'),
+  // Instant Selection Translation Relay (Zero-CSP Node.js Engine)
   performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
-  toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
-
 
   // Megawarden Local Password Vault API
-  vaultList: () => ipcRenderer.invoke("megawarden:list"),
-  vaultSave: (entry) => ipcRenderer.invoke("megawarden:save", entry),
-  vaultDelete: (id) => ipcRenderer.invoke("megawarden:delete", id),
-  vaultFindForUrl: (url) => ipcRenderer.invoke("megawarden:find-for-url", { url }),
-  vaultGeneratePassword: (options) => ipcRenderer.invoke("megawarden:generate-password", options),
-    vaultPickAndImportCsv: () => ipcRenderer.invoke("megawarden:pick-and-import-csv"),
-  vaultExportCsvToFile: () => ipcRenderer.invoke("megawarden:export-csv-to-file"),
-  vaultImportCsv: (csvContent) => ipcRenderer.invoke("megawarden:import-csv", { csvContent }),
-  vaultExportCsv: () => ipcRenderer.invoke("megawarden:export-csv"),
+  vaultList: () => ipcRenderer.invoke('megawarden:list'),
+  vaultSave: (entry) => ipcRenderer.invoke('megawarden:save', entry),
+  vaultDelete: (id) => ipcRenderer.invoke('megawarden:delete', id),
+  vaultFindForUrl: (url) => ipcRenderer.invoke('megawarden:find-for-url', { url }),
+  vaultGeneratePassword: (options) => ipcRenderer.invoke('megawarden:generate-password', options),
+  vaultPickAndImportCsv: () => ipcRenderer.invoke('megawarden:pick-and-import-csv'),
+  vaultExportCsvToFile: () => ipcRenderer.invoke('megawarden:export-csv-to-file'),
+  vaultImportCsv: (csvContent) => ipcRenderer.invoke('megawarden:import-csv', { csvContent }),
+  vaultExportCsv: () => ipcRenderer.invoke('megawarden:export-csv'),
 
-  // Lock Screen API (Local-First Master Password / PIN)
-  verifyLockPassword: (password) => ipcRenderer.invoke("lock:verify", { password }),
-  setLockPassword: (currentPassword, newPassword) => ipcRenderer.invoke("lock:set-password", { currentPassword, newPassword }),
-  getLockStatus: () => ipcRenderer.invoke("lock:status"),
 
   // Settings & System API
   getSettings: () => ipcRenderer.invoke('settings:get'),
@@ -54,19 +47,12 @@ contextBridge.exposeInMainWorld('megabox', {
   resetAvatar: () => ipcRenderer.invoke('avatar:reset'),
   getAvatar: () => ipcRenderer.invoke('avatar:get'),
 
-  // Cloud Sync API
-  getSyncStatus: () => ipcRenderer.invoke('sync:get-status'),
-  loginSync: (email, password) => ipcRenderer.invoke('sync:login', { email, password }),
-  registerSync: (email, password) => ipcRenderer.invoke('sync:register', { email, password }),
-  logoutSync: () => ipcRenderer.invoke('sync:logout'),
-  syncNow: () => ipcRenderer.invoke('sync:now'),
+  // System Window & Notification API
   focusWindow: () => ipcRenderer.invoke('window:focus'),
-  onSyncStatusUpdated: (callback) => ipcRenderer.on('sync:status-updated', (_, status) => callback(status)),
   dispatchNotification: (title, body, icon) => ipcRenderer.invoke('notify:dispatch', { title, body, icon }),
 
   // Update Notifier API
   checkUpdatesManual: () => ipcRenderer.invoke('update:check-manual'),
   dismissUpdate: (version) => ipcRenderer.invoke('update:dismiss', version),
-  onUpdateAvailable: (callback) => ipcRenderer.on('update:available', (_, data) => callback(data)),
-
+  onUpdateAvailable: (callback) => ipcRenderer.on('update:available', (_, data) => callback(data))
 });
