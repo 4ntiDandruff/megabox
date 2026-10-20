@@ -134,7 +134,7 @@ megabox/
 │   │   ├── index.js             # Window lifecycle, native dialogs, & IPC gateway
 │   │   ├── db.js                # Penyimpanan berkas atomic POSIX JSON
 │   │   ├── extensions.js        # Multi-engine user-agent & header interceptors
-│   │   ├── extensions-manager.js# Katalog ekstensi workstation
+│   │   ├── megawarden.js        # Pengelola kredensial lokal aman (AES-256-GCM)
 │   │   └── translator.js        # Mesin relay terjemahan Google PA/GTX (CORS-free)
 │   ├── preload/
 │   │   └── index.js             # Jembatan IPC aman (contextBridge)
@@ -206,3 +206,10 @@ Perangkat lunak ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
 *Membangun software dengan ketelitian logika teknisi perangkat keras: Ringan, Tangguh, dan Nol-Bloat.*
 
 </div>
+
+---
+
+## 9. Kebijakan Desain & Batasan Arsitektur Meja Kerja
+
+- **Zero Lock Policy**: Megabox dirancang sebagai *open-workbench workspace* yang responsif dan langsung siap pakai tanpa hambatan otentikasi lokal. Fitur penguncian layar (*lock screen*), master PIN, dan penghitung *idle auto-lock* **secara mutlak dilarang ditambahkan kembali**, kecuali jika Cak Hizam memberikan instruksi penambahan secara eksplisit.
+- **Kedaulatan Data Penuh**: Tidak ada telemetry tersembunyi, tidak ada lock-in proprietary, dan seluruh tatanan akun adalah berkas JSON lokal murni yang berada 100% dalam kendali pengguna.
