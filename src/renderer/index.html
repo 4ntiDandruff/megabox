@@ -2229,22 +2229,22 @@
 
 
   
-  <!-- Megawarden Auto-Capture Prompt Toast -->
-  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 20px; right: 24px; z-index: 99999; background: #18191c; border: 1px solid #2d3036; border-radius: 12px; box-shadow: 0 16px 36px rgba(0,0,0,0.7); width: 340px; padding: 14px 16px; color: #f1f5f9; backdrop-filter: blur(16px);">
-    <div style="display: flex; align-items: flex-start; gap: 10px;">
-      <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+  <!-- Megawarden Auto-Capture Prompt Toast (Apple Liquid Crystal) -->
+  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 22px; right: 24px; z-index: 99999; background: rgba(22, 25, 31, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08); width: 330px; padding: 14px 16px; color: #f8fafc; backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;">
+    <div style="display: flex; align-items: flex-start; gap: 11px;">
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
       </div>
       <div style="flex: 1; min-width: 0;">
-        <div style="font-size: 13px; font-weight: 600; color: #ffffff;">Simpan sandi ke Megawarden?</div>
+        <div id="toast-vault-title" style="font-size: 13px; font-weight: 600; color: #ffffff; letter-spacing: -0.01em;">Simpan sandi ke Megawarden?</div>
         <div id="toast-vault-domain" style="font-size: 11px; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">example.com</div>
-        <div id="toast-vault-user" style="font-size: 11px; color: #cbd5e1; margin-top: 1px; font-weight: 500;">user@example.com</div>
+        <div id="toast-vault-user" style="font-size: 11.5px; color: #e2e8f0; margin-top: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</div>
       </div>
-      <button id="toast-vault-btn-dismiss" type="button" style="background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 16px; line-height: 1; padding: 0;">&times;</button>
+      <button id="toast-vault-btn-dismiss" type="button" style="background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; transition: color 0.15s;" title="Tutup">&times;</button>
     </div>
-    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
-      <button id="toast-vault-btn-ignore" type="button" class="crystal-btn-secondary" style="padding: 5px 12px; font-size: 11px; font-weight: 500;">Jangan Sekarang</button>
-      <button id="toast-vault-btn-save" type="button" class="crystal-btn-primary" style="padding: 5px 14px; font-size: 11px; font-weight: 600; background: #10b981; border-color: #059669;">Simpan Sandi</button>
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px;">
+      <button id="toast-vault-btn-ignore" type="button" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #cbd5e1; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
+      <button id="toast-vault-btn-save" type="button" style="padding: 5px 14px; font-size: 11px; font-weight: 600; border-radius: 6px; background: #0284c7; border: 1px solid #38bdf8; color: #ffffff; cursor: pointer; transition: all 0.15s; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);">Simpan Sandi</button>
     </div>
   </div>
 

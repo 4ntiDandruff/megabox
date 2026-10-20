@@ -2869,14 +2869,41 @@
   let cachedVaultItems = [];
 
   window.handleMegawardenPrompt = handleMegawardenPrompt;
-  function handleMegawardenPrompt(data) {
+  async function handleMegawardenPrompt(data) {
     if (!data || !data.password || !data.username) return;
-    pendingVaultPrompt = data;
 
     const toast = document.getElementById("megawarden-save-toast");
+    const titleEl = document.getElementById("toast-vault-title");
     const domainEl = document.getElementById("toast-vault-domain");
     const userEl = document.getElementById("toast-vault-user");
+    const btnSaveEl = document.getElementById("toast-vault-btn-save");
     if (!toast) return;
+
+    // Check existing vault credentials to prevent redundant/illogical save prompts
+    let isUpdate = false;
+    if (window.megabox && typeof window.megabox.vaultFindForUrl === "function") {
+      try {
+        const res = await window.megabox.vaultFindForUrl(data.url);
+        const matches = (res && res.success && Array.isArray(res.matches)) ? res.matches : [];
+        
+        const cleanUser = (data.username || "").trim().toLowerCase();
+        const existing = matches.find(m => (m.username || "").trim().toLowerCase() === cleanUser);
+
+        if (existing) {
+          // If username AND password are identical, already saved! Skip prompt silently.
+          if (existing.password === data.password) {
+            console.log("[Megawarden] Kredensial untuk " + data.username + " sudah tersimpan dan identik di vault. Abaikan prompt.");
+            return;
+          }
+          // Same username but password changed -> offer to update
+          isUpdate = true;
+        }
+      } catch (err) {
+        console.warn("[Megawarden] Gagal mengecek status duplikasi vault:", err.message);
+      }
+    }
+
+    pendingVaultPrompt = data;
 
     let displayDomain = data.url;
     try {
@@ -2884,6 +2911,12 @@
       displayDomain = u.hostname.replace(/^www\./, "");
     } catch (_) {}
 
+    if (titleEl) {
+      titleEl.textContent = isUpdate ? "Perbarui sandi di Megawarden?" : "Simpan sandi ke Megawarden?";
+    }
+    if (btnSaveEl) {
+      btnSaveEl.textContent = isUpdate ? "Perbarui Sandi" : "Simpan Sandi";
+    }
     if (domainEl) domainEl.textContent = displayDomain;
     if (userEl) userEl.textContent = data.username;
 

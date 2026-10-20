@@ -503,16 +503,58 @@ window.__megabox_preload_loaded = true;
       activeDropdown = null;
     }
 
+    // Inject scrollbar and hover styles into document head (Trusted Types safe)
+    function ensureDropdownStyles() {
+      if (document.getElementById("megawarden-overlay-style")) return;
+      try {
+        const style = document.createElement("style");
+        style.id = "megawarden-overlay-style";
+        style.textContent = `
+          @keyframes mw-fade-in {
+            0% { opacity: 0; transform: translateY(-4px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar {
+            width: 5px;
+          }
+          #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 9999px;
+          }
+          #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.28);
+          }
+        `;
+        (document.head || document.documentElement).appendChild(style);
+      } catch (_) {}
+    }
+
     function showSuggestionDropdown(input) {
       removeDropdown();
       if (!cachedCredentials || cachedCredentials.length === 0) return;
       if (!input || !input.isConnected) return;
 
+      ensureDropdownStyles();
+
+      // Deduplicate credentials by username + password
+      const seen = new Set();
+      const uniqueCredentials = [];
+      for (const cred of cachedCredentials) {
+        const key = ((cred.username || "").trim().toLowerCase()) + ":::" + (cred.password || "");
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueCredentials.push(cred);
+        }
+      }
+      if (uniqueCredentials.length === 0) return;
+
       const rect = input.getBoundingClientRect();
       const elWidth = rect.width > 0 ? rect.width : (input.offsetWidth || 300);
       const elLeft = rect.left > 0 ? rect.left : Math.max(8, input.offsetLeft || 100);
       const elBottom = rect.bottom > 0 ? rect.bottom : ((rect.top > 0 ? rect.top : input.offsetTop || 200) + (input.offsetHeight || 45));
-
 
       const isPassword = input.type === "password";
 
@@ -522,30 +564,29 @@ window.__megabox_preload_loaded = true;
         position: fixed;
         left: ${Math.max(8, elLeft)}px;
         top: ${elBottom + 6}px;
-        width: ${Math.max(260, Math.min(360, elWidth))}px;
-        background: #14161a;
-        border: 1px solid #2d313a;
-        border-radius: 10px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(56, 189, 248, 0.15);
+        width: ${Math.max(280, Math.min(380, elWidth))}px;
+        background: rgba(22, 25, 31, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
         z-index: 2147483647;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: #f1f5f9;
+        color: #f8fafc;
         overflow: hidden;
-        animation: mw-fade-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: mw-fade-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
       `;
 
-      // Header (100% Trusted Types safe without innerHTML)
+      // Header: Editorial Clean & Apple Liquid Crystal (No mini capsule AI slop)
       const header = document.createElement("div");
       header.style.cssText = `
-        padding: 7px 12px;
-        background: #181b22;
-        border-bottom: 1px solid #242832;
-        font-size: 11px;
-        font-weight: 600;
-        color: #38bdf8;
+        padding: 8px 12px 7px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         user-select: none;
       `;
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -560,26 +601,28 @@ window.__megabox_preload_loaded = true;
       svg.appendChild(path);
 
       const titleSpan = document.createElement("span");
+      titleSpan.style.cssText = "font-size: 11px; font-weight: 600; color: #f1f5f9; letter-spacing: -0.01em;";
       titleSpan.textContent = "Megawarden Vault";
 
       const countSpan = document.createElement("span");
-      countSpan.style.cssText = "margin-left: auto; font-size: 10px; color: #64748b; font-weight: 400;";
-      countSpan.textContent = `${cachedCredentials.length} akun`;
+      countSpan.style.cssText = "margin-left: auto; font-size: 10px; color: #64748b; font-weight: 500;";
+      countSpan.textContent = `${uniqueCredentials.length} akun`;
 
       header.appendChild(svg);
       header.appendChild(titleSpan);
       header.appendChild(countSpan);
       dropdown.appendChild(header);
 
-      // List container
+      // List container with scrollbar for ALL accounts
       const list = document.createElement("div");
-      list.style.cssText = "max-height: 200px; overflow-y: auto; padding: 4px;";
+      list.className = "mw-scroll-list";
+      list.style.cssText = "max-height: 260px; overflow-y: auto; padding: 4px; overscroll-behavior: contain;";
 
-      cachedCredentials.slice(0, 6).forEach((cred, idx) => {
+      uniqueCredentials.forEach((cred) => {
         const item = document.createElement("div");
         item.style.cssText = `
           padding: 8px 10px;
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -587,7 +630,7 @@ window.__megabox_preload_loaded = true;
           transition: background 0.12s ease;
         `;
 
-        item.onmouseenter = () => { item.style.background = "rgba(56, 189, 248, 0.12)"; };
+        item.onmouseenter = () => { item.style.background = "rgba(255, 255, 255, 0.07)"; };
         item.onmouseleave = () => { item.style.background = "transparent"; };
 
         item.onmousedown = (e) => {
@@ -598,16 +641,16 @@ window.__megabox_preload_loaded = true;
 
         const iconBox = document.createElement("div");
         iconBox.style.cssText = `
-          width: 24px;
-          height: 24px;
-          border-radius: 5px;
-          background: #1e222b;
-          border: 1px solid #2f3542;
+          width: 26px;
+          height: 26px;
+          border-radius: 7px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
           color: #38bdf8;
-          font-weight: 700;
+          font-weight: 600;
           font-size: 11px;
           flex-shrink: 0;
         `;
@@ -617,12 +660,12 @@ window.__megabox_preload_loaded = true;
         textCol.style.cssText = "min-width: 0; flex: 1;";
 
         const titleLine = document.createElement("div");
-        titleLine.style.cssText = "font-size: 12px; font-weight: 500; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+        titleLine.style.cssText = "font-size: 12px; font-weight: 500; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;";
         titleLine.textContent = cred.username || "(tanpa username)";
 
         const subLine = document.createElement("div");
-        subLine.style.cssText = "font-size: 10.5px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
-        subLine.textContent = cred.name ? `${cred.name} • ${cred.domain || ''}` : (cred.domain || 'Akun Tersimpan');
+        subLine.style.cssText = "font-size: 10.5px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;";
+        subLine.textContent = cred.name ? (cred.name + " - " + (cred.domain || "")) : (cred.domain || "Akun Tersimpan");
 
         textCol.appendChild(titleLine);
         textCol.appendChild(subLine);
