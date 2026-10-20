@@ -1041,8 +1041,8 @@
     /* ============================================================ */
     .crystal-modal-box {
       width: 100%;
-      max-width: 660px;
-      min-height: 520px;
+      max-width: 760px;
+      min-height: 540px;
       max-height: 85vh;
       display: flex;
       flex-direction: column;
@@ -1114,6 +1114,87 @@
     }
 
     /* Flat Section Cards */
+    
+    /* Megawarden & Apple Liquid UI Classes */
+    .crystal-input {
+      background: #111215;
+      color: #f0f6fc;
+      border: 1px solid #30343d;
+      border-radius: 7px;
+      padding: 7px 12px;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+    }
+    .crystal-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+    .crystal-input::placeholder {
+      color: #64748b;
+    }
+    .crystal-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: #0ea5e9;
+      color: #ffffff;
+      border: 1px solid #38bdf8;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 120ms ease, transform 80ms ease;
+    }
+    .crystal-btn-primary:hover {
+      background: #0284c7;
+    }
+    .crystal-btn-primary:active {
+      transform: scale(0.97);
+    }
+    .crystal-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 500;
+      background: #1f2229;
+      color: #cbd5e1;
+      border: 1px solid #323743;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 80ms ease;
+    }
+    .crystal-btn-secondary:hover {
+      background: #2a2e38;
+      color: #ffffff;
+      border-color: #444a59;
+    }
+    .crystal-btn-secondary:active {
+      transform: scale(0.97);
+    }
+    .vault-item-row {
+      background: #14161a;
+      border: 1px solid #23262f;
+      border-radius: 8px;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      transition: background-color 120ms ease, border-color 120ms ease;
+    }
+    .vault-item-row:hover {
+      background: #1a1c22;
+      border-color: #343946;
+    }
+
     .apple-group-card {
       background: #151619;
       border: 1px solid #26282e;
@@ -1709,32 +1790,32 @@
         <!-- SECTION 4: MEGAWARDEN PASSWORD VAULT -->
         <div id="section-settings-vault" style="display: none; flex-direction: column; gap: 16px;">
           <!-- Top summary card -->
-          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px;">
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: #16181c; border: 1px solid #282c35;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); display: flex; align-items: center; justify-content: center;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                   </svg>
                 </div>
                 <div>
-                  <div style="font-weight: 600; font-size: 14px; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+                  <div style="font-weight: 600; font-size: 13.5px; color: #ffffff; display: flex; align-items: center; gap: 8px;">
                     Megawarden Vault
-                    <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); color: #34d399; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3);">AES-256-GCM</span>
+                    <span style="font-size: 10px; padding: 1.5px 6px; border-radius: 4px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 600; border: 1px solid rgba(56, 189, 248, 0.25);">AES-256-GCM</span>
                   </div>
-                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa server pihak ketiga.</div>
+                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa cloud pihak ketiga.</div>
                 </div>
               </div>
               <div style="display: flex; gap: 8px;">
-                <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                   <span>Impor Google CSV</span>
                 </button>
-                <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                   <span>Ekspor CSV</span>
                 </button>
-                <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary" style="padding: 6px 12px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                   <span>Tambah Sandi</span>
                 </button>
@@ -1742,14 +1823,14 @@
             </div>
 
             <!-- Search bar & Count -->
-            <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+            <div style="display: flex; gap: 12px; align-items: center; margin-top: 2px;">
               <div style="flex: 1; position: relative;">
-                <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 32px; font-size: 12px; height: 34px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position: absolute; left: 10px; top: 10px;">
+                <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 34px; font-size: 12px; height: 36px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position: absolute; left: 11px; top: 11px;">
                   <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
               </div>
-              <div id="vault-items-counter" style="font-size: 11px; color: #94a3b8; font-weight: 600; padding: 0 8px; white-space: nowrap;">0 Kredensial</div>
+              <div id="vault-items-counter" style="font-size: 11.5px; color: #38bdf8; font-weight: 600; padding: 6px 12px; border-radius: 6px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); white-space: nowrap;">0 Kredensial</div>
             </div>
           </div>
 

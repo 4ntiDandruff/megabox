@@ -2953,40 +2953,44 @@
 
     items.forEach(item => {
       const row = document.createElement("div");
-      row.className = "apple-group-card";
-      row.style.cssText = "padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 8px;";
+      row.className = "vault-item-row";
 
       const left = document.createElement("div");
       left.style.cssText = "display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;";
 
+      const initialChar = (item.name || item.domain || "S").charAt(0).toUpperCase();
       const iconBox = document.createElement("div");
-      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 700; font-size: 12px; flex-shrink: 0;";
-      iconBox.textContent = (item.name || item.domain || "S").charAt(0).toUpperCase();
+      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 7px; background: #1c1f26; border: 1px solid #2d323e; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 700; font-size: 12px; flex-shrink: 0; user-select: none;";
+      iconBox.textContent = initialChar;
 
       const textCol = document.createElement("div");
       textCol.style.cssText = "min-width: 0; flex: 1;";
 
       const titleLine = document.createElement("div");
-      titleLine.style.cssText = "font-size: 13px; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px;";
-      titleLine.textContent = item.name || item.domain || "Akun";
+      titleLine.style.cssText = "display: flex; align-items: baseline; gap: 6px; min-width: 0;";
 
-      if (item.domain) {
+      const nameSpan = document.createElement("span");
+      nameSpan.style.cssText = "font-size: 12.5px; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+      nameSpan.textContent = item.name || item.domain || "Akun";
+      titleLine.appendChild(nameSpan);
+
+      if (item.domain && item.domain !== item.name) {
         const domSpan = document.createElement("span");
-        domSpan.style.cssText = "font-size: 10px; color: #64748b; font-weight: 400;";
-        domSpan.textContent = "(" + item.domain + ")";
+        domSpan.style.cssText = "font-size: 11px; color: #64748b; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+        domSpan.textContent = item.domain;
         titleLine.appendChild(domSpan);
       }
 
       const userLine = document.createElement("div");
-      userLine.style.cssText = "font-size: 11px; color: #94a3b8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
-      userLine.textContent = item.username;
+      userLine.style.cssText = "font-size: 11px; color: #94a3b8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;";
+      userLine.textContent = item.username || "(tanpa username)";
 
       textCol.appendChild(titleLine);
       textCol.appendChild(userLine);
       left.appendChild(iconBox);
       left.appendChild(textCol);
 
-      // Actions right
+      // Actions right (Cupertino subtle buttons)
       const right = document.createElement("div");
       right.style.cssText = "display: flex; align-items: center; gap: 6px; flex-shrink: 0;";
 
@@ -2996,7 +3000,7 @@
       btnCopyUser.title = "Salin Nama Pengguna";
       btnCopyUser.className = "crystal-btn-secondary";
       btnCopyUser.style.cssText = "padding: 5px 8px; font-size: 11px;";
-      btnCopyUser.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+      btnCopyUser.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
       btnCopyUser.onclick = (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(item.username);
@@ -3009,7 +3013,7 @@
       btnCopyPass.title = "Salin Kata Sandi";
       btnCopyPass.className = "crystal-btn-secondary";
       btnCopyPass.style.cssText = "padding: 5px 8px; font-size: 11px; color: #38bdf8;";
-      btnCopyPass.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+      btnCopyPass.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
       btnCopyPass.onclick = (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(item.password);
@@ -3022,7 +3026,7 @@
       btnEdit.title = "Edit Akun";
       btnEdit.className = "crystal-btn-secondary";
       btnEdit.style.cssText = "padding: 5px 8px; font-size: 11px;";
-      btnEdit.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+      btnEdit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
       btnEdit.onclick = () => openVaultModal(item);
 
       // Delete item
@@ -3030,8 +3034,8 @@
       btnDelete.type = "button";
       btnDelete.title = "Hapus Akun";
       btnDelete.className = "crystal-btn-secondary";
-      btnDelete.style.cssText = "padding: 5px 8px; font-size: 11px; color: #ef4444;";
-      btnDelete.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+      btnDelete.style.cssText = "padding: 5px 8px; font-size: 11px; color: #f87171;";
+      btnDelete.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
       btnDelete.onclick = async (e) => {
         e.stopPropagation();
         if (confirm(`Hapus kredensial "${item.name || item.domain}" dari Megawarden?`)) {
