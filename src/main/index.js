@@ -6,6 +6,7 @@ const sync = require('./sync-client.js');
 const extensionsManager = require('./extensions-manager.js');
 const { translateText } = require('./translator.js');
 const { initUpdater } = require('./updater.js');
+const { MegawardenVault } = require('./megawarden.js');
 const fs = require('fs');
 
 function checkGpuCacheConsistency() {
@@ -40,6 +41,7 @@ function checkGpuCacheConsistency() {
 let mainWindow = null;
 let tray = null;
 let db = null;
+let megawarden = null;
 let isQuitting = false;
 let syncDebounceTimer = null;
 
@@ -260,6 +262,7 @@ function createWindow() {
 app.whenReady().then(() => {
   checkGpuCacheConsistency();
   db = initDatabase();
+  megawarden = new MegawardenVault(() => getSettings(db));
 
   // Initial cloud sync pull if logged in
   const status = sync.getSyncStatus();
@@ -761,6 +764,72 @@ async function cacheFaviconToDataUri(iconUrl) {
         count: restoredCount || getApps(db).length,
         version_hash: pushRes.version_hash
       };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+
+  // ==========================================
+  // Megawarden (Local-First Password Vault) IPC Handlers
+  // ==========================================
+  ipcMain.handle("megawarden:list", async () => {
+    try {
+      return { success: true, items: megawarden.list() };
+    } catch (err) {
+      return { success: false, error: err.message, items: [] };
+    }
+  });
+
+  ipcMain.handle("megawarden:save", async (_, entry) => {
+    try {
+      const saved = megawarden.save(entry);
+      return { success: true, item: saved };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle("megawarden:delete", async (_, id) => {
+    try {
+      megawarden.delete(id);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle("megawarden:find-for-url", async (_, { url }) => {
+    try {
+      const matches = megawarden.findForUrl(url);
+      return { success: true, matches: matches || [] };
+    } catch (err) {
+      return { success: false, error: err.message, matches: [] };
+    }
+  });
+
+  ipcMain.handle("megawarden:generate-password", async (_, options) => {
+    try {
+      const password = megawarden.generatePassword(options);
+      return { success: true, password };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle("megawarden:import-csv", async (_, { csvContent }) => {
+    try {
+      const result = megawarden.importCsv(csvContent);
+      return result;
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle("megawarden:export-csv", async () => {
+    try {
+      const csv = megawarden.exportCsv();
+      return { success: true, csv };
     } catch (err) {
       return { success: false, error: err.message };
     }

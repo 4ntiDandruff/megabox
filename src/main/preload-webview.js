@@ -427,3 +427,123 @@ window.__megabox_preload_loaded = true;
     console.error("[Megabox Preload Error] initWheelZoomBridge:", err);
   }
 })();
+
+
+// ========================================================
+// Megawarden: Auto-Capture & Autofill Engine
+// ========================================================
+(function initMegawardenObserver() {
+  try {
+    let autofilled = false;
+
+    function findInputs() {
+      const passwordInputs = Array.from(document.querySelectorAll("input[type='password']"));
+      if (passwordInputs.length === 0) return null;
+
+      // Primary password field is usually visible
+      const pwInput = passwordInputs.find(i => i.offsetParent !== null) || passwordInputs[0];
+      const form = pwInput.closest("form") || document.body;
+
+      // Find user input
+      const candidates = Array.from(form.querySelectorAll("input[type='text'], input[type='email'], input[type='tel'], input:not([type])"));
+      const visibleCandidates = candidates.filter(i => i.offsetParent !== null && i !== pwInput);
+
+      let userInput = null;
+      for (const input of visibleCandidates) {
+        const idName = (input.id + " " + input.name + " " + (input.getAttribute("autocomplete") || "")).toLowerCase();
+        if (idName.includes("user") || idName.includes("login") || idName.includes("email") || idName.includes("account") || idName.includes("identifier")) {
+          userInput = input;
+          break;
+        }
+      }
+      if (!userInput && visibleCandidates.length > 0) {
+        userInput = visibleCandidates[0];
+      }
+
+      return { form, userInput, pwInput };
+    }
+
+    // 1. Request Auto-fill when page or form is ready
+    function tryAutofill() {
+      if (autofilled) return;
+      const inputs = findInputs();
+      if (!inputs || !inputs.pwInput) return;
+
+      const origin = window.location.href;
+      ipcRenderer.sendToHost("megawarden:request-credentials", { url: origin });
+    }
+
+    // Receive autofill credentials from host
+    ipcRenderer.on("megawarden:autofill-data", (_e, creds) => {
+      if (!creds || !creds.password) return;
+      const inputs = findInputs();
+      if (!inputs || !inputs.pwInput) return;
+
+      if (inputs.userInput && creds.username && !inputs.userInput.value) {
+        inputs.userInput.value = creds.username;
+        inputs.userInput.dispatchEvent(new Event("input", { bubbles: true }));
+        inputs.userInput.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      if (!inputs.pwInput.value) {
+        inputs.pwInput.value = creds.password;
+        inputs.pwInput.dispatchEvent(new Event("input", { bubbles: true }));
+        inputs.pwInput.dispatchEvent(new Event("change", { bubbles: true }));
+        autofilled = true;
+      }
+    });
+
+    // 2. Auto-capture submission
+    function captureLogin(sourceEvent) {
+      try {
+        const inputs = findInputs();
+        if (!inputs || !inputs.pwInput) return;
+
+        const password = inputs.pwInput.value;
+        const username = inputs.userInput ? inputs.userInput.value : "";
+        if (!password || password.length < 2) return;
+
+        const url = window.location.href;
+        const title = document.title || "";
+
+        ipcRenderer.sendToHost("megawarden:save-prompt", {
+          url,
+          title,
+          username: username.trim(),
+          password: password
+        });
+      } catch (err) {
+        console.warn("[Megawarden Preload] Capture error:", err.message);
+      }
+    }
+
+    document.addEventListener("submit", captureLogin, true);
+
+    // Also listen to submit button click in case form doesn't fire submit event (modern SPAs)
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[type='submit'], input[type='submit'], button");
+      if (!btn) return;
+      const text = (btn.innerText || btn.value || "").toLowerCase();
+      if (text.includes("login") || text.includes("masuk") || text.includes("sign in") || text.includes("log in") || btn.type === "submit") {
+        setTimeout(captureLogin, 50);
+      }
+    }, true);
+
+    // Initial autofill trigger
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => setTimeout(tryAutofill, 500));
+    } else {
+      setTimeout(tryAutofill, 500);
+    }
+
+    // Dynamic SPA observer
+    const observer = new MutationObserver(() => {
+      if (!autofilled) tryAutofill();
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    console.log("[Megawarden Preload] Auto-capture & autofill engine active.");
+  } catch (err) {
+    console.error("[Megawarden Preload Error]:", err);
+  }
+})();

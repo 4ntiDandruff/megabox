@@ -1729,15 +1729,18 @@
   }
 
   const tabNavGeneral = document.getElementById('tab-nav-general');
+  const tabNavVault = document.getElementById('tab-nav-vault');
   const tabNavSync = document.getElementById('tab-nav-sync');
   const tabNavAbout = document.getElementById('tab-nav-about');
   const secGeneral = document.getElementById('section-settings-general');
+  const secVault = document.getElementById('section-settings-vault');
   const secSync = document.getElementById('section-settings-sync');
   const secAbout = document.getElementById('section-settings-about');
 
   function switchSettingsTab(tabName) {
     const tabs = [
       { id: 'general', btn: tabNavGeneral, sec: secGeneral },
+      { id: 'vault', btn: tabNavVault, sec: secVault },
       { id: 'sync', btn: tabNavSync, sec: secSync },
       { id: 'about', btn: tabNavAbout, sec: secAbout }
     ];
@@ -1760,6 +1763,10 @@
   }
 
   if (tabNavGeneral) tabNavGeneral.onclick = () => switchSettingsTab('general');
+  if (tabNavVault) tabNavVault.onclick = () => {
+    switchSettingsTab('vault');
+    loadMegawardenVault();
+  };
   if (tabNavSync) tabNavSync.onclick = () => switchSettingsTab('sync');
   if (tabNavAbout) tabNavAbout.onclick = () => switchSettingsTab('about');
 
@@ -2824,3 +2831,367 @@
   if (btnDrawerClose) btnDrawerClose.onclick = closeExtensionDrawer;
   if (drawerOverlay) drawerOverlay.onclick = closeExtensionDrawer;
 })();
+
+
+  // ==========================================================
+  // MEGAWARDEN CONTROLLER (Local-First Password Vault Engine)
+  // ==========================================================
+  let pendingVaultPrompt = null;
+  let cachedVaultItems = [];
+
+  function handleMegawardenPrompt(data) {
+    if (!data || !data.password || !data.username) return;
+    pendingVaultPrompt = data;
+
+    const toast = document.getElementById("megawarden-save-toast");
+    const domainEl = document.getElementById("toast-vault-domain");
+    const userEl = document.getElementById("toast-vault-user");
+    if (!toast) return;
+
+    let displayDomain = data.url;
+    try {
+      const u = new URL(data.url);
+      displayDomain = u.hostname.replace(/^www\./, "");
+    } catch (_) {}
+
+    if (domainEl) domainEl.textContent = displayDomain;
+    if (userEl) userEl.textContent = data.username;
+
+    toast.style.display = "block";
+  }
+
+  const toastDismiss = document.getElementById("toast-vault-btn-dismiss");
+  const toastIgnore = document.getElementById("toast-vault-btn-ignore");
+  const toastSave = document.getElementById("toast-vault-btn-save");
+
+  function hideVaultToast() {
+    const toast = document.getElementById("megawarden-save-toast");
+    if (toast) toast.style.display = "none";
+    pendingVaultPrompt = null;
+  }
+
+  if (toastDismiss) toastDismiss.onclick = hideVaultToast;
+  if (toastIgnore) toastIgnore.onclick = hideVaultToast;
+  if (toastSave) {
+    toastSave.onclick = async () => {
+      if (!pendingVaultPrompt || !window.megabox || typeof window.megabox.vaultSave !== "function") {
+        hideVaultToast();
+        return;
+      }
+      try {
+        let domain = pendingVaultPrompt.url;
+        try { domain = new URL(pendingVaultPrompt.url).hostname.replace(/^www\./, ""); } catch(_) {}
+        
+        await window.megabox.vaultSave({
+          name: domain,
+          url: pendingVaultPrompt.url,
+          username: pendingVaultPrompt.username,
+          password: pendingVaultPrompt.password
+        });
+        showGlobalToast("Sandi berhasil disimpan ke Megawarden", "success");
+      } catch (err) {
+        showGlobalToast("Gagal menyimpan sandi: " + err.message, "danger");
+      } finally {
+        hideVaultToast();
+      }
+    };
+  }
+
+  // Megawarden Vault Manager UI
+  const vaultListContainer = document.getElementById("vault-items-list");
+  const vaultSearchInput = document.getElementById("vault-search-input");
+  const vaultCounter = document.getElementById("vault-items-counter");
+  const btnVaultAdd = document.getElementById("btn-vault-add-entry");
+  const btnVaultImportCsv = document.getElementById("btn-vault-import-csv");
+  const btnVaultExportCsv = document.getElementById("btn-vault-export-csv");
+  const vaultFileInput = document.getElementById("vault-csv-file-input");
+
+  const vaultModal = document.getElementById("vault-entry-modal");
+  const vaultModalTitle = document.getElementById("vault-modal-title");
+  const vaultModalClose = document.getElementById("btn-vault-modal-close");
+  const vaultModalCancel = document.getElementById("btn-vault-modal-cancel");
+  const vaultModalSave = document.getElementById("btn-vault-modal-save");
+
+  const vFormId = document.getElementById("vault-form-id");
+  const vFormName = document.getElementById("vault-form-name");
+  const vFormUrl = document.getElementById("vault-form-url");
+  const vFormUsername = document.getElementById("vault-form-username");
+  const vFormPassword = document.getElementById("vault-form-password");
+  const vFormNote = document.getElementById("vault-form-note");
+  const vBtnGenPass = document.getElementById("btn-vault-form-gen");
+  const vBtnTogglePass = document.getElementById("btn-vault-form-toggle-pwd");
+
+  async function loadMegawardenVault() {
+    if (!window.megabox || typeof window.megabox.vaultList !== "function") return;
+    try {
+      const res = await window.megabox.vaultList();
+      cachedVaultItems = (res && res.items) ? res.items : [];
+      renderVaultItems(cachedVaultItems);
+    } catch (err) {
+      console.error("[Megawarden] Load vault failed:", err);
+    }
+  }
+
+  function renderVaultItems(items) {
+    if (!vaultListContainer) return;
+    vaultListContainer.innerHTML = "";
+
+    if (vaultCounter) {
+      vaultCounter.textContent = `${items.length} Kredensial`;
+    }
+
+    if (items.length === 0) {
+      vaultListContainer.innerHTML = `
+        <div style="padding: 32px 16px; text-align: center; color: #64748b; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Belum ada kredensial tersimpan di Megawarden.</span>
+          <span style="font-size: 11px; color: #475569;">Gunakan "Impor Google CSV" atau "Tambah Sandi" untuk memulai.</span>
+        </div>
+      `;
+      return;
+    }
+
+    items.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "apple-group-card";
+      row.style.cssText = "padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 8px;";
+
+      const left = document.createElement("div");
+      left.style.cssText = "display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;";
+
+      const iconBox = document.createElement("div");
+      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 6px; background: #21242b; border: 1px solid #30343d; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 700; font-size: 12px; flex-shrink: 0;";
+      iconBox.textContent = (item.name || item.domain || "S").charAt(0).toUpperCase();
+
+      const textCol = document.createElement("div");
+      textCol.style.cssText = "min-width: 0; flex: 1;";
+
+      const titleLine = document.createElement("div");
+      titleLine.style.cssText = "font-size: 13px; font-weight: 600; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px;";
+      titleLine.textContent = item.name || item.domain || "Akun";
+
+      if (item.domain) {
+        const domSpan = document.createElement("span");
+        domSpan.style.cssText = "font-size: 10px; color: #64748b; font-weight: 400;";
+        domSpan.textContent = "(" + item.domain + ")";
+        titleLine.appendChild(domSpan);
+      }
+
+      const userLine = document.createElement("div");
+      userLine.style.cssText = "font-size: 11px; color: #94a3b8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+      userLine.textContent = item.username;
+
+      textCol.appendChild(titleLine);
+      textCol.appendChild(userLine);
+      left.appendChild(iconBox);
+      left.appendChild(textCol);
+
+      // Actions right
+      const right = document.createElement("div");
+      right.style.cssText = "display: flex; align-items: center; gap: 6px; flex-shrink: 0;";
+
+      // Copy username
+      const btnCopyUser = document.createElement("button");
+      btnCopyUser.type = "button";
+      btnCopyUser.title = "Salin Nama Pengguna";
+      btnCopyUser.className = "crystal-btn-secondary";
+      btnCopyUser.style.cssText = "padding: 5px 8px; font-size: 11px;";
+      btnCopyUser.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+      btnCopyUser.onclick = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(item.username);
+        showGlobalToast("Nama pengguna disalin", "info");
+      };
+
+      // Copy password
+      const btnCopyPass = document.createElement("button");
+      btnCopyPass.type = "button";
+      btnCopyPass.title = "Salin Kata Sandi";
+      btnCopyPass.className = "crystal-btn-secondary";
+      btnCopyPass.style.cssText = "padding: 5px 8px; font-size: 11px; color: #38bdf8;";
+      btnCopyPass.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+      btnCopyPass.onclick = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(item.password);
+        showGlobalToast("Kata sandi disalin ke clipboard", "success");
+      };
+
+      // Edit item
+      const btnEdit = document.createElement("button");
+      btnEdit.type = "button";
+      btnEdit.title = "Edit Akun";
+      btnEdit.className = "crystal-btn-secondary";
+      btnEdit.style.cssText = "padding: 5px 8px; font-size: 11px;";
+      btnEdit.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+      btnEdit.onclick = () => openVaultModal(item);
+
+      // Delete item
+      const btnDelete = document.createElement("button");
+      btnDelete.type = "button";
+      btnDelete.title = "Hapus Akun";
+      btnDelete.className = "crystal-btn-secondary";
+      btnDelete.style.cssText = "padding: 5px 8px; font-size: 11px; color: #ef4444;";
+      btnDelete.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+      btnDelete.onclick = async (e) => {
+        e.stopPropagation();
+        if (confirm(`Hapus kredensial "${item.name || item.domain}" dari Megawarden?`)) {
+          await window.megabox.vaultDelete(item.id);
+          loadMegawardenVault();
+          showGlobalToast("Kredensial dihapus", "info");
+        }
+      };
+
+      right.appendChild(btnCopyUser);
+      right.appendChild(btnCopyPass);
+      right.appendChild(btnEdit);
+      right.appendChild(btnDelete);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      vaultListContainer.appendChild(row);
+    });
+  }
+
+  // Filter vault search
+  if (vaultSearchInput) {
+    vaultSearchInput.oninput = (e) => {
+      const q = (e.target.value || "").toLowerCase().trim();
+      if (!q) {
+        renderVaultItems(cachedVaultItems);
+        return;
+      }
+      const filtered = cachedVaultItems.filter(i => 
+        (i.name || "").toLowerCase().includes(q) ||
+        (i.domain || "").toLowerCase().includes(q) ||
+        (i.username || "").toLowerCase().includes(q) ||
+        (i.url || "").toLowerCase().includes(q)
+      );
+      renderVaultItems(filtered);
+    };
+  }
+
+  // Add / Edit Modal Logic
+  function openVaultModal(item = null) {
+    if (!vaultModal) return;
+    if (item) {
+      if (vaultModalTitle) vaultModalTitle.textContent = "Edit Akun Megawarden";
+      if (vFormId) vFormId.value = item.id || "";
+      if (vFormName) vFormName.value = item.name || "";
+      if (vFormUrl) vFormUrl.value = item.url || "";
+      if (vFormUsername) vFormUsername.value = item.username || "";
+      if (vFormPassword) vFormPassword.value = item.password || "";
+      if (vFormNote) vFormNote.value = item.note || "";
+    } else {
+      if (vaultModalTitle) vaultModalTitle.textContent = "Tambah Akun Megawarden";
+      if (vFormId) vFormId.value = "";
+      if (vFormName) vFormName.value = "";
+      if (vFormUrl) vFormUrl.value = "";
+      if (vFormUsername) vFormUsername.value = "";
+      if (vFormPassword) vFormPassword.value = "";
+      if (vFormNote) vFormNote.value = "";
+    }
+    if (vFormPassword) vFormPassword.type = "password";
+    vaultModal.style.display = "flex";
+  }
+
+  function closeVaultModal() {
+    if (vaultModal) vaultModal.style.display = "none";
+  }
+
+  if (btnVaultAdd) btnVaultAdd.onclick = () => openVaultModal();
+  if (vaultModalClose) vaultModalClose.onclick = closeVaultModal;
+  if (vaultModalCancel) vaultModalCancel.onclick = closeVaultModal;
+
+  if (vBtnTogglePass) {
+    vBtnTogglePass.onclick = () => {
+      if (!vFormPassword) return;
+      vFormPassword.type = vFormPassword.type === "password" ? "text" : "password";
+    };
+  }
+
+  if (vBtnGenPass) {
+    vBtnGenPass.onclick = async () => {
+      if (!window.megabox || typeof window.megabox.vaultGeneratePassword !== "function") return;
+      const res = await window.megabox.vaultGeneratePassword({ length: 18 });
+      if (res && res.password && vFormPassword) {
+        vFormPassword.value = res.password;
+        vFormPassword.type = "text";
+        showGlobalToast("Sandi acak kuat digenerate", "info");
+      }
+    };
+  }
+
+  if (vaultModalSave) {
+    vaultModalSave.onclick = async () => {
+      const username = (vFormUsername ? vFormUsername.value : "").trim();
+      const password = (vFormPassword ? vFormPassword.value : "").trim();
+      const name = (vFormName ? vFormName.value : "").trim();
+      const url = (vFormUrl ? vFormUrl.value : "").trim();
+      const note = (vFormNote ? vFormNote.value : "").trim();
+      const id = vFormId ? vFormId.value : "";
+
+      if (!username || !password) {
+        alert("Nama pengguna dan kata sandi wajib diisi!");
+        return;
+      }
+
+      try {
+        await window.megabox.vaultSave({ id, name, url, username, password, note });
+        closeVaultModal();
+        loadMegawardenVault();
+        showGlobalToast("Kredensial berhasil disimpan", "success");
+      } catch (err) {
+        alert("Gagal menyimpan: " + err.message);
+      }
+    };
+  }
+
+  // Import Google CSV
+  if (btnVaultImportCsv && vaultFileInput) {
+    btnVaultImportCsv.onclick = () => vaultFileInput.click();
+    vaultFileInput.onchange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (evt) => {
+        const text = evt.target.result;
+        try {
+          const res = await window.megabox.vaultImportCsv(text);
+          if (res && res.success) {
+            showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager!`, "success");
+            loadMegawardenVault();
+          } else {
+            alert("Gagal impor CSV: " + (res.error || "Format tidak valid"));
+          }
+        } catch (err) {
+          alert("Gagal membaca berkas CSV: " + err.message);
+        } finally {
+          vaultFileInput.value = "";
+        }
+      };
+      reader.readAsText(file);
+    };
+  }
+
+  // Export CSV
+  if (btnVaultExportCsv) {
+    btnVaultExportCsv.onclick = async () => {
+      if (!window.megabox || typeof window.megabox.vaultExportCsv !== "function") return;
+      try {
+        const res = await window.megabox.vaultExportCsv();
+        if (res && res.success && res.csv) {
+          const blob = new Blob([res.csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `megawarden-passwords-${new Date().toISOString().slice(0,10)}.csv`;
+          link.click();
+          URL.revokeObjectURL(url);
+          showGlobalToast("Ekspor berkas CSV berhasil diunduh", "success");
+        }
+      } catch (err) {
+        alert("Gagal ekspor: " + err.message);
+      }
+    };
+  }

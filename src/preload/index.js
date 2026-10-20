@@ -22,6 +22,16 @@ contextBridge.exposeInMainWorld('megabox', {
   performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
   toggleExtension: (appId, extensionId, enabled) => ipcRenderer.invoke('extensions:toggle', { appId, extensionId, enabled }),
 
+
+  // Megawarden Local Password Vault API
+  vaultList: () => ipcRenderer.invoke("megawarden:list"),
+  vaultSave: (entry) => ipcRenderer.invoke("megawarden:save", entry),
+  vaultDelete: (id) => ipcRenderer.invoke("megawarden:delete", id),
+  vaultFindForUrl: (url) => ipcRenderer.invoke("megawarden:find-for-url", { url }),
+  vaultGeneratePassword: (options) => ipcRenderer.invoke("megawarden:generate-password", options),
+  vaultImportCsv: (csvContent) => ipcRenderer.invoke("megawarden:import-csv", { csvContent }),
+  vaultExportCsv: () => ipcRenderer.invoke("megawarden:export-csv"),
+
   // Lock Screen API (Local-First Master Password / PIN)
   verifyLockPassword: (password) => ipcRenderer.invoke("lock:verify", { password }),
   setLockPassword: (currentPassword, newPassword) => ipcRenderer.invoke("lock:set-password", { currentPassword, newPassword }),
