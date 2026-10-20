@@ -21,7 +21,7 @@ function initDatabase(customPath = null) {
   ];
 
   if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify({ apps: defaults, settings: {} }, null, 2), 'utf-8');
+    fs.writeFileSync(filePath, JSON.stringify({ apps: defaults, settings: {}, downloads: [] }, null, 2), 'utf-8');
   }
 
   return {
@@ -30,7 +30,7 @@ function initDatabase(customPath = null) {
       try {
         return JSON.parse(fs.readFileSync(this.filePath, 'utf-8'));
       } catch (e) {
-        return { apps: defaults, settings: {} };
+        return { apps: defaults, settings: {}, downloads: [] };
       }
     },
     write: function(data) {
@@ -99,9 +99,9 @@ function reorderApp(db, id, direction) {
 
 const defaultSettings = {
   language: 'en',
-    auto_check_updates: true,
-    dismissed_update_version: null,
-    dismissed_update_time: 0,
+  auto_check_updates: true,
+  dismissed_update_version: null,
+  dismissed_update_time: 0,
   hibernate_timeout_minutes: 15,
   close_to_tray: true,
   autostart: false,
@@ -119,6 +119,59 @@ function saveSettings(db, newSettings) {
   return data.settings;
 }
 
+// ==========================================
+// Download History Management (Zero-Bloat)
+// ==========================================
+function getDownloads(db, limit = 50) {
+  const data = db.read();
+  const list = data.downloads || [];
+  return list.slice().sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, limit);
+}
+
+function saveDownload(db, item) {
+  const data = db.read();
+  data.downloads = data.downloads || [];
+  const idx = data.downloads.findIndex(d => d.id === item.id);
+  const cleanItem = {
+    id: String(item.id || ('dl_' + Date.now())),
+    filename: String(item.filename || 'download'),
+    path: String(item.path || ''),
+    url: String(item.url || ''),
+    total_bytes: Number(item.total_bytes || 0),
+    received_bytes: Number(item.received_bytes || 0),
+    state: item.state || 'completed',
+    service_name: String(item.service_name || 'Megabox'),
+    timestamp: Number(item.timestamp || Date.now())
+  };
+
+  if (idx >= 0) {
+    data.downloads[idx] = cleanItem;
+  } else {
+    data.downloads.push(cleanItem);
+  }
+  
+  // Cap history at 150 items to keep storage lean
+  if (data.downloads.length > 150) {
+    data.downloads.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    data.downloads = data.downloads.slice(0, 150);
+  }
+
+  db.write(data);
+  return cleanItem;
+}
+
+function deleteDownload(db, id) {
+  const data = db.read();
+  data.downloads = (data.downloads || []).filter(d => d.id !== id);
+  db.write(data);
+}
+
+function clearDownloads(db) {
+  const data = db.read();
+  data.downloads = [];
+  db.write(data);
+}
+
 module.exports = {
   getDefaultDbPath,
   initDatabase,
@@ -127,5 +180,9 @@ module.exports = {
   deleteApp,
   reorderApp,
   getSettings,
-  saveSettings
+  saveSettings,
+  getDownloads,
+  saveDownload,
+  deleteDownload,
+  clearDownloads
 };
