@@ -47,6 +47,7 @@
 
   let apps = [];
   let recipesCatalog = [];
+  let isWorkspaceLocked = false;
   let activeAppId = null;
   let secondaryTiledAppId = null;
   let isTileModeActive = false;
@@ -96,6 +97,10 @@
     // Unified Shortcut Dispatcher (handles IPC from Main/Webviews as well as local Renderer keys)
     function dispatchShortcutAction(data) {
       if (!data || !data.action) return;
+      if (typeof isWorkspaceLocked !== 'undefined' && isWorkspaceLocked) {
+        // While locked, reject all shortcuts to protect workspace
+        return;
+      }
       const { action, dir, index } = data;
 
       switch (action) {
@@ -246,6 +251,10 @@
 
     // Local Renderer Keyboard Shortcuts Router
     window.addEventListener('keydown', (e) => {
+      if (typeof isWorkspaceLocked !== 'undefined' && isWorkspaceLocked) {
+        // While locked, do not intercept keys except for typing into password input
+        return;
+      }
       const isCtrl = Boolean(e.ctrlKey || e.metaKey);
       const isAlt = Boolean(e.altKey);
       const isShift = Boolean(e.shiftKey);
@@ -1504,6 +1513,11 @@
       settingsAvatarImg.style.display = 'block';
     }
     if (settingsAvatarDefaultIcon) settingsAvatarDefaultIcon.style.display = 'none';
+
+    const lockAvatarImg = document.getElementById('lock-screen-avatar-img');
+    if (lockAvatarImg) {
+      lockAvatarImg.src = avatarSrc;
+    }
   }
 
   async function loadInitialAvatar() {
@@ -2472,7 +2486,6 @@
   const btnRemoveLockPwd = document.getElementById("btn-remove-lock-pwd");
   const lockSaveMsg = document.getElementById("lock-save-msg");
 
-  let isWorkspaceLocked = false;
   let isLockProtected = false;
   let lastUserActivityTime = Date.now();
   let lockIdleMinutes = 0;
@@ -2516,6 +2529,11 @@
   function lockWorkspace() {
     if (!lockOverlay) return;
     isWorkspaceLocked = true;
+    const currentSidebarAvatar = document.getElementById("avatar-user-img");
+    const lockAvatarImg = document.getElementById("lock-screen-avatar-img");
+    if (currentSidebarAvatar && lockAvatarImg && currentSidebarAvatar.src) {
+      lockAvatarImg.src = currentSidebarAvatar.src;
+    }
     lockOverlay.style.display = "flex";
     if (unlockErrorMsg) unlockErrorMsg.style.display = "none";
     if (inputUnlockPassword) {
@@ -2699,6 +2717,8 @@
   window._megabox_applyLanguage = applyLanguage;
   window._megabox_showUpdateBanner = showUpdateBanner;
   window._megabox_hideUpdateBanner = hideUpdateBanner;
+  window._megabox_lockWorkspace = lockWorkspace;
+  window._megabox_isLocked = () => isWorkspaceLocked;
 
   // --- Contextual Right Extension Drawer Controller ---
   const extensionDrawer = document.getElementById('extension-drawer');
