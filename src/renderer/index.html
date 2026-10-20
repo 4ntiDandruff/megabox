@@ -84,19 +84,23 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      background: #7266f0;
+      background: linear-gradient(135deg, #0071E3 0%, #0077ED 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: none;
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
       margin-bottom: 12px;
       cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-
+    .sidebar-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 113, 227, 0.35);
+    }
     .sidebar-logo svg {
       width: 24px;
       height: 24px;
-      color: #ffffff;
+      color: #FFFFFF;
     }
 
     .sidebar-divider {
@@ -147,8 +151,8 @@
 
     .tab-item.is-active {
       background-color: var(--sidebar-active-bg);
-      border-color: rgba(114, 102, 240, 0.45);
-      box-shadow: none;
+      border-color: rgba(0, 113, 227, 0.35);
+      box-shadow: 0 2px 8px rgba(0, 113, 227, 0.10);
     }
 
     .tab-item.is-active::before {
@@ -181,7 +185,7 @@
     .tab-item span.tab-fallback {
       font-size: 13px;
       font-weight: 700;
-      color: #e2e8f0;
+      color: #1D1D1F;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -215,21 +219,21 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border: 1px dashed rgba(0, 0, 0, 0.18);
       background: transparent;
       color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       margin-top: 4px;
     }
-
     .btn-add-service:hover {
       border-color: var(--brand-primary);
-      color: #ffffff;
-      background-color: rgba(114, 102, 240, 0.1);
+      color: #0071E3;
+      background-color: rgba(0, 113, 227, 0.08);
+      transform: scale(1.04);
     }
 
     .btn-add-service svg {
@@ -252,43 +256,35 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.10);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: all 0.15s ease;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       margin-bottom: 6px;
-      color: #94a3b8;
+      color: #86868B;
     }
-
     .profile-avatar-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(114, 102, 240, 0.5);
-      color: #ffffff;
-      transform: translateY(-1px);
+      background: rgba(0, 0, 0, 0.07);
+      border-color: rgba(0, 113, 227, 0.4);
+      color: #1D1D1F;
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.15);
     }
-
-    .profile-avatar-btn:hover {
-      transform: scale(1.08);
-      border-color: var(--brand-primary);
-      box-shadow: none;
-    }
-
     .profile-avatar-btn img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
     }
-
     .profile-avatar-initials {
       font-size: 14px;
       font-weight: 700;
-      color: #ffffff;
+      color: #1D1D1F;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -308,8 +304,8 @@
     }
 
     .sidebar-btn:hover {
-      background-color: rgba(255, 255, 255, 0.06);
-      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: #1D1D1F;
     }
 
     .sidebar-btn svg {
@@ -331,8 +327,8 @@
     .webviews-container.is-tiled {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
-      gap: 3px;
-      background: #111317;
+      gap: 4px;
+      background: #E5E5EA;
     }
     .webviews-container.is-tiled webview {
       position: relative !important;
@@ -464,7 +460,7 @@
       color: #0071E3;
       padding: 2px 8px;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(0, 113, 227, 0.18);
     }
 
     .catalog-close {
@@ -478,7 +474,7 @@
     }
 
     .catalog-close:hover {
-      color: #ffffff;
+      color: #1D1D1F;
     }
 
     .catalog-search-wrapper {
@@ -489,17 +485,18 @@
     .catalog-search {
       width: 100%;
       padding: 10px 14px 10px 38px;
-      background-color: var(--input-bg);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background-color: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       border-radius: 10px;
-      color: #ffffff;
+      color: #1D1D1F;
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-
     .catalog-search:focus {
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: #0071E3;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
     }
 
     .catalog-search-icon {
@@ -621,23 +618,23 @@
     }
 
     .btn-add-pill {
-      background-color: #2b303c;
-      color: #e2e8f0;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background-color: rgba(0, 113, 227, 0.08);
+      color: #0071E3;
+      border: 1px solid rgba(0, 113, 227, 0.2);
       border-radius: 6px;
       padding: 6px 14px;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      transition: all 0.15s ease;
       box-shadow: none;
     }
-
     .btn-add-pill:hover {
-      background-color: #383f4f;
-      border-color: rgba(255, 255, 255, 0.25);
-      color: #ffffff;
+      background-color: #0071E3;
+      border-color: #0071E3;
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25);
     }
 
     /* Custom App Bottom Banner in Catalog */
@@ -672,7 +669,8 @@
 
     .btn-custom-service:hover {
       border-color: var(--brand-primary);
-      background: rgba(114, 102, 240, 0.1);
+      background: rgba(0, 113, 227, 0.08);
+      color: #0071E3;
     }
 
     /* Configure Service Modal */
@@ -740,8 +738,8 @@
     }
 
     .btn-cancel:hover {
-      background-color: rgba(255, 255, 255, 0.06);
-      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.05);
+      color: #1D1D1F;
     }
 
     .btn-submit {
@@ -891,12 +889,15 @@
       right: 0;
       bottom: 0;
       width: 320px;
-      background: #14171d;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: none;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border-left: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.06);
       z-index: 99995;
       display: flex;
       flex-direction: column;
+      color: #1D1D1F;
       transform: translate3d(100%, 0, 0);
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -906,11 +907,12 @@
 
     .drawer-header {
       padding: 16px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
     }
     .drawer-title-box {
       display: flex;
@@ -920,7 +922,7 @@
     .drawer-title {
       font-size: 15px;
       font-weight: 700;
-      color: #ffffff;
+      color: #1D1D1F;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -928,19 +930,19 @@
     }
     .drawer-subtitle {
       font-size: 11px;
-      color: #94a3b8;
+      color: #86868B;
     }
     .drawer-close {
       background: transparent;
       border: none;
-      color: #94a3b8;
+      color: #86868B;
       font-size: 22px;
       cursor: pointer;
       line-height: 1;
       transition: color 0.15s;
     }
     .drawer-close:hover {
-      color: #ffffff;
+      color: #1D1D1F;
     }
 
     .drawer-body {
@@ -953,25 +955,28 @@
     }
 
     .drawer-extension-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
       padding: 12px;
       display: flex;
       align-items: center;
       gap: 12px;
-      transition: background-color 0.15s, border-color 0.15s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .drawer-extension-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(114, 102, 240, 0.35);
+      background: #FFFFFF;
+      border-color: rgba(0, 113, 227, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 113, 227, 0.08);
     }
 
     .ext-icon-box {
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.06);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -990,18 +995,8 @@
       flex: 1;
       overflow: hidden;
     }
-    .ext-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .ext-desc {
-      font-size: 11px;
-      color: #94a3b8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .ext-name { font-size: 13px; font-weight: 600; color: #1D1D1F; }
+    .ext-desc { font-size: 11px; color: #86868B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Modern Toggle Switch */
     .switch {
@@ -1016,14 +1011,7 @@
       width: 0;
       height: 0;
     }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #334155;
-      transition: .2s;
-      border-radius: 22px;
-    }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(0, 0, 0, 0.12); border: 1px solid rgba(0, 0, 0, 0.06); transition: .2s; border-radius: 22px; }
     .slider:before {
       position: absolute;
       content: "";
@@ -1035,9 +1023,7 @@
       transition: .2s;
       border-radius: 50%;
     }
-    input:checked + .slider {
-      background-color: #7266f0;
-    }
+    input:checked + .slider { background-color: #34C759; border-color: #30B050; }
     input:checked + .slider:before {
       transform: translateX(16px);
     }
@@ -1082,10 +1068,7 @@
     .flat-switch input:checked + .flat-slider::before {
       transform: translateX(20px);
     }
-    .settings-tab-btn:hover {
-      background: #27272a !important;
-      color: #fff !important;
-    }
+    .settings-tab-btn:hover { background: rgba(0, 0, 0, 0.05) !important; color: #1D1D1F !important; }
 
     /* ============================================================ */
     /* FLAT MINIMALIST SETTINGS MODAL (Zero-Glow, Zero-3D, Clean)   */
@@ -1335,39 +1318,7 @@
       color: #86868B;
     }
 
-    /* Spring Action Buttons */
-    .btn-apple-cyan-solid {
-      background: #0ea5e9 !important;
-      border: 1px solid #38bdf8 !important;
-      color: #ffffff !important;
-      border-radius: 7px;
-      font-weight: 600;
-      transition: background-color 120ms ease, transform 80ms ease;
-    }
-    .btn-apple-cyan-solid:hover {
-      background: #0284c7 !important;
-    }
-    .btn-apple-cyan-solid:active {
-      transform: scale(0.97);
-    }
-
-    .btn-apple-pill-dark {
-      background: #1f2229 !important;
-      border: 1px solid #323743 !important;
-      color: #cbd5e1 !important;
-      border-radius: 7px;
-      font-weight: 500;
-      transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 80ms ease;
-    }
-    .btn-apple-pill-dark:hover {
-      background: #2a2e38 !important;
-      color: #ffffff !important;
-      border-color: #444a59 !important;
-    }
-    .btn-apple-pill-dark:active {
-      transform: scale(0.97);
-    }
-
+    /* Consolidated Apple Controls */
     .apple-group-card {
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(0, 0, 0, 0.08);
@@ -1392,7 +1343,7 @@
       background-color: rgba(0, 0, 0, 0.02);
     }
 
-    /* Flat Modern Switch */
+    /* Flat Modern Apple Mint Switch */
     .apple-switch-mint {
       position: relative;
       display: inline-block;
@@ -1441,7 +1392,6 @@
       background-color: #ffffff !important;
     }
 
-    /* Flat Clean Inputs & Selects */
     .apple-select-dark {
       background: #FFFFFF;
       color: #1D1D1F;
@@ -1463,59 +1413,6 @@
     .apple-select-dark option {
       background-color: #FFFFFF;
       color: #1D1D1F;
-    }
-
-    /* Flat Clean Buttons */
-    .btn-apple-pill-dark {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      background: #21242b;
-      color: #e6edf3;
-      border: 1px solid #323640;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 100ms ease, border-color 100ms ease;
-    }
-
-    .btn-apple-pill-dark:hover {
-      background: #2b2f38;
-      border-color: #424754;
-      color: #ffffff;
-    }
-
-    .btn-apple-pill-dark:active {
-      background: #1c1e23;
-    }
-
-    .btn-apple-cyan-solid {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 7px 16px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      background: #238636;
-      color: #ffffff;
-      border: 1px solid #2ea043;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 100ms ease, border-color 100ms ease;
-    }
-
-    .btn-apple-cyan-solid:hover {
-      background: #2ea043;
-      border-color: #3fb950;
-    }
-
-    .btn-apple-cyan-solid:active {
-      background: #196c2e;
     }
   </style>
 </head>
@@ -1583,24 +1480,24 @@
   
   <!-- Webview Host Area (Clean White Background for Web Pages) -->
     <!-- Floating Top Update Banner (Rambox / VS Code Style) -->
-  <div id="update-banner" style="display: none; position: absolute; top: 0; left: 56px; right: 0; height: 38px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(16, 185, 129, 0.3); z-index: 40; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: transform 0.25s ease, opacity 0.25s ease;">
+  <div id="update-banner" style="display: none; position: absolute; top: 0; left: 72px; right: 0; height: 38px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px) saturate(190%); border-bottom: 1px solid rgba(0, 0, 0, 0.08); z-index: 40; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: transform 0.25s ease, opacity 0.25s ease;">
     <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
       <span style="position: relative; display: flex; width: 8px; height: 8px;">
-        <span style="position: absolute; display: inline-flex; width: 100%; height: 100%; border-radius: 9999px; background-color: #34d399; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
-        <span style="position: relative; display: inline-flex; border-radius: 9999px; width: 8px; height: 8px; background-color: #10b981;"></span>
+        <span style="position: absolute; display: inline-flex; width: 100%; height: 100%; border-radius: 9999px; background-color: #34C759; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+        <span style="position: relative; display: inline-flex; border-radius: 9999px; width: 8px; height: 8px; background-color: #34C759;"></span>
       </span>
-      <span id="i18n-update-banner-text" style="font-size: 11.5px; font-weight: 500; color: #f1f5f9; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+      <span id="i18n-update-banner-text" style="font-size: 11.5px; font-weight: 500; color: #1D1D1F; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
         Megabox update available.
       </span>
     </div>
     <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-      <button id="btn-update-download" type="button" style="background: #10b981; color: #064e3b; border: none; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 5px; cursor: pointer; transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+      <button id="btn-update-download" type="button" style="background: #34C759; color: #FFFFFF; border: none; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(52, 199, 89, 0.3);">
         <span id="i18n-btn-update-download">Download</span>
       </button>
-      <button id="btn-update-later" type="button" style="background: transparent; color: #94a3b8; border: none; font-size: 11px; font-weight: 500; padding: 4px 8px; border-radius: 5px; cursor: pointer;">
+      <button id="btn-update-later" type="button" style="background: transparent; color: #86868B; border: none; font-size: 11px; font-weight: 500; padding: 4px 8px; border-radius: 6px; cursor: pointer;">
         <span id="i18n-btn-update-later">Later</span>
       </button>
-      <button id="btn-update-close" type="button" style="background: transparent; color: #64748b; border: none; font-size: 15px; cursor: pointer; padding: 0 4px; line-height: 1;">&times;</button>
+      <button id="btn-update-close" type="button" style="background: transparent; color: #86868B; border: none; font-size: 15px; cursor: pointer; padding: 0 4px; line-height: 1;">&times;</button>
     </div>
   </div>
 
@@ -2141,11 +2038,11 @@
       <div id="quickswitch-list" class="quickswitch-list"></div>
       <div style="padding:8px 14px;background:rgba(255,255,255,0.85);border-top:1px solid rgba(0,0,0,0.07);color:#86868B;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;">
         <div style="display:flex;gap:12px;">
-          <span><kbd style="background:#282828;padding:2px 5px;border-radius:3px;color:#bbb;">↑ ↓</kbd> Navigasi</span>
-          <span><kbd style="background:#282828;padding:2px 5px;border-radius:3px;color:#bbb;">Enter</kbd> Pilih</span>
-          <span><kbd style="background:#282828;padding:2px 5px;border-radius:3px;color:#bbb;">Esc</kbd> Tutup</span>
+          <span><kbd style="background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.1);padding:2px 5px;border-radius:4px;color:#1D1D1F;">↑ ↓</kbd> Navigasi</span>
+          <span><kbd style="background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.1);padding:2px 5px;border-radius:4px;color:#1D1D1F;">Enter</kbd> Pilih</span>
+          <span><kbd style="background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.1);padding:2px 5px;border-radius:4px;color:#1D1D1F;">Esc</kbd> Tutup</span>
         </div>
-        <div style="color:#7266f0;font-weight:600;">Megabox Spotlight</div>
+        <div style="color:#0071E3;font-weight:600;">Megabox Spotlight</div>
       </div>
     </div>
   </div>
@@ -2165,51 +2062,47 @@
       <!-- Injected dynamically by app.js -->
     </div>
 
-    <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);background:#101317;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#888;">
+    <div style="padding:14px 18px;border-top:1px solid rgba(0,0,0,0.07);background:rgba(255,255,255,0.75);backdrop-filter:blur(20px);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#86868B;">
       <span>Ekstensi Chrome</span>
-      <span style="color:#7266f0;font-weight:600;">Megabox Native</span>
+      <span style="color:#0071E3;font-weight:600;">Megabox Native</span>
     </div>
   </aside>
 
   <!-- MODAL POPUP QRIS (DONASI) -->
-  <div id="qris-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #18191d; border: 1px solid #2e281e; border-radius: 12px; width: 100%; max-width: 340px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;">
+  <div id="qris-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px;">
+    <div class="crystal-modal-box" style="width: 100%; max-width: 340px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; position: relative;">
       
       <!-- Close Button -->
-      <button id="btn-qris-close" type="button" style="position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 150ms ease;">
+      <button id="btn-qris-close" type="button" style="position: absolute; top: 14px; right: 14px; width: 28px; height: 28px; border-radius: 7px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); color: #86868B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 150ms ease;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
 
       <!-- Header -->
       <div style="text-align: center;">
-        <div style="font-size: 15px; font-weight: 700; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 6px;">
-          <span style="color: #f59e0b;">QRIS</span>
+        <div style="font-size: 15px; font-weight: 700; color: #1D1D1F; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <span style="color: #FF9F0A;">QRIS</span>
           <span>Donasi Megabox</span>
         </div>
-        <div style="font-size: 11px; color: #94a3b8; margin-top: 3px;">Dukungan sukarela untuk pengembangan software zero-bloat</div>
+        <div style="font-size: 11px; color: #86868B; margin-top: 3px;">Dukungan sukarela untuk pengembangan software zero-bloat</div>
       </div>
 
-      <!-- Clean Official QRIS Card (Bebas Twibbon) -->
-      <div style="width: 280px; height: 376px; border-radius: 12px; background: #ffffff; padding: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;">
+      <!-- Clean Official QRIS Card -->
+      <div style="width: 280px; height: 376px; border-radius: 12px; background: #FFFFFF; padding: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); overflow: hidden;">
         <img id="qris-img" src="assets/qris.png" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="QRIS Megabox">
       </div>
 
-      <!-- Instructions / Scan Badges -->
-      <div style="width: 100%; text-align: center; font-size: 11px; color: #cbd5e1; line-height: 1.4; background: #1f2025; padding: 8px 12px; border-radius: 6px; border: 1px solid #2e3037;">
+      <!-- Instructions -->
+      <div style="width: 100%; text-align: center; font-size: 11px; color: #1D1D1F; line-height: 1.4; background: rgba(0, 0, 0, 0.04); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.06);">
         Bisa dipindai dari BCA, Mandiri, GoPay, OVO, Dana, ShopeePay, dan seluruh perbankan nasional.
       </div>
 
-      <button id="btn-qris-done" type="button" class="btn-apple-pill-dark" style="width: 100%; justify-content: center; padding: 9px; font-size: 12px; font-weight: 600;">
+      <button id="btn-qris-done" type="button" class="crystal-btn-secondary" style="width: 100%; justify-content: center; padding: 9px; font-size: 12px; font-weight: 600;">
         Tutup
       </button>
 
     </div>
   </div>
 
-
-
-
-  
   <!-- Megawarden Auto-Capture Prompt Toast (Apple Liquid Crystal) -->
   <div id="megawarden-save-toast" style="display: none; position: fixed; top: 22px; right: 24px; z-index: 99999; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.95); border-radius: 14px; box-shadow: 0 20px 48px rgba(0, 113, 227, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06); width: 330px; padding: 14px 16px; color: #1D1D1F; backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;">
     <div style="display: flex; align-items: flex-start; gap: 11px;">
