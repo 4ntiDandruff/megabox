@@ -1130,7 +1130,7 @@
     if (!btnDnd) return;
     if (isDndActive) {
       btnDnd.classList.add('is-active');
-      btnDnd.style.color = '#f43f5e';
+      btnDnd.style.color = '#5E5CE6';
       if (iconDndOff) iconDndOff.style.display = 'none';
       if (iconDndOn) iconDndOn.style.display = 'block';
     } else {

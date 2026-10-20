@@ -395,25 +395,29 @@
       color: #86868B;
       font-size: 12px;
       font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 20px;
+      padding: 5px 13px;
+      border-radius: 8px;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.15s ease;
+      transition: all 120ms ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      user-select: none;
     }
     .category-pill:hover {
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.07);
       color: #1D1D1F;
+    }
+    .category-pill:active {
+      transform: scale(0.96);
     }
     .category-pill.is-active {
       background: #FFFFFF;
-      border-color: rgba(0, 0, 0, 0.12);
+      border-color: rgba(0, 113, 227, 0.3);
       color: #0071E3;
       font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 6px rgba(0, 113, 227, 0.12);
     }
     
     .featured-badge-pill {
@@ -463,19 +467,7 @@
       border: 1px solid rgba(0, 113, 227, 0.18);
     }
 
-    .catalog-close {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 26px;
-      cursor: pointer;
-      line-height: 1;
-      transition: color 0.15s;
-    }
-
-    .catalog-close:hover {
-      color: #1D1D1F;
-    }
+    
 
     .catalog-search-wrapper {
       position: relative;
@@ -932,18 +924,7 @@
       font-size: 11px;
       color: #86868B;
     }
-    .drawer-close {
-      background: transparent;
-      border: none;
-      color: #86868B;
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-      transition: color 0.15s;
-    }
-    .drawer-close:hover {
-      color: #1D1D1F;
-    }
+    
 
     .drawer-body {
       flex: 1;
@@ -1177,7 +1158,7 @@
     .crystal-input::placeholder, .apple-input-dark::placeholder {
       color: #86868B !important;
     }
-    .crystal-btn-primary, .btn-apple-cyan-solid {
+    .crystal-btn-primary, .btn-apple-primary, .btn-apple-cyan-solid {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1192,15 +1173,16 @@
       cursor: pointer;
       user-select: none;
       box-shadow: 0 2px 6px rgba(0, 113, 227, 0.25);
-      transition: background-color 120ms ease, transform 80ms ease;
+      transition: background-color 120ms ease, transform 80ms ease, box-shadow 120ms ease;
     }
-    .crystal-btn-primary:hover, .btn-apple-cyan-solid:hover {
+    .crystal-btn-primary:hover, .btn-apple-primary:hover, .btn-apple-cyan-solid:hover {
       background: #0077ED !important;
+      box-shadow: 0 4px 10px rgba(0, 113, 227, 0.35);
     }
-    .crystal-btn-primary:active, .btn-apple-cyan-solid:active {
+    .crystal-btn-primary:active, .btn-apple-primary:active, .btn-apple-cyan-solid:active {
       transform: scale(0.97);
     }
-    .crystal-btn-secondary, .btn-apple-pill-dark {
+    .crystal-btn-secondary, .btn-apple-secondary, .btn-apple-pill-dark {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1217,13 +1199,37 @@
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       transition: all 120ms ease;
     }
-    .crystal-btn-secondary:hover, .btn-apple-pill-dark:hover {
+    .crystal-btn-secondary:hover, .btn-apple-secondary:hover, .btn-apple-pill-dark:hover {
       background: #FFFFFF !important;
-      border-color: rgba(0, 0, 0, 0.2) !important;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.22) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      color: #0071E3 !important;
     }
-    .crystal-btn-secondary:active, .btn-apple-pill-dark:active {
+    .crystal-btn-secondary:active, .btn-apple-secondary:active, .btn-apple-pill-dark:active {
       transform: scale(0.97);
+    }
+    .btn-apple-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #86868B;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 120ms ease;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .btn-apple-close:hover {
+      background: rgba(0, 0, 0, 0.08);
+      color: #1D1D1F;
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    .btn-apple-close:active {
+      transform: scale(0.94);
     }
     .vault-item-row {
       background: rgba(255, 255, 255, 0.92);
@@ -1459,17 +1465,12 @@
         </svg>
       </button>
 
-      <button id="btn-dnd" class="sidebar-btn" title="Fokus Tenang" style="position:relative;">
-        <svg id="icon-dnd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      <button id="btn-dnd" class="sidebar-btn" title="Fokus Tenang (DND)" style="position:relative;">
+        <svg id="icon-dnd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
-        <svg id="icon-dnd-on" style="display:none;color:#f43f5e;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
-          <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
-          <path d="M18 8a6 6 0 0 0-9.33-5"></path>
-          <line x1="1" y1="1" x2="23" y2="23"></line>
+        <svg id="icon-dnd-on" style="display:none;color:#5E5CE6;" viewBox="0 0 24 24" fill="currentColor" stroke="#5E5CE6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
     </div>
@@ -1497,7 +1498,7 @@
       <button id="btn-update-later" type="button" style="background: transparent; color: #86868B; border: none; font-size: 11px; font-weight: 500; padding: 4px 8px; border-radius: 6px; cursor: pointer;">
         <span id="i18n-btn-update-later">Later</span>
       </button>
-      <button id="btn-update-close" type="button" style="background: transparent; color: #86868B; border: none; font-size: 15px; cursor: pointer; padding: 0 4px; line-height: 1;">&times;</button>
+      <button id="btn-update-close" class="btn-apple-close" type="button" style="width: 22px; height: 22px; border: none; background: transparent;" title="Tutup"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
   </div>
 
@@ -1513,7 +1514,7 @@
             <span>Tambah Layanan</span>
             <span id="catalog-count-badge" class="catalog-badge">481 Layanan</span>
           </div>
-          <button id="btn-catalog-close" class="catalog-close">&times;</button>
+          <button id="btn-catalog-close" class="catalog-close btn-apple-close" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <div class="catalog-search-wrapper">
@@ -1552,7 +1553,7 @@
     <div class="modal-box-form">
       <div class="catalog-title-row">
         <h3 id="form-modal-title" class="catalog-title">Tambah Layanan</h3>
-        <button id="btn-form-close" class="catalog-close">&times;</button>
+        <button id="btn-form-close" class="catalog-close btn-apple-close" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
       <div class="form-group">
@@ -1642,7 +1643,7 @@
             </div>
           </div>
           
-          <button id="btn-settings-close" type="button" style="width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid rgba(0, 0, 0, 0.08); color: #86868B; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; line-height: 1;">&times;</button>
+          <button id="btn-settings-close" class="btn-apple-close" type="button" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <!-- Cupertino Segmented Tab Recessed Well -->
@@ -1690,7 +1691,7 @@
             </div>
 
             <div style="display: flex; background: rgba(0, 0, 0, 0.05); padding: 3px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.06); gap: 2px;">
-              <button id="btn-lang-en" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: #0071E3; color: #1D1D1F;">
+              <button id="btn-lang-en" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: #0071E3; color: #FFFFFF; box-shadow: 0 1px 3px rgba(0, 113, 227, 0.3);">
                 English
               </button>
               <button id="btn-lang-id" type="button" style="padding: 5px 14px; font-size: 11.5px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.15s ease; background: transparent; color: #86868B;">
@@ -1718,7 +1719,7 @@
                 <img src="assets/icons8/avatar.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Photo">
                 <span>Pilih Foto</span>
               </button>
-              <button id="btn-reset-avatar" type="button" class="btn-apple-pill-dark" style="padding: 7px 12px; font-size: 11.5px; color: #86868B;">
+              <button id="btn-reset-avatar" type="button" class="crystal-btn-secondary" style="padding: 7px 12px; font-size: 11.5px; color: #86868B;">
                 <span>Hapus</span>
               </button>
             </div>
@@ -1808,8 +1809,12 @@
                   <div id="i18n-card-cache-desc" style="font-size: 11px; color: #86868B; margin-top: 2px; line-height: 1.4;">Kosongkan cache HTTP Chromium dan GPU Shader sementara. Sesi login dan cookie akun tetap 100% aman.</div>
                 </div>
               </div>
-              <button id="btn-clear-cache" type="button" class="btn-apple-pill-dark" style="gap: 6px;">
-                <img src="assets/icons8/clean_cache.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Clean">
+              <button id="btn-clear-cache" type="button" class="crystal-btn-secondary" style="gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                </svg>
                 <span>Bersihkan Cache</span>
               </button>
             </div>
@@ -1856,9 +1861,12 @@
 
             <!-- Search bar & Count -->
             <div style="display: flex; gap: 12px; align-items: center; margin-top: 2px;">
-              <div style="flex: 1; position: relative;">
+              <div style="flex: 1; position: relative; display: flex; align-items: center;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 11px; pointer-events: none;">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
                 <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 34px; font-size: 12px; height: 36px;">
-                <img src="assets/icons8/search.png" style="width: 15px; height: 15px; object-fit: contain; position: absolute; left: 11px; top: 10.5px; opacity: 0.7;" alt="Search">
               </div>
               <div id="vault-items-counter" style="font-size: 11.5px; color: #0071E3; font-weight: 600; padding: 6px 12px; border-radius: 6px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); white-space: nowrap;">0 Kredensial</div>
             </div>
@@ -1885,7 +1893,9 @@
           <!-- Explanation Plaque -->
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
             <div style="font-size: 13px; font-weight: 600; color: #1D1D1F; display: flex; align-items: center; gap: 8px;">
-              <img src="assets/icons8/tab_vault.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Privacy">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
               <span id="i18n-card-privacy-title">Privasi Tanpa Server Luar</span>
             </div>
             <div id="i18n-card-privacy-desc" style="font-size: 12px; color: #86868B; line-height: 1.6;">Semua daftar tab, urutan workspace, dan preferensi disimpan sepenuhnya di komputer Anda. Tidak ada data yang dikirim ke server cloud mana pun. Untuk berpindah ke PC lain, ekspor konfigurasi menjadi file JSON dan impor di PC tujuan.</div>
@@ -1934,11 +1944,11 @@
               </div>
 
               <div style="display: flex; gap: 8px; align-items: center;">
-                <button id="btn-check-updates" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #0071E3;">
+                <button id="btn-check-updates" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #0071E3;">
                   <img src="assets/icons8/updates.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Updates">
                   <span id="i18n-btn-check-updates">Periksa Pembaruan</span>
                 </button>
-                <button id="btn-about-github" type="button" class="btn-apple-pill-dark" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+                <button id="btn-about-github" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
                 <img src="assets/icons8/star_github.png" style="width: 14px; height: 14px; object-fit: contain;" alt="GitHub">
                 <span>GitHub</span>
               </button>
@@ -1975,11 +1985,11 @@
             <div id="i18n-card-support-desc" style="font-size: 11.5px; color: #86868B; line-height: 1.5;">Megabox dibangun untuk efisiensi meja kerja sehari-hari. Jika perangkat lunak ini bermanfaat bagi rutinitas Anda, dukungan Anda sangat diapresiasi.</div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
-              <button id="btn-support-qris" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
+              <button id="btn-support-qris" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
                 <img src="assets/icons8/heart_donate.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Donate">
                 <span>Donasi via QRIS</span>
               </button>
-              <button id="btn-support-github" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
+              <button id="btn-support-github" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
                 <img src="assets/icons8/star_github.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Star">
                 <span>Bintang di GitHub</span>
               </button>
@@ -2000,11 +2010,11 @@
 
             <!-- Tautan Web & Portofolio -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
-              <button id="btn-about-portfolio" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
+              <button id="btn-about-portfolio" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
                 <img src="assets/icons8/certificate.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Certificate">
                 <span>Portofolio & Sertifikat</span>
               </button>
-              <button id="btn-about-megapass" type="button" class="btn-apple-pill-dark" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
+              <button id="btn-about-megapass" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
                 <img src="assets/icons8/globe_web.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Web">
                 <span>megapass.web.id</span>
               </button>
@@ -2022,7 +2032,7 @@
           <span>Tersimpan otomatis</span>
         </span>
         <div style="display: flex; gap: 10px; margin-left: auto;">
-          <button id="btn-settings-done" type="button" class="btn-apple-pill-dark" style="padding: 7px 22px;">Selesai</button>
+          <button id="btn-settings-done" type="button" class="crystal-btn-primary" style="padding: 7px 22px;">Selesai</button>
         </div>
       </div>
 
@@ -2055,7 +2065,7 @@
         <div id="drawer-title" class="drawer-title">Ekstensi</div>
         <div id="drawer-subtitle" class="drawer-subtitle">Kelola ekstensi</div>
       </div>
-      <button id="btn-drawer-close" class="drawer-close">&times;</button>
+      <button id="btn-drawer-close" class="drawer-close btn-apple-close" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
 
     <div id="drawer-extension-list" class="drawer-body">
@@ -2114,7 +2124,7 @@
         <div id="toast-vault-domain" style="font-size: 11px; color: #86868B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">example.com</div>
         <div id="toast-vault-user" style="font-size: 11.5px; color: #1D1D1F; margin-top: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</div>
       </div>
-      <button id="toast-vault-btn-dismiss" type="button" style="background: transparent; border: none; color: #86868B; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; transition: color 0.15s;" title="Tutup">&times;</button>
+      <button id="toast-vault-btn-dismiss" class="btn-apple-close" type="button" style="width: 22px; height: 22px; border: none; background: transparent;" title="Tutup"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
     <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(0, 0, 0, 0.07); padding-top: 10px;">
       <button id="toast-vault-btn-ignore" type="button" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); color: #1D1D1F; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
@@ -2135,7 +2145,7 @@
             <div style="font-size: 11px; color: #86868B;">Simpan kredensial login terenkripsi</div>
           </div>
         </div>
-        <button id="btn-vault-modal-close" type="button" style="width: 26px; height: 26px; border-radius: 6px; background: transparent; border: 1px solid rgba(0, 0, 0, 0.08); color: #86868B; cursor: pointer; font-size: 15px; line-height: 1;">&times;</button>
+        <button id="btn-vault-modal-close" class="btn-apple-close" type="button" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
         <input type="hidden" id="vault-form-id">
