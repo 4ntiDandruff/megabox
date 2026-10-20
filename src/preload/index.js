@@ -32,7 +32,17 @@ contextBridge.exposeInMainWorld('megabox', {
   vaultExportCsv: () => ipcRenderer.invoke('megawarden:export-csv'),
 
 
-  // Settings & System API
+// Download Manager & Progress Tracking API
+  getDownloadHistory: () => ipcRenderer.invoke("downloads:get-history"),
+  clearDownloadHistory: () => ipcRenderer.invoke("downloads:clear-history"),
+  openDownloadFile: (filePath) => ipcRenderer.invoke("downloads:open-file", { filePath }),
+  showDownloadInFolder: (filePath) => ipcRenderer.invoke("downloads:show-in-folder", { filePath }),
+  cancelDownload: (id) => ipcRenderer.invoke("downloads:cancel", { id }),
+  onDownloadStarted: (callback) => ipcRenderer.on("download:started", (_, data) => callback(data)),
+  onDownloadProgress: (callback) => ipcRenderer.on("download:progress", (_, data) => callback(data)),
+  onDownloadCompleted: (callback) => ipcRenderer.on("download:completed", (_, data) => callback(data)),
+
+    // Settings & System API
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (settings) => ipcRenderer.invoke('settings:save', settings),
   clearCache: () => ipcRenderer.invoke('system:clear-cache'),

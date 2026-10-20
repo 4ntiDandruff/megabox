@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell } = require('electron');
 const path = require('path');
-const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings } = require('./db.js');
+const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const { translateText } = require('./translator.js');
 const { initUpdater } = require('./updater.js');
@@ -87,6 +87,127 @@ function createTray() {
   });
 }
 
+// ==========================================
+// Download Manager (Zero-Bloat Event Interceptor)
+// ==========================================
+const activeDownloads = new Map();
+
+function registerDownloadListener(ses) {
+  if (!ses || ses._megaboxDownloadHooked) return;
+  ses._megaboxDownloadHooked = true;
+
+  ses.on('will-download', (event, item, webContents) => {
+    const downloadId = 'dl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+    activeDownloads.set(downloadId, item);
+
+    const defaultDownloadsPath = app.getPath('downloads');
+    const safeFilename = path.basename(item.getFilename());
+    const savePath = path.join(defaultDownloadsPath, safeFilename);
+    item.setSavePath(savePath);
+
+    const totalBytes = item.getTotalBytes() || 0;
+    let serviceName = 'Web Service';
+    try {
+      if (webContents && typeof webContents.getTitle === 'function') {
+        const title = webContents.getTitle();
+        if (title) serviceName = title.slice(0, 30);
+      }
+    } catch (_) {}
+
+    console.log(`[Megabox Download] Started: ${safeFilename} (${totalBytes} bytes) -> ${savePath}`);
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('download:started', {
+        id: downloadId,
+        filename: safeFilename,
+        path: savePath,
+        totalBytes: totalBytes,
+        serviceName: serviceName
+      });
+    }
+
+    let lastProgressTime = 0;
+    item.on('updated', (updateEvent, state) => {
+      if (state === 'progressing') {
+        const now = Date.now();
+        if (now - lastProgressTime > 150) {
+          lastProgressTime = now;
+          const received = item.getReceivedBytes();
+          const total = item.getTotalBytes();
+          const percent = total > 0 ? Math.round((received / total) * 100) : 0;
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('download:progress', {
+              id: downloadId,
+              filename: safeFilename,
+              receivedBytes: received,
+              totalBytes: total,
+              percent: percent
+            });
+          }
+        }
+      } else if (state === 'interrupted') {
+        console.warn(`[Megabox Download] Interrupted: ${safeFilename}`);
+      }
+    });
+
+    item.once('done', (doneEvent, state) => {
+      activeDownloads.delete(downloadId);
+      const isCompleted = state === 'completed';
+      const finalReceived = item.getReceivedBytes();
+      const finalTotal = item.getTotalBytes() || finalReceived;
+
+      try {
+        if (db) {
+          saveDownload(db, {
+            id: downloadId,
+            filename: safeFilename,
+            path: savePath,
+            url: item.getURL() || '',
+            total_bytes: finalTotal,
+            received_bytes: finalReceived,
+            state: state,
+            service_name: serviceName,
+            timestamp: Date.now()
+          });
+        }
+      } catch (err) {
+        console.error('[Megabox Download] Failed to save history:', err.message);
+      }
+
+      console.log(`[Megabox Download] Done: ${safeFilename} [${state}]`);
+
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('download:completed', {
+          id: downloadId,
+          filename: safeFilename,
+          path: savePath,
+          totalBytes: finalTotal,
+          state: state
+        });
+      }
+
+      if (isCompleted) {
+        try {
+          const { Notification } = require('electron');
+          if (Notification && Notification.isSupported()) {
+            const notif = new Notification({
+              title: 'Unduhan Selesai',
+              body: safeFilename,
+              silent: false
+            });
+            notif.on('click', () => {
+              if (fs.existsSync(savePath)) {
+                shell.showItemInFolder(savePath);
+              }
+            });
+            notif.show();
+          }
+        } catch (_) {}
+      }
+    });
+  });
+}
+
 function createWindow() {
   Menu.setApplicationMenu(null);
 
@@ -141,8 +262,10 @@ function createWindow() {
   });
 
   setupHeaderInterceptors(session.defaultSession);
+  registerDownloadListener(session.defaultSession);
   app.on('session-created', (ses) => {
     setupHeaderInterceptors(ses);
+    registerDownloadListener(ses);
   });
 
   // Webview WebContents Attachment Hook (Workaround for Electron #40674 & Intercepting Shortcuts)
@@ -776,7 +899,66 @@ async function cacheFaviconToDataUri(iconUrl) {
     }
   });
 
-  createWindow();
+  // ==========================================
+  // Download Manager IPC Handlers
+  // ==========================================
+  ipcMain.handle('downloads:get-history', async () => {
+    try {
+      return { success: true, downloads: getDownloads(db, 60) };
+    } catch (err) {
+      return { success: false, error: err.message, downloads: [] };
+    }
+  });
+
+  ipcMain.handle('downloads:clear-history', async () => {
+    try {
+      clearDownloads(db);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('downloads:open-file', async (_, { filePath }) => {
+    try {
+      if (!filePath || !fs.existsSync(filePath)) {
+        return { success: false, error: 'Berkas tidak ditemukan di disk.' };
+      }
+      const err = await shell.openPath(filePath);
+      if (err) return { success: false, error: err };
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('downloads:show-in-folder', async (_, { filePath }) => {
+    try {
+      if (!filePath || !fs.existsSync(filePath)) {
+        return { success: false, error: 'Berkas tidak ditemukan di disk.' };
+      }
+      shell.showItemInFolder(filePath);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  ipcMain.handle('downloads:cancel', async (_, { id }) => {
+    try {
+      const item = activeDownloads.get(id);
+      if (item && typeof item.cancel === 'function') {
+        item.cancel();
+        activeDownloads.delete(id);
+        return { success: true };
+      }
+      return { success: false, error: 'Unduhan tidak aktif atau sudah selesai.' };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+    createWindow();
   initUpdater(mainWindow, db, { getSettings, saveSettings });
   createTray();
 
