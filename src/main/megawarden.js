@@ -39,16 +39,13 @@ function getOrCreateDeviceSecret() {
   return newSecret;
 }
 
-function deriveKey(masterPassword, salt) {
+function deriveKey(salt) {
   const deviceSecret = getOrCreateDeviceSecret();
-  const inputSecret = (masterPassword && masterPassword.length > 0)
-    ? `${masterPassword}:${deviceSecret}`
-    : `default-megabox-vault:${deviceSecret}`;
-  
+  const inputSecret = `default-megabox-vault:${deviceSecret}`;
   return crypto.pbkdf2Sync(inputSecret, salt, 100000, 32, 'sha256');
 }
 
-function readEncryptedVault(masterPassword = null) {
+function readEncryptedVault() {
   const vaultPath = getVaultPath();
   if (!fs.existsSync(vaultPath)) {
     return [];
@@ -68,7 +65,7 @@ function readEncryptedVault(masterPassword = null) {
     const tag = Buffer.from(envelope.tag, 'hex');
     const ciphertext = Buffer.from(envelope.ciphertext, 'hex');
 
-    const key = deriveKey(masterPassword, salt);
+    const key = deriveKey(salt);
     const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
     decipher.setAuthTag(tag);
 
@@ -81,11 +78,11 @@ function readEncryptedVault(masterPassword = null) {
   }
 }
 
-function writeEncryptedVault(items, masterPassword = null) {
+function writeEncryptedVault(items) {
   const vaultPath = getVaultPath();
   const salt = crypto.randomBytes(16);
   const iv = crypto.randomBytes(12); // Standard GCM IV length
-  const key = deriveKey(masterPassword, salt);
+  const key = deriveKey(salt);
 
   const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
   const payload = Buffer.from(JSON.stringify(items || []), 'utf8');
@@ -153,23 +150,10 @@ function extractDomain(urlStr, nameStr = '') {
 }
 
 class MegawardenVault {
-  constructor(getSettingsFn) {
-    this.getSettingsFn = getSettingsFn;
-  }
-
-  getMasterPassword() {
-    if (typeof this.getSettingsFn === 'function') {
-      try {
-        const s = this.getSettingsFn();
-        return null;
-      } catch (_) {}
-    }
-    return null;
-  }
+  constructor() {}
 
   list() {
-    const pw = this.getMasterPassword();
-    return readEncryptedVault(pw);
+    return readEncryptedVault();
   }
 
   save(entry) {
@@ -177,8 +161,7 @@ class MegawardenVault {
       throw new Error('Username dan kata sandi wajib diisi.');
     }
 
-    const pw = this.getMasterPassword();
-    const items = readEncryptedVault(pw);
+    const items = readEncryptedVault();
 
     const now = Date.now();
     const domain = extractDomain(entry.url || entry.domain || entry.name, entry.name);
@@ -196,7 +179,7 @@ class MegawardenVault {
           note: (entry.note || '').trim(),
           updated_at: now
         };
-        writeEncryptedVault(items, pw);
+        writeEncryptedVault(items);
         return items[idx];
       }
     }
@@ -213,7 +196,7 @@ class MegawardenVault {
       if (entry.url) items[existingIdx].url = entry.url.trim();
       if (entry.note !== undefined) items[existingIdx].note = entry.note;
       items[existingIdx].updated_at = now;
-      writeEncryptedVault(items, pw);
+      writeEncryptedVault(items);
       return items[existingIdx];
     }
 
@@ -230,15 +213,14 @@ class MegawardenVault {
     };
 
     items.unshift(newItem);
-    writeEncryptedVault(items, pw);
+    writeEncryptedVault(items);
     return newItem;
   }
 
   delete(id) {
-    const pw = this.getMasterPassword();
-    const items = readEncryptedVault(pw);
+    const items = readEncryptedVault();
     const filtered = items.filter(i => i.id !== id);
-    writeEncryptedVault(filtered, pw);
+    writeEncryptedVault(filtered);
     return true;
   }
 
@@ -247,8 +229,7 @@ class MegawardenVault {
     const targetDomain = extractDomain(urlStr);
     if (!targetDomain) return null;
 
-    const pw = this.getMasterPassword();
-    const items = readEncryptedVault(pw);
+    const items = readEncryptedVault();
     const targetRoot = getRootDomain(targetDomain);
 
     // Exact domain match, sub-domain match, or shared root domain match
@@ -292,8 +273,7 @@ class MegawardenVault {
       };
     }
 
-    const pw = this.getMasterPassword();
-    const currentItems = readEncryptedVault(pw);
+    const currentItems = readEncryptedVault();
     let count = 0;
     const now = Date.now();
 
@@ -339,14 +319,13 @@ class MegawardenVault {
       }
     }
 
-    writeEncryptedVault(currentItems, pw);
+    writeEncryptedVault(currentItems);
     return { success: true, imported: count, total: currentItems.length };
   }
 
   // Export to Google-compatible CSV format
   exportCsv() {
-    const pw = this.getMasterPassword();
-    const items = readEncryptedVault(pw);
+    const items = readEncryptedVault();
 
     const headers = ['name', 'url', 'username', 'password', 'note'];
     const lines = [headers.join(',')];
@@ -389,13 +368,7 @@ class MegawardenVault {
     return result;
   }
 
-  // Re-encrypt entire vault with new master password hash
-  rekey(oldMasterPassword, newMasterPassword) {
-    const items = readEncryptedVault(oldMasterPassword);
-    const vaultPath = getVaultPath();
-    if (!fs.existsSync(vaultPath)) return true;
-    return writeEncryptedVault(items, newMasterPassword);
-  }
+
 }
 
 // RFC 4180 CSV Parser (Handles quoted fields, commas, and newlines cleanly)

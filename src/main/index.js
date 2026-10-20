@@ -249,7 +249,7 @@ function createWindow() {
 app.whenReady().then(() => {
   checkGpuCacheConsistency();
   db = initDatabase();
-  megawarden = new MegawardenVault(() => getSettings(db));
+  megawarden = new MegawardenVault();
 
   // Local-First architecture: configuration loaded exclusively from local storage
 
