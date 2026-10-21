@@ -219,7 +219,7 @@ document.addEventListener('keydown', (e) => {
 })();
 
 // ============================================================================
-// Simple Translate - Floating Instant Selection Translator Engine (IPC Relay)
+// Simple Translate - Floating Selection Translator Engine (Cupertino Liquid Glass)
 // ============================================================================
 (function initSimpleTranslate() {
   let tooltipEl = null;
@@ -227,27 +227,79 @@ document.addEventListener('keydown', (e) => {
   let lastTranslateTimer = null;
   let activeRequestId = 0;
 
+  // Icons Lucide SVG strings
+  const SVG_ARROW = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  const SVG_COPY = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+  const SVG_CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const SVG_CLOSE = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+  const SVG_SPINNER = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: megabox-spin 0.8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+  function injectKeyframesOnce() {
+    if (document.getElementById("megabox-st-styles")) return;
+    const style = document.createElement("style");
+    style.id = "megabox-st-styles";
+    style.textContent = `
+      @keyframes megabox-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes megabox-pop-in {
+        0% { opacity: 0; transform: scale(0.96) translateY(4px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      #megabox-simple-translate-panel * {
+        box-sizing: border-box;
+      }
+      #st-copy-btn:hover {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-color: rgba(0, 0, 0, 0.12) !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+        color: #0071E3 !important;
+      }
+      #st-copy-btn:active {
+        transform: scale(0.96) !important;
+      }
+      #st-close-btn:hover {
+        background: rgba(0, 0, 0, 0.06) !important;
+        color: #1D1D1F !important;
+      }
+      #st-translated-text::-webkit-scrollbar {
+        width: 4px;
+      }
+      #st-translated-text::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.16);
+        border-radius: 4px;
+      }
+    `;
+    (document.head || document.documentElement).appendChild(style);
+  }
+
   function createTooltip() {
     if (tooltipEl) return tooltipEl;
+    injectKeyframesOnce();
+
     tooltipEl = document.createElement("div");
     tooltipEl.id = "megabox-simple-translate-panel";
     tooltipEl.style.cssText = [
       "position: absolute",
       "display: none",
       "z-index: 2147483647",
-      "background: #151619",
-      "color: #f1f5f9",
-      "border: 1px solid #282a30",
-      "border-radius: 9px",
-      "box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5)",
-      "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      "background: rgba(255, 255, 255, 0.88)",
+      "color: #1D1D1F",
+      "backdrop-filter: blur(28px) saturate(190%)",
+      "-webkit-backdrop-filter: blur(28px) saturate(190%)",
+      "border: 1px solid rgba(255, 255, 255, 0.95)",
+      "border-radius: 14px",
+      "box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 20px 48px -12px rgba(0, 113, 227, 0.10), inset 0 1px 0 rgba(255, 255, 255, 1)",
+      "font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif",
       "font-size: 13px",
       "line-height: 1.5",
-      "max-width: 380px",
-      "min-width: 220px",
-      "padding: 10px 14px",
+      "max-width: 390px",
+      "min-width: 240px",
+      "padding: 11px 14px 13px 14px",
       "user-select: text",
-      "box-sizing: border-box"
+      "box-sizing: border-box",
+      "animation: megabox-pop-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards"
     ].join("; ");
 
     document.documentElement.appendChild(tooltipEl);
@@ -271,17 +323,26 @@ document.addEventListener('keydown', (e) => {
       const target = (res.targetLang || 'id').toUpperCase();
 
       tooltipEl.innerHTML = `
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px; font-size:11px; color:#94a3b8; font-weight:600;">
-          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid rgba(56,189,248,0.25); padding:1px 6px; border-radius:4px; text-transform:uppercase; font-size:10px; font-weight:700;">${source} → ${target}</span>
-          <span style="font-size:11px; color:#64748b;">Terjemahan Instan</span>
-          <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
-            <button id="st-copy-btn" type="button" style="background:#22242a; border:1px solid #363942; border-radius:4px; color:#cbd5e1; cursor:pointer; font-size:11px; padding:2px 8px; font-weight:600; display:flex; align-items:center; gap:4px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-bottom:7px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:11px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.18); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 7px; border-radius:6px;">
+              <span>${source}</span>
+              ${SVG_ARROW}
+              <span>${target}</span>
+            </div>
+            <span style="font-size:11px; font-weight:600; color:#86868B; letter-spacing:-0.01em;">Terjemahan Instan</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:5px;">
+            <button id="st-copy-btn" type="button" title="Salin terjemahan" style="background:rgba(255,255,255,0.7); border:1px solid rgba(0,0,0,0.08); border-radius:7px; color:#4B5563; cursor:pointer; font-size:11px; font-weight:600; padding:3px 8px; display:inline-flex; align-items:center; gap:4px; transition:all 0.14s ease;">
+              ${SVG_COPY}
               <span>Salin</span>
             </button>
-            <span style="cursor:pointer; color:#94a3b8; font-size:16px; line-height:1; padding:0 2px;" id="st-close-btn">&times;</span>
+            <button id="st-close-btn" type="button" title="Tutup" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:all 0.14s ease;">
+              ${SVG_CLOSE}
+            </button>
           </div>
         </div>
-        <div id="st-translated-text" style="font-size:13px; color:#f8fafc; font-weight:500; word-break:break-word; max-height:200px; overflow-y:auto; line-height:1.55;">
+        <div id="st-translated-text" style="font-size:13px; color:#1D1D1F; font-weight:500; word-break:break-word; max-height:220px; overflow-y:auto; line-height:1.58; padding-right:2px; letter-spacing:-0.01em;">
           ${res.translation}
         </div>
       `;
@@ -290,10 +351,16 @@ document.addEventListener('keydown', (e) => {
       if (copyBtn) {
         copyBtn.onclick = () => {
           navigator.clipboard.writeText(res.translation).then(() => {
-            copyBtn.innerHTML = '<span style="color:#22c55e;">Tersalin!</span>';
+            copyBtn.innerHTML = `${SVG_CHECK}<span style="color:#30D158; font-weight:700;">Tersalin</span>`;
+            copyBtn.style.borderColor = "rgba(48,209,88,0.3)";
+            copyBtn.style.background = "rgba(48,209,88,0.08)";
             setTimeout(() => {
-              if (copyBtn) copyBtn.innerHTML = '<span>Salin</span>';
-            }, 1500);
+              if (copyBtn) {
+                copyBtn.innerHTML = `${SVG_COPY}<span>Salin</span>`;
+                copyBtn.style.borderColor = "rgba(0,0,0,0.08)";
+                copyBtn.style.background = "rgba(255,255,255,0.7)";
+              }
+            }, 1600);
           }).catch(() => {});
         };
       }
@@ -303,9 +370,14 @@ document.addEventListener('keydown', (e) => {
 
     } else {
       tooltipEl.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; color:#ef4444;">
-          <span>Gagal menerjemahkan (${res ? res.error || 'Network error' : 'Error'})</span>
-          <span style="cursor:pointer; color:#cbd5e1;" id="st-close-btn">&times;</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#FF3B30; font-weight:500; gap:8px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <span>Gagal menerjemahkan (${res ? res.error || 'Network error' : 'Error'})</span>
+          </div>
+          <button id="st-close-btn" type="button" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; padding:0;">
+            ${SVG_CLOSE}
+          </button>
         </div>
       `;
       const closeBtn = tooltipEl.querySelector('#st-close-btn');
@@ -338,12 +410,21 @@ document.addEventListener('keydown', (e) => {
       const panel = createTooltip();
       panel.style.display = "block";
       panel.innerHTML = `
-        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px; font-size:11px; color:#94a3b8; font-weight:600;">
-          <span style="background:rgba(255,255,255,0.06); color:#cbd5e1; padding:1px 6px; border-radius:4px; font-size:10px;">AUTO-FLIP</span>
-          <span>Menerjemahkan...</span>
-          <span style="margin-left:auto; cursor:pointer; color:#94a3b8; font-size:16px; line-height:1;" id="st-close-btn">&times;</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:11px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="display:inline-flex; align-items:center; gap:3px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.16); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 6px; border-radius:6px;">
+              AUTO-FLIP
+            </div>
+            <span style="font-size:11px; font-weight:600; color:#86868B;">Menerjemahkan</span>
+          </div>
+          <button id="st-close-btn" type="button" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; padding:0;">
+            ${SVG_CLOSE}
+          </button>
         </div>
-        <div style="font-size:12px; color:#64748b; font-style:italic;">Menghubungkan ke engine terjemahan...</div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#6B7280; padding:4px 0;">
+          ${SVG_SPINNER}
+          <span>Menghubungkan ke engine terjemahan...</span>
+        </div>
       `;
 
       // Position tooltip safely within viewport
@@ -352,8 +433,8 @@ document.addEventListener('keydown', (e) => {
       let topPos = rect.bottom + scrollTop + 8;
       let leftPos = rect.left + scrollLeft;
 
-      if (leftPos + 380 > window.innerWidth + scrollLeft) {
-        leftPos = Math.max(10, window.innerWidth + scrollLeft - 390);
+      if (leftPos + 390 > window.innerWidth + scrollLeft) {
+        leftPos = Math.max(10, window.innerWidth + scrollLeft - 400);
       }
       panel.style.top = topPos + "px";
       panel.style.left = leftPos + "px";
@@ -387,7 +468,7 @@ document.addEventListener('keydown', (e) => {
     }
   });
 
-  console.log("[Megabox] Simple Translate selection observer mounted via IPC Relay.");
+  console.log("[Megabox] Simple Translate selection observer mounted via IPC Relay (Liquid Apple Glass).");
 })();
 
 
