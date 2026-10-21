@@ -1043,7 +1043,7 @@
       background: rgba(255, 255, 255, 0.6);
     }
 
-    .neo-tab-dark.is-active, .neo-tab.is-active {
+    .neo-tab-dark.is-active, .neo-tab.is-active, .vault-filter-btn.neo-tab-active, .vault-filter-btn.is-active {
       background: #FFFFFF !important;
       color: #1D1D1F !important;
       border: 1px solid rgba(0, 0, 0, 0.08) !important;
@@ -1149,58 +1149,58 @@
     .btn-apple-close:active {
       transform: scale(0.94);
     }
-    .vault-item-row {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
+.vault-item-row {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      border-radius: 13px;
       padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.95);
       transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .vault-item-row:hover {
       background: #FFFFFF;
-      border-color: rgba(0, 113, 227, 0.3);
-      box-shadow: 0 4px 16px rgba(0, 113, 227, 0.08);
-      transform: translateY(-1px);
+      border-color: rgba(0, 113, 227, 0.35);
+      box-shadow: 0 8px 24px -4px rgba(0, 113, 227, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04), inset 0 1px 0 #FFFFFF;
+      transform: translateY(-0.5px);
     }
     .vault-action-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.035);
+      border: 1px solid rgba(0, 0, 0, 0.07);
       color: #86868B;
       cursor: pointer;
-      transition: all 120ms ease;
+      transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .vault-action-btn:hover {
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.07);
       color: #1D1D1F;
-      border-color: rgba(0, 0, 0, 0.16);
+      border-color: rgba(0, 0, 0, 0.14);
+      transform: translateY(-0.5px);
     }
     .vault-action-btn:active {
       transform: scale(0.92);
     }
     .vault-action-btn.copy-pass:hover {
       color: #0071E3;
-      border-color: rgba(0, 113, 227, 0.3);
-      background: rgba(0, 113, 227, 0.08);
+      border-color: rgba(0, 113, 227, 0.35);
+      background: rgba(0, 113, 227, 0.09);
     }
     .vault-action-btn.danger:hover {
-      color: #FF3B30;
-      border-color: rgba(255, 59, 48, 0.3);
-      background: rgba(255, 59, 48, 0.08);
+      color: #FF375F;
+      border-color: rgba(255, 55, 95, 0.35);
+      background: rgba(255, 55, 95, 0.09);
     }
 
-    
-    /* ============================================================ */
+        /* ============================================================ */
     /* Liquid Apple UI v2.1 Cupertino Dark Tokens & Elements       */
     /* ============================================================ */
     
@@ -1768,78 +1768,78 @@
           <div id="clear-cache-msg" style="font-size: 11px; display: none; padding-left: 4px;"></div>
         </div>
 
-        <!-- SECTION 4: MEGAWARDEN PASSWORD VAULT -->
+<!-- SECTION 4: MEGAWARDEN PASSWORD VAULT -->
         <div id="section-settings-vault" style="display: none; flex-direction: column; gap: 14px;">
-          <!-- Top summary card -->
-          <div class="apple-group-card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="setting-row-icon" style="color: #0071E3;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Top summary card (Apple Liquid Crystal Island) -->
+          <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.98); box-shadow: 0 10px 30px -10px rgba(0, 113, 227, 0.08), inset 0 1px 0 #FFFFFF;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); color: #0071E3; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2.5"/>
                   </svg>
                 </div>
                 <div>
-                  <div style="font-weight: 600; font-size: 13.5px; color: #1D1D1F;">
-                    Megawarden Vault <span style="font-size: 11px; color: #86868B; font-weight: normal; margin-left: 4px;">(Enkripsi AES-256-GCM)</span>
+                  <div style="font-weight: 700; font-size: 14px; color: #1D1D1F; letter-spacing: -0.01em;">
+                    Megawarden Vault <span style="font-size: 11px; color: #0071E3; font-weight: 600; margin-left: 6px; padding: 2px 7px; background: rgba(0, 113, 227, 0.08); border-radius: 9999px;">AES-256-GCM</span>
                   </div>
-                  <div style="font-size: 11px; color: #86868B; margin-top: 1px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa cloud pihak ketiga.</div>
+                  <div style="font-size: 11.5px; color: #86868B; margin-top: 2px;">Pengelola kata sandi mandiri & local-first. Terenkripsi di NVMe lokal tanpa server luar.</div>
                 </div>
               </div>
-              <div style="display: flex; gap: 6px;">
-                <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary" style="gap: 5px; padding: 5px 10px; font-size: 11.5px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              <div style="display: flex; gap: 8px;">
+                <button id="btn-vault-import-csv" type="button" class="btn-apple-pill" style="gap: 5px; padding: 6px 12px; font-size: 11.5px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                   <span>Impor CSV</span>
                 </button>
-                <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary" style="gap: 5px; padding: 5px 10px; font-size: 11.5px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                <button id="btn-vault-export-csv" type="button" class="btn-apple-pill" style="gap: 5px; padding: 6px 12px; font-size: 11.5px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                   <span>Ekspor CSV</span>
                 </button>
-                <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary" style="gap: 5px; padding: 5px 12px; font-size: 11.5px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <button id="btn-vault-add-entry" type="button" class="btn-apple-blue" style="gap: 5px; padding: 6px 14px; font-size: 11.5px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   <span>Tambah Sandi</span>
                 </button>
               </div>
             </div>
 
             <!-- Search bar, Filter & Sort Toolbar -->
-            <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #F2F2F7; padding-top: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(0, 0, 0, 0.05); padding-top: 12px;">
               <div style="display: flex; gap: 8px; align-items: center;">
                 <div style="flex: 1; position: relative; display: flex; align-items: center;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 10px; pointer-events: none;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 12px; pointer-events: none;">
                     <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="crystal-input" style="width: 100%; padding-left: 32px; font-size: 12px; height: 32px; border-radius: 6px;">
+                  <input id="vault-search-input" type="text" placeholder="Cari akun, domain, atau nama pengguna..." class="apple-input" style="width: 100%; padding-left: 36px; font-size: 12px; height: 34px; border-radius: 9px;">
                 </div>
                 
                 <!-- Sort Dropdown -->
-                <select id="vault-sort-select" class="apple-select-dark" style="height: 32px; font-size: 11.5px; padding: 4px 8px;">
+                <select id="vault-sort-select" class="apple-input" style="height: 34px; font-size: 11.5px; padding: 4px 10px; border-radius: 9px; cursor: pointer; color: #1D1D1F; font-weight: 500;">
                   <option value="name-asc" selected>Nama (A-Z)</option>
                   <option value="name-desc">Nama (Z-A)</option>
                   <option value="domain-asc">Domain / Host</option>
                   <option value="recent">Terakhir Disimpan</option>
                 </select>
 
-                <div id="vault-items-counter" style="font-size: 11.5px; color: #48484A; font-weight: 500; padding: 5px 10px; border-radius: 6px; background: #F2F2F7; border: 1px solid #E5E5EA; white-space: nowrap; height: 32px; display: flex; align-items: center;">0 Kredensial</div>
+                <div id="vault-items-counter" style="font-size: 11.5px; color: #1D1D1F; font-weight: 600; padding: 5px 12px; border-radius: 9px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.07); white-space: nowrap; height: 34px; display: flex; align-items: center;">0 Kredensial</div>
               </div>
 
-              <!-- Category Filter Rel (Segmented Minimalist) -->
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;">
-                <div style="display: flex; gap: 3px; background: #F2F2F7; padding: 2px; border-radius: 6px; border: 1px solid #E5E5EA;">
-                  <button type="button" id="vault-filter-all" class="vault-filter-btn is-active" style="padding: 3px 8px; font-size: 11px; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: #FFFFFF; color: #1D1D1F; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">Semua</button>
-                  <button type="button" id="vault-filter-web" class="vault-filter-btn" style="padding: 3px 8px; font-size: 11px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: #636366;">Web & SaaS</button>
-                  <button type="button" id="vault-filter-network" class="vault-filter-btn" style="padding: 3px 8px; font-size: 11px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: #636366;">Jaringan / IP</button>
-                  <button type="button" id="vault-filter-servicing" class="vault-filter-btn" style="padding: 3px 8px; font-size: 11px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: #636366;">Servis & HW</button>
-                  <button type="button" id="vault-filter-finance" class="vault-filter-btn" style="padding: 3px 8px; font-size: 11px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: #636366;">Bank & Belanja</button>
-                  <button type="button" id="vault-filter-google" class="vault-filter-btn" style="padding: 3px 8px; font-size: 11px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: #636366;">Google</button>
+              <!-- Category Filter Rel (Neomorphic Inset Groove) -->
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <div class="neo-groove" style="display: flex; gap: 3px; padding: 3px; border-radius: 10px;">
+                  <button type="button" id="vault-filter-all" class="vault-filter-btn is-active neo-tab-active" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 7px; border: none; cursor: pointer;">Semua</button>
+                  <button type="button" id="vault-filter-web" class="vault-filter-btn" style="padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 7px; border: none; cursor: pointer; background: transparent; color: #86868B;">Web & SaaS</button>
+                  <button type="button" id="vault-filter-network" class="vault-filter-btn" style="padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 7px; border: none; cursor: pointer; background: transparent; color: #86868B;">Jaringan / IP</button>
+                  <button type="button" id="vault-filter-servicing" class="vault-filter-btn" style="padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 7px; border: none; cursor: pointer; background: transparent; color: #86868B;">Servis & HW</button>
+                  <button type="button" id="vault-filter-finance" class="vault-filter-btn" style="padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 7px; border: none; cursor: pointer; background: transparent; color: #86868B;">Bank & Belanja</button>
+                  <button type="button" id="vault-filter-google" class="vault-filter-btn" style="padding: 4px 10px; font-size: 11px; font-weight: 500; border-radius: 7px; border: none; cursor: pointer; background: transparent; color: #86868B;">Google</button>
                 </div>
-                <span id="vault-filter-indicator" style="font-size: 10.5px; color: #86868B;">Menampilkan semua akun</span>
+                <span id="vault-filter-indicator" style="font-size: 11px; color: #86868B; font-weight: 500;">Menampilkan semua akun</span>
               </div>
             </div>
           </div>
 
-          <!-- Vault List Container -->
-          <div id="vault-items-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 380px; overflow-y: auto; padding-right: 2px;">
+          <!-- Vault List Container (Apple Frosted Scroll Area) -->
+          <div id="vault-items-list" class="custom-scrollbar" style="display: flex; flex-direction: column; gap: 7px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -2075,74 +2075,74 @@
     </div>
   </div>
 
-  <!-- Megawarden Auto-Capture Prompt Toast (Apple Liquid Crystal) -->
-  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 22px; right: 24px; z-index: 99999; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.95); border-radius: 14px; box-shadow: 0 20px 48px rgba(0, 113, 227, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06); width: 330px; padding: 14px 16px; color: #1D1D1F; backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;">
-    <div style="display: flex; align-items: flex-start; gap: 11px;">
-      <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+  <!-- Megawarden Auto-Capture Prompt Toast (Apple Dynamic Island Liquid Glass) -->
+  <div id="megawarden-save-toast" style="display: none; position: fixed; top: 24px; right: 26px; z-index: 99999; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.98); border-radius: 16px; box-shadow: 0 24px 52px -8px rgba(0, 113, 227, 0.18), 0 6px 16px -2px rgba(0, 0, 0, 0.06), inset 0 1px 0 #FFFFFF; width: 340px; padding: 15px 17px; color: #1D1D1F; backdrop-filter: blur(32px) saturate(200%); -webkit-backdrop-filter: blur(32px) saturate(200%); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);">
+    <div style="display: flex; align-items: flex-start; gap: 12px;">
+      <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="2.5"></circle><path d="m12 13.5v2"></path></svg>
       </div>
       <div style="flex: 1; min-width: 0;">
         <div id="toast-vault-title" style="font-size: 13px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.01em;">Simpan sandi ke Megawarden?</div>
-        <div id="toast-vault-domain" style="font-size: 11px; color: #86868B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">example.com</div>
+        <div id="toast-vault-domain" style="font-size: 11px; color: #86868B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;">example.com</div>
         <div id="toast-vault-user" style="font-size: 11.5px; color: #1D1D1F; margin-top: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</div>
       </div>
-      <button id="toast-vault-btn-dismiss" class="btn-apple-close" type="button" style="width: 22px; height: 22px; border: none; background: transparent;" title="Tutup"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      <button id="toast-vault-btn-dismiss" class="btn-apple-close" type="button" style="width: 24px; height: 24px; border: none; background: transparent; cursor: pointer;" title="Tutup"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
-    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(0, 0, 0, 0.07); padding-top: 10px;">
-      <button id="toast-vault-btn-ignore" type="button" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 6px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); color: #1D1D1F; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
-      <button id="toast-vault-btn-save" type="button" style="padding: 5px 14px; font-size: 11px; font-weight: 600; border-radius: 6px; background: #0071E3; border: 1px solid #0071E3; color: #FFFFFF; cursor: pointer; transition: all 0.15s; box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);">Simpan Sandi</button>
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 13px; border-top: 1px solid rgba(0, 0, 0, 0.06); padding-top: 11px;">
+      <button id="toast-vault-btn-ignore" type="button" class="btn-apple-pill-dark" style="padding: 5px 12px; font-size: 11px; font-weight: 500; border-radius: 7px; background: rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.08); color: #1D1D1F; cursor: pointer; transition: all 0.15s;">Jangan Sekarang</button>
+      <button id="toast-vault-btn-save" type="button" class="crystal-btn-primary" style="padding: 5px 15px; font-size: 11px; font-weight: 600; border-radius: 7px; background: #0071E3; border: 1px solid #0071E3; color: #FFFFFF; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(0, 113, 227, 0.32);">Simpan Sandi</button>
     </div>
   </div>
 
-  <!-- Megawarden Entry Edit / Add Modal -->
-  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 1000001;">
-    <div class="crystal-modal-box" style="width: 440px; max-width: 95vw;">
-      <div style="padding: 16px 20px 14px; border-bottom: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.25); display: flex; align-items: center; justify-content: center; color: #34C759;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+  <!-- Megawarden Entry Edit / Add Modal (Apple Frosted Crystal Sheet) -->
+  <div id="vault-entry-modal" class="modal-overlay" style="display: none; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000001;">
+    <div class="crystal-modal-box" style="width: 460px; max-width: 95vw; border-radius: 18px; background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.98); box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.16), 0 8px 24px -4px rgba(0, 0, 0, 0.08), inset 0 1px 0 #FFFFFF; overflow: hidden;">
+      <div style="padding: 16px 22px 14px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 11px;">
+          <div style="width: 32px; height: 32px; border-radius: 9px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; color: #0071E3; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="2.5"></circle><path d="m12 13.5v2"></path></svg>
           </div>
           <div>
-            <div id="vault-modal-title" style="font-weight: 700; font-size: 14px; color: #1D1D1F;">Tambah Akun Megawarden</div>
-            <div style="font-size: 11px; color: #86868B;">Simpan kredensial login terenkripsi</div>
+            <div id="vault-modal-title" style="font-weight: 700; font-size: 14px; color: #1D1D1F; letter-spacing: -0.01em;">Tambah Akun Megawarden</div>
+            <div style="font-size: 11px; color: #86868B; font-weight: 400;">Kredensial disimpan terenkripsi di database NVMe lokal</div>
           </div>
         </div>
-        <button id="btn-vault-modal-close" class="btn-apple-close" type="button" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        <button id="btn-vault-modal-close" class="btn-apple-close" type="button" title="Tutup" style="width: 26px; height: 26px; border: none; background: transparent; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
-      <div style="padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="padding: 20px 22px; display: flex; flex-direction: column; gap: 13px;">
         <input type="hidden" id="vault-form-id">
         <div>
-          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Nama Layanan / Situs</label>
-          <input id="vault-form-name" type="text" class="crystal-input" placeholder="contoh: Google, GitHub, Portal Servis" style="width: 100%; font-size: 12px;">
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Nama Layanan / Situs</label>
+          <input id="vault-form-name" type="text" class="crystal-input" placeholder="contoh: Google, GitHub, Portal Servis" style="width: 100%; font-size: 12.5px; border-radius: 9px;">
         </div>
         <div>
-          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">URL / Domain Web</label>
-          <input id="vault-form-url" type="text" class="crystal-input" placeholder="https://accounts.google.com" style="width: 100%; font-size: 12px;">
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">URL / Domain Web</label>
+          <input id="vault-form-url" type="text" class="crystal-input" placeholder="https://accounts.google.com" style="width: 100%; font-size: 12.5px; border-radius: 9px;">
         </div>
         <div>
-          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Nama Pengguna / Email</label>
-          <input id="vault-form-username" type="text" class="crystal-input" placeholder="user@gmail.com" style="width: 100%; font-size: 12px;">
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Nama Pengguna / Email</label>
+          <input id="vault-form-username" type="text" class="crystal-input" placeholder="user@gmail.com" style="width: 100%; font-size: 12.5px; border-radius: 9px;">
         </div>
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <label style="font-size: 11px; color: #86868B; font-weight: 600;">Kata Sandi</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <label style="font-size: 11px; color: #86868B; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">Kata Sandi</label>
             <button id="btn-vault-form-gen" type="button" style="background: none; border: none; color: #0071E3; font-size: 11px; font-weight: 600; cursor: pointer; padding: 0;">Acak Sandi Kuat</button>
           </div>
           <div style="position: relative;">
-            <input id="vault-form-password" type="password" class="crystal-input" placeholder="Kata sandi akun" style="width: 100%; font-size: 12px; padding-right: 36px;">
-            <button id="btn-vault-form-toggle-pwd" type="button" style="position: absolute; right: 8px; top: 8px; background: none; border: none; color: #86868B; cursor: pointer; padding: 0;">
+            <input id="vault-form-password" type="password" class="crystal-input" placeholder="Kata sandi akun" style="width: 100%; font-size: 12.5px; padding-right: 36px; border-radius: 9px;">
+            <button id="btn-vault-form-toggle-pwd" type="button" style="position: absolute; right: 10px; top: 9px; background: none; border: none; color: #86868B; cursor: pointer; padding: 0;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             </button>
           </div>
         </div>
         <div>
-          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 4px;">Catatan (Opsional)</label>
-          <textarea id="vault-form-note" class="crystal-input" rows="2" placeholder="Catatan pemulihan atau 2FA backup code" style="width: 100%; font-size: 12px; resize: none;"></textarea>
+          <label style="font-size: 11px; color: #86868B; font-weight: 600; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Catatan (Opsional)</label>
+          <textarea id="vault-form-note" class="crystal-input" rows="2" placeholder="Catatan pemulihan atau 2FA backup code" style="width: 100%; font-size: 12.5px; resize: none; border-radius: 9px;"></textarea>
         </div>
       </div>
-      <div style="padding: 12px 20px; border-top: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; justify-content: flex-end; gap: 8px;">
-        <button id="btn-vault-modal-cancel" type="button" class="crystal-btn-secondary" style="padding: 6px 14px; font-size: 12px;">Batal</button>
-        <button id="btn-vault-modal-save" type="button" class="crystal-btn-primary" style="padding: 6px 18px; font-size: 12px; background: #34C759 !important; border-color: #34C759 !important;">Simpan Kredensial</button>
+      <div style="padding: 14px 22px; border-top: 1px solid rgba(0, 0, 0, 0.06); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); display: flex; justify-content: flex-end; gap: 9px;">
+        <button id="btn-vault-modal-cancel" type="button" class="crystal-btn-secondary" style="padding: 7px 15px; font-size: 12px; border-radius: 8px;">Batal</button>
+        <button id="btn-vault-modal-save" type="button" class="crystal-btn-primary" style="padding: 7px 20px; font-size: 12px; border-radius: 8px; background: #0071E3 !important; border-color: #0071E3 !important; box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);">Simpan Kredensial</button>
       </div>
     </div>
   </div>

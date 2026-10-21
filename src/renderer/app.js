@@ -3340,18 +3340,18 @@
         catButtons.forEach(b => {
           const el = document.getElementById(b.id);
           if (el) {
-            el.classList.remove("is-active");
+            el.classList.remove("is-active", "neo-tab-active");
             el.style.background = "transparent";
-            el.style.color = "#636366";
+            el.style.color = "#86868B";
             el.style.fontWeight = "500";
             el.style.boxShadow = "none";
           }
         });
-        btn.classList.add("is-active");
+        btn.classList.add("is-active", "neo-tab-active");
         btn.style.background = "#FFFFFF";
         btn.style.color = "#1D1D1F";
         btn.style.fontWeight = "600";
-        btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.06)";
+        btn.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 #FFFFFF";
         currentVaultCategory = cat;
         applyVaultFilterAndRender();
       };
