@@ -56,19 +56,6 @@
 
   const defaultUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
-  async function init() {
-    setupEventListeners();
-    loadSystemSettings();
-    await loadRecipesCatalog();
-    
-    loadApps();
-    setInterval(checkHibernation, 60000);
-
-
-  }
-
-  function setupEventListeners() {
-
   // ============================================================================
   // Megabox Discrete Zoom System & Cupertino Crystal HUD OSD
   // Standard scale: 30%, 50%, 67%, 75%, 80%, 90%, 100%, 110%, 125%, 150%, 175%, 200%, 250%, 300%
@@ -178,6 +165,21 @@
       }
     } catch (_) {}
   }
+
+  async function init() {
+    setupEventListeners();
+    loadSystemSettings();
+    await loadRecipesCatalog();
+    
+    loadApps();
+    setInterval(checkHibernation, 60000);
+
+
+  }
+
+  function setupEventListeners() {
+
+
 
 
     // Unified Shortcut Dispatcher (handles IPC from Main/Webviews as well as local Renderer keys)
