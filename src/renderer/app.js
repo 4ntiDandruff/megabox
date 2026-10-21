@@ -2831,55 +2831,134 @@
 
   // Brand Mapping to local 499 SVG Icons
   const VAULT_BRAND_ICONS = {
+    // Search Engines & Ecosystems
     "google": "google-gemini",
-    "passwords.google.com": "google-gemini",
-    "accounts.google.com": "google-gemini",
-    "mail.google.com": "gmail",
+    "passwords.google": "google-passwords",
+    "accounts.google": "google-gemini",
+    "mail.google": "gmail",
     "gmail": "gmail",
+    "yahoo": "yahoo-mail",
+    "outlook": "outlook",
+    "microsoft": "microsoft-copilot",
+    "azure": "azure-portal",
+    "office": "microsoft-copilot",
+
+    // Developers, AI & Tech
     "github": "github",
     "gitlab": "gitlab",
     "bitbucket": "bitbucket",
-    "whatsapp": "whatsapp",
-    "telegram": "telegram",
-    "discord": "discord",
-    "slack": "slack",
+    "digitalocean": "cloud",
+    "cloudflare": "cloudflare",
+    "openai": "chatgpt",
+    "chatgpt": "chatgpt",
+    "claude": "chatllm",
+    "huggingface": "huggingface",
+    "aws": "amazon-web-services",
+    "amazon": "amazon-web-services",
+    "envato": "box",
+    "meta": "facebook",
+    "linktree": "link",
+    "linktr.ee": "link",
+
+    // Collaboration, Notes & Workspace
     "notion": "notion",
     "trello": "trello",
     "figma": "figma",
-    "tokopedia": "tokopedia",
-    "shopee": "shopee",
-    "spotify": "spotify",
-    "netflix": "netflix",
-    "youtube": "youtube",
+    "slack": "slack",
+    "asana": "asana",
+    "airtable": "airtable",
+    "canva": "canva",
+    "canv": "canva",
+    "basecamp": "basecamp",
+    "dropbox": "dropbox",
+    "box": "box",
+    "mega": "box",
+
+    // Communications & Social
+    "whatsapp": "whatsapp",
+    "telegram": "telegram",
+    "discord": "discord",
     "facebook": "facebook",
+    "instagram": "instagram",
     "twitter": "twitter",
     "x.com": "twitter",
     "linkedin": "linkedin",
-    "cloudflare": "cloudflare",
-    "openai": "openai",
-    "chatgpt": "chatgpt",
-    "claude": "claude",
-    "microsoft": "microsoft",
-    "azure": "azure-portal",
-    "aws": "amazon-web-services",
-    "bitwarden": "1password",
+    "reddit": "reddit",
+    "pinterest": "pinterest",
+    "tiktok": "tiktok",
+    "twitch": "twitch",
+    "youtube": "youtube",
+    "bluesky": "bluesky",
+    "messenger": "facebook",
+    "zoom": "zoom",
+
+    // Media, Games & Entertainment
+    "netflix": "film",
+    "spotify": "music",
+    "steam": "steamchat",
+    "roblox": "gamepad",
+    "crunchyroll": "film",
+    "viu": "film",
+
+    // Security, Passwords & Remote Control
+    "bitwarden": "bitwarden",
     "lastpass": "lastpass",
     "1password": "1password",
     "proton": "proton-pass",
+    "dashlane": "bitwarden",
+    "adguard": "adguard-home",
+    "anydesk": "rustdesk",
+    "teamviewer": "rustdesk",
+    "rustdesk": "rustdesk",
+    "bitdefender": "shield",
+    "kaspersky": "shield",
+    "norton": "shield",
+    "avira": "shield",
+
+    // Finance & E-Commerce
+    "paypal": "credit-card",
     "jenius": "credit-card",
     "bca": "credit-card",
     "bank": "credit-card",
-    "cctv": "cctv",
+    "aladin": "credit-card",
+    "tokopedia": "tokopedia",
+    "shopee": "shopping-bag",
+    "lazada": "shopping-bag",
+    "bukalapak": "shopping-bag",
+    "flip": "dollar-sign",
+    "bareksa": "trending-up",
+    "tokocrypto": "binance",
+    "binance": "binance",
+
+    // Networking, Routers, Servicing & Hardware Bench
     "mikrotik": "router",
-    "openwrt": "router"
+    "openwrt": "router",
+    "tendawifi": "wifi",
+    "ruijie": "network",
+    "ezviz": "cctv",
+    "bardi": "wifi",
+    "raksanata": "shield",
+    "megapass": "megapass",
+    "cctv": "cctv",
+    "cam": "cctv",
+    "samsung": "smartphone",
+    "xiaomi": "smartphone",
+    "apple": "apple",
+    "icloud": "cloud",
+    "badcaps": "cpu",
+    "vinafix": "cpu",
+    "fixbios": "cpu",
+    "bios": "cpu",
+    "schematic": "cpu"
   };
 
   function resolveVaultItemIcon(item) {
     const name = (item.name || "").toLowerCase();
     const domain = (item.domain || "").toLowerCase().replace(/^www\./, "").split(":")[0];
     const url = (item.url || "").toLowerCase();
+    const combined = `${name} ${domain} ${url}`;
 
-    // 1. Hardware, Router & LAN Subnets (IP addresses)
+    // 1. Hardware, Router & LAN Subnets (IP addresses & Local network)
     if (/^(\d{1,3}\.){3}\d{1,3}$/.test(domain)) {
       if (domain.startsWith("192.168.") || domain.startsWith("10.") || domain.startsWith("172.16.")) {
         return { type: "router", category: "network" };
@@ -2890,24 +2969,49 @@
       return { type: "network", category: "network" };
     }
 
-    if (domain.includes("local") || domain.includes("router") || name.includes("router") || name.includes("mikrotik") || name.includes("cctv")) {
+    if (domain.includes(".ts.net") || domain.includes("router") || name.includes("router") || name.includes("mikrotik") || domain.includes("ruijie") || domain.includes("tenda")) {
       return { type: "router", category: "network" };
     }
 
-    // 2. Google Services
+    // 2. CCTV & Daycare / STB streams
+    if (combined.includes("cctv") || combined.includes("ezviz") || combined.includes("cam") || combined.includes("camera")) {
+      return { type: "cctv", category: "network" };
+    }
+
+    // 3. Hardware Repair & Schematic Forums (Badcaps, Vinafix, BIOS, Refox, Borneo)
+    if (combined.includes("schematic") || combined.includes("bios") || combined.includes("badcaps") || combined.includes("vinafix") || combined.includes("repairlap") || combined.includes("teknisi")) {
+      return { type: "chip", category: "servicing" };
+    }
+
+    // 4. Smartphone Servicing (SamFW, SamMobile, Tecno, Xiaomi, Samsung, Apple, Flyme)
+    if (combined.includes("samfw") || combined.includes("sammobile") || combined.includes("xiaomi") || combined.includes("samsung") || combined.includes("flyme") || combined.includes("kfunlocker")) {
+      return { type: "phone", category: "servicing" };
+    }
+
+    // 5. Finance, Banking & E-Wallet (BCA, Jenius, BTPN, Pajak, Flip, Bareksa, PayPal)
+    if (combined.includes("bca") || combined.includes("jenius") || combined.includes("btpn") || combined.includes("bank") || combined.includes("pajak") || combined.includes("flip") || combined.includes("paypal") || combined.includes("aladin")) {
+      return { type: "finance", category: "finance" };
+    }
+
+    // 6. E-Commerce & Belanja (Tokopedia, Shopee, Lazada, Bukalapak, Alfagift, Jakartanotebook)
+    if (combined.includes("tokopedia") || combined.includes("shopee") || combined.includes("lazada") || combined.includes("bukalapak") || combined.includes("alfagift") || combined.includes("jakartanotebook")) {
+      return { type: "ecommerce", category: "ecommerce" };
+    }
+
+    // 7. Google Services
     if (domain.includes("google") || domain.includes("gmail") || name.includes("google")) {
-      const iconFile = domain.includes("mail") || name.includes("gmail") ? "gmail" : "google-gemini";
+      const iconFile = domain.includes("mail") || name.includes("gmail") ? "gmail" : (domain.includes("password") ? "google-passwords" : "google-gemini");
       return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "google" };
     }
 
-    // 3. Known Local Brand SVGs
+    // 8. Known Brand SVGs in assets/icons
     for (const [key, iconFile] of Object.entries(VAULT_BRAND_ICONS)) {
       if (domain.includes(key) || name.includes(key)) {
         return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "web" };
       }
     }
 
-    // 4. Remote Web Favicon via Google S2 Engine (with graceful inline SVG fallback)
+    // 9. Web Favicon via Google S2 Engine (with graceful fallback)
     if (domain && domain.includes(".")) {
       return {
         type: "favicon",
@@ -2950,6 +3054,8 @@
       items = items.filter(i => {
         const meta = resolveVaultItemIcon(i);
         if (currentVaultCategory === "network") return meta.category === "network";
+        if (currentVaultCategory === "servicing") return meta.category === "servicing";
+        if (currentVaultCategory === "finance") return meta.category === "finance" || meta.category === "ecommerce";
         if (currentVaultCategory === "google") return meta.category === "google";
         if (currentVaultCategory === "web") return meta.category === "web";
         return true;
@@ -3020,13 +3126,28 @@
         iconBox.appendChild(img);
       } else if (iconMeta.type === "router") {
         iconBox.style.color = "#0071E3";
-        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/><path d="M15 10v4"/><path d="M17.8 8A6 6 0 0 0 6.2 8"/><path d="M20.5 5a10 10 0 0 0-17 0"/></svg>`;
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/><path d="M15 10v4"/><path d="M17.8 8A6 6 0 0 0 6.2 8"/><path d="M20.5 5a10 10 0 0 0-17 0"/></svg>`;
       } else if (iconMeta.type === "server") {
         iconBox.style.color = "#5E5CE6";
-        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>`;
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>`;
       } else if (iconMeta.type === "network") {
         iconBox.style.color = "#34C759";
-        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>`;
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>`;
+      } else if (iconMeta.type === "cctv") {
+        iconBox.style.color = "#FF9F0A";
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 8 3.5-3.5a1 1 0 0 0-1.4-1.4L18 6"/><path d="M2 10a8 8 0 0 1 11.3-7.3l2.8 2.8A8 8 0 0 1 14 17l-4 4-2-2 2-2a4 4 0 0 0-5.7-5.7L4.5 13"/><circle cx="10" cy="9" r="2"/></svg>`;
+      } else if (iconMeta.type === "chip") {
+        iconBox.style.color = "#FF375F";
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="5" y="5" rx="2"/><path d="M9 2v3"/><path d="M15 2v3"/><path d="M9 19v3"/><path d="M15 19v3"/><path d="M2 9h3"/><path d="M2 15h3"/><path d="M19 9h3"/><path d="M19 15h3"/><circle cx="12" cy="12" r="2"/></svg>`;
+      } else if (iconMeta.type === "phone") {
+        iconBox.style.color = "#30B0C7";
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>`;
+      } else if (iconMeta.type === "finance") {
+        iconBox.style.color = "#34C759";
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>`;
+      } else if (iconMeta.type === "ecommerce") {
+        iconBox.style.color = "#FF9500";
+        iconBox.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
       } else if (iconMeta.type === "favicon") {
         const img = document.createElement("img");
         img.src = iconMeta.src;
@@ -3165,6 +3286,8 @@
     { id: "vault-filter-all", cat: "all" },
     { id: "vault-filter-web", cat: "web" },
     { id: "vault-filter-network", cat: "network" },
+    { id: "vault-filter-servicing", cat: "servicing" },
+    { id: "vault-filter-finance", cat: "finance" },
     { id: "vault-filter-google", cat: "google" }
   ];
 
