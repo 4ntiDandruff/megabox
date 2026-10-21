@@ -2800,10 +2800,12 @@
     };
   }
 
-  // Megawarden Vault Manager UI
+  // Megawarden Vault Manager UI (Auto-Icons, Multi-Layer Brand Resolving, Category & Sorting)
   const vaultListContainer = document.getElementById("vault-items-list");
   const vaultSearchInput = document.getElementById("vault-search-input");
   const vaultCounter = document.getElementById("vault-items-counter");
+  const vaultSortSelect = document.getElementById("vault-sort-select");
+  const vaultFilterIndicator = document.getElementById("vault-filter-indicator");
   const btnVaultAdd = document.getElementById("btn-vault-add-entry");
   const btnVaultImportCsv = document.getElementById("btn-vault-import-csv");
   const btnVaultExportCsv = document.getElementById("btn-vault-export-csv");
@@ -2824,15 +2826,158 @@
   const vBtnGenPass = document.getElementById("btn-vault-form-gen");
   const vBtnTogglePass = document.getElementById("btn-vault-form-toggle-pwd");
 
+  let currentVaultCategory = "all";
+  let currentVaultSort = "name-asc";
+
+  // Brand Mapping to local 499 SVG Icons
+  const VAULT_BRAND_ICONS = {
+    "google": "google-gemini",
+    "passwords.google.com": "google-gemini",
+    "accounts.google.com": "google-gemini",
+    "mail.google.com": "gmail",
+    "gmail": "gmail",
+    "github": "github",
+    "gitlab": "gitlab",
+    "bitbucket": "bitbucket",
+    "whatsapp": "whatsapp",
+    "telegram": "telegram",
+    "discord": "discord",
+    "slack": "slack",
+    "notion": "notion",
+    "trello": "trello",
+    "figma": "figma",
+    "tokopedia": "tokopedia",
+    "shopee": "shopee",
+    "spotify": "spotify",
+    "netflix": "netflix",
+    "youtube": "youtube",
+    "facebook": "facebook",
+    "twitter": "twitter",
+    "x.com": "twitter",
+    "linkedin": "linkedin",
+    "cloudflare": "cloudflare",
+    "openai": "openai",
+    "chatgpt": "chatgpt",
+    "claude": "claude",
+    "microsoft": "microsoft",
+    "azure": "azure-portal",
+    "aws": "amazon-web-services",
+    "bitwarden": "1password",
+    "lastpass": "lastpass",
+    "1password": "1password",
+    "proton": "proton-pass",
+    "jenius": "credit-card",
+    "bca": "credit-card",
+    "bank": "credit-card",
+    "cctv": "cctv",
+    "mikrotik": "router",
+    "openwrt": "router"
+  };
+
+  function resolveVaultItemIcon(item) {
+    const name = (item.name || "").toLowerCase();
+    const domain = (item.domain || "").toLowerCase().replace(/^www\./, "").split(":")[0];
+    const url = (item.url || "").toLowerCase();
+
+    // 1. Hardware, Router & LAN Subnets (IP addresses)
+    if (/^(\d{1,3}\.){3}\d{1,3}$/.test(domain)) {
+      if (domain.startsWith("192.168.") || domain.startsWith("10.") || domain.startsWith("172.16.")) {
+        return { type: "router", category: "network" };
+      }
+      if (domain.startsWith("100.")) {
+        return { type: "server", category: "network" };
+      }
+      return { type: "network", category: "network" };
+    }
+
+    if (domain.includes("local") || domain.includes("router") || name.includes("router") || name.includes("mikrotik") || name.includes("cctv")) {
+      return { type: "router", category: "network" };
+    }
+
+    // 2. Google Services
+    if (domain.includes("google") || domain.includes("gmail") || name.includes("google")) {
+      const iconFile = domain.includes("mail") || name.includes("gmail") ? "gmail" : "google-gemini";
+      return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "google" };
+    }
+
+    // 3. Known Local Brand SVGs
+    for (const [key, iconFile] of Object.entries(VAULT_BRAND_ICONS)) {
+      if (domain.includes(key) || name.includes(key)) {
+        return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "web" };
+      }
+    }
+
+    // 4. Remote Web Favicon via Google S2 Engine (with graceful inline SVG fallback)
+    if (domain && domain.includes(".")) {
+      return {
+        type: "favicon",
+        src: `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
+        domain: domain,
+        category: "web"
+      };
+    }
+
+    return { type: "key", category: "web" };
+  }
+
   async function loadMegawardenVault() {
     if (!window.megabox || typeof window.megabox.vaultList !== "function") return;
     try {
       const res = await window.megabox.vaultList();
       cachedVaultItems = (res && res.items) ? res.items : [];
-      renderVaultItems(cachedVaultItems);
+      applyVaultFilterAndRender();
     } catch (err) {
       console.error("[Megawarden] Load vault failed:", err);
     }
+  }
+
+  function applyVaultFilterAndRender() {
+    let items = [...cachedVaultItems];
+    const q = (vaultSearchInput ? vaultSearchInput.value : "").toLowerCase().trim();
+
+    // 1. Search Query Filter
+    if (q) {
+      items = items.filter(i => 
+        (i.name || "").toLowerCase().includes(q) ||
+        (i.domain || "").toLowerCase().includes(q) ||
+        (i.username || "").toLowerCase().includes(q) ||
+        (i.url || "").toLowerCase().includes(q)
+      );
+    }
+
+    // 2. Category Tab Filter
+    if (currentVaultCategory !== "all") {
+      items = items.filter(i => {
+        const meta = resolveVaultItemIcon(i);
+        if (currentVaultCategory === "network") return meta.category === "network";
+        if (currentVaultCategory === "google") return meta.category === "google";
+        if (currentVaultCategory === "web") return meta.category === "web";
+        return true;
+      });
+    }
+
+    // 3. Sorting
+    if (currentVaultSort === "name-asc") {
+      items.sort((a, b) => (a.name || a.domain || "").localeCompare(b.name || b.domain || "", undefined, { numeric: true, sensitivity: "base" }));
+    } else if (currentVaultSort === "name-desc") {
+      items.sort((a, b) => (b.name || b.domain || "").localeCompare(a.name || a.domain || "", undefined, { numeric: true, sensitivity: "base" }));
+    } else if (currentVaultSort === "domain-asc") {
+      items.sort((a, b) => (a.domain || a.name || "").localeCompare(b.domain || b.name || "", undefined, { numeric: true, sensitivity: "base" }));
+    } else if (currentVaultSort === "recent") {
+      items.sort((a, b) => (b.updated_at || b.created_at || 0) - (a.updated_at || a.created_at || 0));
+    }
+
+    if (vaultFilterIndicator) {
+      if (q) {
+        vaultFilterIndicator.textContent = `Menemukan ${items.length} dari ${cachedVaultItems.length} akun`;
+      } else if (currentVaultCategory !== "all") {
+        vaultFilterIndicator.textContent = `Filter ${currentVaultCategory.toUpperCase()}: ${items.length} akun`;
+      } else {
+        vaultFilterIndicator.textContent = `Total ${items.length} akun kredensial`;
+      }
+    }
+
+    renderVaultItems(items);
   }
 
   function renderVaultItems(items) {
@@ -2847,8 +2992,7 @@
       vaultListContainer.innerHTML = `
         <div style="padding: 32px 16px; text-align: center; color: #86868B; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          <span>Belum ada kredensial tersimpan di Megawarden.</span>
-          <span style="font-size: 11px; color: #86868B;">Gunakan "Impor Google CSV" atau "Tambah Sandi" untuk memulai.</span>
+          <span>Tidak ada kredensial yang sesuai dengan filter atau pencarian.</span>
         </div>
       `;
       return;
@@ -2861,10 +3005,41 @@
       const left = document.createElement("div");
       left.style.cssText = "display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;";
 
-      const initialChar = (item.name || item.domain || "S").charAt(0).toUpperCase();
+      // Resolve icon
+      const iconMeta = resolveVaultItemIcon(item);
       const iconBox = document.createElement("div");
-      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.2); display: flex; align-items: center; justify-content: center; color: #0071E3; font-weight: 700; font-size: 12px; flex-shrink: 0; user-select: none;";
-      iconBox.textContent = initialChar;
+      iconBox.style.cssText = "width: 32px; height: 32px; border-radius: 8px; background: #F2F2F7; border: 1px solid #E5E5EA; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none; overflow: hidden; padding: 4px;";
+
+      if (iconMeta.type === "local") {
+        const img = document.createElement("img");
+        img.src = iconMeta.src;
+        img.style.cssText = "width: 20px; height: 20px; object-fit: contain;";
+        img.onerror = () => {
+          iconBox.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#48484A" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+        };
+        iconBox.appendChild(img);
+      } else if (iconMeta.type === "router") {
+        iconBox.style.color = "#0071E3";
+        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/><path d="M15 10v4"/><path d="M17.8 8A6 6 0 0 0 6.2 8"/><path d="M20.5 5a10 10 0 0 0-17 0"/></svg>`;
+      } else if (iconMeta.type === "server") {
+        iconBox.style.color = "#5E5CE6";
+        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>`;
+      } else if (iconMeta.type === "network") {
+        iconBox.style.color = "#34C759";
+        iconBox.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>`;
+      } else if (iconMeta.type === "favicon") {
+        const img = document.createElement("img");
+        img.src = iconMeta.src;
+        img.style.cssText = "width: 20px; height: 20px; object-fit: contain; border-radius: 4px;";
+        img.loading = "lazy";
+        img.onerror = () => {
+          const initChar = (item.name || item.domain || "W").charAt(0).toUpperCase();
+          iconBox.innerHTML = `<span style="font-size:12px; font-weight:600; color:#48484A;">${initChar}</span>`;
+        };
+        iconBox.appendChild(img);
+      } else {
+        iconBox.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#48484A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>`;
+      }
 
       const textCol = document.createElement("div");
       textCol.style.cssText = "min-width: 0; flex: 1;";
@@ -2970,23 +3145,53 @@
     });
   }
 
-  // Filter vault search
+  // Filter vault search input
   if (vaultSearchInput) {
-    vaultSearchInput.oninput = (e) => {
-      const q = (e.target.value || "").toLowerCase().trim();
-      if (!q) {
-        renderVaultItems(cachedVaultItems);
-        return;
-      }
-      const filtered = cachedVaultItems.filter(i => 
-        (i.name || "").toLowerCase().includes(q) ||
-        (i.domain || "").toLowerCase().includes(q) ||
-        (i.username || "").toLowerCase().includes(q) ||
-        (i.url || "").toLowerCase().includes(q)
-      );
-      renderVaultItems(filtered);
+    vaultSearchInput.oninput = () => {
+      applyVaultFilterAndRender();
     };
   }
+
+  // Sort dropdown change
+  if (vaultSortSelect) {
+    vaultSortSelect.onchange = (e) => {
+      currentVaultSort = e.target.value;
+      applyVaultFilterAndRender();
+    };
+  }
+
+  // Category filter buttons
+  const catButtons = [
+    { id: "vault-filter-all", cat: "all" },
+    { id: "vault-filter-web", cat: "web" },
+    { id: "vault-filter-network", cat: "network" },
+    { id: "vault-filter-google", cat: "google" }
+  ];
+
+  catButtons.forEach(({ id, cat }) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.onclick = () => {
+        catButtons.forEach(b => {
+          const el = document.getElementById(b.id);
+          if (el) {
+            el.classList.remove("is-active");
+            el.style.background = "transparent";
+            el.style.color = "#636366";
+            el.style.fontWeight = "500";
+            el.style.boxShadow = "none";
+          }
+        });
+        btn.classList.add("is-active");
+        btn.style.background = "#FFFFFF";
+        btn.style.color = "#1D1D1F";
+        btn.style.fontWeight = "600";
+        btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.06)";
+        currentVaultCategory = cat;
+        applyVaultFilterAndRender();
+      };
+    }
+  });
 
   // Add / Edit Modal Logic
   function openVaultModal(item = null) {
