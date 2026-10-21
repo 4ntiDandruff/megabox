@@ -1561,8 +1561,11 @@
       <div style="padding: 16px 20px 14px 20px; border-bottom: 1px solid rgba(0, 0, 0, 0.07); background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
-              <img src="assets/icons8/settings_header.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Settings">
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(0, 113, 227, 0.08); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; color: #0071E3;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
             </div>
             <div>
               <span id="i18n-settings-title" style="font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #1D1D1F;">Pengaturan Megabox</span>
@@ -1575,20 +1578,28 @@
 
         <!-- Cupertino Segmented Tab Recessed Well -->
         <div class="neo-groove">
-          <button id="tab-nav-general" type="button" class="neo-tab is-active">
-            <img src="assets/icons8/tab_general.png" style="width: 16px; height: 16px; object-fit: contain;" alt="General">
+          <button id="tab-nav-general" type="button" class="neo-tab is-active" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="18" r="2"/>
+            </svg>
             <span>Umum & Sistem</span>
           </button>
-          <button id="tab-nav-vault" type="button" class="neo-tab">
-            <img src="assets/icons8/tab_vault.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Vault">
+          <button id="tab-nav-vault" type="button" class="neo-tab" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+            </svg>
             <span>Megawarden</span>
           </button>
-          <button id="tab-nav-sync" type="button" class="neo-tab">
-            <img src="assets/icons8/tab_sync.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Sync">
+          <button id="tab-nav-sync" type="button" class="neo-tab" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>
+            </svg>
             <span>Cadangan & Data</span>
           </button>
-          <button id="tab-nav-about" type="button" class="neo-tab">
-            <img src="assets/icons8/tab_about.png" style="width: 16px; height: 16px; object-fit: contain;" alt="About">
+          <button id="tab-nav-about" type="button" class="neo-tab" style="display:inline-flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+            </svg>
             <span>Tentang</span>
           </button>
         </div>
@@ -1608,8 +1619,10 @@
                               <!-- Grouped Island: Interface Language Switch (ID / EN) -->
           <div class="apple-group-card" style="padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 12px; max-width: 440px;">
-              <div class="apple-squircle-icon apple-squircle-blue" style="padding: 3px;">
-                <img src="assets/icons8/language.png" style="width: 24px; height: 24px; object-fit: contain;" alt="Language">
+              <div class="apple-squircle-icon apple-squircle-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                </svg>
               </div>
               <div>
                 <div id="i18n-card-lang-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Bahasa Antarmuka (Interface Language)</div>
@@ -1643,7 +1656,9 @@
             <div style="display: flex; gap: 8px;">
               <input type="file" id="input-avatar-file" accept="image/*" style="display: none;">
               <button id="btn-pick-avatar" type="button" class="btn-apple-cyan-solid" style="padding: 7px 14px; font-size: 11.5px; display: flex; align-items: center; gap: 6px;">
-                <img src="assets/icons8/avatar.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Photo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>
+                </svg>
                 <span>Pilih Foto</span>
               </button>
               <button id="btn-reset-avatar" type="button" class="crystal-btn-secondary" style="padding: 7px 12px; font-size: 11.5px; color: #86868B;">
@@ -1657,8 +1672,10 @@
             <!-- Row 1: Hibernation -->
             <div class="apple-setting-row">
               <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
-                <div class="apple-squircle-icon apple-squircle-purple" style="padding: 3px;">
-                  <img src="assets/icons8/memory_saver.png" style="width: 22px; height: 22px; object-fit: contain;" alt="RAM">
+                <div class="apple-squircle-icon apple-squircle-purple">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>
+                  </svg>
                 </div>
                 <div>
                   <div id="i18n-row-hibernate-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Hemat Memori (Hibernasi Otomatis)</div>
@@ -1677,8 +1694,10 @@
             <!-- Row 2: Close Action -->
             <div class="apple-setting-row">
               <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
-                <div class="apple-squircle-icon apple-squircle-slate" style="padding: 3px;">
-                  <img src="assets/icons8/window_close.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Close">
+                <div class="apple-squircle-icon apple-squircle-slate">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m10 9 4 4"/><path d="m14 9-4 4"/>
+                  </svg>
                 </div>
                 <div>
                   <div id="i18n-row-close-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Perilaku Tombol Tutup [x]</div>
@@ -1694,8 +1713,10 @@
             <!-- Row 3: Autostart -->
             <div class="apple-setting-row">
               <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
-                <div class="apple-squircle-icon apple-squircle-amber" style="padding: 3px;">
-                  <img src="assets/icons8/autostart.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Autostart">
+                <div class="apple-squircle-icon apple-squircle-amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/>
+                  </svg>
                 </div>
                 <div>
                   <div id="i18n-row-autostart-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Mulai Otomatis Saat Login</div>
@@ -1711,8 +1732,10 @@
                         <!-- Row 4: Auto-Check Updates -->
             <div class="apple-setting-row">
               <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
-                <div class="apple-squircle-icon apple-squircle-blue" style="padding: 3px;">
-                  <img src="assets/icons8/notification.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Notification">
+                <div class="apple-squircle-icon apple-squircle-blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                  </svg>
                 </div>
                 <div>
                   <div id="i18n-row-autoupdate-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Pemberitahuan Versi Baru</div>
@@ -1728,8 +1751,10 @@
             <!-- Row 5: Clear Cache -->
             <div class="apple-setting-row">
               <div style="display: flex; align-items: center; gap: 12px; max-width: 430px;">
-                <div class="apple-squircle-icon apple-squircle-emerald" style="padding: 3px;">
-                  <img src="assets/icons8/clean_cache.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Clean">
+                <div class="apple-squircle-icon apple-squircle-emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="M20 12h-4"/><path d="m19.07 4.93-2.83 2.83"/><path d="M22 22 2 2"/><path d="m8 12-2 2a4 4 0 0 0 5.66 5.66l2.34-2.34"/>
+                  </svg>
                 </div>
                 <div>
                   <div id="i18n-card-cache-title" style="font-weight: 600; font-size: 13px; color: #1D1D1F;">Pembersih Cache Web & GPU</div>
@@ -1759,8 +1784,10 @@
           <div class="apple-group-card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0, 0, 0, 0.08);">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; padding: 4px;">
-                  <img src="assets/icons8/tab_vault.png" style="width: 26px; height: 26px; object-fit: contain;" alt="Megawarden">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 113, 227, 0.06); border: 1px solid rgba(0, 113, 227, 0.18); display: flex; align-items: center; justify-content: center; color: #0071E3;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="2.5"/>
+                  </svg>
                 </div>
                 <div>
                   <div style="font-weight: 600; font-size: 13.5px; color: #1D1D1F; display: flex; align-items: center; gap: 8px;">
@@ -1772,15 +1799,15 @@
               </div>
               <div style="display: flex; gap: 8px;">
                 <button id="btn-vault-import-csv" type="button" class="crystal-btn-secondary" style="gap: 7px;">
-                  <img src="assets/icons8/import_data.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Import">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                   <span>Impor Google CSV</span>
                 </button>
                 <button id="btn-vault-export-csv" type="button" class="crystal-btn-secondary" style="gap: 7px;">
-                  <img src="assets/icons8/export_data.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Export">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                   <span>Ekspor CSV</span>
                 </button>
                 <button id="btn-vault-add-entry" type="button" class="crystal-btn-primary" style="gap: 7px;">
-                  <img src="assets/icons8/add_vault.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Add">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   <span>Tambah Sandi</span>
                 </button>
               </div>
@@ -1836,12 +1863,12 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <button id="btn-backup-export" type="button" class="crystal-btn-primary" style="padding: 10px 16px; font-size: 12px; font-weight: 600; gap: 8px;">
-                <img src="assets/icons8/export_data.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Export">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                 <span>Ekspor Cadangan (.json)</span>
               </button>
 
               <button id="btn-backup-import" type="button" class="crystal-btn-secondary" style="padding: 10px 16px; font-size: 12px; font-weight: 500; gap: 8px;">
-                <img src="assets/icons8/import_data.png" style="width: 18px; height: 18px; object-fit: contain;" alt="Import">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                 <span>Impor Cadangan (.json)</span>
               </button>
             </div>
@@ -1872,13 +1899,13 @@
 
               <div style="display: flex; gap: 8px; align-items: center;">
                 <button id="btn-check-updates" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; color: #0071E3;">
-                  <img src="assets/icons8/updates.png" style="width: 14px; height: 14px; object-fit: contain;" alt="Updates">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
                   <span id="i18n-btn-check-updates">Periksa Pembaruan</span>
                 </button>
                 <button id="btn-about-github" type="button" class="crystal-btn-secondary" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
-                <img src="assets/icons8/star_github.png" style="width: 14px; height: 14px; object-fit: contain;" alt="GitHub">
-                <span>GitHub</span>
-              </button>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                  <span>GitHub</span>
+                </button>
               </div>
             </div>
 
@@ -1913,11 +1940,11 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px;">
               <button id="btn-support-qris" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
-                <img src="assets/icons8/heart_donate.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Donate">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF375F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                 <span>Donasi via QRIS</span>
               </button>
               <button id="btn-support-github" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 9px 14px; font-size: 11.5px; font-weight: 600; color: #1D1D1F; border-color: rgba(255,255,255,0.14); gap: 8px;">
-                <img src="assets/icons8/star_github.png" style="width: 16px; height: 16px; object-fit: contain;" alt="Star">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9F0A" stroke="#FF9F0A" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>Bintang di GitHub</span>
               </button>
             </div>
@@ -1938,11 +1965,11 @@
             <!-- Tautan Web & Portofolio -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
               <button id="btn-about-portfolio" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
-                <img src="assets/icons8/certificate.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Certificate">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
                 <span>Portofolio & Sertifikat</span>
               </button>
               <button id="btn-about-megapass" type="button" class="crystal-btn-secondary" style="justify-content: center; padding: 8px 12px; font-size: 11.5px; color: #1D1D1F; gap: 7px;">
-                <img src="assets/icons8/globe_web.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Web">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
                 <span>megapass.web.id</span>
               </button>
             </div>
