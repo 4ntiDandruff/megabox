@@ -589,7 +589,7 @@ window.__megabox_preload_loaded = true;
       activeDropdown = null;
     }
 
-    // Inject scrollbar and hover styles into document head (Trusted Types safe)
+// Inject scrollbar and hover styles into document head (Trusted Types safe)
     function ensureDropdownStyles() {
       if (document.getElementById("megawarden-overlay-style")) return;
       try {
@@ -597,8 +597,8 @@ window.__megabox_preload_loaded = true;
         style.id = "megawarden-overlay-style";
         style.textContent = `
           @keyframes mw-fade-in {
-            0% { opacity: 0; transform: translateY(-4px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0; transform: translateY(-4px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
           }
           #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar {
             width: 5px;
@@ -607,15 +607,39 @@ window.__megabox_preload_loaded = true;
             background: transparent;
           }
           #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.16);
+            background: rgba(0, 0, 0, 0.16);
             border-radius: 9999px;
           }
           #megawarden-suggestion-overlay .mw-scroll-list::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.28);
+            background: rgba(0, 0, 0, 0.32);
           }
         `;
         (document.head || document.documentElement).appendChild(style);
       } catch (_) {}
+    }
+
+    function createKeyFallbackSvg() {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", "13");
+      svg.setAttribute("height", "13");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "#0071E3");
+      svg.setAttribute("stroke-width", "2.2");
+      svg.setAttribute("stroke-linecap", "round");
+      svg.setAttribute("stroke-linejoin", "round");
+      const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path1.setAttribute("d", "M21 2l-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9");
+      const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path2.setAttribute("d", "m15.5 7.5 3 3L22 7l-3-3");
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", "7.5");
+      circle.setAttribute("cy", "15.5");
+      circle.setAttribute("r", "5.5");
+      svg.appendChild(circle);
+      svg.appendChild(path1);
+      svg.appendChild(path2);
+      return svg;
     }
 
     function showSuggestionDropdown(input) {
@@ -651,15 +675,15 @@ window.__megabox_preload_loaded = true;
         left: ${Math.max(8, elLeft)}px;
         top: ${elBottom + 6}px;
         width: ${Math.max(280, Math.min(380, elWidth))}px;
-        background: rgba(22, 25, 31, 0.96);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.98);
+        border-radius: 14px;
+        box-shadow: 0 20px 48px -12px rgba(0, 113, 227, 0.16), 0 8px 24px -4px rgba(0, 0, 0, 0.06), inset 0 1px 0 #FFFFFF, inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+        backdrop-filter: blur(32px) saturate(190%);
+        -webkit-backdrop-filter: blur(32px) saturate(190%);
         z-index: 2147483647;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+        color: #1D1D1F;
         overflow: hidden;
         animation: mw-fade-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
       `;
@@ -667,9 +691,9 @@ window.__megabox_preload_loaded = true;
       // Header: Editorial Clean & Apple Liquid Crystal (No mini capsule AI slop)
       const header = document.createElement("div");
       header.style.cssText = `
-        padding: 8px 12px 7px;
-        background: rgba(255, 255, 255, 0.02);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 9px 12px 8px;
+        background: rgba(245, 245, 247, 0.65);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
         display: flex;
         align-items: center;
         gap: 8px;
@@ -680,18 +704,18 @@ window.__megabox_preload_loaded = true;
       svg.setAttribute("height", "13");
       svg.setAttribute("viewBox", "0 0 24 24");
       svg.setAttribute("fill", "none");
-      svg.setAttribute("stroke", "#38bdf8");
+      svg.setAttribute("stroke", "#0071E3");
       svg.setAttribute("stroke-width", "2.2");
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z");
       svg.appendChild(path);
 
       const titleSpan = document.createElement("span");
-      titleSpan.style.cssText = "font-size: 11px; font-weight: 600; color: #f1f5f9; letter-spacing: -0.01em;";
+      titleSpan.style.cssText = "font-size: 11px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.01em;";
       titleSpan.textContent = "Megawarden Vault";
 
       const countSpan = document.createElement("span");
-      countSpan.style.cssText = "margin-left: auto; font-size: 10px; color: #64748b; font-weight: 500;";
+      countSpan.style.cssText = "margin-left: auto; font-size: 10px; color: #86868B; font-weight: 500;";
       countSpan.textContent = `${uniqueCredentials.length} akun`;
 
       header.appendChild(svg);
@@ -708,16 +732,22 @@ window.__megabox_preload_loaded = true;
         const item = document.createElement("div");
         item.style.cssText = `
           padding: 8px 10px;
-          border-radius: 8px;
+          border-radius: 10px;
           cursor: pointer;
           display: flex;
           align-items: center;
           gap: 10px;
-          transition: background 0.12s ease;
+          transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
         `;
 
-        item.onmouseenter = () => { item.style.background = "rgba(255, 255, 255, 0.07)"; };
-        item.onmouseleave = () => { item.style.background = "transparent"; };
+        item.onmouseenter = () => { 
+          item.style.background = "rgba(0, 113, 227, 0.08)";
+          item.style.transform = "translateX(2px)";
+        };
+        item.onmouseleave = () => { 
+          item.style.background = "transparent";
+          item.style.transform = "none";
+        };
 
         item.onmousedown = (e) => {
           e.preventDefault(); // Prevent input blur
@@ -727,31 +757,55 @@ window.__megabox_preload_loaded = true;
 
         const iconBox = document.createElement("div");
         iconBox.style.cssText = `
-          width: 26px;
-          height: 26px;
+          width: 28px;
+          height: 28px;
           border-radius: 7px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: #F2F2F7;
+          border: 1px solid rgba(0, 0, 0, 0.06);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #38bdf8;
-          font-weight: 600;
-          font-size: 11px;
           flex-shrink: 0;
+          overflow: hidden;
         `;
-        iconBox.textContent = (cred.name || cred.username || "A").charAt(0).toUpperCase();
+
+        // Resolve clean domain for favicon
+        let targetDomain = (cred.domain || cred.name || "").toLowerCase().trim();
+        if (cred.url && cred.url.startsWith("http")) {
+          try {
+            targetDomain = new URL(cred.url).hostname.replace(/^www\./, "");
+          } catch (_) {}
+        }
+
+        if (targetDomain && targetDomain.includes(".")) {
+          const img = document.createElement("img");
+          img.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(targetDomain)}&sz=64`;
+          img.style.cssText = "width: 18px; height: 18px; object-fit: contain; border-radius: 3px;";
+          img.loading = "lazy";
+          
+          let hasFallback = false;
+          img.onerror = () => {
+            if (!hasFallback) {
+              hasFallback = true;
+              while (iconBox.firstChild) iconBox.removeChild(iconBox.firstChild);
+              iconBox.appendChild(createKeyFallbackSvg());
+            }
+          };
+          iconBox.appendChild(img);
+        } else {
+          iconBox.appendChild(createKeyFallbackSvg());
+        }
 
         const textCol = document.createElement("div");
         textCol.style.cssText = "min-width: 0; flex: 1;";
 
         const titleLine = document.createElement("div");
-        titleLine.style.cssText = "font-size: 12px; font-weight: 500; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;";
+        titleLine.style.cssText = "font-size: 12px; font-weight: 600; color: #1D1D1F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;";
         titleLine.textContent = cred.username || "(tanpa username)";
 
         const subLine = document.createElement("div");
-        subLine.style.cssText = "font-size: 10.5px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;";
-        subLine.textContent = cred.name ? (cred.name + " - " + (cred.domain || "")) : (cred.domain || "Akun Tersimpan");
+        subLine.style.cssText = "font-size: 10.5px; color: #86868B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;";
+        subLine.textContent = cred.name ? (cred.name + (cred.domain && cred.domain !== cred.name ? " - " + cred.domain : "")) : (cred.domain || "Akun Tersimpan");
 
         textCol.appendChild(titleLine);
         textCol.appendChild(subLine);
@@ -761,9 +815,53 @@ window.__megabox_preload_loaded = true;
       });
 
       dropdown.appendChild(list);
+
+      // Subtle Apple Footer info bar
+      const footer = document.createElement("div");
+      footer.style.cssText = `
+        padding: 5px 12px;
+        background: rgba(245, 245, 247, 0.5);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        user-select: none;
+      `;
+      const footerLeft = document.createElement("div");
+      footerLeft.style.cssText = "display: flex; align-items: center; gap: 4px; font-size: 9.5px; color: #86868B;";
+      const lockSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      lockSvg.setAttribute("width", "10");
+      lockSvg.setAttribute("height", "10");
+      lockSvg.setAttribute("viewBox", "0 0 24 24");
+      lockSvg.setAttribute("fill", "none");
+      lockSvg.setAttribute("stroke", "#86868B");
+      lockSvg.setAttribute("stroke-width", "2");
+      const lockRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      lockRect.setAttribute("x", "3"); lockRect.setAttribute("y", "11");
+      lockRect.setAttribute("width", "18"); lockRect.setAttribute("height", "11");
+      lockRect.setAttribute("rx", "2"); lockRect.setAttribute("ry", "2");
+      const lockPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      lockPath.setAttribute("d", "M7 11V7a5 5 0 0 1 10 0v4");
+      lockSvg.appendChild(lockRect);
+      lockSvg.appendChild(lockPath);
+
+      const footerText = document.createElement("span");
+      footerText.textContent = "Tersimpan di NVMe lokal";
+      footerLeft.appendChild(lockSvg);
+      footerLeft.appendChild(footerText);
+
+      const footerRight = document.createElement("span");
+      footerRight.style.cssText = "font-size: 9.5px; color: #86868B; font-weight: 500;";
+      footerRight.textContent = "Klik untuk isi";
+
+      footer.appendChild(footerLeft);
+      footer.appendChild(footerRight);
+      dropdown.appendChild(footer);
+
       document.documentElement.appendChild(dropdown);
       activeDropdown = dropdown;
     }
+
 
     function fillCredential(activeInput, cred, isPassword) {
       if (!cred) return;
