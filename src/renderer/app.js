@@ -69,27 +69,114 @@
 
   function setupEventListeners() {
 
-  // Megabox Active Webview Zoom Helper (Ctrl + Wheel, Ctrl + / -, Ctrl + 0)
+  // ============================================================================
+  // Megabox Discrete Zoom System & Cupertino Crystal HUD OSD
+  // Standard scale: 30%, 50%, 67%, 75%, 80%, 90%, 100%, 110%, 125%, 150%, 175%, 200%, 250%, 300%
+  // ============================================================================
+  const ZOOM_PERCENT_STEPS = [30, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300];
+
+  function percentToZoomFactor(pct) {
+    return pct / 100;
+  }
+
+  function zoomFactorToPercent(factor) {
+    return Math.round((factor || 1) * 100);
+  }
+
+  // Find nearest discrete zoom step
+  function findClosestStepIndex(currentPct) {
+    let closestIdx = 6; // default 100%
+    let minDiff = 9999;
+    ZOOM_PERCENT_STEPS.forEach((step, idx) => {
+      const diff = Math.abs(step - currentPct);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = idx;
+      }
+    });
+    return closestIdx;
+  }
+
+  let zoomHudTimer = null;
+
+  function showZoomHud(percent) {
+    const hud = document.getElementById('zoom-hud-pill');
+    const txtPercent = document.getElementById('zoom-hud-percent');
+    const btnReset = document.getElementById('zoom-hud-btn-reset');
+    if (!hud || !txtPercent) return;
+
+    txtPercent.textContent = percent + '%';
+    if (btnReset) {
+      btnReset.style.display = (percent !== 100) ? 'inline-block' : 'none';
+    }
+
+    hud.style.display = 'flex';
+    requestAnimationFrame(() => {
+      hud.style.opacity = '1';
+      hud.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    if (zoomHudTimer) clearTimeout(zoomHudTimer);
+    zoomHudTimer = setTimeout(() => {
+      hud.style.opacity = '0';
+      hud.style.transform = 'translateX(-50%) translateY(-6px)';
+      setTimeout(() => {
+        if (hud.style.opacity === '0') hud.style.display = 'none';
+      }, 220);
+    }, 1600);
+  }
+
+  // Megabox Active Webview Zoom Controller with per-app persistence
   async function zoomActiveApp(dir) {
     if (!activeAppId) return;
-    const wv = document.getElementById("wv-" + activeAppId);
-    if (!wv || typeof wv.getZoomLevel !== "function") return;
+    const wv = document.getElementById('wv-' + activeAppId);
+    if (!wv || typeof wv.getZoomFactor !== 'function') return;
+
     try {
-      const current = await wv.getZoomLevel();
-      let target = current;
-      if (dir === "in") {
-        target = Math.min(Math.round((current + 0.5) * 10) / 10, 9);
-      } else if (dir === "out") {
-        target = Math.max(Math.round((current - 0.5) * 10) / 10, -8);
-      } else if (dir === "reset") {
-        target = 0;
+      const currentFactor = await wv.getZoomFactor();
+      const currentPct = zoomFactorToPercent(currentFactor);
+      let stepIdx = findClosestStepIndex(currentPct);
+
+      if (dir === 'in') {
+        if (ZOOM_PERCENT_STEPS[stepIdx] <= currentPct) {
+          stepIdx = Math.min(stepIdx + 1, ZOOM_PERCENT_STEPS.length - 1);
+        }
+      } else if (dir === 'out') {
+        if (ZOOM_PERCENT_STEPS[stepIdx] >= currentPct) {
+          stepIdx = Math.max(stepIdx - 1, 0);
+        }
+      } else if (dir === 'reset') {
+        stepIdx = 6; // 100%
       }
-      wv.setZoomLevel(target);
-      try { wv.send("zoom:set", target); } catch (_) {}
-      console.log("[Megabox Zoom]", activeAppId, dir, "Level:", target);
+
+      const nextPercent = ZOOM_PERCENT_STEPS[stepIdx];
+      const nextFactor = percentToZoomFactor(nextPercent);
+
+      wv.setZoomFactor(nextFactor);
+      try { wv.send('zoom:set-factor', nextFactor); } catch (_) {}
+      
+      // Persist zoom setting for this service
+      localStorage.setItem('megabox_zoom_' + activeAppId, String(nextPercent));
+      console.log('[Megabox Zoom]', activeAppId, dir, `${currentPct}% -> ${nextPercent}%`);
+
+      // Trigger visual feedback
+      showZoomHud(nextPercent);
     } catch (err) {
-      console.warn("[Megabox Zoom Error]", err);
+      console.warn('[Megabox Zoom Error]', err);
     }
+  }
+
+  // Apply persisted zoom to a webview
+  function restoreWebviewZoom(appId, wv) {
+    if (!appId || !wv || typeof wv.setZoomFactor !== 'function') return;
+    try {
+      const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + appId), 10);
+      if (!isNaN(savedPct) && savedPct > 0) {
+        const factor = percentToZoomFactor(savedPct);
+        wv.setZoomFactor(factor);
+        try { wv.send('zoom:set-factor', factor); } catch (_) {}
+      }
+    } catch (_) {}
   }
 
 
@@ -203,6 +290,14 @@
       }
     }
     window.dispatchShortcutAction = dispatchShortcutAction;
+    // Wire Zoom HUD OSD Buttons
+    const btnZoomHudIn = document.getElementById('zoom-hud-btn-in');
+    const btnZoomHudOut = document.getElementById('zoom-hud-btn-out');
+    const btnZoomHudReset = document.getElementById('zoom-hud-btn-reset');
+    if (btnZoomHudIn) btnZoomHudIn.onclick = () => zoomActiveApp('in');
+    if (btnZoomHudOut) btnZoomHudOut.onclick = () => zoomActiveApp('out');
+    if (btnZoomHudReset) btnZoomHudReset.onclick = () => zoomActiveApp('reset');
+
 
     // Open Service Catalog / Tambah Aplikasi via delegation on tabsContainer
     tabsContainer.addEventListener('click', (e) => {
@@ -780,6 +875,7 @@
 
         // Listen to badge events from preload-webview bridge
         wv.addEventListener('dom-ready', () => {
+          restoreWebviewZoom(app.id, wv);
           // Proactively send credentials to webview on dom-ready
           if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
             const checkUrl = wv.src || app.url;
@@ -1041,6 +1137,7 @@
             if (tab) tab.classList.remove('is-hibernated');
           }
           wv.style.display = 'flex';
+          restoreWebviewZoom(app.id, wv);
           try { wv.focus(); } catch (err) {}
         } else {
           wv.style.display = 'none';

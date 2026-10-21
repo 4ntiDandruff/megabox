@@ -482,7 +482,12 @@ window.__megabox_preload_loaded = true;
 
     window.__wheel_installed = true;
 
-    // Sync zoom level from host renderer
+    // Sync zoom factor from host renderer
+    ipcRenderer.on("zoom:set-factor", (_e, factor) => {
+      try {
+        webFrame.setZoomFactor(typeof factor === "number" ? factor : 1);
+      } catch (_) {}
+    });
     ipcRenderer.on("zoom:set", (_e, level) => {
       try {
         webFrame.setZoomLevel(typeof level === "number" ? level : 0);
