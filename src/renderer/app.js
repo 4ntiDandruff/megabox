@@ -3225,7 +3225,7 @@
       }
 
       const userLine = document.createElement("div");
-      userLine.style.cssText = "font-size: 11px; color: #86868B; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400;";
+      userLine.style.cssText = "font-size: 11px; color: #636366; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;";
       userLine.textContent = item.username || "(tanpa username)";
 
       textCol.appendChild(titleLine);
@@ -3241,7 +3241,7 @@
       const btnCopyUser = document.createElement("button");
       btnCopyUser.type = "button";
       btnCopyUser.title = "Salin Nama Pengguna";
-      btnCopyUser.className = "vault-action-btn";
+      btnCopyUser.className = "vault-action-btn copy-user";
       btnCopyUser.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
       btnCopyUser.onclick = (e) => {
         e.stopPropagation();
@@ -3249,12 +3249,12 @@
         showGlobalToast("Nama pengguna disalin", "info");
       };
 
-      // Copy password
+      // Copy password (Key icon)
       const btnCopyPass = document.createElement("button");
       btnCopyPass.type = "button";
       btnCopyPass.title = "Salin Kata Sandi";
       btnCopyPass.className = "vault-action-btn copy-pass";
-      btnCopyPass.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+      btnCopyPass.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>`;
       btnCopyPass.onclick = (e) => {
         e.stopPropagation();
         const pwdToCopy = item.password;
@@ -3277,7 +3277,7 @@
       const btnEdit = document.createElement("button");
       btnEdit.type = "button";
       btnEdit.title = "Edit Akun";
-      btnEdit.className = "vault-action-btn";
+      btnEdit.className = "vault-action-btn edit-entry";
       btnEdit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
       btnEdit.onclick = (e) => {
         e.stopPropagation();
@@ -3343,17 +3343,19 @@
           const el = document.getElementById(b.id);
           if (el) {
             el.classList.remove("is-active", "neo-tab-active");
-            el.style.background = "transparent";
-            el.style.color = "#86868B";
-            el.style.fontWeight = "500";
-            el.style.boxShadow = "none";
+            el.style.removeProperty("background");
+            el.style.removeProperty("color");
+            el.style.removeProperty("font-weight");
+            el.style.removeProperty("box-shadow");
+            el.style.removeProperty("border");
           }
         });
         btn.classList.add("is-active", "neo-tab-active");
-        btn.style.background = "#FFFFFF";
-        btn.style.color = "#1D1D1F";
-        btn.style.fontWeight = "600";
-        btn.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 #FFFFFF";
+        btn.style.removeProperty("background");
+        btn.style.removeProperty("color");
+        btn.style.removeProperty("font-weight");
+        btn.style.removeProperty("box-shadow");
+        btn.style.removeProperty("border");
         currentVaultCategory = cat;
         applyVaultFilterAndRender();
       };
