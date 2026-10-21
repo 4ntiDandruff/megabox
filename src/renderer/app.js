@@ -3446,7 +3446,17 @@
           const res = await window.megabox.vaultPickAndImportCsv();
           if (res && res.canceled) return;
           if (res && res.success) {
-            showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager! (Total ${res.total} akun)`, "success");
+            let msg = '';
+            if (res.imported > 0 && res.updated > 0) {
+              msg = `Berhasil mengimpor ${res.imported} akun baru & memperbarui ${res.updated} akun! (Total ${res.total} akun)`;
+            } else if (res.imported > 0) {
+              msg = `Berhasil mengimpor ${res.imported} akun dari Google Password Manager! (Total ${res.total} akun)`;
+            } else if (res.updated > 0) {
+              msg = `Berhasil memperbarui ${res.updated} akun yang sudah ada! (Total ${res.total} akun)`;
+            } else {
+              msg = `Semua akun (${res.total}) sudah sinkron dan mutakhir.`;
+            }
+            showGlobalToast(msg, "success");
             loadMegawardenVault();
           } else {
             alert("Gagal impor CSV: " + (res.error || "Format berkas tidak valid"));
@@ -3470,7 +3480,17 @@
           try {
             const res = await window.megabox.vaultImportCsv(text);
             if (res && res.success) {
-              showGlobalToast(`Berhasil mengimpor ${res.imported} akun dari Google Password Manager!`, "success");
+              let msg = '';
+              if (res.imported > 0 && res.updated > 0) {
+                msg = `Berhasil mengimpor ${res.imported} akun baru & memperbarui ${res.updated} akun! (Total ${res.total} akun)`;
+              } else if (res.imported > 0) {
+                msg = `Berhasil mengimpor ${res.imported} akun dari Google Password Manager! (Total ${res.total} akun)`;
+              } else if (res.updated > 0) {
+                msg = `Berhasil memperbarui ${res.updated} akun yang sudah ada! (Total ${res.total} akun)`;
+              } else {
+                msg = `Semua akun (${res.total}) sudah sinkron dan mutakhir.`;
+              }
+              showGlobalToast(msg, "success");
               loadMegawardenVault();
             } else {
               alert("Gagal impor CSV: " + (res.error || "Format tidak valid"));

@@ -247,34 +247,41 @@ class MegawardenVault {
   }
 
   // Parse Google Password Manager CSV export
-  // Standard columns: name,url,username,password,note
+  // Fully compliant with Google Chrome / Passwords CSV schema (name,url,username,password,note)
   importCsv(csvContent) {
     if (!csvContent || typeof csvContent !== 'string') {
-      return { success: false, imported: 0, error: 'File CSV kosong atau tidak valid.' };
+      return { success: false, imported: 0, updated: 0, total: 0, error: 'File CSV kosong atau tidak valid.' };
     }
 
-    const rows = parseCsvText(csvContent);
+    // Strip UTF-8 Byte Order Mark (BOM) if present from Google / Excel exports
+    const cleanContent = csvContent.replace(/^\uFEFF/, '');
+
+    const rows = parseCsvText(cleanContent);
     if (rows.length === 0) {
-      return { success: false, imported: 0, error: 'Tidak ada data valid yang ditemukan dalam CSV.' };
+      return { success: false, imported: 0, updated: 0, total: 0, error: 'Tidak ada data valid yang ditemukan dalam CSV.' };
     }
 
-    const header = rows[0].map(h => String(h || '').trim().toLowerCase());
-    const nameIdx = header.findIndex(h => h === 'name' || h === 'nama');
-    const urlIdx = header.findIndex(h => h === 'url' || h === 'website' || h === 'tautan');
-    const userIdx = header.findIndex(h => h === 'username' || h === 'user' || h === 'email');
-    const passIdx = header.findIndex(h => h === 'password' || h === 'sandi' || h === 'kata sandi');
+    // Recognize English, Indonesian, and common Password Manager column headers
+    const header = rows[0].map(h => String(h || '').replace(/^\uFEFF/, '').trim().toLowerCase());
+    const nameIdx = header.findIndex(h => h === 'name' || h === 'nama' || h === 'title');
+    const urlIdx = header.findIndex(h => h === 'url' || h === 'website' || h === 'tautan' || h === 'web' || h === 'uri' || h === 'login_uri');
+    const userIdx = header.findIndex(h => h === 'username' || h === 'user' || h === 'email' || h === 'nama pengguna' || h === 'pengguna' || h === 'login_username');
+    const passIdx = header.findIndex(h => h === 'password' || h === 'sandi' || h === 'kata sandi' || h === 'pass' || h === 'login_password');
     const noteIdx = header.findIndex(h => h === 'note' || h === 'notes' || h === 'catatan');
 
     if (passIdx === -1 || (userIdx === -1 && urlIdx === -1)) {
       return { 
         success: false, 
         imported: 0, 
+        updated: 0,
+        total: 0,
         error: 'Format header CSV tidak dikenali. Wajib memuat kolom "url", "username", dan "password".' 
       };
     }
 
     const currentItems = readEncryptedVault();
-    let count = 0;
+    let addedCount = 0;
+    let updatedCount = 0;
     const now = Date.now();
 
     for (let i = 1; i < rows.length; i++) {
@@ -292,17 +299,33 @@ class MegawardenVault {
       const domain = extractDomain(url || name, name);
       const displayName = name || domain || 'Akun';
 
-      // Duplicate check (by domain + username)
-      const existing = currentItems.find(item => 
-        extractDomain(item.url || item.domain, item.name) === domain && 
-        item.username.toLowerCase() === username.toLowerCase()
-      );
+      // Duplicate check: Match by exact domain / package name and case-insensitive username
+      const existing = currentItems.find(item => {
+        const itemDomain = extractDomain(item.url || item.domain, item.name);
+        const matchDomain = (itemDomain && domain && itemDomain.toLowerCase() === domain.toLowerCase());
+        const matchUser = (item.username || '').toLowerCase() === username.toLowerCase();
+        return matchDomain && matchUser;
+      });
 
       if (existing) {
-        // Update password & note
-        existing.password = password;
-        if (note && !existing.note) existing.note = note;
-        existing.updated_at = now;
+        // Update password and/or note if modified
+        let changed = false;
+        if (existing.password !== password) {
+          existing.password = password;
+          changed = true;
+        }
+        if (url && !existing.url) {
+          existing.url = url;
+          changed = true;
+        }
+        if (note && (!existing.note || existing.note !== note)) {
+          existing.note = note;
+          changed = true;
+        }
+        if (changed) {
+          existing.updated_at = now;
+          updatedCount++;
+        }
       } else {
         currentItems.push({
           id: 'mw_' + Date.now().toString(36) + '_' + crypto.randomBytes(4).toString('hex'),
@@ -315,25 +338,54 @@ class MegawardenVault {
           created_at: now,
           updated_at: now
         });
-        count++;
+        addedCount++;
       }
     }
 
-    writeEncryptedVault(currentItems);
-    return { success: true, imported: count, total: currentItems.length };
+    if (addedCount > 0 || updatedCount > 0) {
+      writeEncryptedVault(currentItems);
+    }
+
+    return { 
+      success: true, 
+      imported: addedCount, 
+      updated: updatedCount, 
+      total: currentItems.length 
+    };
   }
 
-  // Export to Google-compatible CSV format
+  // Export to Google Password Manager CSV format
+  // RFC 4180 compliant with CRLF, exact headers, and normalized URLs
   exportCsv() {
     const items = readEncryptedVault();
 
+    // Standard Google Password Manager header
     const headers = ['name', 'url', 'username', 'password', 'note'];
     const lines = [headers.join(',')];
 
     for (const item of items) {
+      // Normalize URL for Google Password Manager import requirements
+      let exportUrl = (item.url || '').trim();
+      if (!exportUrl) {
+        const dom = (item.domain || item.name || '').trim();
+        if (dom) {
+          if (dom.startsWith('192.168.') || dom.startsWith('10.') || dom.startsWith('172.16.') || dom.startsWith('localhost') || dom.startsWith('127.0.0.1')) {
+            exportUrl = 'http://' + dom;
+          } else {
+            exportUrl = 'https://' + dom;
+          }
+        }
+      } else if (!exportUrl.startsWith('http://') && !exportUrl.startsWith('https://') && !exportUrl.startsWith('android://')) {
+        if (exportUrl.startsWith('192.168.') || exportUrl.startsWith('10.') || exportUrl.startsWith('172.16.') || exportUrl.startsWith('localhost') || exportUrl.startsWith('127.0.0.1')) {
+          exportUrl = 'http://' + exportUrl;
+        } else {
+          exportUrl = 'https://' + exportUrl;
+        }
+      }
+
       const row = [
-        escapeCsvField(item.name || ''),
-        escapeCsvField(item.url || ''),
+        escapeCsvField(item.name || item.domain || 'Akun'),
+        escapeCsvField(exportUrl),
         escapeCsvField(item.username || ''),
         escapeCsvField(item.password || ''),
         escapeCsvField(item.note || '')
@@ -341,7 +393,8 @@ class MegawardenVault {
       lines.push(row.join(','));
     }
 
-    return lines.join('\n');
+    // RFC 4180 standard CRLF line endings
+    return lines.join('\r\n') + '\r\n';
   }
 
   // Generate cryptographic secure random password
@@ -371,12 +424,18 @@ class MegawardenVault {
 
 }
 
-// RFC 4180 CSV Parser (Handles quoted fields, commas, and newlines cleanly)
+// RFC 4180 CSV Parser (Fortified: handles BOM, unquoted quotes, escaped quotes, multiline notes)
 function parseCsvText(text) {
+  if (!text || typeof text !== 'string') return [];
+  // Strip UTF-8 BOM if present
+  if (text.charCodeAt(0) === 0xFEFF) {
+    text = text.slice(1);
+  }
   const rows = [];
   let currentRow = [];
   let currentField = '';
   let insideQuotes = false;
+  let isQuotedField = false;
   let i = 0;
 
   while (i < text.length) {
@@ -399,27 +458,38 @@ function parseCsvText(text) {
         i++;
       }
     } else {
-      if (c === '"') {
+      // Start of a quoted field: either field is empty or only had leading whitespace
+      if (c === '"' && (!isQuotedField && currentField.trim().length === 0)) {
         insideQuotes = true;
+        isQuotedField = true;
+        currentField = '';
         i++;
       } else if (c === ',') {
-        currentRow.push(currentField);
+        currentRow.push(isQuotedField ? currentField : currentField.trim());
         currentField = '';
+        isQuotedField = false;
         i++;
       } else if (c === '\r') {
         if (next === '\n') i++;
-        currentRow.push(currentField);
+        currentRow.push(isQuotedField ? currentField : currentField.trim());
         rows.push(currentRow);
         currentRow = [];
         currentField = '';
+        isQuotedField = false;
         i++;
       } else if (c === '\n') {
-        currentRow.push(currentField);
+        currentRow.push(isQuotedField ? currentField : currentField.trim());
         rows.push(currentRow);
         currentRow = [];
         currentField = '';
+        isQuotedField = false;
         i++;
       } else {
+        // If we already closed a quoted field, ignore trailing whitespace before delimiter
+        if (isQuotedField && !insideQuotes && (c === ' ' || c === '\t')) {
+          i++;
+          continue;
+        }
         currentField += c;
         i++;
       }
@@ -427,11 +497,12 @@ function parseCsvText(text) {
   }
 
   if (currentField.length > 0 || currentRow.length > 0) {
-    currentRow.push(currentField);
+    currentRow.push(isQuotedField ? currentField : currentField.trim());
     rows.push(currentRow);
   }
 
-  return rows;
+  // Filter out completely empty trailing lines
+  return rows.filter(r => r.length > 1 || (r.length === 1 && r[0].trim().length > 0));
 }
 
 function escapeCsvField(val) {
