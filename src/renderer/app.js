@@ -2831,125 +2831,150 @@
 
   // Brand Mapping to local 499 SVG Icons
   const VAULT_BRAND_ICONS = {
-    // Search Engines & Ecosystems
-    "google": "google-gemini",
-    "passwords.google": "google-passwords",
-    "accounts.google": "google-gemini",
-    "mail.google": "gmail",
-    "gmail": "gmail",
-    "yahoo": "yahoo-mail",
-    "outlook": "outlook",
-    "microsoft": "microsoft-copilot",
-    "azure": "azure-portal",
-    "office": "microsoft-copilot",
+    // 1. Ecosystem Raksasa (Samsung, Apple, Xiaomi, Google, Microsoft)
+    "samsung": "samsung.svg",
+    "xiaomi": "xiaomi.svg",
+    "apple": "apple.svg",
+    "id.apple": "apple.svg",
+    "idmsa.apple": "apple.svg",
+    "icloud": "apple.svg",
+    "google": "google-gemini.svg",
+    "passwords.google": "google-passwords.svg",
+    "accounts.google": "google-gemini.svg",
+    "mail.google": "gmail.svg",
+    "gmail": "gmail.svg",
+    "microsoft": "microsoft-copilot.svg",
+    "azure": "azure-portal.svg",
+    "office": "microsoft-copilot.svg",
+    "outlook": "outlook.svg",
+    "yahoo": "yahoo-mail.svg",
 
-    // Developers, AI & Tech
-    "github": "github",
-    "gitlab": "gitlab",
-    "bitbucket": "bitbucket",
-    "digitalocean": "cloud",
-    "cloudflare": "cloudflare",
-    "openai": "chatgpt",
-    "chatgpt": "chatgpt",
-    "claude": "chatllm",
-    "huggingface": "huggingface",
-    "aws": "amazon-web-services",
-    "amazon": "amazon-web-services",
-    "envato": "box",
-    "meta": "facebook",
-    "linktree": "link",
-    "linktr.ee": "link",
+    // 2. E-Commerce & Belanja Indonesia / Global
+    "bukalapak": "bukalapak.svg",
+    "tokopedia": "tokopedia.png",
+    "shopee": "shopee.svg",
+    "lazada": "lazada.png",
+    "alfagift": "alfagift.png",
+    "alfamart": "alfagift.png",
+    "jakartanotebook": "shopping-bag",
+    "amazon": "amazon-web-services.svg",
+    "ebay": "shopping-bag",
+    "gojek": "gojek.svg",
+    "grab": "grab.svg",
 
-    // Collaboration, Notes & Workspace
-    "notion": "notion",
-    "trello": "trello",
-    "figma": "figma",
-    "slack": "slack",
-    "asana": "asana",
-    "airtable": "airtable",
-    "canva": "canva",
-    "canv": "canva",
-    "basecamp": "basecamp",
-    "dropbox": "dropbox",
-    "box": "box",
-    "mega": "box",
+    // 3. Bank & Finansial Indonesia
+    "jenius": "jenius.png",
+    "bca": "bca.png",
+    "mybca": "bca.png",
+    "aladin": "credit-card",
+    "flip": "dollar-sign",
+    "bareksa": "trending-up",
+    "tokocrypto": "binance.svg",
+    "binance": "binance.svg",
+    "paypal": "paypal.svg",
+    "pajak": "pajak.png",
+    "bpjs": "bpjs.png",
+    "bpjstku": "bpjs.png",
 
-    // Communications & Social
-    "whatsapp": "whatsapp",
-    "telegram": "telegram",
-    "discord": "discord",
-    "facebook": "facebook",
-    "instagram": "instagram",
-    "twitter": "twitter",
-    "x.com": "twitter",
-    "linkedin": "linkedin",
-    "reddit": "reddit",
-    "pinterest": "pinterest",
-    "tiktok": "tiktok",
-    "twitch": "twitch",
-    "youtube": "youtube",
-    "bluesky": "bluesky",
-    "messenger": "facebook",
-    "zoom": "zoom",
+    // 4. Developer, AI, Cloud & Infra
+    "github": "github.svg",
+    "gitlab": "gitlab.svg",
+    "bitbucket": "bitbucket.svg",
+    "digitalocean": "digitalocean.svg",
+    "cloudflare": "cloudflare.svg",
+    "ubiquiti": "ubiquiti.svg",
+    "ui.com": "ubiquiti.svg",
+    "openai": "chatgpt.svg",
+    "chatgpt": "chatgpt.svg",
+    "claude": "chatllm.svg",
+    "huggingface": "huggingface.svg",
+    "aws": "amazon-web-services.svg",
+    "envato": "box.svg",
+    "linktree": "link.svg",
+    "linktr.ee": "link.svg",
 
-    // Media, Games & Entertainment
-    "netflix": "film",
-    "spotify": "music",
-    "steam": "steamchat",
-    "roblox": "gamepad",
-    "crunchyroll": "film",
-    "viu": "film",
+    // 5. Servis HW, Chipset, BIOS & Flashing
+    "samfw": "samfw.png",
+    "sammobile": "samsung.svg",
+    "vinafix": "vinafix.png",
+    "badcaps": "badcaps.png",
+    "fixbios": "cpu",
+    "repairlap": "cpu",
+    "borneoschematic": "cpu",
+    "teknisi-laptop": "cpu",
+    "kfunlocker": "smartphone",
+    "flyme": "smartphone",
+    "palm.tech": "smartphone",
+    "tecno": "smartphone",
 
-    // Security, Passwords & Remote Control
-    "bitwarden": "bitwarden",
-    "lastpass": "lastpass",
-    "1password": "1password",
-    "proton": "proton-pass",
-    "dashlane": "bitwarden",
-    "adguard": "adguard-home",
-    "anydesk": "rustdesk",
-    "teamviewer": "rustdesk",
-    "rustdesk": "rustdesk",
-    "bitdefender": "shield",
-    "kaspersky": "shield",
+    // 6. Jaringan, Router, CCTV & IoT
+    "adguard": "adguard-home.svg",
+    "ruijie": "network.svg",
+    "tendawifi": "wifi",
+    "ezviz": "cctv.svg",
+    "bardi": "wifi",
+    "cctv": "cctv.svg",
+    "cam": "cctv.svg",
+    "camscanner": "camscanner.png",
+    "virustotal": "virustotal.svg",
+    "speedtest": "speedtest.svg",
+
+    // 7. Kolaborasi & Remote Ops
+    "teamviewer": "teamviewer.svg",
+    "anydesk": "anydesk.svg",
+    "rustdesk": "rustdesk.svg",
+    "notion": "notion.svg",
+    "trello": "trello.svg",
+    "figma": "figma.svg",
+    "slack": "slack.svg",
+    "asana": "asana.svg",
+    "airtable": "airtable.svg",
+    "canva": "canva.svg",
+    "basecamp": "basecamp.svg",
+    "dropbox": "dropbox.svg",
+    "mega.nz": "mega.svg",
+    "mega": "mega.svg",
+    "box.com": "box.svg",
+
+    // 8. Komunikasi & Media Sosial
+    "whatsapp": "whatsapp.svg",
+    "telegram": "telegram.svg",
+    "discord": "discord.svg",
+    "facebook": "facebook.svg",
+    "instagram": "instagram.svg",
+    "twitter": "twitter.svg",
+    "x.com": "twitter.svg",
+    "linkedin": "linkedin.svg",
+    "reddit": "reddit.svg",
+    "pinterest": "pinterest.svg",
+    "tiktok": "tiktok.svg",
+    "twitch": "twitch.svg",
+    "youtube": "youtube.svg",
+    "kaskus": "kaskus.png",
+    "zoom": "zoom.svg",
+
+    // 9. Entertainment & Games
+    "netflix": "netflix.svg",
+    "spotify": "spotify.svg",
+    "steam": "steam.svg",
+    "roblox": "roblox.svg",
+    "crunchyroll": "crunchyroll.svg",
+    "vimeo": "vimeo.svg",
+    "deviantart": "deviantart.svg",
+    "freepik": "freepik.svg",
+
+    // 10. Keamanan & Antivirus
+    "bitwarden": "bitwarden.svg",
+    "lastpass": "lastpass.svg",
+    "1password": "1password.svg",
+    "proton": "proton-pass.svg",
+    "bitdefender": "bitdefender.svg",
+    "kaspersky": "kaspersky.svg",
     "norton": "shield",
     "avira": "shield",
 
-    // Finance & E-Commerce
-    "paypal": "credit-card",
-    "jenius": "credit-card",
-    "bca": "credit-card",
-    "bank": "credit-card",
-    "aladin": "credit-card",
-    "tokopedia": "tokopedia",
-    "shopee": "shopping-bag",
-    "lazada": "shopping-bag",
-    "bukalapak": "shopping-bag",
-    "flip": "dollar-sign",
-    "bareksa": "trending-up",
-    "tokocrypto": "binance",
-    "binance": "binance",
-
-    // Networking, Routers, Servicing & Hardware Bench
-    "mikrotik": "router",
-    "openwrt": "router",
-    "tendawifi": "wifi",
-    "ruijie": "network",
-    "ezviz": "cctv",
-    "bardi": "wifi",
-    "raksanata": "shield",
-    "megapass": "megapass",
-    "cctv": "cctv",
-    "cam": "cctv",
-    "samsung": "smartphone",
-    "xiaomi": "smartphone",
-    "apple": "apple",
-    "icloud": "cloud",
-    "badcaps": "cpu",
-    "vinafix": "cpu",
-    "fixbios": "cpu",
-    "bios": "cpu",
-    "schematic": "cpu"
+    // 11. Edukasi
+    "umsida": "umsida.png"
   };
 
   function resolveVaultItemIcon(item) {
@@ -2973,45 +2998,62 @@
       return { type: "router", category: "network" };
     }
 
-    // 2. CCTV & Daycare / STB streams
+    // 2. Check explicitly mapped brand catalog (both SVG & PNG)
+    for (const [key, iconFile] of Object.entries(VAULT_BRAND_ICONS)) {
+      if (domain.includes(key) || name.includes(key)) {
+        if (iconFile.endsWith(".svg") || iconFile.endsWith(".png")) {
+          // If it's a known service, classify category
+          let cat = "web";
+          if (["samsung", "xiaomi", "apple", "badcaps", "vinafix", "samfw", "fixbios", "repairlap", "borneoschematic", "kfunlocker", "flyme", "tecno"].includes(key)) {
+            cat = "servicing";
+          } else if (["tokopedia", "bukalapak", "shopee", "lazada", "alfagift", "alfamart", "amazon", "ebay", "bca", "jenius", "aladin", "flip", "bareksa", "paypal", "pajak", "bpjs", "tokocrypto", "binance"].includes(key)) {
+            cat = "finance";
+          } else if (key.includes("google") || key.includes("gmail")) {
+            cat = "google";
+          } else if (["cctv", "ezviz", "tendawifi", "ruijie", "bardi", "speedtest", "virustotal"].includes(key)) {
+            cat = "network";
+          }
+          return { type: "local", src: `assets/icons/${iconFile}`, category: cat };
+        } else if (iconFile === "router") {
+          return { type: "router", category: "network" };
+        } else if (iconFile === "cpu") {
+          return { type: "chip", category: "servicing" };
+        } else if (iconFile === "smartphone") {
+          return { type: "phone", category: "servicing" };
+        } else if (iconFile === "credit-card") {
+          return { type: "finance", category: "finance" };
+        } else if (iconFile === "shopping-bag") {
+          return { type: "ecommerce", category: "finance" };
+        }
+      }
+    }
+
+    // 3. CCTV & Streams
     if (combined.includes("cctv") || combined.includes("ezviz") || combined.includes("cam") || combined.includes("camera")) {
       return { type: "cctv", category: "network" };
     }
 
-    // 3. Hardware Repair & Schematic Forums (Badcaps, Vinafix, BIOS, Refox, Borneo)
+    // 4. Hardware Repair & Schematic Forums
     if (combined.includes("schematic") || combined.includes("bios") || combined.includes("badcaps") || combined.includes("vinafix") || combined.includes("repairlap") || combined.includes("teknisi")) {
       return { type: "chip", category: "servicing" };
     }
 
-    // 4. Smartphone Servicing (SamFW, SamMobile, Tecno, Xiaomi, Samsung, Apple, Flyme)
+    // 5. Smartphones & Devices
     if (combined.includes("samfw") || combined.includes("sammobile") || combined.includes("xiaomi") || combined.includes("samsung") || combined.includes("flyme") || combined.includes("kfunlocker")) {
       return { type: "phone", category: "servicing" };
     }
 
-    // 5. Finance, Banking & E-Wallet (BCA, Jenius, BTPN, Pajak, Flip, Bareksa, PayPal)
+    // 6. Finance & Banking
     if (combined.includes("bca") || combined.includes("jenius") || combined.includes("btpn") || combined.includes("bank") || combined.includes("pajak") || combined.includes("flip") || combined.includes("paypal") || combined.includes("aladin")) {
       return { type: "finance", category: "finance" };
     }
 
-    // 6. E-Commerce & Belanja (Tokopedia, Shopee, Lazada, Bukalapak, Alfagift, Jakartanotebook)
+    // 7. E-Commerce
     if (combined.includes("tokopedia") || combined.includes("shopee") || combined.includes("lazada") || combined.includes("bukalapak") || combined.includes("alfagift") || combined.includes("jakartanotebook")) {
-      return { type: "ecommerce", category: "ecommerce" };
+      return { type: "ecommerce", category: "finance" };
     }
 
-    // 7. Google Services
-    if (domain.includes("google") || domain.includes("gmail") || name.includes("google")) {
-      const iconFile = domain.includes("mail") || name.includes("gmail") ? "gmail" : (domain.includes("password") ? "google-passwords" : "google-gemini");
-      return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "google" };
-    }
-
-    // 8. Known Brand SVGs in assets/icons
-    for (const [key, iconFile] of Object.entries(VAULT_BRAND_ICONS)) {
-      if (domain.includes(key) || name.includes(key)) {
-        return { type: "local", src: `assets/icons/${iconFile}.svg`, category: "web" };
-      }
-    }
-
-    // 9. Web Favicon via Google S2 Engine (with graceful fallback)
+    // 8. Remote Web Favicon via Google S2 Engine (with graceful inline SVG fallback)
     if (domain && domain.includes(".")) {
       return {
         type: "favicon",
