@@ -1570,9 +1570,7 @@ window.__megabox_preload_loaded = true;
   if (!isYouTube) return;
 
   let isEnhancerActive = true;
-  let cinemaActive = false;
-  let cinemaOverlay = null;
-  let toolbarEl = null;
+    let toolbarEl = null;
   let isPopupActive = false;
   let isPopupDismissedByUser = false;
   let overlayEl = null;
@@ -1617,8 +1615,8 @@ window.__megabox_preload_loaded = true;
   }
 
   function updatePopupCssVars(x, y) {
-    const maxX = Math.max(10, window.innerWidth - 540);
-    const maxY = Math.max(10, window.innerHeight - 310);
+    const maxX = Math.max(10, window.innerWidth - 460);
+    const maxY = Math.max(10, window.innerHeight - 270);
     const clampedX = Math.min(Math.max(10, x), maxX);
     const clampedY = Math.min(Math.max(10, y), maxY);
 
@@ -1662,8 +1660,8 @@ window.__megabox_preload_loaded = true;
         position: fixed !important;
         top: var(--mb-popup-top, 72px) !important;
         left: var(--mb-popup-left, 17px) !important;
-        width: 528px !important;
-        height: 297px !important;
+        width: 448px !important;
+        height: 252px !important;
         margin: 0 !important;
         padding: 0 !important;
         z-index: 2147483640 !important;
@@ -1721,8 +1719,8 @@ window.__megabox_preload_loaded = true;
         position: fixed !important;
         top: var(--mb-popup-top, 72px) !important;
         left: var(--mb-popup-left, 17px) !important;
-        width: 528px !important;
-        height: 297px !important;
+        width: 448px !important;
+        height: 252px !important;
         z-index: 2147483645 !important;
         border-radius: 12px !important;
         pointer-events: none !important;
@@ -1736,22 +1734,22 @@ window.__megabox_preload_loaded = true;
         display: block !important;
       }
 
-      /* Top Drag Handle Header */
+      /* Top Drag Handle Header - Fast fade */
       #mb-ref-drag-handle {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 48px;
+        height: 44px;
         cursor: move;
         pointer-events: auto;
         z-index: 1;
         display: flex;
         align-items: center;
-        padding: 0 12px;
+        padding: 0 10px;
         background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.1s ease;
       }
       #mb-enhancer-ref-overlay:hover #mb-ref-drag-handle {
         opacity: 1;
@@ -1794,17 +1792,22 @@ window.__megabox_preload_loaded = true;
         gap: 4px;
       }
 
-      /* Bottom bar with play/pause, volume circle, time pill */
+      /* Bottom bar with play/pause, volume circle, time pill - Fast fade */
       #mb-ref-bottom-bar {
         position: absolute;
-        bottom: 12px;
-        left: 14px;
-        right: 14px;
+        bottom: 10px;
+        left: 12px;
+        right: 12px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         pointer-events: auto;
         z-index: 2;
+        opacity: 0;
+        transition: opacity 0.1s ease;
+      }
+      #mb-enhancer-ref-overlay:hover #mb-ref-bottom-bar {
+        opacity: 1;
       }
 
       #mb-ref-play-btn {
@@ -1825,36 +1828,37 @@ window.__megabox_preload_loaded = true;
       }
 
       #mb-ref-vol-btn {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        background: rgba(45, 45, 45, 0.72);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(30, 30, 30, 0.38);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
         color: #FFFFFF;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         padding: 0;
-        transition: background 0.15s ease;
+        transition: background 0.1s ease, transform 0.1s ease;
       }
       #mb-ref-vol-btn:hover {
-        background: rgba(65, 65, 65, 0.85);
+        background: rgba(45, 45, 45, 0.65);
+        transform: scale(1.05);
       }
 
       #mb-ref-time-pill {
-        height: 32px;
-        padding: 0 14px;
-        border-radius: 16px;
-        background: rgba(45, 45, 45, 0.72);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 14px;
+        background: rgba(30, 30, 30, 0.38);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
         color: #FFFFFF;
         font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
         display: flex;
         align-items: center;
@@ -1896,7 +1900,7 @@ window.__megabox_preload_loaded = true;
       isEnhancerActive = !!enabled;
       if (!isEnhancerActive) {
         if (toolbarEl) toolbarEl.style.display = "none";
-        if (cinemaActive) toggleCinemaMode(false);
+        
         deactivateVideoPopup();
       } else {
         if (toolbarEl) toolbarEl.style.display = "flex";
@@ -1937,109 +1941,9 @@ window.__megabox_preload_loaded = true;
     pill._timer = setTimeout(() => { pill.style.opacity = "0"; }, 1500);
   }
 
-  // 1. Mouse Scroll-Wheel Volume & Playback Speed Control over video
-  function attachScrollWheelControls() {
-    const player = document.querySelector("#movie_player, .html5-video-player");
-    if (!player || player.dataset.mbEnhancerWheel) return;
-    player.dataset.mbEnhancerWheel = "true";
+  // Mouse scroll-wheel preserves normal page scrolling (no volume hijacking)
 
-    player.addEventListener("wheel", (e) => {
-      if (!isEnhancerActive) return;
-      const video = document.querySelector("video");
-      if (!video) return;
 
-      e.preventDefault();
-      const isShift = e.shiftKey;
-
-      if (isShift) {
-        let rate = video.playbackRate;
-        if (e.deltaY < 0) {
-          rate = Math.min(4.0, rate + 0.25);
-        } else {
-          rate = Math.max(0.25, rate - 0.25);
-        }
-        video.playbackRate = rate;
-        showEnhancerFeedback("⚡ Kecepatan: " + rate.toFixed(2) + "x");
-      } else {
-        let vol = video.volume;
-        if (e.deltaY < 0) {
-          vol = Math.min(1.0, vol + 0.05);
-        } else {
-          vol = Math.max(0.0, vol - 0.05);
-        }
-        video.volume = vol;
-        video.muted = false;
-        showEnhancerFeedback("🔊 Volume: " + Math.round(vol * 100) + "%");
-      }
-    }, { passive: false });
-  }
-
-  // 2. Cinema Mode (Dim surrounding page)
-  function toggleCinemaMode(force) {
-    cinemaActive = force !== undefined ? force : !cinemaActive;
-    if (!cinemaOverlay) {
-      cinemaOverlay = document.createElement("div");
-      cinemaOverlay.id = "megabox-cinema-overlay";
-      cinemaOverlay.style.cssText = `
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.90);
-        z-index: 1000;
-        pointer-events: auto;
-        opacity: 0;
-        transition: opacity 0.25s ease;
-      `;
-      cinemaOverlay.onclick = () => toggleCinemaMode(false);
-      (document.body || document.documentElement).appendChild(cinemaOverlay);
-    }
-
-    const player = document.querySelector("#movie_player, .html5-video-player");
-    if (cinemaActive) {
-      cinemaOverlay.style.display = "block";
-      requestAnimationFrame(() => { cinemaOverlay.style.opacity = "1"; });
-      if (player) {
-        player.style.position = "relative";
-        player.style.zIndex = "1001";
-      }
-      showEnhancerFeedback("🎬 Mode Bioskop: Aktif");
-    } else {
-      cinemaOverlay.style.opacity = "0";
-      setTimeout(() => { cinemaOverlay.style.display = "none"; }, 250);
-      if (player) player.style.zIndex = "";
-    }
-  }
-
-  // 3. HD Screenshot Frame Capture
-  function captureVideoScreenshot() {
-    const video = document.querySelector("video");
-    if (!video || video.videoWidth === 0) return;
-
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        try {
-          const item = new ClipboardItem({ "image/png": blob });
-          navigator.clipboard.write([item]).then(() => {
-            showEnhancerFeedback("📸 Tangkapan Frame HD disalin ke Clipboard!");
-          });
-        } catch (_) {
-          const a = document.createElement("a");
-          a.download = `yt-frame-${Date.now()}.png`;
-          a.href = canvas.toDataURL("image/png");
-          a.click();
-          showEnhancerFeedback("📸 Tangkapan Frame HD disimpan!");
-        }
-      }, "image/png");
-    } catch (err) {
-      console.error("[Megabox Enhancer Screenshot Error]", err);
-    }
-  }
 
   // 4. Draggable Mini-Player Overlay
   function ensureOverlayExists() {
@@ -2459,36 +2363,35 @@ window.__megabox_preload_loaded = true;
   function injectEnhancerToolbar() {
     ensureEnhancerStyles();
     if (document.getElementById("megabox-enhancer-bar")) return;
-    const player = document.querySelector("#movie_player, .html5-video-player");
-    if (!player) return;
+
+    // Placement anchor: prioritize #actions-inner beside Like/Share, fallback before #below inside #primary-inner
+    const actionsInner = document.querySelector("#above-the-fold #actions-inner");
+    const below = document.getElementById("below");
+    const primaryInner = document.getElementById("primary-inner");
+    if (!actionsInner && !below && !primaryInner) return;
 
     const bar = document.createElement("div");
     bar.id = "megabox-enhancer-bar";
     bar.style.cssText = `
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 1002;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(28, 28, 30, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 10px;
-      padding: 4px 6px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 0 8px;
+      height: 36px;
+      margin-right: 8px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      opacity: 0.15;
-      transition: opacity 0.2s ease;
+      box-sizing: border-box; flex: none; width: fit-content;
+      z-index: 10;
     `;
-    bar.onmouseenter = () => { bar.style.opacity = "1"; };
-    bar.onmouseleave = () => { bar.style.opacity = "0.15"; };
 
     function createBtn(svgEl, title, onClick) {
       const btn = document.createElement("button");
       btn.title = title;
-      btn.style.cssText = "width:28px; height:28px; border-radius:6px; border:none; background:transparent; color:#FFFFFF; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background 0.15s ease;";
+      btn.style.cssText = "width:28px; height:28px; border-radius:6px; border:none; background:transparent; color:#FFFFFF; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background 0.1s ease;";
       btn.onmouseenter = () => { btn.style.background = "rgba(255,255,255,0.18)"; };
       btn.onmouseleave = () => { btn.style.background = "transparent"; };
       btn.appendChild(svgEl);
@@ -2557,36 +2460,13 @@ window.__megabox_preload_loaded = true;
     );
     bar.appendChild(qualityBtn);
 
-    // Cinema Mode Button
-    bar.appendChild(createBtn(
-      createSvgIcon("15", "15", "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm0 5h20M7 5v5M17 5v5"),
-      "Mode Bioskop Gelap",
-      () => toggleCinemaMode()
-    ));
-
-    // Screenshot Capture Button
-    bar.appendChild(createBtn(
-      createSvgIcon("15", "15", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z M12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"),
-      "Ambil Screenshot Frame HD",
-      () => captureVideoScreenshot()
-    ));
-
-    // Loop Toggle Button
-    const loopBtn = createBtn(
-      createSvgIcon("15", "15", "M17 1l4 4-4 4 M3 11V9a4 4 0 0 1 4-4h14 M7 23l-4-4 4-4 M21 13v2a4 4 0 0 1-4 4H3"),
-      "Ulangi Video (Loop)",
-      () => {
-        const video = document.querySelector("video");
-        if (video) {
-          video.loop = !video.loop;
-          loopBtn.style.color = video.loop ? "#34C759" : "#FFFFFF";
-          showEnhancerFeedback(video.loop ? "🔁 Putar Ulang: Aktif" : "🔁 Putar Ulang: Mati");
-        }
-      }
-    );
-    bar.appendChild(loopBtn);
-
-    player.appendChild(bar);
+    if (actionsInner) {
+      actionsInner.insertBefore(bar, actionsInner.firstChild);
+    } else if (below && below.parentElement) {
+      below.parentElement.insertBefore(bar, below);
+    } else if (primaryInner) {
+      primaryInner.appendChild(bar);
+    }
     toolbarEl = bar;
   }
 
@@ -2603,13 +2483,12 @@ window.__megabox_preload_loaded = true;
   // Polling hook
   setInterval(() => {
     if (!isEnhancerActive) return;
-    attachScrollWheelControls();
-    injectEnhancerToolbar();
+        injectEnhancerToolbar();
     enforceAutoQuality();
     enforceAudioTrackPreference();
     enforceSubtitleIndoPreference();
   }, 1500);
 
-  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Draggable Popup, Auto Quality, Audio Track, Cinema, Loop).");
+  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Draggable Popup, Auto Quality, Audio & Subtitle Indo).");
 })();
 

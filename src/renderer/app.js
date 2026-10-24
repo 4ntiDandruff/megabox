@@ -2782,7 +2782,7 @@
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
     { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak jaringan dengan Peter Lowe domain rules', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
     { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
-    { id: 'enhancer', name: 'YouTube Enhancer', desc: 'Draggable mini-player, auto kunci 1080p, dubbing Draggable mini-player, auto kunci 1080p, toggle dubbing Indo/asli, bioskop & loop subtitle Indo, bioskop Draggable mini-player, auto kunci 1080p, toggle dubbing Indo/asli, bioskop & loop loop', icon: 'assets/icons/enhancer.svg', enabledByDefault: true },
+    { id: 'enhancer', name: 'YouTube Enhancer', desc: 'Draggable mini-player, auto kunci 1080p, serta toggle cepat dubbing & subtitle Indonesia', icon: 'assets/icons/enhancer.svg', enabledByDefault: true },
     { id: 'nonstop', name: 'YouTube NonStop', desc: 'Putar video & musik tanpa jeda konfirmasi "Lanjutkan menonton?"', icon: 'assets/icons/nonstop.svg', enabledByDefault: true },
     { id: 'shortsblocker', name: 'YouTube Shorts Blocker', desc: 'Sembunyikan tab/rak Shorts & alihkan link ke pemutar video normal', icon: 'assets/icons/shortsblocker.svg', enabledByDefault: true },
     { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/sponsorblock.svg', enabledByDefault: true }
