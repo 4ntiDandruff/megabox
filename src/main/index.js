@@ -504,45 +504,55 @@ function createWindow() {
             click: () => webviewWebContents.paste()
           });
         }
-        // Permanent Clipboard Quick Insert
-        if (isEditable) {
-          const snippets = getSnippets(db);
-          const snippetSubmenu = [];
-          if (snippets.length > 0) {
-            snippets.slice(0, 12).forEach(snip => {
-              snippetSubmenu.push({
-                label: snip.title + (snip.category ? ' [' + snip.category + ']' : ''),
-                click: () => {
-                  webviewWebContents.insertText(snip.content);
-                  incrementSnippetUsage(db, snip.id);
-                }
-              });
-            });
-            snippetSubmenu.push({ type: 'separator' });
-          }
-          snippetSubmenu.push({
-            label: '+ Tambah Snippet Baru...',
-            click: () => {
-              if (mainWindow && !mainWindow.isDestroyed()) {
-                mainWindow.webContents.send('snippet:open-manager', { mode: 'new' });
-              }
-            }
-          });
-          snippetSubmenu.push({
-            label: 'Kelola Snippet Perpustakaan...',
-            click: () => {
-              if (mainWindow && !mainWindow.isDestroyed()) {
-                mainWindow.webContents.send('snippet:open-manager', { mode: 'list' });
-              }
-            }
-          });
-          template.push({
-            label: 'Permanent Clipboard',
-            submenu: snippetSubmenu
-          });
-        }
+
       }
 
+      // Permanent Clipboard Quick Insert & Manager (Always available on right click)
+      const snippets = getSnippets(db);
+      const snippetSubmenu = [];
+      if (snippets.length > 0) {
+        snippets.slice(0, 15).forEach(snip => {
+          snippetSubmenu.push({
+            label: snip.title + (snip.category ? ' [' + snip.category + ']' : ''),
+            click: () => {
+              if (isEditable) {
+                try { webviewWebContents.insertText(snip.content); } catch (_) { clipboard.writeText(snip.content); }
+              } else {
+                clipboard.writeText(snip.content);
+                if (mainWindow && !mainWindow.isDestroyed()) {
+                  mainWindow.webContents.send('toast:show', {
+                    message: 'Snippet tersalin: ' + snip.title,
+                    type: 'success'
+                  });
+                }
+              }
+              incrementSnippetUsage(db, snip.id);
+            }
+          });
+        });
+        snippetSubmenu.push({ type: 'separator' });
+      }
+      snippetSubmenu.push({
+        label: '+ Tambah Snippet Baru...',
+        click: () => {
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('snippet:open-manager', { mode: 'new' });
+          }
+        }
+      });
+      snippetSubmenu.push({
+        label: 'Kelola Snippet Perpustakaan...',
+        click: () => {
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('snippet:open-manager', { mode: 'list' });
+          }
+        }
+      });
+      template.push({
+        label: 'Permanent Clipboard',
+        submenu: snippetSubmenu
+      });
+      template.push({ type: 'separator' });
       // 3. Select All
       template.push({
         label: 'Select All',
