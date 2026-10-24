@@ -299,7 +299,14 @@ document.addEventListener('keydown', (e) => {
         background: rgba(0, 0, 0, 0.28);
       }
     `;
-    (document.head || document.documentElement).appendChild(style);
+    const target = document.head || document.documentElement;
+    if (target) {
+      target.appendChild(style);
+    } else {
+      document.addEventListener("DOMContentLoaded", () => {
+        (document.head || document.documentElement)?.appendChild(style);
+      });
+    }
   }
 
   function createTooltip() {
@@ -1573,6 +1580,7 @@ window.__megabox_preload_loaded = true;
   // Enhancer Preferences
   let prefQuality = localStorage.getItem("mb_enhancer_quality") || "hd1080";
   let prefPreferIndo = localStorage.getItem("mb_enhancer_prefer_indo") !== "false"; // Default true
+  let prefSubtitleIndo = localStorage.getItem("mb_enhancer_sub_indo") === "true"; // Default false
 
   // Mini-player draggable coordinates
   let popupCoords = { x: 17, y: 72 };
@@ -1872,7 +1880,14 @@ window.__megabox_preload_loaded = true;
         transition: width 0.1s linear;
       }
     `;
-    (document.head || document.documentElement).appendChild(style);
+    const target = document.head || document.documentElement;
+    if (target) {
+      target.appendChild(style);
+    } else {
+      document.addEventListener("DOMContentLoaded", () => {
+        (document.head || document.documentElement)?.appendChild(style);
+      });
+    }
   }
 
   try {
@@ -1914,7 +1929,7 @@ window.__megabox_preload_loaded = true;
         backdrop-filter: blur(16px);
         transition: opacity 0.2s ease;
       `;
-      document.body.appendChild(pill);
+      (document.body || document.documentElement).appendChild(pill);
     }
     pill.textContent = text;
     pill.style.opacity = "1";
@@ -1975,7 +1990,7 @@ window.__megabox_preload_loaded = true;
         transition: opacity 0.25s ease;
       `;
       cinemaOverlay.onclick = () => toggleCinemaMode(false);
-      document.body.appendChild(cinemaOverlay);
+      (document.body || document.documentElement).appendChild(cinemaOverlay);
     }
 
     const player = document.querySelector("#movie_player, .html5-video-player");
@@ -2189,7 +2204,7 @@ window.__megabox_preload_loaded = true;
     bottomBar.appendChild(timePill);
 
     overlay.appendChild(bottomBar);
-    document.body.appendChild(overlay);
+    (document.body || document.documentElement).appendChild(overlay);
 
     // Video event hook
     setInterval(() => {
@@ -2372,8 +2387,77 @@ window.__megabox_preload_loaded = true;
     lastAudioTrackAppliedVideoId = videoId;
   }
 
-  // 8. Floating Enhancer Quick Action Bar on Player
+  // 8. Auto Subtitle Indonesia Engine
+  let lastSubAppliedVideoId = null;
+  function enableSubtitlesOnPlayer(player) {
+    const subBtn = document.querySelector(".ytp-subtitles-button");
+    if (subBtn && subBtn.getAttribute("aria-pressed") !== "true") {
+      subBtn.click();
+    } else if (player && player.toggleSubtitlesOn && !player.isSubtitlesOn?.()) {
+      player.toggleSubtitlesOn();
+    }
+  }
+
+  function disableSubtitlesOnPlayer(player) {
+    const subBtn = document.querySelector(".ytp-subtitles-button");
+    if (subBtn && subBtn.getAttribute("aria-pressed") === "true") {
+      subBtn.click();
+    } else if (player) {
+      player.setOption?.("captions", "track", {});
+      if (player.toggleSubtitles && player.isSubtitlesOn?.()) player.toggleSubtitles();
+    }
+  }
+
+  function enforceSubtitleIndoPreference() {
+    if (!isEnhancerActive) return;
+    const player = document.getElementById("movie_player");
+    if (!player || typeof player.setOption !== "function") return;
+
+    const videoId = player.getVideoData ? player.getVideoData()?.video_id : null;
+    if (!videoId) return;
+
+    if (lastSubAppliedVideoId === videoId) return;
+
+    if (!prefSubtitleIndo) {
+      lastSubAppliedVideoId = videoId;
+      return;
+    }
+
+    const tracklist = player.getOption("captions", "tracklist") || [];
+    const transList = player.getOption("captions", "translationLanguages") || [];
+    if (!tracklist || tracklist.length === 0) {
+      lastSubAppliedVideoId = videoId;
+      return;
+    }
+
+    enableSubtitlesOnPlayer(player);
+
+    const nativeIdTrack = tracklist.find(t => t.languageCode === "id" || (t.languageName && t.languageName.toLowerCase().includes("indonesia")));
+    if (nativeIdTrack) {
+      player.setOption("captions", "track", nativeIdTrack);
+      lastSubAppliedVideoId = videoId;
+      console.log("[Megabox Enhancer] Set subtitle to native Indonesian track");
+      return;
+    }
+
+    const baseTrack = tracklist.find(t => t.languageCode === "en" || t.is_default) || tracklist[0];
+    const idTrans = transList.find(t => t.languageCode === "id");
+    if (baseTrack && idTrans) {
+      player.setOption("captions", "track", {
+        ...baseTrack,
+        translationLanguage: idTrans
+      });
+      lastSubAppliedVideoId = videoId;
+      console.log("[Megabox Enhancer] Set subtitle to auto-translated Indonesian track");
+      return;
+    }
+
+    lastSubAppliedVideoId = videoId;
+  }
+
+  // 9. Floating Enhancer Quick Action Bar on Player
   function injectEnhancerToolbar() {
+    ensureEnhancerStyles();
     if (document.getElementById("megabox-enhancer-bar")) return;
     const player = document.querySelector("#movie_player, .html5-video-player");
     if (!player) return;
@@ -2429,6 +2513,32 @@ window.__megabox_preload_loaded = true;
     if (prefPreferIndo) audioBtn.style.color = "#34C759";
     bar.appendChild(audioBtn);
 
+    // Subtitle Indonesia Toggle (CC ID On <-> Off)
+    const subBtn = createBtn(
+      createSvgIcon("15", "15", "M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 6h3M7 9h4M14 12h3M14 9h2"),
+      prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)",
+      () => {
+        prefSubtitleIndo = !prefSubtitleIndo;
+        localStorage.setItem("mb_enhancer_sub_indo", prefSubtitleIndo ? "true" : "false");
+        subBtn.title = prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)";
+        subBtn.style.color = prefSubtitleIndo ? "#FFCC00" : "#FFFFFF";
+
+        const player = document.getElementById("movie_player");
+        if (player) {
+          if (prefSubtitleIndo) {
+            lastSubAppliedVideoId = null;
+            enforceSubtitleIndoPreference();
+            showEnhancerFeedback("💬 Subtitle: Bahasa Indonesia Aktif");
+          } else {
+            disableSubtitlesOnPlayer(player);
+            showEnhancerFeedback("💬 Subtitle: Dimatikan");
+          }
+        }
+      }
+    );
+    if (prefSubtitleIndo) subBtn.style.color = "#FFCC00";
+    bar.appendChild(subBtn);
+
     // Quality Lock Button (Cycle 1080p -> 720p -> 1440p)
     const qualityBtn = createBtn(
       createSvgIcon("15", "15", "M4 6h16M4 12h16M4 18h7"),
@@ -2481,15 +2591,13 @@ window.__megabox_preload_loaded = true;
   }
 
   // Setup scroll observer once
-  // Inject enhancer styles early
-  ensureEnhancerStyles();
-
   setupScrollPopupObserver();
 
   // Reset tracking on YouTube SPA navigation
   window.addEventListener("yt-navigate-finish", () => {
     lastQualityAppliedVideoId = null;
     lastAudioTrackAppliedVideoId = null;
+    lastSubAppliedVideoId = null;
   });
 
   // Polling hook
@@ -2499,6 +2607,7 @@ window.__megabox_preload_loaded = true;
     injectEnhancerToolbar();
     enforceAutoQuality();
     enforceAudioTrackPreference();
+    enforceSubtitleIndoPreference();
   }, 1500);
 
   console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Draggable Popup, Auto Quality, Audio Track, Cinema, Loop).");
