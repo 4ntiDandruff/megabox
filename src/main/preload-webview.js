@@ -1290,7 +1290,7 @@ window.__megabox_preload_loaded = true;
     });
   } catch (_) {}
 
-  // 1. Lock window.google_ad_status to fool YouTube ad-detection script
+  // 1. Lock window.google_ad_status in both preload & actual page world
   function lockGoogleAdStatus() {
     try {
       window.google_ad_status = 1;
@@ -1301,8 +1301,15 @@ window.__megabox_preload_loaded = true;
         set() {}
       });
     } catch (_) {}
+    try {
+      const script = document.createElement("script");
+      script.textContent = "window.google_ad_status = 1; try { Object.defineProperty(window, 'google_ad_status', { value: 1, writable: false }); } catch (_) {}";
+      (document.head || document.documentElement).appendChild(script);
+      script.remove();
+    } catch (_) {}
   }
   lockGoogleAdStatus();
+  document.addEventListener("DOMContentLoaded", lockGoogleAdStatus, { once: true });
 
   // 2. Inject CSS rules to hide ad slots, banners & backdrop modal
   function injectAdblockCSS() {
