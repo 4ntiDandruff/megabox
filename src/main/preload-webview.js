@@ -1045,3 +1045,222 @@ window.__megabox_preload_loaded = true;
     console.error("[Megawarden Preload Error]:", err);
   }
 })();
+
+
+// ============================================================================
+// YouTube SponsorBlock - Smart Segment Skipping Engine (K-Anonymity Privacy API)
+// ============================================================================
+(function initYouTubeSponsorBlock() {
+  const isYouTube = window.location.hostname.includes('youtube.com');
+  if (!isYouTube) return;
+
+  let isSponsorBlockActive = true;
+  let currentVideoId = null;
+  let activeSegments = [];
+  let toastEl = null;
+  let toastTimeout = null;
+  let lastSkippedEnd = 0;
+
+  // Sync state from host
+  ipcRenderer.on('sponsorblock:toggle-state', (_, enabled) => {
+    isSponsorBlockActive = Boolean(enabled);
+    if (!isSponsorBlockActive) {
+      activeSegments = [];
+      hideToast();
+    } else {
+      checkCurrentVideo();
+    }
+  });
+
+  function showToast(text, duration = 3200) {
+    if (!document.body) return;
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.id = 'megabox-sponsorblock-toast';
+      toastEl.style.cssText = `
+        position: fixed;
+        bottom: 72px;
+        left: 28px;
+        z-index: 999999;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: rgba(28, 28, 30, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 12px;
+        padding: 9px 15px;
+        color: #F2F2F7;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      `;
+      document.body.appendChild(toastEl);
+    }
+
+    toastEl.innerHTML = `
+      <div style="width: 20px; height: 20px; border-radius: 6px; background: #0071E3; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 4 15 12 5 20 5 4"></polygon>
+          <line x1="19" y1="5" x2="19" y2="19"></line>
+        </svg>
+      </div>
+      <span>${text}</span>
+    `;
+    toastEl.style.display = 'flex';
+    toastEl.style.opacity = '1';
+    toastEl.style.transform = 'translateY(0)';
+
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => hideToast(), duration);
+  }
+
+  function hideToast() {
+    if (toastEl) {
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateY(6px)';
+      setTimeout(() => {
+        if (toastEl) toastEl.style.display = 'none';
+      }, 200);
+    }
+  }
+
+  // SHA-256 for K-Anonymity (first 4 characters of hash)
+  async function getPrefix(str) {
+    const enc = new TextEncoder().encode(str);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    const arr = Array.from(new Uint8Array(buf));
+    return arr.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 4);
+  }
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function getCategoryLabel(cat) {
+    switch (cat) {
+      case 'sponsor': return 'Segmen Sponsor';
+      case 'selfpromo': return 'Promosi Channel';
+      case 'interaction': return 'Pengingat Like/Sub';
+      case 'intro': return 'Intro Video';
+      case 'outro': return 'Outro / Credits';
+      case 'preview': return 'Cuplikan Teaser';
+      default: return 'Segmen Sponsor';
+    }
+  }
+
+  async function fetchSegments(vid) {
+    try {
+      const prefix = await getPrefix(vid);
+      const categories = encodeURIComponent(JSON.stringify([
+        "sponsor", "selfpromo", "interaction", "intro", "outro", "preview"
+      ]));
+      const url = `https://sponsor.ajay.app/api/skipSegments/${prefix}?categories=${categories}`;
+      
+      const resp = await fetch(url);
+      if (!resp.ok) return [];
+      const data = await resp.json();
+      const match = data.find(item => item.videoID === vid);
+      if (match && Array.isArray(match.segments)) {
+        return match.segments.filter(s => s.actionType === 'skip' || !s.actionType);
+      }
+      return [];
+    } catch (e) {
+      console.warn('[Megabox SponsorBlock] Fetch error:', e.message);
+      return [];
+    }
+  }
+
+  function extractVideoId(url) {
+    try {
+      const u = new URL(url || window.location.href);
+      if (u.hostname.includes('youtube.com')) {
+        return u.searchParams.get('v');
+      }
+      if (u.hostname.includes('youtu.be')) {
+        return u.pathname.substring(1);
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  async function checkCurrentVideo() {
+    if (!isSponsorBlockActive) return;
+    const vid = extractVideoId(window.location.href);
+    if (!vid) {
+      currentVideoId = null;
+      activeSegments = [];
+      return;
+    }
+    if (vid === currentVideoId) return;
+
+    currentVideoId = vid;
+    activeSegments = [];
+    lastSkippedEnd = 0;
+
+    const segments = await fetchSegments(vid);
+    if (vid === currentVideoId) {
+      activeSegments = segments;
+      if (segments.length > 0) {
+        console.log(`[Megabox SponsorBlock] Loaded ${segments.length} skip segments for ${vid}`);
+      }
+    }
+  }
+
+  function monitorVideo() {
+    const video = document.querySelector('video');
+    if (!video) return;
+
+    video.addEventListener('timeupdate', () => {
+      if (!isSponsorBlockActive || !activeSegments || activeSegments.length === 0) return;
+      const cur = video.currentTime;
+
+      for (let i = 0; i < activeSegments.length; i++) {
+        const seg = activeSegments[i];
+        const start = seg.segment[0];
+        const end = seg.segment[1];
+
+        // If video enters skip window
+        if (cur >= start && cur < end - 0.25) {
+          if (Math.abs(lastSkippedEnd - end) > 1) {
+            lastSkippedEnd = end;
+            video.currentTime = end;
+            const label = getCategoryLabel(seg.category);
+            showToast(`${label} dilewati (${formatTime(start)} → ${formatTime(end)})`);
+            console.log(`[Megabox SponsorBlock] Auto-skipped ${label} from ${start.toFixed(1)}s to ${end.toFixed(1)}s`);
+          }
+          break;
+        }
+      }
+    });
+  }
+
+  // Hook navigation & SPA changes on YouTube
+  window.addEventListener('yt-navigate-finish', checkCurrentVideo, true);
+  window.addEventListener('popstate', checkCurrentVideo, true);
+  window.addEventListener('load', () => {
+    checkCurrentVideo();
+    monitorVideo();
+  });
+
+  // Polling check for lazy-loaded video player
+  setInterval(() => {
+    const video = document.querySelector('video');
+    if (video && !video.dataset.mbSbHooked) {
+      video.dataset.mbSbHooked = 'true';
+      monitorVideo();
+    }
+    const vid = extractVideoId(window.location.href);
+    if (vid && vid !== currentVideoId) {
+      checkCurrentVideo();
+    }
+  }, 1500);
+
+  console.log('[Megabox SponsorBlock] YouTube SponsorBlock engine initialized (K-Anonymity mode).');
+})();
