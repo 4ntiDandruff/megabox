@@ -1009,6 +1009,13 @@
             wv.send('shortsblocker:toggle-state', isShortsBlockerEnabled);
             const isEnhancerEnabled = prefs['enhancer'] !== undefined ? prefs['enhancer'] : true;
             wv.send('enhancer:toggle-state', isEnhancerEnabled);
+            const isDarkReaderEnabled = prefs['dark-reader'] === true;
+            if (isDarkReaderEnabled) {
+              wv.insertCSS(`
+                html, body { filter: invert(90%) hue-rotate(180deg) !important; background: #121212 !important; }
+                img, video, canvas, [style*="background-image"] { filter: invert(100%) hue-rotate(180deg) !important; }
+              `).catch(() => {});
+            }
           } catch (_) {}
           // Proactively send credentials to webview on dom-ready
           if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
@@ -1360,6 +1367,13 @@
             wv.send('shortsblocker:toggle-state', isShortsBlockerEnabled);
             const isEnhancerEnabled = prefs['enhancer'] !== undefined ? prefs['enhancer'] : true;
             wv.send('enhancer:toggle-state', isEnhancerEnabled);
+            const isDarkReaderEnabled = prefs['dark-reader'] === true;
+            if (isDarkReaderEnabled) {
+              wv.insertCSS(`
+                html, body { filter: invert(90%) hue-rotate(180deg) !important; background: #121212 !important; }
+                img, video, canvas, [style*="background-image"] { filter: invert(100%) hue-rotate(180deg) !important; }
+              `).catch(() => {});
+            }
           } catch (_) {}
           // Only restore zoom if not already 100% or explicitly customized to avoid re-rendering layout jump
           const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + app.id), 10);
@@ -2826,18 +2840,18 @@
   const drawerSubtitle = document.getElementById('drawer-subtitle');
   const drawerExtensionList = document.getElementById('drawer-extension-list');
 
-  // Built-in Chromium extensions catalog for Megabox (Valid verified local SVGs)
+  // Built-in Chromium extensions catalog for Megabox (Alphabetical order)
   const extensionCatalog = [
+    { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata dengan penyesuaian kontras', icon: 'assets/icons/darkreader.svg', enabledByDefault: false },
+    { id: 'permanent-clipboard', name: 'Permanent Clipboard', desc: 'Pustaka snippet balasan cepat & riwayat clipboard (Klik kanan di chat)', icon: 'assets/icons/clipboard.svg', enabledByDefault: true },
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
-    { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/sponsorblock.svg', enabledByDefault: true },
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak jaringan dengan Peter Lowe domain rules', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
+    { id: 'web-to-pdf', name: 'Web to PDF', desc: 'Konversi dan simpan halaman web aktif menjadi dokumen PDF bersih dengan sekali klik', icon: 'assets/icons/web-to-pdf.svg', enabledByDefault: true },
+    { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
+    { id: 'enhancer', name: 'YouTube Enhancer', desc: 'Scroll volume & speed, Mode bioskop, screenshot frame HD & loop', icon: 'assets/icons/enhancer.svg', enabledByDefault: true },
     { id: 'nonstop', name: 'YouTube NonStop', desc: 'Putar video & musik tanpa jeda konfirmasi "Lanjutkan menonton?"', icon: 'assets/icons/nonstop.svg', enabledByDefault: true },
     { id: 'shortsblocker', name: 'YouTube Shorts Blocker', desc: 'Sembunyikan tab/rak Shorts & alihkan link ke pemutar video normal', icon: 'assets/icons/shortsblocker.svg', enabledByDefault: true },
-    { id: 'enhancer', name: 'YouTube Enhancer', desc: 'Scroll volume & speed, Mode bioskop, screenshot frame HD & loop', icon: 'assets/icons/enhancer.svg', enabledByDefault: true },
-    { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
-    { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/darkreader.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
-    { id: 'web-to-pdf', name: 'Web to PDF', desc: 'Konversi dan simpan halaman web aktif menjadi dokumen PDF bersih dengan sekali klik', icon: 'assets/icons/web-to-pdf.svg', enabledByDefault: true },
-    { id: 'permanent-clipboard', name: 'Permanent Clipboard', desc: 'Pustaka snippet balasan cepat & riwayat clipboard (Klik kanan di chat)', icon: 'assets/icons/clipboard.svg', enabledByDefault: true }
+    { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/sponsorblock.svg', enabledByDefault: true }
   ];
 
   function openExtensionDrawer() {
