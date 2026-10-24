@@ -1393,3 +1393,76 @@ window.__megabox_preload_loaded = true;
   setInterval(runAdRemover, 300);
   console.log("[Megabox AdblockThing] YouTube Anti-Adblock & Video Ad Skipper active.");
 })();
+
+// ============================================================================
+// YouTube NonStop - Inactivity "Video Paused. Continue Watching?" Auto-Confirm
+// ============================================================================
+(function initYouTubeNonStop() {
+  const isYouTube = window.location.hostname.includes("youtube.com");
+  if (!isYouTube) return;
+
+  let isNonStopActive = true;
+
+  try {
+    const { ipcRenderer } = require("electron");
+    ipcRenderer.on("nonstop:toggle-state", (_event, enabled) => {
+      isNonStopActive = !!enabled;
+      console.log("[Megabox NonStop] Active state:", isNonStopActive);
+    });
+  } catch (_) {}
+
+  function autoConfirmWatching() {
+    if (!isNonStopActive) return;
+
+    // 1. YouTube standard & YouTube Music "Still there?" confirmation dialogs
+    const confirmDialog = document.querySelector("yt-confirm-dialog-renderer, ytd-popup-container yt-confirm-dialog-renderer, ytmusic-you-there-renderer");
+    if (confirmDialog) {
+      // Find confirm or continue button
+      const confirmBtn = confirmDialog.querySelector("#confirm-button, yt-button-renderer#confirm-button, button.yt-spec-button-shape-next");
+      if (confirmBtn) {
+        confirmBtn.click();
+        console.log("[Megabox NonStop] Auto-clicked 'Continue watching' prompt.");
+      }
+      // Resume video playback immediately
+      const video = document.querySelector("video");
+      if (video && video.paused) {
+        try { video.play(); } catch (_) {}
+      }
+    }
+
+    // 2. Event-based fallback: if video is paused by inactivity prompt
+    const pausedOverlay = document.querySelector(".ytp-pause-overlay");
+    if (pausedOverlay && pausedOverlay.style.display !== "none") {
+      const video = document.querySelector("video");
+      if (video && video.paused) {
+        // Only resume if pause wasn't triggered by user manual click
+        const youThereBox = document.querySelector("ytmusic-you-there-renderer, ytd-action-companion-ad-renderer");
+        if (youThereBox) {
+          try { video.play(); } catch (_) {}
+        }
+      }
+    }
+  }
+
+  // Intercept YouTube popup opened event for 0ms instant dismissal
+  document.addEventListener("yt-popup-opened", (e) => {
+    if (!isNonStopActive) return;
+    const nodename = e && e.detail && e.detail.nodeName ? e.detail.nodeName : "";
+    if (nodename.includes("CONFIRM") || nodename.includes("YOU-THERE")) {
+      const popupContainer = document.querySelector("ytd-popup-container, ytmusic-popup-container");
+      if (popupContainer) {
+        const btn = popupContainer.querySelector("#confirm-button, button");
+        if (btn) btn.click();
+      }
+      const video = document.querySelector("video");
+      if (video && video.paused) {
+        try { video.play(); } catch (_) {}
+      }
+      console.log("[Megabox NonStop] Intercepted yt-popup-opened and auto-resumed playback.");
+    }
+  }, true);
+
+  // Periodic watch loop (every 1.5s, ultra-low CPU)
+  setInterval(autoConfirmWatching, 1500);
+  console.log("[Megabox NonStop] YouTube NonStop background playback watcher active.");
+})();

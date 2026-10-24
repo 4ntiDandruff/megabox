@@ -937,6 +937,8 @@
             wv.send('sponsorblock:toggle-state', isSponsorBlockEnabled);
             const isAdblockThingEnabled = prefs['adblock-thing'] !== undefined ? prefs['adblock-thing'] : true;
             wv.send('adblock-thing:toggle-state', isAdblockThingEnabled);
+            const isNonStopEnabled = prefs['nonstop'] !== undefined ? prefs['nonstop'] : true;
+            wv.send('nonstop:toggle-state', isNonStopEnabled);
           } catch (_) {}
           // Proactively send credentials to webview on dom-ready
           if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
@@ -1282,6 +1284,8 @@
             wv.send('sponsorblock:toggle-state', isSponsorBlockEnabled);
             const isAdblockThingEnabled = prefs['adblock-thing'] !== undefined ? prefs['adblock-thing'] : true;
             wv.send('adblock-thing:toggle-state', isAdblockThingEnabled);
+            const isNonStopEnabled = prefs['nonstop'] !== undefined ? prefs['nonstop'] : true;
+            wv.send('nonstop:toggle-state', isNonStopEnabled);
           } catch (_) {}
           // Only restore zoom if not already 100% or explicitly customized to avoid re-rendering layout jump
           const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + app.id), 10);
@@ -2752,6 +2756,7 @@
   const extensionCatalog = [
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
     { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/sponsorblock.svg', enabledByDefault: true },
+    { id: 'nonstop', name: 'YouTube NonStop', desc: 'Putar video & musik tanpa jeda konfirmasi "Lanjutkan menonton?"', icon: 'assets/icons/nonstop.svg', enabledByDefault: true },
     { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/darkreader.svg', enabledByDefault: false },
     { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
@@ -2842,6 +2847,14 @@
           const wv = document.getElementById('wv-' + activeAppId);
           if (wv) {
             try { wv.send('adblock-thing:toggle-state', toggle.checked); } catch (_) {}
+          }
+        }
+
+        // If YouTube NonStop toggled, broadcast instantly to active webview
+        if (ext.id === 'nonstop' && activeAppId) {
+          const wv = document.getElementById('wv-' + activeAppId);
+          if (wv) {
+            try { wv.send('nonstop:toggle-state', toggle.checked); } catch (_) {}
           }
         }
 
