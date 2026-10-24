@@ -1054,22 +1054,28 @@
     }
 
     .ext-icon-box {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.06);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .drawer-extension-card:hover .ext-icon-box {
+      transform: scale(1.05);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
     }
     .ext-icon-box img, .ext-icon-box svg {
       display: block;
       image-rendering: -webkit-optimize-contrast;
       transform: translateZ(0);
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       object-fit: contain;
     }
 

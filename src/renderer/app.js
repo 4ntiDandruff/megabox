@@ -2751,10 +2751,10 @@
   // Built-in Chromium extensions catalog for Megabox (Valid verified local SVGs)
   const extensionCatalog = [
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
-    { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/youtube.svg', enabledByDefault: true },
-    { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/shield.svg', enabledByDefault: true },
-    { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true },
+    { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/sponsorblock.svg', enabledByDefault: true },
+    { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
+    { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/darkreader.svg', enabledByDefault: false },
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
     { id: 'permanent-clipboard', name: 'Permanent Clipboard', desc: 'Pustaka snippet balasan cepat & riwayat clipboard (Klik kanan di chat)', icon: 'assets/icons/clipboard.svg', enabledByDefault: true }
   ];
 
