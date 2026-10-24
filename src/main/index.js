@@ -8,6 +8,10 @@ const { initUpdater } = require('./updater.js');
 const { MegawardenVault } = require('./megawarden.js');
 const fs = require('fs');
 
+// Allow self-signed certificates and private LAN/router gateways (Ruijie, OpenWrt, Proxmox, AdGuard, etc.)
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('allow-insecure-localhost');
+
 function checkGpuCacheConsistency() {
   try {
     const configDir = path.join(app.getPath('userData'));
@@ -300,7 +304,63 @@ function createWindow() {
     }
   });
 
+  function setupSessionCertificates(ses) {
+    if (!ses) return;
+    if (typeof ses.setCertificateVerifyProc === 'function') {
+      ses.setCertificateVerifyProc((request, callback) => {
+        const { hostname } = request;
+        // Auto-trust private router/LAN, local subnet, and loopback IPs
+        if (
+          hostname === 'localhost' ||
+          hostname === '127.0.0.1' ||
+          hostname.startsWith('192.168.') ||
+          hostname.startsWith('10.') ||
+          hostname.startsWith('172.16.') ||
+          hostname.startsWith('172.17.') ||
+          hostname.startsWith('172.18.') ||
+          hostname.startsWith('172.19.') ||
+          hostname.startsWith('172.2') ||
+          hostname.startsWith('172.30.') ||
+          hostname.startsWith('172.31.') ||
+          hostname.startsWith('100.') || // Tailscale Carrier-Grade NAT
+          hostname.endsWith('.local') ||
+          hostname.endsWith('.lan') ||
+          hostname.endsWith('.ts.net')
+        ) {
+          callback(0); // 0 = Certificate verification success / trust
+          return;
+        }
+        callback(-3); // -3 = Use verification result from Chromium
+      });
+    }
+  }
+
+  // App-level certificate error handler fallback
+  app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    try {
+      const parsedUrl = new URL(url);
+      const h = parsedUrl.hostname;
+      if (
+        h === 'localhost' ||
+        h === '127.0.0.1' ||
+        h.startsWith('192.168.') ||
+        h.startsWith('10.') ||
+        h.startsWith('172.') ||
+        h.startsWith('100.') ||
+        h.endsWith('.local') ||
+        h.endsWith('.lan') ||
+        h.endsWith('.ts.net')
+      ) {
+        event.preventDefault();
+        callback(true);
+        return;
+      }
+    } catch (_) {}
+    callback(false);
+  });
+
   session.defaultSession.setSpellCheckerEnabled(false);
+  setupSessionCertificates(session.defaultSession);
   setupHeaderInterceptors(session.defaultSession);
   uBlockOriginEngine.setupSessionInterceptor(session.defaultSession);
   registerDownloadListener(session.defaultSession);
@@ -308,6 +368,7 @@ function createWindow() {
     if (ses && typeof ses.setSpellCheckerEnabled === 'function') {
       ses.setSpellCheckerEnabled(false);
     }
+    setupSessionCertificates(ses);
     setupHeaderInterceptors(ses);
     uBlockOriginEngine.setupSessionInterceptor(ses);
     registerDownloadListener(ses);
