@@ -1554,3 +1554,251 @@ window.__megabox_preload_loaded = true;
   setInterval(checkRedirectShorts, 1000);
   console.log("[Megabox ShortsBlocker] YouTube Shorts Blocker & Redirector active.");
 })();
+
+// ============================================================================
+// YouTube Enhancer Engine - Productivity Toolbar, Scroll Wheel, Cinema & Loop
+// ============================================================================
+(function initYouTubeEnhancer() {
+  const isYouTube = window.location.hostname.includes("youtube.com");
+  if (!isYouTube) return;
+
+  let isEnhancerActive = true;
+  let cinemaActive = false;
+  let cinemaOverlay = null;
+  let toolbarEl = null;
+
+  try {
+    const { ipcRenderer } = require("electron");
+    ipcRenderer.on("enhancer:toggle-state", (_event, enabled) => {
+      isEnhancerActive = !!enabled;
+      if (!isEnhancerActive) {
+        if (toolbarEl) toolbarEl.style.display = "none";
+        if (cinemaActive) toggleCinemaMode(false);
+      } else {
+        if (toolbarEl) toolbarEl.style.display = "flex";
+      }
+      console.log("[Megabox Enhancer] Active state:", isEnhancerActive);
+    });
+  } catch (_) {}
+
+  function showEnhancerFeedback(text) {
+    let pill = document.getElementById("megabox-enhancer-pill");
+    if (!pill) {
+      pill = document.createElement("div");
+      pill.id = "megabox-enhancer-pill";
+      pill.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999999;
+        background: rgba(28, 28, 30, 0.92);
+        color: #FFFFFF;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.2);
+        pointer-events: none;
+        backdrop-filter: blur(16px);
+        transition: opacity 0.2s ease;
+      `;
+      document.body.appendChild(pill);
+    }
+    pill.textContent = text;
+    pill.style.opacity = "1";
+    clearTimeout(pill._timer);
+    pill._timer = setTimeout(() => { pill.style.opacity = "0"; }, 1400);
+  }
+
+  // 1. Mouse Scroll-Wheel Volume & Playback Speed Control over video
+  function attachScrollWheelControls() {
+    const player = document.querySelector("#movie_player, .html5-video-player");
+    if (!player || player.dataset.mbEnhancerWheel) return;
+    player.dataset.mbEnhancerWheel = "true";
+
+    player.addEventListener("wheel", (e) => {
+      if (!isEnhancerActive) return;
+      const video = document.querySelector("video");
+      if (!video) return;
+
+      e.preventDefault();
+      const isShift = e.shiftKey;
+
+      if (isShift) {
+        // Shift + Wheel: Change Playback Speed (0.25x up to 4.0x)
+        let rate = video.playbackRate;
+        if (e.deltaY < 0) {
+          rate = Math.min(4.0, rate + 0.25);
+        } else {
+          rate = Math.max(0.25, rate - 0.25);
+        }
+        video.playbackRate = rate;
+        showEnhancerFeedback(`⚡ Kecepatan: ${rate.toFixed(2)}x`);
+      } else {
+        // Standard Wheel: Change Volume (0% - 100%)
+        let vol = video.volume;
+        if (e.deltaY < 0) {
+          vol = Math.min(1.0, vol + 0.05);
+        } else {
+          vol = Math.max(0.0, vol - 0.05);
+        }
+        video.volume = vol;
+        video.muted = false;
+        showEnhancerFeedback(`🔊 Volume: ${Math.round(vol * 100)}%`);
+      }
+    }, { passive: false });
+  }
+
+  // 2. Cinema Mode (Dim surrounding page)
+  function toggleCinemaMode(force) {
+    cinemaActive = force !== undefined ? force : !cinemaActive;
+    if (!cinemaOverlay) {
+      cinemaOverlay = document.createElement("div");
+      cinemaOverlay.id = "megabox-cinema-overlay";
+      cinemaOverlay.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.90);
+        z-index: 1000;
+        pointer-events: auto;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      `;
+      cinemaOverlay.onclick = () => toggleCinemaMode(false);
+      document.body.appendChild(cinemaOverlay);
+    }
+
+    const player = document.querySelector("#movie_player, .html5-video-player");
+    if (cinemaActive) {
+      cinemaOverlay.style.display = "block";
+      requestAnimationFrame(() => { cinemaOverlay.style.opacity = "1"; });
+      if (player) {
+        player.style.position = "relative";
+        player.style.zIndex = "1001";
+      }
+      showEnhancerFeedback("🎬 Mode Bioskop: Aktif");
+    } else {
+      cinemaOverlay.style.opacity = "0";
+      setTimeout(() => { cinemaOverlay.style.display = "none"; }, 250);
+      if (player) player.style.zIndex = "";
+    }
+  }
+
+  // 3. HD Screenshot Frame Capture
+  function captureVideoScreenshot() {
+    const video = document.querySelector("video");
+    if (!video || video.videoWidth === 0) return;
+
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        try {
+          const item = new ClipboardItem({ "image/png": blob });
+          navigator.clipboard.write([item]).then(() => {
+            showEnhancerFeedback("📸 Tangkapan Frame HD disalin ke Clipboard!");
+          });
+        } catch (_) {
+          // Fallback download if clipboard item restricted
+          const a = document.createElement("a");
+          a.download = `yt-frame-${Date.now()}.png`;
+          a.href = canvas.toDataURL("image/png");
+          a.click();
+          showEnhancerFeedback("📸 Tangkapan Frame HD disimpan!");
+        }
+      }, "image/png");
+    } catch (err) {
+      console.error("[Megabox Enhancer Screenshot Error]", err);
+    }
+  }
+
+  // 4. Floating Enhancer Quick Action Bar on Player
+  function injectEnhancerToolbar() {
+    if (document.getElementById("megabox-enhancer-bar")) return;
+    const player = document.querySelector("#movie_player, .html5-video-player");
+    if (!player) return;
+
+    const bar = document.createElement("div");
+    bar.id = "megabox-enhancer-bar";
+    bar.style.cssText = `
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 1002;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(28, 28, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      padding: 4px 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0.15;
+      transition: opacity 0.2s ease;
+    `;
+    bar.onmouseenter = () => { bar.style.opacity = "1"; };
+    bar.onmouseleave = () => { bar.style.opacity = "0.15"; };
+
+    function createBtn(svgIcon, title, onClick) {
+      const btn = document.createElement("button");
+      btn.title = title;
+      btn.style.cssText = "width:28px; height:28px; border-radius:6px; border:none; background:transparent; color:#FFFFFF; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background 0.15s ease;";
+      btn.onmouseenter = () => { btn.style.background = "rgba(255,255,255,0.18)"; };
+      btn.onmouseleave = () => { btn.style.background = "transparent"; };
+      btn.innerHTML = svgIcon;
+      btn.onclick = onClick;
+      return btn;
+    }
+
+    // Cinema Mode Button
+    bar.appendChild(createBtn(
+      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20M7 5v5M17 5v5"/></svg>`,
+      "Mode Bioskop Gelap",
+      () => toggleCinemaMode()
+    ));
+
+    // Screenshot Capture Button
+    bar.appendChild(createBtn(
+      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+      "Ambil Screenshot Frame HD",
+      () => captureVideoScreenshot()
+    ));
+
+    // Loop Toggle Button
+    const loopBtn = createBtn(
+      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
+      "Ulangi Video (Loop)",
+      () => {
+        const video = document.querySelector("video");
+        if (video) {
+          video.loop = !video.loop;
+          loopBtn.style.color = video.loop ? "#34C759" : "#FFFFFF";
+          showEnhancerFeedback(video.loop ? "🔁 Putar Ulang: Aktif" : "🔁 Putar Ulang: Mati");
+        }
+      }
+    );
+    bar.appendChild(loopBtn);
+
+    player.appendChild(bar);
+    toolbarEl = bar;
+  }
+
+  // Polling hook
+  setInterval(() => {
+    if (!isEnhancerActive) return;
+    attachScrollWheelControls();
+    injectEnhancerToolbar();
+  }, 1500);
+
+  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active.");
+})();
