@@ -1568,15 +1568,16 @@ window.__megabox_preload_loaded = true;
   let toolbarEl = null;
   let isPopupActive = false;
   let isPopupDismissedByUser = false;
+  let overlayEl = null;
 
   // Helper DOM creator compliant with YouTube TrustedTypes
-  function createSvgIcon(width, height, pathD, strokeWidth = "2") {
+  function createSvgIcon(width, height, pathD, strokeWidth = "2", fill = "none", stroke = "currentColor") {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", width);
     svg.setAttribute("height", height);
     svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "none");
-    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("fill", fill);
+    svg.setAttribute("stroke", stroke);
     svg.setAttribute("stroke-width", strokeWidth);
     svg.setAttribute("stroke-linecap", "round");
     svg.setAttribute("stroke-linejoin", "round");
@@ -1584,6 +1585,14 @@ window.__megabox_preload_loaded = true;
     path.setAttribute("d", pathD);
     svg.appendChild(path);
     return svg;
+  }
+
+  function formatTime(sec) {
+    if (!sec || isNaN(sec)) return "0:00";
+    sec = Math.floor(sec);
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
   // Inject CSS rules for Enhancer Popup & Mini-Player
@@ -1597,86 +1606,193 @@ window.__megabox_preload_loaded = true;
         min-height: var(--mb-orig-player-height, 56.25vw);
       }
 
-      /* Float player window to bottom-right smoothly */
+      /* Elevate stacking context of #player so it renders above shelves and comments */
+      ytd-watch-flexy[mb-popup-active] #player {
+        position: relative !important;
+        z-index: 2147483640 !important;
+      }
+
+      /* Float player window to top-left exactly matching Enhancer for YouTube reference */
       ytd-watch-flexy[mb-popup-active] #ytd-player {
         position: fixed !important;
-        bottom: 24px !important;
-        right: 28px !important;
-        width: 420px !important;
-        height: 236px !important;
+        top: 72px !important;
+        left: 17px !important;
+        width: 528px !important;
+        height: 297px !important;
         z-index: 2147483640 !important;
-        border-radius: 14px !important;
-        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
         overflow: hidden !important;
         background: #000000 !important;
         transform: translateZ(0) !important;
-        transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
       }
 
-      ytd-watch-flexy[mb-popup-active] #ytd-player:hover {
-        box-shadow: 0 20px 52px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.28) !important;
+      /* Force #movie_player and html5-video-container to cleanly fit inside mini-player */
+      ytd-watch-flexy[mb-popup-active] #movie_player {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative !important;
+        overflow: hidden !important;
       }
 
-      /* Floating header controls bar on mini popup */
-      #mb-popup-header {
+      ytd-watch-flexy[mb-popup-active] .html5-video-container {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative !important;
+      }
+
+      ytd-watch-flexy[mb-popup-active] #movie_player video {
+        width: 100% !important;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        object-fit: contain !important;
+        position: absolute !important;
+      }
+
+      /* Hide default cluttered YouTube controls in popup mode */
+      ytd-watch-flexy[mb-popup-active] .ytp-chrome-bottom,
+      ytd-watch-flexy[mb-popup-active] .ytp-chrome-top,
+      ytd-watch-flexy[mb-popup-active] .ytp-gradient-bottom,
+      ytd-watch-flexy[mb-popup-active] .ytp-gradient-top,
+      ytd-watch-flexy[mb-popup-active] .ytp-ce-element,
+      ytd-watch-flexy[mb-popup-active] .ytp-paid-content-overlay,
+      ytd-watch-flexy[mb-popup-active] .html5-endscreen,
+      ytd-watch-flexy[mb-popup-active] .videowall-endscreen,
+      ytd-watch-flexy[mb-popup-active] #megabox-enhancer-bar {
+        display: none !important;
+      }
+
+      /* Dedicated Clean Overlay Matching Reference Screenshot */
+      #mb-enhancer-ref-overlay {
+        position: fixed !important;
+        top: 72px !important;
+        left: 17px !important;
+        width: 528px !important;
+        height: 297px !important;
+        z-index: 2147483645 !important;
+        border-radius: 12px !important;
+        pointer-events: none !important;
+        overflow: hidden !important;
+        display: none;
+      }
+
+      ytd-watch-flexy[mb-popup-active] ~ #mb-enhancer-ref-overlay,
+      body:has(ytd-watch-flexy[mb-popup-active]) #mb-enhancer-ref-overlay {
+        display: block !important;
+      }
+
+      /* Close button (White circle with black X) at top-left */
+      #mb-ref-close-btn {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 40px;
+        top: 12px;
+        left: 12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        color: #000000;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0 10px;
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0) 100%);
-        z-index: 2147483647;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        pointer-events: none;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        border: none;
+        padding: 0;
+        transition: transform 0.15s ease, background 0.15s ease;
+      }
+      #mb-ref-close-btn:hover {
+        background: #E5E5E5;
+        transform: scale(1.08);
+      }
+      #mb-ref-close-btn:active {
+        transform: scale(0.92);
       }
 
-      ytd-watch-flexy[mb-popup-active] #ytd-player:hover #mb-popup-header {
-        opacity: 1;
+      /* Bottom bar with play/pause, volume circle, time pill */
+      #mb-ref-bottom-bar {
+        position: absolute;
+        bottom: 12px;
+        left: 14px;
+        right: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         pointer-events: auto;
       }
 
-      .mb-popup-badge {
-        font-size: 11px;
-        font-weight: 600;
-        color: #E2E8F0;
-        letter-spacing: 0.02em;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-        user-select: none;
-      }
-
-      .mb-popup-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .mb-popup-btn {
-        width: 26px;
-        height: 26px;
-        border-radius: 6px;
-        background: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #F8FAFC;
+      #mb-ref-play-btn {
+        width: 28px;
+        height: 28px;
+        background: transparent;
+        border: none;
+        color: #FFFFFF;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         padding: 0;
-        transition: background 0.15s ease, transform 0.1s ease;
+        transition: transform 0.15s ease;
+      }
+      #mb-ref-play-btn:hover {
+        transform: scale(1.1);
       }
 
-      .mb-popup-btn:hover {
-        background: rgba(51, 65, 85, 0.95);
-        transform: scale(1.05);
+      #mb-ref-vol-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(45, 45, 45, 0.72);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.15s ease;
+      }
+      #mb-ref-vol-btn:hover {
+        background: rgba(65, 65, 65, 0.85);
       }
 
-      .mb-popup-btn:active {
-        transform: scale(0.95);
+      #mb-ref-time-pill {
+        height: 32px;
+        padding: 0 14px;
+        border-radius: 16px;
+        background: rgba(45, 45, 45, 0.72);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+        font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        user-select: none;
+        letter-spacing: 0.02em;
+      }
+
+      #mb-ref-progress-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+        pointer-events: auto;
+      }
+      #mb-ref-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: #FF0000;
+        transition: width 0.1s linear;
       }
     `;
     document.head.appendChild(style);
@@ -1744,7 +1860,6 @@ window.__megabox_preload_loaded = true;
       const isShift = e.shiftKey;
 
       if (isShift) {
-        // Shift + Wheel: Change Playback Speed (0.25x up to 4.0x)
         let rate = video.playbackRate;
         if (e.deltaY < 0) {
           rate = Math.min(4.0, rate + 0.25);
@@ -1754,7 +1869,6 @@ window.__megabox_preload_loaded = true;
         video.playbackRate = rate;
         showEnhancerFeedback(`⚡ Kecepatan: ${rate.toFixed(2)}x`);
       } else {
-        // Standard Wheel: Change Volume (0% - 100%)
         let vol = video.volume;
         if (e.deltaY < 0) {
           vol = Math.min(1.0, vol + 0.05);
@@ -1835,62 +1949,156 @@ window.__megabox_preload_loaded = true;
     }
   }
 
-  // 4. Floating Video Popup / Mini-Player Engine
+  // 4. Ensure Overlay DOM exists and is bound to current video
+  function ensureOverlayExists() {
+    let overlay = document.getElementById("mb-enhancer-ref-overlay");
+    if (overlay) return overlay;
+
+    overlay = document.createElement("div");
+    overlay.id = "mb-enhancer-ref-overlay";
+
+    // Close button (White circle with black X)
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "mb-ref-close-btn";
+    closeBtn.title = "Tutup Mini-Player";
+    closeBtn.appendChild(createSvgIcon("14", "14", "M18 6L6 18M6 6l12 12", "2.6", "none", "#000000"));
+    closeBtn.onclick = (e) => {
+      e.stopPropagation();
+      isPopupDismissedByUser = true;
+      deactivateVideoPopup();
+      showEnhancerFeedback("Mini-Player ditutup");
+    };
+    overlay.appendChild(closeBtn);
+
+    // Progress bar
+    const progCont = document.createElement("div");
+    progCont.id = "mb-ref-progress-container";
+    const progFill = document.createElement("div");
+    progFill.id = "mb-ref-progress-fill";
+    progCont.appendChild(progFill);
+    progCont.onclick = (e) => {
+      e.stopPropagation();
+      const video = document.querySelector("video");
+      if (video && video.duration) {
+        const rect = progCont.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pct * video.duration;
+      }
+    };
+    overlay.appendChild(progCont);
+
+    // Bottom bar
+    const bottomBar = document.createElement("div");
+    bottomBar.id = "mb-ref-bottom-bar";
+
+    // Play/Pause button
+    const playBtn = document.createElement("button");
+    playBtn.id = "mb-ref-play-btn";
+    function updatePlayIcon() {
+      while (playBtn.firstChild) playBtn.removeChild(playBtn.firstChild);
+      const video = document.querySelector("video");
+      if (video && video.paused) {
+        playBtn.appendChild(createSvgIcon("20", "20", "M5 3l14 9-14 9V3z", "2", "#FFFFFF", "#FFFFFF"));
+      } else {
+        playBtn.appendChild(createSvgIcon("20", "20", "M6 4h4v16H6zm8 0h4v16h-4z", "2", "#FFFFFF", "#FFFFFF"));
+      }
+    }
+    updatePlayIcon();
+    playBtn.onclick = (e) => {
+      e.stopPropagation();
+      const video = document.querySelector("video");
+      if (!video) return;
+      if (video.paused) video.play(); else video.pause();
+      updatePlayIcon();
+    };
+    bottomBar.appendChild(playBtn);
+
+    // Volume Speaker button
+    const volBtn = document.createElement("button");
+    volBtn.id = "mb-ref-vol-btn";
+    function updateVolIcon() {
+      while (volBtn.firstChild) volBtn.removeChild(volBtn.firstChild);
+      const video = document.querySelector("video");
+      if (!video || video.muted || video.volume === 0) {
+        volBtn.appendChild(createSvgIcon("16", "16", "M11 5L6 9H2v6h4l5 4V5z M23 9l-6 6 M17 9l6 6", "2"));
+      } else {
+        volBtn.appendChild(createSvgIcon("16", "16", "M11 5L6 9H2v6h4l5 4V5z M19.07 4.93a10 10 0 0 1 0 14.14 M15.54 8.46a5 5 0 0 1 0 7.07", "2"));
+      }
+    }
+    updateVolIcon();
+    volBtn.onclick = (e) => {
+      e.stopPropagation();
+      const video = document.querySelector("video");
+      if (!video) return;
+      video.muted = !video.muted;
+      updateVolIcon();
+    };
+    volBtn.onwheel = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const video = document.querySelector("video");
+      if (!video) return;
+      if (e.deltaY < 0) {
+        video.volume = Math.min(1, video.volume + 0.05);
+      } else {
+        video.volume = Math.max(0, video.volume - 0.05);
+      }
+      video.muted = false;
+      updateVolIcon();
+    };
+    bottomBar.appendChild(volBtn);
+
+    // Time pill
+    const timePill = document.createElement("div");
+    timePill.id = "mb-ref-time-pill";
+    function updateTimeText() {
+      const video = document.querySelector("video");
+      if (video) {
+        timePill.textContent = formatTime(video.currentTime) + " / " + formatTime(video.duration);
+        if (progFill && video.duration) {
+          progFill.style.width = ((video.currentTime / video.duration) * 100) + "%";
+        }
+      }
+    }
+    updateTimeText();
+    bottomBar.appendChild(timePill);
+
+    overlay.appendChild(bottomBar);
+    document.body.appendChild(overlay);
+
+    // Video event hook
+    setInterval(() => {
+      const video = document.querySelector("video");
+      if (!video) return;
+      if (!video.dataset.mbOverlayBound) {
+        video.dataset.mbOverlayBound = "true";
+        video.addEventListener("play", updatePlayIcon);
+        video.addEventListener("pause", updatePlayIcon);
+        video.addEventListener("volumechange", updateVolIcon);
+        video.addEventListener("timeupdate", updateTimeText);
+      }
+    }, 1000);
+
+    overlayEl = overlay;
+    return overlay;
+  }
+
+  // 5. Floating Video Popup Engine
   function activateVideoPopup() {
     if (!isEnhancerActive || isPopupActive || isPopupDismissedByUser) return;
     ensureEnhancerStyles();
 
     const flexy = document.querySelector("ytd-watch-flexy");
-    const ytdPlayer = document.querySelector("#ytd-player");
     const container = document.querySelector("#player-container-outer") || document.querySelector("#player-container");
-    if (!flexy || !ytdPlayer || !container) return;
+    const ytdPlayer = document.querySelector("#ytd-player");
+    if (!flexy || !container || !ytdPlayer) return;
 
-    // Cache original height to avoid layout shift when scrolling comments
     if (container.offsetHeight > 100) {
       flexy.style.setProperty("--mb-orig-player-height", container.offsetHeight + "px");
     }
 
-    // Attach popup controls header
-    let header = document.getElementById("mb-popup-header");
-    if (!header) {
-      header = document.createElement("div");
-      header.id = "mb-popup-header";
-
-      const title = document.createElement("span");
-      title.className = "mb-popup-badge";
-      title.textContent = "Enhancer Mini-Player";
-      header.appendChild(title);
-
-      const actions = document.createElement("div");
-      actions.className = "mb-popup-actions";
-
-      // Scroll to top button
-      const scrollBtn = document.createElement("button");
-      scrollBtn.className = "mb-popup-btn";
-      scrollBtn.title = "Kembali ke atas video";
-      scrollBtn.appendChild(createSvgIcon("14", "14", "M18 15l-6-6-6 6"));
-      scrollBtn.onclick = (e) => {
-        e.stopPropagation();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      };
-      actions.appendChild(scrollBtn);
-
-      // Dismiss popup button for this session
-      const closeBtn = document.createElement("button");
-      closeBtn.className = "mb-popup-btn";
-      closeBtn.title = "Tutup Mini-Player";
-      closeBtn.appendChild(createSvgIcon("14", "14", "M18 6L6 18M6 6l12 12"));
-      closeBtn.onclick = (e) => {
-        e.stopPropagation();
-        isPopupDismissedByUser = true;
-        deactivateVideoPopup();
-        showEnhancerFeedback("Mini-Player ditutup sementara");
-      };
-      actions.appendChild(closeBtn);
-
-      header.appendChild(actions);
-      ytdPlayer.appendChild(header);
-    }
+    ensureOverlayExists();
+    if (overlayEl) overlayEl.style.display = "block";
 
     flexy.setAttribute("mb-popup-active", "");
     isPopupActive = true;
@@ -1901,6 +2109,7 @@ window.__megabox_preload_loaded = true;
     if (!isPopupActive) return;
     const flexy = document.querySelector("ytd-watch-flexy");
     if (flexy) flexy.removeAttribute("mb-popup-active");
+    if (overlayEl) overlayEl.style.display = "none";
     isPopupActive = false;
     window.dispatchEvent(new Event("resize"));
   }
@@ -1913,7 +2122,6 @@ window.__megabox_preload_loaded = true;
         return;
       }
 
-      // Reset dismissed state when user scrolls back to very top
       if (window.scrollY < 50) {
         isPopupDismissedByUser = false;
       }
@@ -1922,7 +2130,7 @@ window.__megabox_preload_loaded = true;
       if (!container) return;
 
       const rect = container.getBoundingClientRect();
-      // When the bottom of the original player container scrolls past the top bar (header ~60px)
+      // Out of view when video bottom scrolls past header (60px)
       const isOutOfView = rect.bottom < 60;
 
       if (isOutOfView) {
@@ -1937,7 +2145,7 @@ window.__megabox_preload_loaded = true;
     }, { passive: true });
   }
 
-  // 5. Floating Enhancer Quick Action Bar on Player
+  // 6. Floating Enhancer Quick Action Bar on Player
   function injectEnhancerToolbar() {
     if (document.getElementById("megabox-enhancer-bar")) return;
     const player = document.querySelector("#movie_player, .html5-video-player");
@@ -2010,7 +2218,7 @@ window.__megabox_preload_loaded = true;
     toolbarEl = bar;
   }
 
-  // Setup scroll listener once
+  // Setup scroll observer once
   setupScrollPopupObserver();
 
   // Polling hook
