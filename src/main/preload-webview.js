@@ -1466,3 +1466,91 @@ window.__megabox_preload_loaded = true;
   setInterval(autoConfirmWatching, 1500);
   console.log("[Megabox NonStop] YouTube NonStop background playback watcher active.");
 })();
+
+// ============================================================================
+// YouTube Shorts Blocker & Redirector (Remove Shorts from YouTube Native)
+// ============================================================================
+(function initYouTubeShortsBlocker() {
+  const isYouTube = window.location.hostname.includes("youtube.com");
+  if (!isYouTube) return;
+
+  let isShortsBlockerActive = true;
+  let styleEl = null;
+
+  try {
+    const { ipcRenderer } = require("electron");
+    ipcRenderer.on("shortsblocker:toggle-state", (_event, enabled) => {
+      isShortsBlockerActive = !!enabled;
+      if (!isShortsBlockerActive && styleEl) {
+        styleEl.remove();
+        styleEl = null;
+      } else if (isShortsBlockerActive) {
+        injectShortsCSS();
+        checkRedirectShorts();
+      }
+      console.log("[Megabox ShortsBlocker] Active state:", isShortsBlockerActive);
+    });
+  } catch (_) {}
+
+  // 1. Hide Shorts tab, shelves & badges via selective CSS
+  function injectShortsCSS() {
+    if (document.getElementById("megabox-shorts-blocker-style")) return;
+    const style = document.createElement("style");
+    style.id = "megabox-shorts-blocker-style";
+    style.textContent = `
+      /* Hide Shorts in sidebar / guide navigation */
+      ytd-guide-entry-renderer:has(a[title*="Shorts"]),
+      ytd-mini-guide-entry-renderer:has(a[title*="Shorts"]),
+      ytd-guide-entry-renderer:has(a[href^="/shorts"]),
+      ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
+      ytm-pivot-bar-item-renderer:has(div[class*="pivot-shorts"]),
+      
+      /* Hide Shorts shelf on Home & Subscriptions */
+      ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+      ytd-reel-shelf-renderer,
+      
+      /* Hide individual Shorts in search results & related videos */
+      ytd-video-renderer:has(a[href*="/shorts/"]),
+      ytd-grid-video-renderer:has(a[href*="/shorts/"]),
+      ytd-rich-item-renderer:has(a[href*="/shorts/"]) {
+        display: none !important;
+      }
+    `;
+    (document.head || document.documentElement).appendChild(style);
+    styleEl = style;
+  }
+
+  // 2. Auto-redirect /shorts/VIDEO_ID to standard /watch?v=VIDEO_ID player
+  function checkRedirectShorts() {
+    if (!isShortsBlockerActive) return;
+    const currentUrl = window.location.href;
+    if (currentUrl.includes("/shorts/")) {
+      const match = currentUrl.match(/\/shorts\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        const videoId = match[1];
+        const newUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        console.log(`[Megabox ShortsBlocker] Redirecting Shorts to regular player: ${newUrl}`);
+        window.location.replace(newUrl);
+      }
+    }
+  }
+
+  // Listen to navigation events
+  window.addEventListener("yt-navigate-start", checkRedirectShorts, true);
+  window.addEventListener("yt-navigate-finish", checkRedirectShorts, true);
+  window.addEventListener("popstate", checkRedirectShorts, true);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      injectShortsCSS();
+      checkRedirectShorts();
+    });
+  } else {
+    injectShortsCSS();
+    checkRedirectShorts();
+  }
+
+  // Fallback observer for SPA updates
+  setInterval(checkRedirectShorts, 1000);
+  console.log("[Megabox ShortsBlocker] YouTube Shorts Blocker & Redirector active.");
+})();
