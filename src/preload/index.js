@@ -58,6 +58,12 @@ contextBridge.exposeInMainWorld('megabox', {
   resetAvatar: () => ipcRenderer.invoke('avatar:reset'),
   getAvatar: () => ipcRenderer.invoke('avatar:get'),
 
+  // Permanent Clipboard Snippets API
+  getSnippets: () => ipcRenderer.invoke('snippets:get-all'),
+  saveSnippet: (snippet) => ipcRenderer.invoke('snippets:save', snippet),
+  deleteSnippet: (id) => ipcRenderer.invoke('snippets:delete', id),
+  onOpenSnippetManager: (callback) => ipcRenderer.on('snippet:open-manager', (_, data) => callback(data)),
+
   // Clipboard & Toast Feedback API
   copyToClipboard: (text) => ipcRenderer.invoke('clipboard:write-text', { text }),
   onShowToast: (callback) => ipcRenderer.on('toast:show', (_, data) => callback(data)),

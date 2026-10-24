@@ -172,6 +172,58 @@ function clearDownloads(db) {
   db.write(data);
 }
 
+
+// ==========================================
+// Permanent Clipboard & Snippet Library (Zero-Bloat)
+// ==========================================
+function getSnippets(db) {
+  const data = db.read();
+  const list = data.snippets || [];
+  return list.slice().sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
+}
+
+function saveSnippet(db, snippet) {
+  const data = db.read();
+  data.snippets = data.snippets || [];
+  const idx = data.snippets.findIndex(s => s.id === snippet.id);
+  const cleanSnippet = {
+    id: String(snippet.id || ('snip_' + Date.now())),
+    title: String(snippet.title || 'Untitled Snippet').trim(),
+    content: String(snippet.content || '').trim(),
+    category: String(snippet.category || 'Umum').trim(),
+    usage_count: Number(snippet.usage_count || 0),
+    created_at: Number(snippet.created_at || Date.now()),
+    updated_at: Date.now()
+  };
+
+  if (idx >= 0) {
+    cleanSnippet.created_at = data.snippets[idx].created_at || cleanSnippet.created_at;
+    data.snippets[idx] = cleanSnippet;
+  } else {
+    data.snippets.push(cleanSnippet);
+  }
+
+  db.write(data);
+  return cleanSnippet;
+}
+
+function deleteSnippet(db, id) {
+  const data = db.read();
+  data.snippets = (data.snippets || []).filter(s => s.id !== id);
+  db.write(data);
+}
+
+function incrementSnippetUsage(db, id) {
+  const data = db.read();
+  data.snippets = data.snippets || [];
+  const s = data.snippets.find(item => item.id === id);
+  if (s) {
+    s.usage_count = (s.usage_count || 0) + 1;
+    s.updated_at = Date.now();
+    db.write(data);
+  }
+}
+
 module.exports = {
   getDefaultDbPath,
   initDatabase,
@@ -184,5 +236,9 @@ module.exports = {
   getDownloads,
   saveDownload,
   deleteDownload,
-  clearDownloads
+  clearDownloads,
+  getSnippets,
+  saveSnippet,
+  deleteSnippet,
+  incrementSnippetUsage
 };

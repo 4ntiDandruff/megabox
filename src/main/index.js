@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell, clipboard } = require('electron');
 const path = require('path');
-const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads } = require('./db.js');
+const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads, getSnippets, saveSnippet, deleteSnippet, incrementSnippetUsage } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
 const { uBlockOriginEngine } = require('./ublock-engine.js');
 const { translateText } = require('./translator.js');
@@ -504,6 +504,43 @@ function createWindow() {
             click: () => webviewWebContents.paste()
           });
         }
+        // Permanent Clipboard Quick Insert
+        if (isEditable) {
+          const snippets = getSnippets(db);
+          const snippetSubmenu = [];
+          if (snippets.length > 0) {
+            snippets.slice(0, 12).forEach(snip => {
+              snippetSubmenu.push({
+                label: snip.title + (snip.category ? ' [' + snip.category + ']' : ''),
+                click: () => {
+                  webviewWebContents.insertText(snip.content);
+                  incrementSnippetUsage(db, snip.id);
+                }
+              });
+            });
+            snippetSubmenu.push({ type: 'separator' });
+          }
+          snippetSubmenu.push({
+            label: '+ Tambah Snippet Baru...',
+            click: () => {
+              if (mainWindow && !mainWindow.isDestroyed()) {
+                mainWindow.webContents.send('snippet:open-manager', { mode: 'new' });
+              }
+            }
+          });
+          snippetSubmenu.push({
+            label: 'Kelola Snippet Perpustakaan...',
+            click: () => {
+              if (mainWindow && !mainWindow.isDestroyed()) {
+                mainWindow.webContents.send('snippet:open-manager', { mode: 'list' });
+              }
+            }
+          });
+          template.push({
+            label: 'Permanent Clipboard',
+            submenu: snippetSubmenu
+          });
+        }
       }
 
       // 3. Select All
@@ -633,6 +670,18 @@ function createWindow() {
   });
 
   // Expose CLI trigger to pop window to front if it goes behind
+  // Permanent Clipboard IPC Handlers
+  ipcMain.handle('snippets:get-all', () => {
+    return getSnippets(db);
+  });
+  ipcMain.handle('snippets:save', (_, snippet) => {
+    return saveSnippet(db, snippet);
+  });
+  ipcMain.handle('snippets:delete', (_, id) => {
+    deleteSnippet(db, id);
+    return { success: true };
+  });
+
   // Direct system clipboard writer (foolproof for Wayland/KDE & sandboxed webview calls)
   ipcMain.handle('clipboard:write-text', (_, { text }) => {
     try {

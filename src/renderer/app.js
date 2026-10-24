@@ -2754,7 +2754,8 @@
     { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/youtube.svg', enabledByDefault: true },
     { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/shield.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
-    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true }
+    { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true },
+    { id: 'permanent-clipboard', name: 'Permanent Clipboard', desc: 'Pustaka snippet balasan cepat & riwayat clipboard (Klik kanan di chat)', icon: 'assets/icons/clipboard.svg', enabledByDefault: true }
   ];
 
   function openExtensionDrawer() {
@@ -4012,3 +4013,223 @@
   }
   window.showGlobalToast = showGlobalToast;
 
+
+
+// ============================================================================
+// Permanent Clipboard & Snippet Library UI Logic (permanent-clipboard.app Native)
+// ============================================================================
+(function initPermanentClipboardUI() {
+  const modalSnippets = document.getElementById('modal-snippets');
+  const btnClose = document.getElementById('btn-close-snippets');
+  const btnAddNew = document.getElementById('btn-add-new-snippet');
+  const searchInput = document.getElementById('snippet-search-input');
+  const formContainer = document.getElementById('snippet-form-container');
+  const formTitle = document.getElementById('snippet-form-title');
+  const formId = document.getElementById('form-snippet-id');
+  const formSnippetTitle = document.getElementById('form-snippet-title');
+  const formSnippetCat = document.getElementById('form-snippet-category');
+  const formSnippetContent = document.getElementById('form-snippet-content');
+  const btnCancelForm = document.getElementById('btn-cancel-snippet-form');
+  const btnSaveForm = document.getElementById('btn-save-snippet-form');
+  const listContainer = document.getElementById('snippet-list-container');
+
+  if (!modalSnippets) return;
+
+  let allSnippets = [];
+
+  function openSnippetModal(mode = 'list') {
+    modalSnippets.style.display = 'flex';
+    setTimeout(() => { modalSnippets.style.opacity = '1'; }, 10);
+    loadSnippets();
+    if (mode === 'new') {
+      showForm();
+    } else {
+      hideForm();
+    }
+  }
+
+  function closeSnippetModal() {
+    modalSnippets.style.opacity = '0';
+    setTimeout(() => { modalSnippets.style.display = 'none'; hideForm(); }, 200);
+  }
+
+  function showForm(item = null) {
+    formContainer.style.display = 'block';
+    if (item) {
+      formTitle.textContent = 'Edit Snippet';
+      formId.value = item.id;
+      formSnippetTitle.value = item.title;
+      formSnippetCat.value = item.category || '';
+      formSnippetContent.value = item.content;
+    } else {
+      formTitle.textContent = 'Buat Snippet Baru';
+      formId.value = '';
+      formSnippetTitle.value = '';
+      formSnippetCat.value = 'Umum';
+      formSnippetContent.value = '';
+    }
+    formSnippetTitle.focus();
+  }
+
+  function hideForm() {
+    formContainer.style.display = 'none';
+    formId.value = '';
+    formSnippetTitle.value = '';
+    formSnippetCat.value = '';
+    formSnippetContent.value = '';
+  }
+
+  async function loadSnippets() {
+    try {
+      if (window.megabox && typeof window.megabox.getSnippets === 'function') {
+        allSnippets = await window.megabox.getSnippets();
+      } else {
+        allSnippets = [];
+      }
+      renderSnippetList(searchInput.value);
+    } catch (err) {
+      console.error('[Permanent Clipboard Load Error]', err);
+    }
+  }
+
+  function renderSnippetList(query = '') {
+    listContainer.innerHTML = '';
+    const q = (query || '').toLowerCase().trim();
+    const filtered = allSnippets.filter(s => {
+      return (s.title || '').toLowerCase().includes(q) ||
+             (s.category || '').toLowerCase().includes(q) ||
+             (s.content || '').toLowerCase().includes(q);
+    });
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `
+        <div style="padding:40px 20px; text-align:center; color:#86868B; font-size:13px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 10px; opacity:0.4;"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          <div>Belum ada snippet tersimpan</div>
+          <div style="font-size:11px; margin-top:4px;">Klik "+ Tambah Snippet" untuk membuat template teks baru</div>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.style.cssText = 'padding:12px 14px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:#FFFFFF; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; transition:border-color 0.15s ease; box-shadow:0 1px 3px rgba(0,0,0,0.02);';
+      card.onmouseenter = () => { card.style.borderColor = 'rgba(0,113,227,0.4)'; };
+      card.onmouseleave = () => { card.style.borderColor = 'rgba(0,0,0,0.08)'; };
+
+      const left = document.createElement('div');
+      left.style.cssText = 'flex:1; overflow:hidden;';
+
+      const titleRow = document.createElement('div');
+      titleRow.style.cssText = 'display:flex; align-items:center; gap:8px; margin-bottom:4px;';
+      
+      const titleSpan = document.createElement('span');
+      titleSpan.style.cssText = 'font-size:13px; font-weight:700; color:#1D1D1F;';
+      titleSpan.textContent = item.title;
+
+      const catBadge = document.createElement('span');
+      catBadge.style.cssText = 'font-size:10px; font-weight:600; padding:2px 8px; border-radius:6px; background:rgba(0,113,227,0.08); color:#0071E3;';
+      catBadge.textContent = item.category || 'Umum';
+
+      titleRow.appendChild(titleSpan);
+      titleRow.appendChild(catBadge);
+
+      const contentBox = document.createElement('div');
+      contentBox.style.cssText = 'font-size:11px; color:#424245; white-space:pre-wrap; max-height:48px; overflow:hidden; text-overflow:ellipsis; line-height:1.4;';
+      contentBox.textContent = item.content;
+
+      left.appendChild(titleRow);
+      left.appendChild(contentBox);
+
+      const right = document.createElement('div');
+      right.style.cssText = 'display:flex; align-items:center; gap:6px; flex-shrink:0;';
+
+      // Copy Button
+      const btnCopy = document.createElement('button');
+      btnCopy.style.cssText = 'padding:5px 10px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); background:rgba(0,0,0,0.02); font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; color:#1D1D1F;';
+      btnCopy.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Salin';
+      btnCopy.onclick = async () => {
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(item.content);
+        } else if (window.megabox && typeof window.megabox.copyToClipboard === 'function') {
+          await window.megabox.copyToClipboard(item.content);
+        }
+        btnCopy.innerHTML = '<span style="color:#34C759;">✓ Tersalin</span>';
+        setTimeout(() => {
+          btnCopy.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Salin';
+        }, 1200);
+      };
+
+      // Edit Button
+      const btnEdit = document.createElement('button');
+      btnEdit.style.cssText = 'padding:5px 8px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); background:#FFFFFF; cursor:pointer; color:#86868B; display:flex; align-items:center; justify-content:center;';
+      btnEdit.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+      btnEdit.title = 'Edit Snippet';
+      btnEdit.onclick = () => showForm(item);
+
+      // Delete Button
+      const btnDel = document.createElement('button');
+      btnDel.style.cssText = 'padding:5px 8px; border-radius:6px; border:1px solid rgba(255,59,48,0.2); background:rgba(255,59,48,0.05); color:#FF3B30; cursor:pointer; display:flex; align-items:center; justify-content:center;';
+      btnDel.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      btnDel.title = 'Hapus Snippet';
+      btnDel.onclick = async () => {
+        if (confirm(`Hapus snippet "${item.title}"?`)) {
+          if (window.megabox && typeof window.megabox.deleteSnippet === 'function') {
+            await window.megabox.deleteSnippet(item.id);
+            loadSnippets();
+          }
+        }
+      };
+
+      right.appendChild(btnCopy);
+      right.appendChild(btnEdit);
+      right.appendChild(btnDel);
+
+      card.appendChild(left);
+      card.appendChild(right);
+      listContainer.appendChild(card);
+    });
+  }
+
+  // Event Listeners
+  if (btnClose) btnClose.onclick = closeSnippetModal;
+  if (btnAddNew) btnAddNew.onclick = () => showForm();
+  if (btnCancelForm) btnCancelForm.onclick = hideForm;
+  if (searchInput) searchInput.oninput = () => renderSnippetList(searchInput.value);
+
+  if (btnSaveForm) {
+    btnSaveForm.onclick = async () => {
+      const title = formSnippetTitle.value.trim();
+      const content = formSnippetContent.value.trim();
+      const category = formSnippetCat.value.trim() || 'Umum';
+      const id = formId.value || null;
+
+      if (!title || !content) {
+        alert('Mohon isi judul dan teks snippet!');
+        return;
+      }
+
+      if (window.megabox && typeof window.megabox.saveSnippet === 'function') {
+        await window.megabox.saveSnippet({ id, title, content, category });
+        hideForm();
+        loadSnippets();
+      }
+    };
+  }
+
+  // Close on backdrop click
+  modalSnippets.onclick = (e) => {
+    if (e.target === modalSnippets) closeSnippetModal();
+  };
+
+  // Expose opener globally
+  window.openSnippetModal = openSnippetModal;
+
+  // Listen for context-menu trigger from main process
+  if (window.megabox && typeof window.megabox.onOpenSnippetManager === 'function') {
+    window.megabox.onOpenSnippetManager((data) => {
+      openSnippetModal(data && data.mode ? data.mode : 'list');
+    });
+  }
+})();
