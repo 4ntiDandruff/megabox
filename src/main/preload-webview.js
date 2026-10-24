@@ -2359,72 +2359,96 @@ window.__megabox_preload_loaded = true;
     lastSubAppliedVideoId = videoId;
   }
 
-  // 9. Floating Enhancer Quick Action Bar on Player
+  // 9. Integrated Player Controls for Enhancer (Dubbing ID, Sub Indo, 1080p Quality Lock)
   function injectEnhancerToolbar() {
-    ensureEnhancerStyles();
-    if (document.getElementById("megabox-enhancer-bar")) return;
+    try {
+      ensureEnhancerStyles();
 
-    // Placement anchor: prioritize #actions-inner beside Like/Share, fallback before #below inside #primary-inner
-    const actionsInner = document.querySelector("#above-the-fold #actions-inner");
-    const below = document.getElementById("below");
-    const primaryInner = document.getElementById("primary-inner");
-    if (!actionsInner && !below && !primaryInner) return;
+      // Prioritize integrating directly into YouTube's native .ytp-right-controls
+      const rightControls = document.querySelector(".ytp-right-controls-left") || document.querySelector(".ytp-right-controls");
+      if (!rightControls) return;
+
+      if (document.getElementById("megabox-enhancer-bar")) return;
 
     const bar = document.createElement("div");
     bar.id = "megabox-enhancer-bar";
     bar.style.cssText = `
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 18px;
-      padding: 0 8px;
-      height: 36px;
-      margin-right: 8px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-sizing: border-box; flex: none; width: fit-content;
-      z-index: 10;
+      height: 100%;
+      vertical-align: top;
+      margin-right: 4px;
     `;
 
-    function createBtn(svgEl, title, onClick) {
+    function createYtpBtn(svgEl, title, onClick) {
       const btn = document.createElement("button");
+      btn.className = "ytp-button";
       btn.title = title;
-      btn.style.cssText = "width:28px; height:28px; border-radius:6px; border:none; background:transparent; color:#FFFFFF; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background 0.1s ease;";
-      btn.onmouseenter = () => { btn.style.background = "rgba(255,255,255,0.18)"; };
-      btn.onmouseleave = () => { btn.style.background = "transparent"; };
+      btn.style.cssText = `
+        width: 36px;
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        color: rgba(255, 255, 255, 0.75);
+        transition: color 0.15s ease, transform 0.1s ease;
+      `;
       btn.appendChild(svgEl);
+      btn.onmouseenter = () => {
+        if (!btn.dataset.active || btn.dataset.active === "false") {
+          btn.style.color = "#FFFFFF";
+        }
+        btn.style.transform = "scale(1.08)";
+      };
+      btn.onmouseleave = () => {
+        if (!btn.dataset.active || btn.dataset.active === "false") {
+          btn.style.color = "rgba(255, 255, 255, 0.75)";
+        }
+        btn.style.transform = "scale(1)";
+      };
       btn.onclick = onClick;
       return btn;
     }
 
-    // Audio Language Toggle (ID Dubbing <-> Original)
-    const audioBtn = createBtn(
-      createSvgIcon("15", "15", "M3 5h12M9 3v2m1 14l-5-10h10l-5 10zm-1-4h2"),
-      prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Klik ganti ke Audio Asli)" : "Bahasa Audio: Audio Asli (Klik ganti ke Dubbing Indo)",
+    // 1. Audio Language Toggle (ID Dubbing <-> Original)
+    const audioSvg = createSvgIcon("20", "20", "M3 5h12M9 3v2m1 14l-5-10h10l-5 10zm-1-4h2");
+    const audioBtn = createYtpBtn(
+      audioSvg,
+      prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Aktif - Klik ke Suara Asli)" : "Bahasa Audio: Suara Asli (Klik ke Dubbing Indo)",
       () => {
         prefPreferIndo = !prefPreferIndo;
         localStorage.setItem("mb_enhancer_prefer_indo", prefPreferIndo ? "true" : "false");
-        audioBtn.title = prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Klik ganti ke Audio Asli)" : "Bahasa Audio: Audio Asli (Klik ganti ke Dubbing Indo)";
-        audioBtn.style.color = prefPreferIndo ? "#34C759" : "#FFFFFF";
+        audioBtn.title = prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Aktif - Klik ke Suara Asli)" : "Bahasa Audio: Suara Asli (Klik ke Dubbing Indo)";
+        audioBtn.style.color = prefPreferIndo ? "#34C759" : "rgba(255, 255, 255, 0.75)";
+        audioBtn.dataset.active = prefPreferIndo ? "true" : "false";
         showEnhancerFeedback(prefPreferIndo ? "🇮🇩 Audio: Prioritas Dubbing Indo" : "🌐 Audio: Prioritas Suara Asli (Original)");
         lastAudioTrackAppliedVideoId = null;
         enforceAudioTrackPreference();
       }
     );
-    if (prefPreferIndo) audioBtn.style.color = "#34C759";
+    if (prefPreferIndo) {
+      audioBtn.style.color = "#34C759";
+      audioBtn.dataset.active = "true";
+    }
     bar.appendChild(audioBtn);
 
-    // Subtitle Indonesia Toggle (CC ID On <-> Off)
-    const subBtn = createBtn(
-      createSvgIcon("15", "15", "M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 6h3M7 9h4M14 12h3M14 9h2"),
+    // 2. Subtitle Indonesia Toggle (CC ID On <-> Off)
+    const subSvg = createSvgIcon("20", "20", "M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 6h3M7 9h4M14 12h3M14 9h2");
+    const subBtn = createYtpBtn(
+      subSvg,
       prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)",
       () => {
         prefSubtitleIndo = !prefSubtitleIndo;
         localStorage.setItem("mb_enhancer_sub_indo", prefSubtitleIndo ? "true" : "false");
         subBtn.title = prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)";
-        subBtn.style.color = prefSubtitleIndo ? "#FFCC00" : "#FFFFFF";
+        subBtn.style.color = prefSubtitleIndo ? "#FFCC00" : "rgba(255, 255, 255, 0.75)";
+        subBtn.dataset.active = prefSubtitleIndo ? "true" : "false";
 
         const player = document.getElementById("movie_player");
         if (player) {
@@ -2439,12 +2463,16 @@ window.__megabox_preload_loaded = true;
         }
       }
     );
-    if (prefSubtitleIndo) subBtn.style.color = "#FFCC00";
+    if (prefSubtitleIndo) {
+      subBtn.style.color = "#FFCC00";
+      subBtn.dataset.active = "true";
+    }
     bar.appendChild(subBtn);
 
-    // Quality Lock Button (Cycle 1080p -> 720p -> 1440p)
-    const qualityBtn = createBtn(
-      createSvgIcon("15", "15", "M4 6h16M4 12h16M4 18h7"),
+    // 3. Quality Lock Button (Cycle 1080p -> 720p -> 1440p)
+    const qualitySvg = createSvgIcon("20", "20", "M4 6h16M4 12h16M4 18h7");
+    const qualityBtn = createYtpBtn(
+      qualitySvg,
       `Kunci Kualitas: ${prefQuality === "hd1080" ? "1080p HD" : prefQuality} (Klik ganti)`,
       () => {
         if (prefQuality === "hd1080") prefQuality = "hd720";
@@ -2458,16 +2486,21 @@ window.__megabox_preload_loaded = true;
         enforceAutoQuality();
       }
     );
+    qualityBtn.style.color = "#34C759";
+    qualityBtn.dataset.active = "true";
     bar.appendChild(qualityBtn);
 
-    if (actionsInner) {
-      actionsInner.insertBefore(bar, actionsInner.firstChild);
-    } else if (below && below.parentElement) {
-      below.parentElement.insertBefore(bar, below);
-    } else if (primaryInner) {
-      primaryInner.appendChild(bar);
+    // Insert cleanly before settings button or at front of controls
+    const settingsBtn = rightControls.querySelector(".ytp-settings-button");
+    if (settingsBtn) {
+      rightControls.insertBefore(bar, settingsBtn);
+    } else {
+      rightControls.insertBefore(bar, rightControls.firstChild);
     }
     toolbarEl = bar;
+    } catch (err) {
+      console.error("[Megabox Enhancer] Error in injectEnhancerToolbar:", err);
+    }
   }
 
   // Setup scroll observer once
