@@ -1556,7 +1556,7 @@ window.__megabox_preload_loaded = true;
 })();
 
 // ============================================================================
-// YouTube Enhancer Engine - Productivity Toolbar, Scroll Wheel, Cinema & Loop
+// YouTube Enhancer Engine - Auto Popup / Mini-Player, Scroll Wheel, Cinema & Loop
 // ============================================================================
 (function initYouTubeEnhancer() {
   const isYouTube = window.location.hostname.includes("youtube.com");
@@ -1566,6 +1566,121 @@ window.__megabox_preload_loaded = true;
   let cinemaActive = false;
   let cinemaOverlay = null;
   let toolbarEl = null;
+  let isPopupActive = false;
+  let isPopupDismissedByUser = false;
+
+  // Helper DOM creator compliant with YouTube TrustedTypes
+  function createSvgIcon(width, height, pathD, strokeWidth = "2") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", strokeWidth);
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", pathD);
+    svg.appendChild(path);
+    return svg;
+  }
+
+  // Inject CSS rules for Enhancer Popup & Mini-Player
+  function ensureEnhancerStyles() {
+    if (document.getElementById("megabox-enhancer-styles")) return;
+    const style = document.createElement("style");
+    style.id = "megabox-enhancer-styles";
+    style.textContent = `
+      /* Preserve original space in comments section when video floats */
+      ytd-watch-flexy[mb-popup-active] #player-container-outer {
+        min-height: var(--mb-orig-player-height, 56.25vw);
+      }
+
+      /* Float player window to bottom-right smoothly */
+      ytd-watch-flexy[mb-popup-active] #ytd-player {
+        position: fixed !important;
+        bottom: 24px !important;
+        right: 28px !important;
+        width: 420px !important;
+        height: 236px !important;
+        z-index: 2147483640 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
+        overflow: hidden !important;
+        background: #000000 !important;
+        transform: translateZ(0) !important;
+        transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+      }
+
+      ytd-watch-flexy[mb-popup-active] #ytd-player:hover {
+        box-shadow: 0 20px 52px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.28) !important;
+      }
+
+      /* Floating header controls bar on mini popup */
+      #mb-popup-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0) 100%);
+        z-index: 2147483647;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+
+      ytd-watch-flexy[mb-popup-active] #ytd-player:hover #mb-popup-header {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .mb-popup-badge {
+        font-size: 11px;
+        font-weight: 600;
+        color: #E2E8F0;
+        letter-spacing: 0.02em;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        user-select: none;
+      }
+
+      .mb-popup-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .mb-popup-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #F8FAFC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.15s ease, transform 0.1s ease;
+      }
+
+      .mb-popup-btn:hover {
+        background: rgba(51, 65, 85, 0.95);
+        transform: scale(1.05);
+      }
+
+      .mb-popup-btn:active {
+        transform: scale(0.95);
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   try {
     const { ipcRenderer } = require("electron");
@@ -1574,6 +1689,7 @@ window.__megabox_preload_loaded = true;
       if (!isEnhancerActive) {
         if (toolbarEl) toolbarEl.style.display = "none";
         if (cinemaActive) toggleCinemaMode(false);
+        deactivateVideoPopup();
       } else {
         if (toolbarEl) toolbarEl.style.display = "flex";
       }
@@ -1707,7 +1823,6 @@ window.__megabox_preload_loaded = true;
             showEnhancerFeedback("📸 Tangkapan Frame HD disalin ke Clipboard!");
           });
         } catch (_) {
-          // Fallback download if clipboard item restricted
           const a = document.createElement("a");
           a.download = `yt-frame-${Date.now()}.png`;
           a.href = canvas.toDataURL("image/png");
@@ -1720,7 +1835,109 @@ window.__megabox_preload_loaded = true;
     }
   }
 
-  // 4. Floating Enhancer Quick Action Bar on Player
+  // 4. Floating Video Popup / Mini-Player Engine
+  function activateVideoPopup() {
+    if (!isEnhancerActive || isPopupActive || isPopupDismissedByUser) return;
+    ensureEnhancerStyles();
+
+    const flexy = document.querySelector("ytd-watch-flexy");
+    const ytdPlayer = document.querySelector("#ytd-player");
+    const container = document.querySelector("#player-container-outer") || document.querySelector("#player-container");
+    if (!flexy || !ytdPlayer || !container) return;
+
+    // Cache original height to avoid layout shift when scrolling comments
+    if (container.offsetHeight > 100) {
+      flexy.style.setProperty("--mb-orig-player-height", container.offsetHeight + "px");
+    }
+
+    // Attach popup controls header
+    let header = document.getElementById("mb-popup-header");
+    if (!header) {
+      header = document.createElement("div");
+      header.id = "mb-popup-header";
+
+      const title = document.createElement("span");
+      title.className = "mb-popup-badge";
+      title.textContent = "Enhancer Mini-Player";
+      header.appendChild(title);
+
+      const actions = document.createElement("div");
+      actions.className = "mb-popup-actions";
+
+      // Scroll to top button
+      const scrollBtn = document.createElement("button");
+      scrollBtn.className = "mb-popup-btn";
+      scrollBtn.title = "Kembali ke atas video";
+      scrollBtn.appendChild(createSvgIcon("14", "14", "M18 15l-6-6-6 6"));
+      scrollBtn.onclick = (e) => {
+        e.stopPropagation();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+      actions.appendChild(scrollBtn);
+
+      // Dismiss popup button for this session
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "mb-popup-btn";
+      closeBtn.title = "Tutup Mini-Player";
+      closeBtn.appendChild(createSvgIcon("14", "14", "M18 6L6 18M6 6l12 12"));
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        isPopupDismissedByUser = true;
+        deactivateVideoPopup();
+        showEnhancerFeedback("Mini-Player ditutup sementara");
+      };
+      actions.appendChild(closeBtn);
+
+      header.appendChild(actions);
+      ytdPlayer.appendChild(header);
+    }
+
+    flexy.setAttribute("mb-popup-active", "");
+    isPopupActive = true;
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  function deactivateVideoPopup() {
+    if (!isPopupActive) return;
+    const flexy = document.querySelector("ytd-watch-flexy");
+    if (flexy) flexy.removeAttribute("mb-popup-active");
+    isPopupActive = false;
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  function setupScrollPopupObserver() {
+    window.addEventListener("scroll", () => {
+      if (!isEnhancerActive) return;
+      if (!window.location.pathname.includes("/watch")) {
+        if (isPopupActive) deactivateVideoPopup();
+        return;
+      }
+
+      // Reset dismissed state when user scrolls back to very top
+      if (window.scrollY < 50) {
+        isPopupDismissedByUser = false;
+      }
+
+      const container = document.querySelector("#player-container-outer") || document.querySelector("#player-container");
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      // When the bottom of the original player container scrolls past the top bar (header ~60px)
+      const isOutOfView = rect.bottom < 60;
+
+      if (isOutOfView) {
+        if (!isPopupActive && !isPopupDismissedByUser) {
+          activateVideoPopup();
+        }
+      } else {
+        if (isPopupActive) {
+          deactivateVideoPopup();
+        }
+      }
+    }, { passive: true });
+  }
+
+  // 5. Floating Enhancer Quick Action Bar on Player
   function injectEnhancerToolbar() {
     if (document.getElementById("megabox-enhancer-bar")) return;
     const player = document.querySelector("#movie_player, .html5-video-player");
@@ -1749,34 +1966,34 @@ window.__megabox_preload_loaded = true;
     bar.onmouseenter = () => { bar.style.opacity = "1"; };
     bar.onmouseleave = () => { bar.style.opacity = "0.15"; };
 
-    function createBtn(svgIcon, title, onClick) {
+    function createBtn(svgEl, title, onClick) {
       const btn = document.createElement("button");
       btn.title = title;
       btn.style.cssText = "width:28px; height:28px; border-radius:6px; border:none; background:transparent; color:#FFFFFF; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background 0.15s ease;";
       btn.onmouseenter = () => { btn.style.background = "rgba(255,255,255,0.18)"; };
       btn.onmouseleave = () => { btn.style.background = "transparent"; };
-      btn.innerHTML = svgIcon;
+      btn.appendChild(svgEl);
       btn.onclick = onClick;
       return btn;
     }
 
     // Cinema Mode Button
     bar.appendChild(createBtn(
-      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20M7 5v5M17 5v5"/></svg>`,
+      createSvgIcon("15", "15", "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm0 5h20M7 5v5M17 5v5"),
       "Mode Bioskop Gelap",
       () => toggleCinemaMode()
     ));
 
     // Screenshot Capture Button
     bar.appendChild(createBtn(
-      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+      createSvgIcon("15", "15", "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z M12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"),
       "Ambil Screenshot Frame HD",
       () => captureVideoScreenshot()
     ));
 
     // Loop Toggle Button
     const loopBtn = createBtn(
-      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
+      createSvgIcon("15", "15", "M17 1l4 4-4 4 M3 11V9a4 4 0 0 1 4-4h14 M7 23l-4-4 4-4 M21 13v2a4 4 0 0 1-4 4H3"),
       "Ulangi Video (Loop)",
       () => {
         const video = document.querySelector("video");
@@ -1793,6 +2010,9 @@ window.__megabox_preload_loaded = true;
     toolbarEl = bar;
   }
 
+  // Setup scroll listener once
+  setupScrollPopupObserver();
+
   // Polling hook
   setInterval(() => {
     if (!isEnhancerActive) return;
@@ -1800,5 +2020,6 @@ window.__megabox_preload_loaded = true;
     injectEnhancerToolbar();
   }, 1500);
 
-  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active.");
+  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Scroll Popup, Wheel, Cinema, Loop).");
 })();
+
