@@ -16,7 +16,6 @@ class UBlockOriginEngine {
       "/scorecardresearch.com/",
       "/adservice.google.",
       "/pagead/js/adsbygoogle.js",
-      "/pagead/gen_204",
       "google-analytics.com/analytics.js",
       "googletagmanager.com/gtm.js",
       "googletagmanager.com/gtag/js",

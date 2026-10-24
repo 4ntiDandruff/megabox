@@ -1273,7 +1273,7 @@ window.__megabox_preload_loaded = true;
 })();
 
 // ============================================================================
-// YouTube Anti-Adblock & Undetected Ad Skipper (RemoveAdblockThing Native)
+// YouTube Supercharged Adblocker & Anti-Detection Engine (uBO json-prune + Joelmatic + 0ms FastSkip)
 // ============================================================================
 (function initYouTubeAntiAdblock() {
   const isYouTube = window.location.hostname.includes("youtube.com");
@@ -1293,28 +1293,120 @@ window.__megabox_preload_loaded = true;
       } else if (isEngineActive) {
         injectAdblockCSS();
       }
-      console.log("[Megabox AdblockThing] Engine active state:", isEngineActive);
+      console.log("[Megabox Adblock] Engine active state:", isEngineActive);
     });
   } catch (_) {}
 
-  // 1. Lock window.google_ad_status in both preload & main page world (via webFrame)
-  function lockGoogleAdStatus() {
+  // 1. Inject JSON Pruning & Anti-Adblock Hook directly into Main World
+  function injectMainWorldEngine() {
     try {
-      window.google_ad_status = 1;
-      Object.defineProperty(window, "google_ad_status", {
-        configurable: false,
-        enumerable: true,
-        get() { return 1; },
-        set() {}
-      });
-    } catch (_) {}
-    try {
-      const { webFrame } = require("electron");
-      webFrame.executeJavaScript("window.google_ad_status = 1; try { Object.defineProperty(window, 'google_ad_status', { value: 1, writable: false }); } catch (_) {}");
-    } catch (_) {}
+      let policy;
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        try {
+          policy = window.trustedTypes.createPolicy("megaboxAdblockEngine", { createScript: s => s });
+        } catch (_) {
+          policy = window.trustedTypes.defaultPolicy || { createScript: s => s };
+        }
+      } else {
+        policy = { createScript: s => s };
+      }
+
+      const engineScript = `
+        (function() {
+          if (window.__megabox_engine_v3_installed) return;
+          window.__megabox_engine_v3_installed = true;
+
+          // Universal Ad Payload Pruner (gorhill json-prune algorithm)
+          function pruneAdPayload(data) {
+            if (!data || typeof data !== 'object') return data;
+            if (Array.isArray(data.adPlacements)) data.adPlacements = [];
+            if (Array.isArray(data.adSlots)) data.adSlots = [];
+            if (Array.isArray(data.playerAds)) data.playerAds = [];
+            if (data.adBreakHeartbeatParams) delete data.adBreakHeartbeatParams;
+            if (data.playerResponse && typeof data.playerResponse === 'object') {
+              pruneAdPayload(data.playerResponse);
+            }
+            return data;
+          }
+
+          // A. Trap & Clean ytInitialPlayerResponse
+          var _rawYtInitialPlayerResponse = window.ytInitialPlayerResponse;
+          if (_rawYtInitialPlayerResponse) pruneAdPayload(_rawYtInitialPlayerResponse);
+          try {
+            Object.defineProperty(window, 'ytInitialPlayerResponse', {
+              configurable: true,
+              enumerable: true,
+              get: function() { return _rawYtInitialPlayerResponse; },
+              set: function(val) { _rawYtInitialPlayerResponse = pruneAdPayload(val); }
+            });
+          } catch (_) {}
+
+          // B. Intercept window.fetch for Innertube Player & Next endpoints
+          var origFetch = window.fetch;
+          window.fetch = async function(...args) {
+            var url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+            var response = await origFetch.apply(this, args);
+            if (typeof url === 'string' && (url.includes('/youtubei/v1/player') || url.includes('/youtubei/v1/next') || url.includes('/youtubei/v1/browse'))) {
+              try {
+                var clone = response.clone();
+                var json = await clone.json();
+                var cleaned = pruneAdPayload(json);
+                return new Response(JSON.stringify(cleaned), {
+                  status: response.status,
+                  statusText: response.statusText,
+                  headers: response.headers
+                });
+              } catch (_) {}
+            }
+            return response;
+          };
+
+          // C. Intercept JSON.parse for embedded player args
+          var origJSONParse = JSON.parse;
+          JSON.parse = function(text, reviver) {
+            var result = origJSONParse.call(this, text, reviver);
+            if (result && typeof result === 'object') {
+              if (result.adPlacements || result.adSlots || result.playerAds) {
+                pruneAdPayload(result);
+              }
+            }
+            return result;
+          };
+
+          // D. Freeze google_ad_status = 1 (Joelmatic Anti-Adblock bypass)
+          try {
+            window.google_ad_status = 1;
+            Object.defineProperty(window, 'google_ad_status', {
+              configurable: false,
+              enumerable: true,
+              get: function() { return 1; },
+              set: function() {}
+            });
+          } catch (_) {}
+
+          // E. SPA Navigation Watcher
+          ['yt-navigate-start', 'yt-navigate-finish', 'yt-page-data-updated'].forEach(function(evt) {
+            document.addEventListener(evt, function() {
+              if (window.ytInitialPlayerResponse) {
+                pruneAdPayload(window.ytInitialPlayerResponse);
+              }
+            }, true);
+          });
+        })();
+      `;
+
+      const scriptEl = document.createElement("script");
+      scriptEl.textContent = policy.createScript(engineScript);
+      (document.head || document.documentElement).appendChild(scriptEl);
+      scriptEl.remove();
+    } catch (err) {
+      console.warn("[Megabox Adblock] Failed to inject main world engine:", err);
+    }
   }
-  lockGoogleAdStatus();
-  document.addEventListener("DOMContentLoaded", lockGoogleAdStatus, { once: true });
+
+  // Inject early and on DOM ready
+  injectMainWorldEngine();
+  document.addEventListener("DOMContentLoaded", injectMainWorldEngine, { once: true });
 
   // 2. Inject CSS rules to hide ad slots, banners & backdrop modal
   function injectAdblockCSS() {
@@ -1342,7 +1434,8 @@ window.__megabox_preload_loaded = true;
       masthead-ad,
       #masthead-ad,
       tp-yt-iron-overlay-backdrop,
-      .style-scope.ytd-enforcement-message-view-model {
+      .style-scope.ytd-enforcement-message-view-model,
+      ytd-enforcement-message-view-model {
         display: none !important;
       }
     `;
@@ -1350,7 +1443,7 @@ window.__megabox_preload_loaded = true;
     adblockStyleEl = style;
   }
 
-  // 3. Fast popup remover and ad skipper loop (300ms)
+  // 3. Ultra-fast popup remover and fail-safe ad skipper loop (100ms)
   function runAdRemover() {
     if (!isEngineActive) return;
 
@@ -1361,7 +1454,7 @@ window.__megabox_preload_loaded = true;
       popupBackdrop.remove();
     }
 
-    const popup = document.querySelector(".style-scope ytd-enforcement-message-view-model");
+    const popup = document.querySelector(".style-scope ytd-enforcement-message-view-model, ytd-enforcement-message-view-model");
     if (popup) {
       const dismissBtn = document.getElementById("dismiss-button") || popup.querySelector("button");
       if (dismissBtn) dismissBtn.click();
@@ -1375,16 +1468,16 @@ window.__megabox_preload_loaded = true;
       }
     }
 
-    // Undetected Video Ad Skipper
+    // Fail-safe Instant Ad Skipper (Zero-delay leap if stream ad slips through)
     const adContainer = document.querySelector(".ad-showing, .ad-interrupting");
     const video = document.querySelector("video");
     if (adContainer && video) {
       video.muted = true;
       video.playbackRate = 16;
       if (!isNaN(video.duration) && video.duration > 0 && isFinite(video.duration)) {
-        video.currentTime = video.duration - 0.1;
+        video.currentTime = video.duration - 0.05;
       }
-      const skipBtn = document.querySelector(".ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button");
+      const skipBtn = document.querySelector(".ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, button.ytp-ad-skip-button-modern");
       if (skipBtn) {
         skipBtn.click();
       }
@@ -1397,8 +1490,8 @@ window.__megabox_preload_loaded = true;
     injectAdblockCSS();
   }
 
-  setInterval(runAdRemover, 300);
-  console.log("[Megabox AdblockThing] YouTube Anti-Adblock & Video Ad Skipper active.");
+  setInterval(runAdRemover, 100);
+  console.log("[Megabox Adblock] YouTube Supercharged Adblocker & Anti-Detection Engine active.");
 })();
 
 // ============================================================================
