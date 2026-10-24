@@ -17,9 +17,9 @@ viewBox="0 0 8670 8670"
  <g id="Слой_x0020_1">
   <metadata id="CorelCorpID_0Corel-Layer"/>
   <g id="_871737424">
-   <polygon fill="#cbd5e1" class="fil0" points="0,1106 8670,1106 8670,7564 0,7564 "/>
-   <path fill="#cbd5e1" class="fil1" d="M0 7520l3858 -3353c262,-229 694,-227 959,4l3853 3349 0 44 -8670 0 0 -44z"/>
-   <path fill="#cbd5e1" class="fil2" d="M8670 1129l-3856 3488c-263,239 -696,238 -961,-2l-3853 -3486 0 -23 8670 0 0 23z"/>
+   <polygon class="fil0" points="0,1106 8670,1106 8670,7564 0,7564 "/>
+   <path class="fil1" d="M0 7520l3858 -3353c262,-229 694,-227 959,4l3853 3349 0 44 -8670 0 0 -44z"/>
+   <path class="fil2" d="M8670 1129l-3856 3488c-263,239 -696,238 -961,-2l-3853 -3486 0 -23 8670 0 0 23z"/>
   </g>
   <rect class="fil3" width="8670" height="8670"/>
  </g>
