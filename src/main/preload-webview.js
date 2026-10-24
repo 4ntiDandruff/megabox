@@ -1556,7 +1556,7 @@ window.__megabox_preload_loaded = true;
 })();
 
 // ============================================================================
-// YouTube Enhancer Engine - Auto Popup / Mini-Player, Scroll Wheel, Cinema & Loop
+// YouTube Enhancer Engine - Draggable Mini-Player, Auto Quality, Audio Track & Controls
 // ============================================================================
 (function initYouTubeEnhancer() {
   const isYouTube = window.location.hostname.includes("youtube.com");
@@ -1569,6 +1569,19 @@ window.__megabox_preload_loaded = true;
   let isPopupActive = false;
   let isPopupDismissedByUser = false;
   let overlayEl = null;
+
+  // Enhancer Preferences
+  let prefQuality = localStorage.getItem("mb_enhancer_quality") || "hd1080";
+  let prefPreferIndo = localStorage.getItem("mb_enhancer_prefer_indo") !== "false"; // Default true
+
+  // Mini-player draggable coordinates
+  let popupCoords = { x: 17, y: 72 };
+  try {
+    const savedPos = JSON.parse(localStorage.getItem("mb_enhancer_popup_pos") || "null");
+    if (savedPos && typeof savedPos.x === "number" && typeof savedPos.y === "number") {
+      popupCoords = savedPos;
+    }
+  } catch (_) {}
 
   // Helper DOM creator compliant with YouTube TrustedTypes
   function createSvgIcon(width, height, pathD, strokeWidth = "2", fill = "none", stroke = "currentColor") {
@@ -1595,54 +1608,85 @@ window.__megabox_preload_loaded = true;
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
-  // Inject CSS rules for Enhancer Popup & Mini-Player
+  function updatePopupCssVars(x, y) {
+    const maxX = Math.max(10, window.innerWidth - 540);
+    const maxY = Math.max(10, window.innerHeight - 310);
+    const clampedX = Math.min(Math.max(10, x), maxX);
+    const clampedY = Math.min(Math.max(10, y), maxY);
+
+    popupCoords.x = clampedX;
+    popupCoords.y = clampedY;
+    document.documentElement.style.setProperty("--mb-popup-left", clampedX + "px");
+    document.documentElement.style.setProperty("--mb-popup-top", clampedY + "px");
+    try {
+      localStorage.setItem("mb_enhancer_popup_pos", JSON.stringify(popupCoords));
+    } catch (_) {}
+  }
+
+  // Inject CSS rules for Enhancer Popup, Mini-Player & Clutter hiding
   function ensureEnhancerStyles() {
     if (document.getElementById("megabox-enhancer-styles")) return;
     const style = document.createElement("style");
     style.id = "megabox-enhancer-styles";
     style.textContent = `
-      /* Preserve original space in comments section when video floats */
-      ytd-watch-flexy[mb-popup-active] #player-container-outer {
-        min-height: var(--mb-orig-player-height, 56.25vw);
+      :root {
+        --mb-popup-top: ${popupCoords.y}px;
+        --mb-popup-left: ${popupCoords.x}px;
       }
 
       /* Elevate stacking context of #player so it renders above shelves and comments */
-      ytd-watch-flexy[mb-popup-active] #player {
+      [mb-popup-active] #player {
         position: relative !important;
         z-index: 2147483640 !important;
       }
 
-      /* Float player window to top-left exactly matching Enhancer for YouTube reference */
-      ytd-watch-flexy[mb-popup-active] #ytd-player {
+      /* Placeholder to prevent layout shift during popup mode */
+      #mb-player-placeholder {
+        display: none;
+        width: 100%;
+        pointer-events: none;
+        visibility: hidden;
+      }
+
+      /* Float player window to dynamic coordinates */
+      [mb-popup-active] #ytd-player,
+      body[mb-popup-active]:not(:has(#ytd-player)) #player {
         position: fixed !important;
-        top: 72px !important;
-        left: 17px !important;
+        top: var(--mb-popup-top, 72px) !important;
+        left: var(--mb-popup-left, 17px) !important;
         width: 528px !important;
         height: 297px !important;
+        margin: 0 !important;
+        padding: 0 !important;
         z-index: 2147483640 !important;
         border-radius: 12px !important;
         box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
         overflow: hidden !important;
         background: #000000 !important;
         transform: translateZ(0) !important;
-        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        transition: box-shadow 0.2s ease !important;
       }
 
-      /* Force #movie_player and html5-video-container to cleanly fit inside mini-player */
-      ytd-watch-flexy[mb-popup-active] #movie_player {
+      /* Force #movie_player, #player-wrap, #player-api and containers to cleanly fit inside mini-player */
+      [mb-popup-active] #player-wrap,
+      [mb-popup-active] #player-api,
+      [mb-popup-active] #movie_player,
+      [mb-popup-active] .html5-video-container {
         width: 100% !important;
         height: 100% !important;
         position: relative !important;
         overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
-      ytd-watch-flexy[mb-popup-active] .html5-video-container {
+      [mb-popup-active] .html5-video-container {
         width: 100% !important;
         height: 100% !important;
         position: relative !important;
       }
 
-      ytd-watch-flexy[mb-popup-active] #movie_player video {
+      [mb-popup-active] #movie_player video {
         width: 100% !important;
         height: 100% !important;
         top: 0 !important;
@@ -1652,23 +1696,23 @@ window.__megabox_preload_loaded = true;
       }
 
       /* Hide default cluttered YouTube controls in popup mode */
-      ytd-watch-flexy[mb-popup-active] .ytp-chrome-bottom,
-      ytd-watch-flexy[mb-popup-active] .ytp-chrome-top,
-      ytd-watch-flexy[mb-popup-active] .ytp-gradient-bottom,
-      ytd-watch-flexy[mb-popup-active] .ytp-gradient-top,
-      ytd-watch-flexy[mb-popup-active] .ytp-ce-element,
-      ytd-watch-flexy[mb-popup-active] .ytp-paid-content-overlay,
-      ytd-watch-flexy[mb-popup-active] .html5-endscreen,
-      ytd-watch-flexy[mb-popup-active] .videowall-endscreen,
-      ytd-watch-flexy[mb-popup-active] #megabox-enhancer-bar {
+      [mb-popup-active] .ytp-chrome-bottom,
+      [mb-popup-active] .ytp-chrome-top,
+      [mb-popup-active] .ytp-gradient-bottom,
+      [mb-popup-active] .ytp-gradient-top,
+      [mb-popup-active] .ytp-ce-element,
+      [mb-popup-active] .ytp-paid-content-overlay,
+      [mb-popup-active] .html5-endscreen,
+      [mb-popup-active] .videowall-endscreen,
+      [mb-popup-active] #megabox-enhancer-bar {
         display: none !important;
       }
 
-      /* Dedicated Clean Overlay Matching Reference Screenshot */
+      /* Dedicated Clean Overlay Matching Reference Screenshot with Draggable Handle */
       #mb-enhancer-ref-overlay {
         position: fixed !important;
-        top: 72px !important;
-        left: 17px !important;
+        top: var(--mb-popup-top, 72px) !important;
+        left: var(--mb-popup-left, 17px) !important;
         width: 528px !important;
         height: 297px !important;
         z-index: 2147483645 !important;
@@ -1678,16 +1722,35 @@ window.__megabox_preload_loaded = true;
         display: none;
       }
 
-      ytd-watch-flexy[mb-popup-active] ~ #mb-enhancer-ref-overlay,
-      body:has(ytd-watch-flexy[mb-popup-active]) #mb-enhancer-ref-overlay {
+      [mb-popup-active] ~ #mb-enhancer-ref-overlay,
+      body[mb-popup-active] #mb-enhancer-ref-overlay,
+      body:has([mb-popup-active]) #mb-enhancer-ref-overlay {
         display: block !important;
+      }
+
+      /* Top Drag Handle Header */
+      #mb-ref-drag-handle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        cursor: move;
+        pointer-events: auto;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        background: linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      #mb-enhancer-ref-overlay:hover #mb-ref-drag-handle {
+        opacity: 1;
       }
 
       /* Close button (White circle with black X) at top-left */
       #mb-ref-close-btn {
-        position: absolute;
-        top: 12px;
-        left: 12px;
         width: 24px;
         height: 24px;
         border-radius: 50%;
@@ -1711,6 +1774,18 @@ window.__megabox_preload_loaded = true;
         transform: scale(0.92);
       }
 
+      /* Drag Cue Icon */
+      #mb-ref-drag-hint {
+        margin-left: auto;
+        color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        user-select: none;
+        font-size: 11px;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        gap: 4px;
+      }
+
       /* Bottom bar with play/pause, volume circle, time pill */
       #mb-ref-bottom-bar {
         position: absolute;
@@ -1721,6 +1796,7 @@ window.__megabox_preload_loaded = true;
         align-items: center;
         gap: 10px;
         pointer-events: auto;
+        z-index: 2;
       }
 
       #mb-ref-play-btn {
@@ -1787,6 +1863,7 @@ window.__megabox_preload_loaded = true;
         background: rgba(255, 255, 255, 0.25);
         cursor: pointer;
         pointer-events: auto;
+        z-index: 2;
       }
       #mb-ref-progress-fill {
         height: 100%;
@@ -1795,7 +1872,7 @@ window.__megabox_preload_loaded = true;
         transition: width 0.1s linear;
       }
     `;
-    document.head.appendChild(style);
+    (document.head || document.documentElement).appendChild(style);
   }
 
   try {
@@ -1842,7 +1919,7 @@ window.__megabox_preload_loaded = true;
     pill.textContent = text;
     pill.style.opacity = "1";
     clearTimeout(pill._timer);
-    pill._timer = setTimeout(() => { pill.style.opacity = "0"; }, 1400);
+    pill._timer = setTimeout(() => { pill.style.opacity = "0"; }, 1500);
   }
 
   // 1. Mouse Scroll-Wheel Volume & Playback Speed Control over video
@@ -1867,7 +1944,7 @@ window.__megabox_preload_loaded = true;
           rate = Math.max(0.25, rate - 0.25);
         }
         video.playbackRate = rate;
-        showEnhancerFeedback(`⚡ Kecepatan: ${rate.toFixed(2)}x`);
+        showEnhancerFeedback("⚡ Kecepatan: " + rate.toFixed(2) + "x");
       } else {
         let vol = video.volume;
         if (e.deltaY < 0) {
@@ -1877,7 +1954,7 @@ window.__megabox_preload_loaded = true;
         }
         video.volume = vol;
         video.muted = false;
-        showEnhancerFeedback(`🔊 Volume: ${Math.round(vol * 100)}%`);
+        showEnhancerFeedback("🔊 Volume: " + Math.round(vol * 100) + "%");
       }
     }, { passive: false });
   }
@@ -1949,7 +2026,7 @@ window.__megabox_preload_loaded = true;
     }
   }
 
-  // 4. Ensure Overlay DOM exists and is bound to current video
+  // 4. Draggable Mini-Player Overlay
   function ensureOverlayExists() {
     let overlay = document.getElementById("mb-enhancer-ref-overlay");
     if (overlay) return overlay;
@@ -1957,7 +2034,11 @@ window.__megabox_preload_loaded = true;
     overlay = document.createElement("div");
     overlay.id = "mb-enhancer-ref-overlay";
 
-    // Close button (White circle with black X)
+    // Top Drag Handle
+    const dragHandle = document.createElement("div");
+    dragHandle.id = "mb-ref-drag-handle";
+
+    // Close button (White circle with black X) inside drag handle
     const closeBtn = document.createElement("button");
     closeBtn.id = "mb-ref-close-btn";
     closeBtn.title = "Tutup Mini-Player";
@@ -1968,7 +2049,51 @@ window.__megabox_preload_loaded = true;
       deactivateVideoPopup();
       showEnhancerFeedback("Mini-Player ditutup");
     };
-    overlay.appendChild(closeBtn);
+    dragHandle.appendChild(closeBtn);
+
+    // Drag Cue Hint
+    const dragHint = document.createElement("div");
+    dragHint.id = "mb-ref-drag-hint";
+    dragHint.appendChild(createSvgIcon("12", "12", "M8 9l4-4 4 4m0 6l-4 4-4-4", "2"));
+    const hintText = document.createElement("span");
+    hintText.textContent = "Geser";
+    dragHint.appendChild(hintText);
+    dragHandle.appendChild(dragHint);
+
+    // Draggable logic via pointer events
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let origLeft = popupCoords.x;
+    let origTop = popupCoords.y;
+
+    dragHandle.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("#mb-ref-close-btn")) return;
+      isDragging = true;
+      dragHandle.setPointerCapture(e.pointerId);
+      startX = e.clientX;
+      startY = e.clientY;
+      origLeft = popupCoords.x;
+      origTop = popupCoords.y;
+      e.preventDefault();
+    });
+
+    dragHandle.addEventListener("pointermove", (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      updatePopupCssVars(origLeft + dx, origTop + dy);
+    });
+
+    const stopDrag = () => {
+      if (isDragging) {
+        isDragging = false;
+      }
+    };
+    dragHandle.addEventListener("pointerup", stopDrag);
+    dragHandle.addEventListener("pointercancel", stopDrag);
+
+    overlay.appendChild(dragHandle);
 
     // Progress bar
     const progCont = document.createElement("div");
@@ -2088,28 +2213,48 @@ window.__megabox_preload_loaded = true;
     if (!isEnhancerActive || isPopupActive || isPopupDismissedByUser) return;
     ensureEnhancerStyles();
 
-    const flexy = document.querySelector("ytd-watch-flexy");
-    const container = document.querySelector("#player-container-outer") || document.querySelector("#player-container");
-    const ytdPlayer = document.querySelector("#ytd-player");
-    if (!flexy || !container || !ytdPlayer) return;
+    const targetEl = document.querySelector("ytd-watch-flexy") || document.querySelector("ytd-watch-grid") || document.body;
+    const container = document.querySelector("#player-container-outer") || document.querySelector("#player-wrap") || document.querySelector("#player");
+    const moviePlayer = document.querySelector("#movie_player");
+    if (!targetEl || !container || !moviePlayer) return;
+
+    // Maintain document layout flow with placeholder
+    const origHeight = container.offsetHeight || 480;
+    let placeholder = document.getElementById("mb-player-placeholder");
+    if (!placeholder) {
+      placeholder = document.createElement("div");
+      placeholder.id = "mb-player-placeholder";
+      const anchor = document.querySelector("#player-container-outer") || document.querySelector("#player");
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(placeholder, anchor);
+      }
+    }
+    if (placeholder) {
+      placeholder.style.height = origHeight + "px";
+      placeholder.style.display = "block";
+    }
 
     if (container.offsetHeight > 100) {
-      flexy.style.setProperty("--mb-orig-player-height", container.offsetHeight + "px");
+      targetEl.style.setProperty("--mb-orig-player-height", container.offsetHeight + "px");
     }
 
     ensureOverlayExists();
     if (overlayEl) overlayEl.style.display = "block";
 
-    flexy.setAttribute("mb-popup-active", "");
+    targetEl.setAttribute("mb-popup-active", "");
     isPopupActive = true;
     window.dispatchEvent(new Event("resize"));
   }
 
   function deactivateVideoPopup() {
     if (!isPopupActive) return;
-    const flexy = document.querySelector("ytd-watch-flexy");
-    if (flexy) flexy.removeAttribute("mb-popup-active");
+    const targetEl = document.querySelector("[mb-popup-active]");
+    if (targetEl) targetEl.removeAttribute("mb-popup-active");
     if (overlayEl) overlayEl.style.display = "none";
+
+    const placeholder = document.getElementById("mb-player-placeholder");
+    if (placeholder) placeholder.style.display = "none";
+
     isPopupActive = false;
     window.dispatchEvent(new Event("resize"));
   }
@@ -2126,11 +2271,13 @@ window.__megabox_preload_loaded = true;
         isPopupDismissedByUser = false;
       }
 
-      const container = document.querySelector("#player-container-outer") || document.querySelector("#player-container");
+      const placeholder = document.getElementById("mb-player-placeholder");
+      const container = (isPopupActive && placeholder && placeholder.style.display !== "none")
+        ? placeholder
+        : (document.querySelector("#player-container-outer") || document.querySelector("#player-wrap") || document.querySelector("#player"));
       if (!container) return;
 
       const rect = container.getBoundingClientRect();
-      // Out of view when video bottom scrolls past header (60px)
       const isOutOfView = rect.bottom < 60;
 
       if (isOutOfView) {
@@ -2145,7 +2292,87 @@ window.__megabox_preload_loaded = true;
     }, { passive: true });
   }
 
-  // 6. Floating Enhancer Quick Action Bar on Player
+  // 6. Auto Video Quality Engine (Kunci Resolusi HD 1080p Otomatis)
+  let lastQualityAppliedVideoId = null;
+  function enforceAutoQuality() {
+    if (!isEnhancerActive) return;
+    const player = document.getElementById("movie_player");
+    if (!player || typeof player.setPlaybackQualityRange !== "function") return;
+
+    const videoId = player.getVideoData ? player.getVideoData()?.video_id : null;
+    if (!videoId) return;
+
+    if (lastQualityAppliedVideoId === videoId && player.getPlaybackQuality() === prefQuality) return;
+
+    const available = player.getAvailableQualityLevels ? player.getAvailableQualityLevels() : [];
+    if (!available || available.length === 0) return;
+
+    // Pick closest quality if preferred is not available
+    let target = prefQuality;
+    if (!available.includes(target)) {
+      if (available.includes("hd1080")) target = "hd1080";
+      else if (available.includes("hd720")) target = "hd720";
+      else target = available[0];
+    }
+
+    try {
+      player.setPlaybackQualityRange(target, target);
+      if (typeof player.setPlaybackQuality === "function") {
+        player.setPlaybackQuality(target);
+      }
+      lastQualityAppliedVideoId = videoId;
+      console.log(`[Megabox Enhancer] Locked quality to ${target} for video ${videoId}`);
+    } catch (_) {}
+  }
+
+  // 7. Audio Track Selector (Pilih Dubbing Indonesia atau Original)
+  let lastAudioTrackAppliedVideoId = null;
+  function enforceAudioTrackPreference() {
+    if (!isEnhancerActive) return;
+    const player = document.getElementById("movie_player");
+    if (!player || typeof player.getAvailableAudioTracks !== "function") return;
+
+    const videoId = player.getVideoData ? player.getVideoData()?.video_id : null;
+    if (!videoId) return;
+
+    if (lastAudioTrackAppliedVideoId === videoId) return;
+
+    const tracks = player.getAvailableAudioTracks();
+    if (!tracks || tracks.length <= 1) {
+      lastAudioTrackAppliedVideoId = videoId;
+      return;
+    }
+
+    if (prefPreferIndo) {
+      // Prioritize Indonesian dubbing track
+      const indoTrack = tracks.find(t => {
+        const name = (t.Mb ? t.Mb.name : t.name) || "";
+        return name.toLowerCase().includes("indonesia") || (t.id && t.id.includes("aWQ"));
+      });
+      if (indoTrack) {
+        player.setAudioTrack(indoTrack);
+        lastAudioTrackAppliedVideoId = videoId;
+        console.log("[Megabox Enhancer] Set audio track to Indonesian dubbing");
+        return;
+      }
+    } else {
+      // Prioritize Original track
+      const origTrack = tracks.find(t => {
+        const name = (t.Mb ? t.Mb.name : t.name) || "";
+        return (t.id && t.id.includes("original")) || name.toLowerCase().includes("asli");
+      });
+      if (origTrack) {
+        player.setAudioTrack(origTrack);
+        lastAudioTrackAppliedVideoId = videoId;
+        console.log("[Megabox Enhancer] Set audio track to Original track");
+        return;
+      }
+    }
+
+    lastAudioTrackAppliedVideoId = videoId;
+  }
+
+  // 8. Floating Enhancer Quick Action Bar on Player
   function injectEnhancerToolbar() {
     if (document.getElementById("megabox-enhancer-bar")) return;
     const player = document.querySelector("#movie_player, .html5-video-player");
@@ -2185,6 +2412,41 @@ window.__megabox_preload_loaded = true;
       return btn;
     }
 
+    // Audio Language Toggle (ID Dubbing <-> Original)
+    const audioBtn = createBtn(
+      createSvgIcon("15", "15", "M3 5h12M9 3v2m1 14l-5-10h10l-5 10zm-1-4h2"),
+      prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Klik ganti ke Audio Asli)" : "Bahasa Audio: Audio Asli (Klik ganti ke Dubbing Indo)",
+      () => {
+        prefPreferIndo = !prefPreferIndo;
+        localStorage.setItem("mb_enhancer_prefer_indo", prefPreferIndo ? "true" : "false");
+        audioBtn.title = prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Klik ganti ke Audio Asli)" : "Bahasa Audio: Audio Asli (Klik ganti ke Dubbing Indo)";
+        audioBtn.style.color = prefPreferIndo ? "#34C759" : "#FFFFFF";
+        showEnhancerFeedback(prefPreferIndo ? "🇮🇩 Audio: Prioritas Dubbing Indo" : "🌐 Audio: Prioritas Suara Asli (Original)");
+        lastAudioTrackAppliedVideoId = null;
+        enforceAudioTrackPreference();
+      }
+    );
+    if (prefPreferIndo) audioBtn.style.color = "#34C759";
+    bar.appendChild(audioBtn);
+
+    // Quality Lock Button (Cycle 1080p -> 720p -> 1440p)
+    const qualityBtn = createBtn(
+      createSvgIcon("15", "15", "M4 6h16M4 12h16M4 18h7"),
+      `Kunci Kualitas: ${prefQuality === "hd1080" ? "1080p HD" : prefQuality} (Klik ganti)`,
+      () => {
+        if (prefQuality === "hd1080") prefQuality = "hd720";
+        else if (prefQuality === "hd720") prefQuality = "hd1440";
+        else prefQuality = "hd1080";
+        localStorage.setItem("mb_enhancer_quality", prefQuality);
+        const label = prefQuality === "hd1080" ? "1080p HD" : (prefQuality === "hd720" ? "720p HD" : "1440p 2K");
+        qualityBtn.title = `Kunci Kualitas: ${label} (Klik ganti)`;
+        showEnhancerFeedback(`📺 Kunci Kualitas: ${label}`);
+        lastQualityAppliedVideoId = null;
+        enforceAutoQuality();
+      }
+    );
+    bar.appendChild(qualityBtn);
+
     // Cinema Mode Button
     bar.appendChild(createBtn(
       createSvgIcon("15", "15", "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm0 5h20M7 5v5M17 5v5"),
@@ -2219,15 +2481,26 @@ window.__megabox_preload_loaded = true;
   }
 
   // Setup scroll observer once
+  // Inject enhancer styles early
+  ensureEnhancerStyles();
+
   setupScrollPopupObserver();
+
+  // Reset tracking on YouTube SPA navigation
+  window.addEventListener("yt-navigate-finish", () => {
+    lastQualityAppliedVideoId = null;
+    lastAudioTrackAppliedVideoId = null;
+  });
 
   // Polling hook
   setInterval(() => {
     if (!isEnhancerActive) return;
     attachScrollWheelControls();
     injectEnhancerToolbar();
+    enforceAutoQuality();
+    enforceAudioTrackPreference();
   }, 1500);
 
-  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Scroll Popup, Wheel, Cinema, Loop).");
+  console.log("[Megabox Enhancer] YouTube Enhancer power-user engine active (Draggable Popup, Auto Quality, Audio Track, Cinema, Loop).");
 })();
 
