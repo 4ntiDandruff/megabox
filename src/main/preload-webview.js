@@ -1714,7 +1714,14 @@ window.__megabox_preload_loaded = true;
       [mb-popup-active] .ytp-paid-content-overlay,
       [mb-popup-active] .html5-endscreen,
       [mb-popup-active] .videowall-endscreen,
-      [mb-popup-active] #megabox-enhancer-bar {
+            .ytp-autohide .ytp-chrome-bottom:not([mb-keep-alive]),
+      .ytp-autohide #megabox-enhancer-bar {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.2s cubic-bezier(0.4, 0, 1, 1) !important;
+      }
+
+[mb-popup-active] #megabox-enhancer-bar {
         display: none !important;
       }
 
@@ -2301,8 +2308,14 @@ window.__megabox_preload_loaded = true;
     const subBtn = document.querySelector(".ytp-subtitles-button");
     if (subBtn && subBtn.getAttribute("aria-pressed") !== "true") {
       subBtn.click();
-    } else if (player && player.toggleSubtitlesOn && !player.isSubtitlesOn?.()) {
-      player.toggleSubtitlesOn();
+    } else if (player && typeof player.toggleSubtitlesOn === "function") {
+      if (!player.isSubtitlesOn || !player.isSubtitlesOn()) {
+        player.toggleSubtitlesOn();
+      }
+    } else if (player && typeof player.toggleSubtitles === "function") {
+      if (!player.isSubtitlesOn || !player.isSubtitlesOn()) {
+        player.toggleSubtitles();
+      }
     }
   }
 
@@ -2311,19 +2324,35 @@ window.__megabox_preload_loaded = true;
     if (subBtn && subBtn.getAttribute("aria-pressed") === "true") {
       subBtn.click();
     } else if (player) {
-      player.setOption?.("captions", "track", {});
-      if (player.toggleSubtitles && player.isSubtitlesOn?.()) player.toggleSubtitles();
+      if (typeof player.setOption === "function") {
+        player.setOption("captions", "track", {});
+      }
+      if (typeof player.toggleSubtitles === "function" && player.isSubtitlesOn?.()) {
+        player.toggleSubtitles();
+      }
     }
   }
 
-  function applyIndonesianSubtitleTrack(player, isManualToggle = false) {
+  function applyIndonesianSubtitleTrack(player, retries = 5) {
     if (!player || typeof player.setOption !== "function") return false;
 
-    // Ensure YouTube's subtitle display engine is on
+    // Ensure YouTube native subtitle engine is active
     enableSubtitlesOnPlayer(player);
 
     const tracklist = player.getOption("captions", "tracklist") || [];
     const transList = player.getOption("captions", "translationLanguages") || [];
+    const curTrack = player.getOption("captions", "track") || {};
+
+    // Check if current track is already Indonesian (native or auto-translated)
+    if (curTrack.languageCode === "id" || curTrack.translationLanguage?.languageCode === "id") {
+      return true;
+    }
+
+    // If tracklist is still empty, schedule delayed retry (YouTube lazy loads tracklist upon enable)
+    if (!tracklist.length && retries > 0) {
+      setTimeout(() => applyIndonesianSubtitleTrack(player, retries - 1), 350);
+      return false;
+    }
 
     // 1. Direct native Indonesian subtitle track
     const nativeId = tracklist.find(t => t.languageCode === "id" || (t.languageName && t.languageName.toLowerCase().includes("indonesia")));
@@ -2333,11 +2362,11 @@ window.__megabox_preload_loaded = true;
       return true;
     }
 
-    // 2. Auto-translate to Indonesian from base track
+    // 2. Auto-translate to Indonesian from primary spoken/written base track
     const idTrans = transList.find(t => t.languageCode === "id");
     if (idTrans) {
-      const baseTrack = tracklist.find(t => t.is_default && t.is_translateable) ||
-                        tracklist.find(t => t.languageCode === "en") ||
+      const baseTrack = tracklist.find(t => t.languageCode === "en") ||
+                        tracklist.find(t => t.is_default && t.is_translateable) ||
                         tracklist.find(t => t.is_translateable) ||
                         tracklist[0];
       if (baseTrack) {
@@ -2350,12 +2379,6 @@ window.__megabox_preload_loaded = true;
       }
     }
 
-    // If tracklist is still empty, schedule delayed retry (YouTube lazy-loads tracklist on click)
-    if (isManualToggle) {
-      setTimeout(() => {
-        applyIndonesianSubtitleTrack(player, false);
-      }, 500);
-    }
     return false;
   }
 
@@ -2374,7 +2397,7 @@ window.__megabox_preload_loaded = true;
       return;
     }
 
-    const applied = applyIndonesianSubtitleTrack(player, false);
+    const applied = applyIndonesianSubtitleTrack(player, 5);
     if (applied) {
       lastSubAppliedVideoId = videoId;
     }
@@ -2428,7 +2451,7 @@ window.__megabox_preload_loaded = true;
     try {
       ensureEnhancerStyles();
 
-      // Prioritize integrating directly into YouTube's native .ytp-right-controls
+      // Prioritize integrating directly into YouTube native .ytp-right-controls
       const rightControls = document.querySelector(".ytp-right-controls-left") || document.querySelector(".ytp-right-controls");
       if (!rightControls) return;
 
@@ -2441,17 +2464,20 @@ window.__megabox_preload_loaded = true;
         align-items: center;
         height: 100%;
         vertical-align: top;
-        margin-right: 4px;
+        margin-right: 6px;
+        position: relative;
+        z-index: 10;
       `;
 
       function createYtpBtn(svgEl, title, onClick) {
         const btn = document.createElement("button");
-        btn.className = "ytp-button";
+        btn.className = "ytp-button mb-ytp-btn";
         btn.title = title;
         btn.style.cssText = `
-          width: 34px;
+          width: 38px;
           height: 100%;
           display: inline-flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
           background: transparent;
@@ -2461,14 +2487,34 @@ window.__megabox_preload_loaded = true;
           margin: 0;
           outline: none;
           color: rgba(255, 255, 255, 0.75);
+          position: relative;
           transition: color 0.15s ease, transform 0.1s ease;
         `;
+        
         btn.appendChild(svgEl);
+
+        // Subtle 3px active dot pill indicator at the bottom (Liquid Apple Glass touch)
+        const dot = document.createElement("span");
+        dot.className = "mb-active-dot";
+        dot.style.cssText = `
+          position: absolute;
+          bottom: 4px;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: transparent;
+          pointer-events: none;
+          transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+          opacity: 0;
+          transform: scale(0.6);
+        `;
+        btn.appendChild(dot);
+
         btn.onmouseenter = () => {
           if (!btn.dataset.active || btn.dataset.active === "false") {
             btn.style.color = "#FFFFFF";
           }
-          btn.style.transform = "scale(1.08)";
+          btn.style.transform = "scale(1.06)";
         };
         btn.onmouseleave = () => {
           if (!btn.dataset.active || btn.dataset.active === "false") {
@@ -2476,12 +2522,29 @@ window.__megabox_preload_loaded = true;
           }
           btn.style.transform = "scale(1)";
         };
-        btn.onclick = onClick;
+        btn.onclick = (e) => {
+          onClick(e);
+          // Release focus immediately so autohide timer runs cleanly
+          btn.blur();
+          const player = document.getElementById("movie_player");
+          if (player) player.focus();
+        };
         return btn;
       }
 
+      function setBtnActiveState(btn, isActive, activeColor) {
+        btn.dataset.active = isActive ? "true" : "false";
+        btn.style.color = isActive ? activeColor : "rgba(255, 255, 255, 0.75)";
+        const dot = btn.querySelector(".mb-active-dot");
+        if (dot) {
+          dot.style.background = isActive ? activeColor : "transparent";
+          dot.style.opacity = isActive ? "1" : "0";
+          dot.style.transform = isActive ? "scale(1)" : "scale(0.6)";
+        }
+      }
+
       // 1. Audio Language Toggle (ID Dubbing <-> Original)
-      const audioSvg = createSvgIcon("18", "18", "M3 5h12M9 3v2m1 14l-5-10h10l-5 10zm-1-4h2");
+      const audioSvg = createSvgIcon("20", "20", "M3 5h12M9 3v2m1 14l-5-10h10l-5 10zm-1-4h2");
       const audioBtn = createYtpBtn(
         audioSvg,
         prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Aktif - Klik ke Suara Asli)" : "Bahasa Audio: Suara Asli (Klik ke Dubbing Indo)",
@@ -2489,21 +2552,17 @@ window.__megabox_preload_loaded = true;
           prefPreferIndo = !prefPreferIndo;
           localStorage.setItem("mb_enhancer_prefer_indo", prefPreferIndo ? "true" : "false");
           audioBtn.title = prefPreferIndo ? "Bahasa Audio: Dubbing Indo (Aktif - Klik ke Suara Asli)" : "Bahasa Audio: Suara Asli (Klik ke Dubbing Indo)";
-          audioBtn.style.color = prefPreferIndo ? "#34C759" : "rgba(255, 255, 255, 0.75)";
-          audioBtn.dataset.active = prefPreferIndo ? "true" : "false";
+          setBtnActiveState(audioBtn, prefPreferIndo, "#34C759");
           showEnhancerFeedback(prefPreferIndo ? "🇮🇩 Audio: Prioritas Dubbing Indo" : "🌐 Audio: Prioritas Suara Asli (Original)");
           lastAudioTrackAppliedVideoId = null;
           enforceAudioTrackPreference();
         }
       );
-      if (prefPreferIndo) {
-        audioBtn.style.color = "#34C759";
-        audioBtn.dataset.active = "true";
-      }
+      setBtnActiveState(audioBtn, prefPreferIndo, "#34C759");
       bar.appendChild(audioBtn);
 
       // 2. Subtitle Indonesia Toggle (CC ID On <-> Off)
-      const subSvg = createSvgIcon("18", "18", "M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 6h3M7 9h4M14 12h3M14 9h2");
+      const subSvg = createSvgIcon("20", "20", "M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm3 6h3M7 9h4M14 12h3M14 9h2");
       const subBtn = createYtpBtn(
         subSvg,
         prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)",
@@ -2511,14 +2570,14 @@ window.__megabox_preload_loaded = true;
           prefSubtitleIndo = !prefSubtitleIndo;
           localStorage.setItem("mb_enhancer_sub_indo", prefSubtitleIndo ? "true" : "false");
           subBtn.title = prefSubtitleIndo ? "Subtitle: Indonesia Aktif (Klik matikan)" : "Subtitle: Indonesia Nonaktif (Klik aktifkan)";
-          subBtn.style.color = prefSubtitleIndo ? "#FFCC00" : "rgba(255, 255, 255, 0.75)";
-          subBtn.dataset.active = prefSubtitleIndo ? "true" : "false";
+          setBtnActiveState(subBtn, prefSubtitleIndo, "#FFCC00");
 
           const player = document.getElementById("movie_player");
           if (player) {
             if (prefSubtitleIndo) {
               lastSubAppliedVideoId = null;
-              applyIndonesianSubtitleTrack(player, true);
+              enableSubtitlesOnPlayer(player);
+              applyIndonesianSubtitleTrack(player, 6);
               showEnhancerFeedback("💬 Subtitle: Bahasa Indonesia Aktif");
             } else {
               disableSubtitlesOnPlayer(player);
@@ -2527,14 +2586,11 @@ window.__megabox_preload_loaded = true;
           }
         }
       );
-      if (prefSubtitleIndo) {
-        subBtn.style.color = "#FFCC00";
-        subBtn.dataset.active = "true";
-      }
+      setBtnActiveState(subBtn, prefSubtitleIndo, "#FFCC00");
       bar.appendChild(subBtn);
 
       // 3. Quality Lock Button (Cycle 1080p -> 720p -> 1440p)
-      const qualitySvg = createSvgIcon("18", "18", "M4 6h16M4 12h16M4 18h7");
+      const qualitySvg = createSvgIcon("20", "20", "M4 6h16M4 12h16M4 18h7");
       const qualityBtn = createYtpBtn(
         qualitySvg,
         `Kunci Kualitas: ${prefQuality === "hd1080" ? "1080p HD" : prefQuality} (Klik ganti)`,
@@ -2550,8 +2606,7 @@ window.__megabox_preload_loaded = true;
           enforceAutoQuality();
         }
       );
-      qualityBtn.style.color = "#34C759";
-      qualityBtn.dataset.active = "true";
+      setBtnActiveState(qualityBtn, true, "#34C759");
       bar.appendChild(qualityBtn);
 
       // 4. Playback Speed Cluster Pill: Perlambat (-0.25x), Normal (1.0x), Percepat (+0.25x)
@@ -2561,11 +2616,13 @@ window.__megabox_preload_loaded = true;
         display: inline-flex;
         align-items: center;
         background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 13px;
-        height: 26px;
+        border-radius: 14px;
+        height: 28px;
         margin: 0 4px;
-        padding: 0 3px;
+        padding: 0 4px;
         box-sizing: border-box;
       `;
 
@@ -2600,22 +2657,27 @@ window.__megabox_preload_loaded = true;
         }
         b.onmouseenter = () => { b.style.color = "#FFFFFF"; b.style.transform = "scale(1.1)"; };
         b.onmouseleave = () => { b.style.color = "rgba(255, 255, 255, 0.85)"; b.style.transform = "scale(1)"; };
-        b.onclick = onClick;
+        b.onclick = (e) => {
+          onClick(e);
+          b.blur();
+          const player = document.getElementById("movie_player");
+          if (player) player.focus();
+        };
         return b;
       }
 
       // Slower (-0.25x)
       const slowerSvg = createSvgIcon("14", "14", "M11 19l-7-7 7-7m8 14l-7-7 7-7");
-      speedCluster.appendChild(createClusterBtn(slowerSvg, "Perlambat (-0.25x)", "20px", () => setPlayerSpeedRelative(-0.25)));
+      speedCluster.appendChild(createClusterBtn(slowerSvg, "Perlambat (-0.25x)", "22px", () => setPlayerSpeedRelative(-0.25)));
 
       // Normal (1.0x) Reset
-      const normalBtn = createClusterBtn("1.0x", "Kecepatan Normal (Klik untuk Reset ke 1.0x)", "30px", () => resetPlayerSpeedNormal());
+      const normalBtn = createClusterBtn("1.0x", "Kecepatan Normal (Klik untuk Reset ke 1.0x)", "32px", () => resetPlayerSpeedNormal());
       speedPillLabel = normalBtn.querySelector("span");
       speedCluster.appendChild(normalBtn);
 
       // Faster (+0.25x)
       const fasterSvg = createSvgIcon("14", "14", "M13 5l7 7-7 7M5 5l7 7-7 7");
-      speedCluster.appendChild(createClusterBtn(fasterSvg, "Percepat (+0.25x)", "20px", () => setPlayerSpeedRelative(0.25)));
+      speedCluster.appendChild(createClusterBtn(fasterSvg, "Percepat (+0.25x)", "22px", () => setPlayerSpeedRelative(0.25)));
 
       // Sync initial video playback rate
       const curVideo = document.querySelector("video");
