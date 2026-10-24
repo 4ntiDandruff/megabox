@@ -1264,3 +1264,127 @@ window.__megabox_preload_loaded = true;
 
   console.log('[Megabox SponsorBlock] YouTube SponsorBlock engine initialized (K-Anonymity mode).');
 })();
+
+// ============================================================================
+// YouTube Anti-Adblock & Undetected Ad Skipper (RemoveAdblockThing Native)
+// ============================================================================
+(function initYouTubeAntiAdblock() {
+  const isYouTube = window.location.hostname.includes("youtube.com");
+  if (!isYouTube) return;
+
+  let isEngineActive = true;
+  let adblockStyleEl = null;
+
+  // Listen for toggle IPC from Megabox renderer
+  try {
+    const { ipcRenderer } = require("electron");
+    ipcRenderer.on("adblock-thing:toggle-state", (_event, enabled) => {
+      isEngineActive = !!enabled;
+      if (!isEngineActive && adblockStyleEl) {
+        adblockStyleEl.remove();
+        adblockStyleEl = null;
+      } else if (isEngineActive) {
+        injectAdblockCSS();
+      }
+      console.log("[Megabox AdblockThing] Engine active state:", isEngineActive);
+    });
+  } catch (_) {}
+
+  // 1. Lock window.google_ad_status to fool YouTube ad-detection script
+  function lockGoogleAdStatus() {
+    try {
+      window.google_ad_status = 1;
+      Object.defineProperty(window, "google_ad_status", {
+        configurable: false,
+        enumerable: true,
+        get() { return 1; },
+        set() {}
+      });
+    } catch (_) {}
+  }
+  lockGoogleAdStatus();
+
+  // 2. Inject CSS rules to hide ad slots, banners & backdrop modal
+  function injectAdblockCSS() {
+    if (document.getElementById("megabox-adblock-thing-style")) return;
+    const style = document.createElement("style");
+    style.id = "megabox-adblock-thing-style";
+    style.textContent = `
+      ytd-action-companion-ad-renderer,
+      ytd-display-ad-renderer,
+      ytd-video-masthead-ad-advertiser-info-renderer,
+      ytd-video-masthead-ad-primary-video-renderer,
+      ytd-in-feed-ad-layout-renderer,
+      ytd-ad-slot-renderer,
+      yt-about-this-ad-renderer,
+      yt-mealbar-promo-renderer,
+      ytd-statement-banner-renderer,
+      ytd-banner-promo-renderer-background,
+      .ytd-video-masthead-ad-v3-renderer,
+      div#root.style-scope.ytd-display-ad-renderer.yt-simple-endpoint,
+      div#sparkles-container.style-scope.ytd-promoted-sparkles-web-renderer,
+      div#main-container.style-scope.ytd-promoted-video-renderer,
+      div#player-ads.style-scope.ytd-watch-flexy,
+      ad-slot-renderer,
+      ytm-promoted-sparkles-web-renderer,
+      masthead-ad,
+      #masthead-ad,
+      tp-yt-iron-overlay-backdrop,
+      .style-scope.ytd-enforcement-message-view-model {
+        display: none !important;
+      }
+    `;
+    (document.head || document.documentElement).appendChild(style);
+    adblockStyleEl = style;
+  }
+
+  // 3. Fast popup remover and ad skipper loop (300ms)
+  function runAdRemover() {
+    if (!isEngineActive) return;
+
+    // Check & dismiss YouTube enforcement anti-adblock modal
+    const popupBackdrop = document.querySelector("tp-yt-iron-overlay-backdrop");
+    if (popupBackdrop) {
+      popupBackdrop.removeAttribute("opened");
+      popupBackdrop.remove();
+    }
+
+    const popup = document.querySelector(".style-scope ytd-enforcement-message-view-model");
+    if (popup) {
+      const dismissBtn = document.getElementById("dismiss-button") || popup.querySelector("button");
+      if (dismissBtn) dismissBtn.click();
+      popup.remove();
+      if (document.body && document.body.style) {
+        document.body.style.setProperty("overflow-y", "auto", "important");
+      }
+      const video = document.querySelector("video");
+      if (video && video.paused) {
+        try { video.play(); } catch (_) {}
+      }
+    }
+
+    // Undetected Video Ad Skipper
+    const adContainer = document.querySelector(".ad-showing, .ad-interrupting");
+    const video = document.querySelector("video");
+    if (adContainer && video) {
+      video.muted = true;
+      video.playbackRate = 16;
+      if (!isNaN(video.duration) && video.duration > 0 && isFinite(video.duration)) {
+        video.currentTime = video.duration - 0.1;
+      }
+      const skipBtn = document.querySelector(".ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button");
+      if (skipBtn) {
+        skipBtn.click();
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectAdblockCSS);
+  } else {
+    injectAdblockCSS();
+  }
+
+  setInterval(runAdRemover, 300);
+  console.log("[Megabox AdblockThing] YouTube Anti-Adblock & Video Ad Skipper active.");
+})();

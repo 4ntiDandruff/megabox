@@ -935,6 +935,8 @@
             wv.send('translate:toggle-state', isTranslateEnabled);
             const isSponsorBlockEnabled = prefs['sponsorblock'] !== undefined ? prefs['sponsorblock'] : true;
             wv.send('sponsorblock:toggle-state', isSponsorBlockEnabled);
+            const isAdblockThingEnabled = prefs['adblock-thing'] !== undefined ? prefs['adblock-thing'] : true;
+            wv.send('adblock-thing:toggle-state', isAdblockThingEnabled);
           } catch (_) {}
           // Proactively send credentials to webview on dom-ready
           if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
@@ -1278,6 +1280,8 @@
             wv.send('translate:toggle-state', isTranslateEnabled);
             const isSponsorBlockEnabled = prefs['sponsorblock'] !== undefined ? prefs['sponsorblock'] : true;
             wv.send('sponsorblock:toggle-state', isSponsorBlockEnabled);
+            const isAdblockThingEnabled = prefs['adblock-thing'] !== undefined ? prefs['adblock-thing'] : true;
+            wv.send('adblock-thing:toggle-state', isAdblockThingEnabled);
           } catch (_) {}
           // Only restore zoom if not already 100% or explicitly customized to avoid re-rendering layout jump
           const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + app.id), 10);
@@ -2748,6 +2752,7 @@
   const extensionCatalog = [
     { id: 'translate', name: 'Terjemahan Seleksi Teks', desc: 'Tooltip instan dua arah (ID ↔ EN) saat memblok teks di chat', icon: 'assets/icons/google-translate.svg', enabledByDefault: true },
     { id: 'sponsorblock', name: 'YouTube SponsorBlock', desc: 'Lewati otomatis segmen sponsor, intro, dan promosi video YouTube', icon: 'assets/icons/youtube.svg', enabledByDefault: true },
+    { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/shield.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/theme-light-dark.svg', enabledByDefault: false },
     { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/shield.svg', enabledByDefault: true }
   ];
@@ -2828,6 +2833,14 @@
           const wv = document.getElementById('wv-' + activeAppId);
           if (wv) {
             try { wv.send('sponsorblock:toggle-state', toggle.checked); } catch (_) {}
+          }
+        }
+
+        // If YouTube Anti-Adblock Shield toggled, broadcast instantly to active webview
+        if (ext.id === 'adblock-thing' && activeAppId) {
+          const wv = document.getElementById('wv-' + activeAppId);
+          if (wv) {
+            try { wv.send('adblock-thing:toggle-state', toggle.checked); } catch (_) {}
           }
         }
 
