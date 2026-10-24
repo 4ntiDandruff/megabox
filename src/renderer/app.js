@@ -38,6 +38,7 @@
   const ctxHome = document.getElementById('ctx-home');
   const ctxOpenBrowser = document.getElementById('ctx-open-browser');
   const ctxCopyUrl = document.getElementById('ctx-copy-url');
+  const ctxSavePdf = document.getElementById('ctx-save-pdf');
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
   const ctxTile = document.getElementById('ctx-tile');
@@ -411,6 +412,10 @@
       } else if (isAlt && !isCtrl && (key === 's' || key === 'S')) {
         e.preventDefault();
         dispatchShortcutAction({ action: 'toggle-split' });
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && (key === 'P' || key === 'p')) {
+        e.preventDefault();
+        const curApp = contextTargetApp || apps.find(a => a.id === activeAppId);
+        if (curApp) triggerWebToPdf(curApp);
       } else if (key === 'Escape') {
         e.preventDefault();
         dispatchShortcutAction({ action: 'escape' });
@@ -522,6 +527,67 @@
         hideContextMenu();
       };
     }
+    // Web to PDF Handler for Context Menu
+    async function triggerWebToPdf(targetApp) {
+      if (!targetApp) return;
+      const wv = document.getElementById('wv-' + targetApp.id);
+      if (!wv || typeof wv.printToPDF !== 'function') {
+        if (typeof showGlobalToast === 'function') {
+          showGlobalToast('Layanan belum siap atau tidak mendukung cetak PDF.', 'warning');
+        }
+        return;
+      }
+
+      try {
+        if (typeof showGlobalToast === 'function') {
+          showGlobalToast('Menyiapkan dokumen PDF...', 'info');
+        }
+
+        const pdfBuffer = await wv.printToPDF({
+          printBackground: true,
+          landscape: false,
+          marginsType: 0
+        });
+
+        // Convert Uint8Array to base64
+        let binary = '';
+        const len = pdfBuffer.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(pdfBuffer[i]);
+        }
+        const base64Data = btoa(binary);
+
+        const pageTitle = (wv.getTitle && wv.getTitle() ? wv.getTitle() : targetApp.name) || 'Webpage';
+        const defaultFilename = pageTitle.replace(/[/\\:*?\"<>|]/g, '_').slice(0, 100) + '.pdf';
+
+        if (window.megabox && typeof window.megabox.savePdfBuffer === 'function') {
+          const res = await window.megabox.savePdfBuffer({
+            base64Data: base64Data,
+            defaultFilename: defaultFilename,
+            serviceName: targetApp.name,
+            sourceUrl: (wv.getURL && wv.getURL()) || targetApp.url
+          });
+          if (res && res.canceled) {
+            // User canceled dialog, do nothing
+          }
+        }
+      } catch (err) {
+        console.error('[Web to PDF Export Error]', err);
+        if (typeof showGlobalToast === 'function') {
+          showGlobalToast('Gagal mencetak PDF: ' + err.message, 'danger');
+        }
+      }
+    }
+
+    if (ctxSavePdf) {
+      ctxSavePdf.onclick = () => {
+        if (contextTargetApp) {
+          triggerWebToPdf(contextTargetApp);
+        }
+        hideContextMenu();
+      };
+    }
+
     if (ctxHibernate) {
       ctxHibernate.onclick = () => {
         if (contextTargetApp) {
@@ -2770,6 +2836,7 @@
     { id: 'adblock-thing', name: 'YouTube Anti-Adblock Shield', desc: 'Bypass popup adblock YouTube & lewati iklan video otomatis (RemoveAdblockThing)', icon: 'assets/icons/adblock-thing.svg', enabledByDefault: true },
     { id: 'dark-reader', name: 'Dark Reader', desc: 'Mode gelap pelindung mata', icon: 'assets/icons/darkreader.svg', enabledByDefault: false },
     { id: 'ublock-origin', name: 'uBlock Origin', desc: 'Pemblokir iklan & pelacak', icon: 'assets/icons/ublock.svg', enabledByDefault: true },
+    { id: 'web-to-pdf', name: 'Web to PDF', desc: 'Konversi dan simpan halaman web aktif menjadi dokumen PDF bersih dengan sekali klik', icon: 'assets/icons/web-to-pdf.svg', enabledByDefault: true },
     { id: 'permanent-clipboard', name: 'Permanent Clipboard', desc: 'Pustaka snippet balasan cepat & riwayat clipboard (Klik kanan di chat)', icon: 'assets/icons/clipboard.svg', enabledByDefault: true }
   ];
 

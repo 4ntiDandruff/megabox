@@ -72,6 +72,9 @@ contextBridge.exposeInMainWorld('megabox', {
   focusWindow: () => ipcRenderer.invoke('window:focus'),
   dispatchNotification: (title, body, icon) => ipcRenderer.invoke('notify:dispatch', { title, body, icon }),
 
+  // Web to PDF Buffer Saver
+  savePdfBuffer: (options) => ipcRenderer.invoke('system:save-pdf-buffer', options),
+
   // Update Notifier API
   checkUpdatesManual: () => ipcRenderer.invoke('update:check-manual'),
   dismissUpdate: (version) => ipcRenderer.invoke('update:dismiss', version),
