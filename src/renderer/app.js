@@ -4018,7 +4018,7 @@
 // ============================================================================
 // Permanent Clipboard & Snippet Library UI Logic (permanent-clipboard.app Native)
 // ============================================================================
-(function initPermanentClipboardUI() {
+function initPermanentClipboardUI() {
   const modalSnippets = document.getElementById('modal-snippets');
   const btnClose = document.getElementById('btn-close-snippets');
   const btnAddNew = document.getElementById('btn-add-new-snippet');
@@ -4232,4 +4232,10 @@
       openSnippetModal(data && data.mode ? data.mode : 'list');
     });
   }
-})();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPermanentClipboardUI);
+} else {
+  initPermanentClipboardUI();
+}
