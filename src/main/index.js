@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, s
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
+const { uBlockOriginEngine } = require('./ublock-engine.js');
 const { translateText } = require('./translator.js');
 const { initUpdater } = require('./updater.js');
 const { MegawardenVault } = require('./megawarden.js');
@@ -301,13 +302,21 @@ function createWindow() {
 
   session.defaultSession.setSpellCheckerEnabled(false);
   setupHeaderInterceptors(session.defaultSession);
+  uBlockOriginEngine.setupSessionInterceptor(session.defaultSession);
   registerDownloadListener(session.defaultSession);
   app.on('session-created', (ses) => {
     if (ses && typeof ses.setSpellCheckerEnabled === 'function') {
       ses.setSpellCheckerEnabled(false);
     }
     setupHeaderInterceptors(ses);
+    uBlockOriginEngine.setupSessionInterceptor(ses);
     registerDownloadListener(ses);
+  });
+
+  // uBlock Origin toggle relay
+  ipcMain.on('ublock:toggle-state', (event, enabled) => {
+    uBlockOriginEngine.globalEnabled = !!enabled;
+    console.log('[uBlock Origin] Global blocking state set to:', uBlockOriginEngine.globalEnabled);
   });
 
   // Popup window IPC save prompt relay to renderer

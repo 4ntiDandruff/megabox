@@ -2844,6 +2844,14 @@
           }
         }
 
+        // If uBlock Origin toggled, notify main process network blocker
+        if (ext.id === 'ublock-origin') {
+          try {
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('ublock:toggle-state', toggle.checked);
+          } catch (_) {}
+        }
+
         // If Dark Reader toggled, apply immediate fast CSS injection for instant result!
         if (ext.id === 'dark-reader' && activeAppId) {
           const wv = document.getElementById('wv-' + activeAppId);
