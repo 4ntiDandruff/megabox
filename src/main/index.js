@@ -257,15 +257,84 @@ function createWindow() {
     }
     if (isCtrl && isShift && !input.alt && (input.key === 'L' || input.key === 'l')) {
       inputEvent.preventDefault();
-            return;
+      return;
+    }
+
+    // Split Screen Toggle: Alt + S
+    if (input.alt && !isCtrl && (input.key === 's' || input.key === 'S')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'toggle-split' });
+      return;
+    }
+
+    // Tab Switching: Alt + 1..9
+    if (input.alt && !isCtrl && !isShift && input.key >= '1' && input.key <= '9') {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'switch-tab', index: parseInt(input.key, 10) - 1 });
+      return;
+    }
+
+    // Reorder Tabs: Alt + Up / Alt + Down
+    if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowUp' || input.key === 'Up')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'reorder-active-app', dir: 'up' });
+      return;
+    }
+    if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowDown' || input.key === 'Down')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'reorder-active-app', dir: 'down' });
+      return;
+    }
+
+    // History Navigation: Alt + Left / Alt + Right
+    if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowLeft' || input.key === 'Left')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'nav-history', dir: 'back' });
+      return;
+    }
+    if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowRight' || input.key === 'Right')) {
+      inputEvent.preventDefault();
+      mainWindow.webContents.send('shortcut:action', { action: 'nav-history', dir: 'forward' });
+      return;
     }
   });
 
+  session.defaultSession.setSpellCheckerEnabled(false);
   setupHeaderInterceptors(session.defaultSession);
   registerDownloadListener(session.defaultSession);
   app.on('session-created', (ses) => {
+    if (ses && typeof ses.setSpellCheckerEnabled === 'function') {
+      ses.setSpellCheckerEnabled(false);
+    }
     setupHeaderInterceptors(ses);
     registerDownloadListener(ses);
+  });
+
+  // Popup window IPC save prompt relay to renderer
+  ipcMain.on('megawarden:popup-save-prompt', (event, data) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('megawarden:save-prompt-relay', data);
+    }
+  });
+
+  // App-level web-contents-created hook: ensure all popup windows inherit preload & Megawarden
+  app.on('web-contents-created', (event, contents) => {
+    // If a webview or popup triggers window.open, ensure popup window loads preload-webview.js
+    contents.setWindowOpenHandler(({ url, disposition, features }) => {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          autoHideMenuBar: true,
+          webPreferences: {
+            session: contents.session,
+            preload: path.join(__dirname, 'preload-webview.js'),
+            contextIsolation: false,
+            nodeIntegration: false,
+            sandbox: false
+          }
+        }
+      };
+    });
   });
 
   // Webview WebContents Attachment Hook (Workaround for Electron #40674 & Intercepting Shortcuts)
@@ -317,6 +386,13 @@ function createWindow() {
         mainWindow.webContents.send('shortcut:action', { action: 'switch-tab', index: parseInt(input.key, 10) - 1 });
         return;
       }
+      // Split Screen Toggle: Alt + S
+      if (input.alt && !isCtrl && (input.key === 's' || input.key === 'S')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'toggle-split' });
+        return;
+      }
+
       // Reorder Tabs: Alt + Up / Alt + Down
       if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowUp' || input.key === 'Up')) {
         inputEvent.preventDefault();
@@ -329,6 +405,18 @@ function createWindow() {
         return;
       }
       // Escape
+      // History Navigation: Alt + Left / Alt + Right
+      if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowLeft' || input.key === 'Left')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'nav-history', dir: 'back' });
+        return;
+      }
+      if (input.alt && !isCtrl && !isShift && (input.key === 'ArrowRight' || input.key === 'Right')) {
+        inputEvent.preventDefault();
+        mainWindow.webContents.send('shortcut:action', { action: 'nav-history', dir: 'forward' });
+        return;
+      }
+
       if (input.key === 'Escape') {
         mainWindow.webContents.send('shortcut:action', { action: 'escape' });
       }
@@ -339,24 +427,42 @@ function createWindow() {
       event.preventDefault();
 
       const pageUrl = params.pageURL || webviewWebContents.getURL() || '';
+      const linkUrl = (params.linkURL || '').trim();
+      const hasLink = Boolean(linkUrl && linkUrl.length > 0 && linkUrl !== 'about:blank');
       const hasTextSelection = Boolean(params.selectionText && params.selectionText.trim().length > 0);
       const isEditable = Boolean(params.isEditable);
       const { editFlags } = params;
 
       const template = [];
 
-      // 1. Copy current URL
-      if (pageUrl) {
+      // 1. Hyperlink Context Actions (Only when right-clicking on a link)
+      if (hasLink) {
         template.push({
-          label: 'Copy current URL',
+          label: 'Copy Link Address',
           click: () => {
-            clipboard.writeText(pageUrl);
+            clipboard.writeText(linkUrl);
+            if (mainWindow && !mainWindow.isDestroyed()) {
+              mainWindow.webContents.send('toast:show', {
+                message: 'Link address copied: ' + linkUrl,
+                type: 'success'
+              });
+            }
+          }
+        });
+        template.push({
+          label: 'Open Link in External Browser',
+          click: async () => {
+            try {
+              await shell.openExternal(linkUrl);
+            } catch (err) {
+              console.warn('[Open External Link Error]', err.message);
+            }
           }
         });
         template.push({ type: 'separator' });
       }
 
-      // 2. Undo
+      // 2. Edit Actions (Undo / Cut / Copy / Paste / Select All)
       if (isEditable || (editFlags && editFlags.canUndo)) {
         template.push({
           label: 'Undo',
@@ -496,79 +602,13 @@ function createWindow() {
 
       template.push({ type: 'separator' });
 
-      // 7. Search...
+      // 5. Search...
       template.push({
         label: 'Search...',
         click: () => {
           mainWindow.webContents.send('shortcut:action', { action: 'quick-switch' });
         }
       });
-
-      // 8. Set current URL as app's default
-      template.push({
-        label: "Set current URL as app's default",
-        click: () => {
-          mainWindow.webContents.send('webview:set-default-url', {
-            url: pageUrl
-          });
-        }
-      });
-
-      // 9. Spellcheck
-      const ses = webviewWebContents.session;
-      const spellCheckerEnabled = ses && typeof ses.isSpellCheckerEnabled === 'function' ? ses.isSpellCheckerEnabled() : true;
-      const availableLangs = [
-        { code: 'en-US', name: 'English (US)' },
-        { code: 'id', name: 'Bahasa Indonesia' }
-      ];
-      const currentSpellLangs = ses && typeof ses.getSpellCheckerLanguages === 'function' ? ses.getSpellCheckerLanguages() : ['en-US'];
-
-      const spellSubmenu = [
-        {
-          label: 'Pemeriksa Ejaan Aktif',
-          type: 'checkbox',
-          checked: spellCheckerEnabled,
-          click: (menuItem) => {
-            if (ses && typeof ses.setSpellCheckerEnabled === 'function') {
-              ses.setSpellCheckerEnabled(menuItem.checked);
-            }
-          }
-        },
-        { type: 'separator' }
-      ];
-
-      availableLangs.forEach(lang => {
-        spellSubmenu.push({
-          label: lang.name,
-          type: 'checkbox',
-          checked: currentSpellLangs.includes(lang.code),
-          click: (menuItem) => {
-            if (ses && typeof ses.setSpellCheckerLanguages === 'function') {
-              let nextLangs = menuItem.checked
-                ? [...currentSpellLangs, lang.code]
-                : currentSpellLangs.filter(l => l !== lang.code);
-              if (nextLangs.length === 0) nextLangs = ['en-US'];
-              ses.setSpellCheckerLanguages(nextLangs);
-            }
-          }
-        });
-      });
-
-      template.push({
-        label: 'Spellcheck',
-        submenu: spellSubmenu
-      });
-
-      // Contextual dictionary suggestions if user right-clicked a misspelled word
-      if (params.misspelledWord && params.dictionarySuggestions && params.dictionarySuggestions.length > 0) {
-        template.unshift({ type: 'separator' });
-        params.dictionarySuggestions.slice(0, 5).reverse().forEach(suggestion => {
-          template.unshift({
-            label: suggestion,
-            click: () => webviewWebContents.replaceMisspelling(suggestion)
-          });
-        });
-      }
 
       const menu = Menu.buildFromTemplate(template);
       menu.popup({ window: mainWindow });
@@ -584,6 +624,19 @@ function createWindow() {
   });
 
   // Expose CLI trigger to pop window to front if it goes behind
+  // Direct system clipboard writer (foolproof for Wayland/KDE & sandboxed webview calls)
+  ipcMain.handle('clipboard:write-text', (_, { text }) => {
+    try {
+      if (typeof text === 'string') {
+        clipboard.writeText(text);
+        return { success: true };
+      }
+      return { success: false, error: 'Teks tidak valid' };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
   ipcMain.handle('window:focus', () => {
     if (mainWindow) {
       mainWindow.show();

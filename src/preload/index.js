@@ -16,7 +16,6 @@ contextBridge.exposeInMainWorld('megabox', {
   onAppsUpdated: (callback) => ipcRenderer.on('apps:updated', (_, apps) => callback(apps)),
   onReloadActive: (callback) => ipcRenderer.on('action:reload', () => callback()),
   onShortcutAction: (callback) => ipcRenderer.on('shortcut:action', (_, data) => callback(data)),
-  onSetDefaultUrl: (callback) => ipcRenderer.on('webview:set-default-url', (_, data) => callback(data)),
   
   // Instant Selection Translation Relay (Zero-CSP Node.js Engine)
   performTranslation: (text) => ipcRenderer.invoke('translate:perform', { text }),
@@ -31,6 +30,7 @@ contextBridge.exposeInMainWorld('megabox', {
   vaultExportCsvToFile: () => ipcRenderer.invoke('megawarden:export-csv-to-file'),
   vaultImportCsv: (csvContent) => ipcRenderer.invoke('megawarden:import-csv', { csvContent }),
   vaultExportCsv: () => ipcRenderer.invoke('megawarden:export-csv'),
+  onVaultSavePrompt: (callback) => ipcRenderer.on('megawarden:save-prompt-relay', (_, data) => callback(data)),
 
 
 // Download Manager & Progress Tracking API
@@ -57,6 +57,10 @@ contextBridge.exposeInMainWorld('megabox', {
   saveAvatarBase64: (base64Data) => ipcRenderer.invoke('avatar:save-base64', { base64Data }),
   resetAvatar: () => ipcRenderer.invoke('avatar:reset'),
   getAvatar: () => ipcRenderer.invoke('avatar:get'),
+
+  // Clipboard & Toast Feedback API
+  copyToClipboard: (text) => ipcRenderer.invoke('clipboard:write-text', { text }),
+  onShowToast: (callback) => ipcRenderer.on('toast:show', (_, data) => callback(data)),
 
   // System Window & Notification API
   focusWindow: () => ipcRenderer.invoke('window:focus'),

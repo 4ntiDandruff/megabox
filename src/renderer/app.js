@@ -37,6 +37,7 @@
   const ctxReload = document.getElementById('ctx-reload');
   const ctxHome = document.getElementById('ctx-home');
   const ctxOpenBrowser = document.getElementById('ctx-open-browser');
+  const ctxCopyUrl = document.getElementById('ctx-copy-url');
   const ctxHibernate = document.getElementById('ctx-hibernate');
   const ctxHibernateLabel = document.getElementById('ctx-hibernate-label');
   const ctxTile = document.getElementById('ctx-tile');
@@ -160,8 +161,18 @@
       const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + appId), 10);
       if (!isNaN(savedPct) && savedPct > 0) {
         const factor = percentToZoomFactor(savedPct);
-        wv.setZoomFactor(factor);
-        try { wv.send('zoom:set-factor', factor); } catch (_) {}
+        // Only set if different from current zoom factor to prevent Chromium layout flash
+        if (typeof wv.getZoomFactor === 'function') {
+          wv.getZoomFactor((currentFactor) => {
+            if (Math.abs(currentFactor - factor) > 0.01) {
+              wv.setZoomFactor(factor);
+              try { wv.send('zoom:set-factor', factor); } catch (_) {}
+            }
+          });
+        } else {
+          wv.setZoomFactor(factor);
+          try { wv.send('zoom:set-factor', factor); } catch (_) {}
+        }
       }
     } catch (_) {}
   }
@@ -470,7 +481,46 @@
         }
         hideContextMenu();
       };
+    }
 
+    if (ctxCopyUrl) {
+      ctxCopyUrl.onclick = async () => {
+        if (contextTargetApp) {
+          const wv = document.getElementById('wv-' + contextTargetApp.id);
+          let urlToCopy = '';
+          try {
+            if (wv && typeof wv.getURL === 'function') {
+              urlToCopy = wv.getURL();
+            }
+          } catch (_) {}
+
+          if (!urlToCopy || urlToCopy === 'about:blank') {
+            urlToCopy = (wv && wv.src) || contextTargetApp.url || '';
+          }
+
+          if (urlToCopy && urlToCopy !== 'about:blank') {
+            let copied = false;
+            if (window.megabox && typeof window.megabox.copyToClipboard === 'function') {
+              const res = await window.megabox.copyToClipboard(urlToCopy);
+              copied = res && res.success;
+            }
+            if (!copied && navigator.clipboard) {
+              try {
+                await navigator.clipboard.writeText(urlToCopy);
+                copied = true;
+              } catch (_) {}
+            }
+            if (typeof showGlobalToast === 'function') {
+              showGlobalToast('URL berhasil disalin: ' + urlToCopy, 'success');
+            }
+          } else {
+            if (typeof showGlobalToast === 'function') {
+              showGlobalToast('Gagal menyalin: Halaman belum memuat URL valid', 'danger');
+            }
+          }
+        }
+        hideContextMenu();
+      };
     }
     if (ctxHibernate) {
       ctxHibernate.onclick = () => {
@@ -541,17 +591,14 @@
           dispatchShortcutAction(data);
         });
       }
-      if (window.megabox.onSetDefaultUrl) {
-        window.megabox.onSetDefaultUrl(async (data) => {
-          if (!data || !data.url || !activeAppId) return;
-          const currentApp = apps.find(a => a.id === activeAppId);
-          if (currentApp) {
-            currentApp.url = data.url;
-            await window.megabox.saveApp(currentApp);
-            showGlobalToast('URL default aplikasi diperbarui ke: ' + data.url, 'success');
+      if (window.megabox.onShowToast) {
+        window.megabox.onShowToast(({ message, type }) => {
+          if (typeof showGlobalToast === 'function') {
+            showGlobalToast(message, type || 'info');
           }
         });
       }
+
     }
   }
 
@@ -765,6 +812,8 @@
     if (lowerName.includes('cctv') || lowerName.includes('cam')) return 'assets/icons/cctv.svg';
     if (lowerName.includes('github') || lowerName.includes('git')) return 'assets/icons/github.svg';
     if (lowerName.includes('password') || lowerName.includes('key')) return 'assets/icons/key.svg';
+    if (lowerName.includes('router') || lowerName.includes('agy') || lowerName.includes('clash') || lowerName.includes('zevai')) return 'assets/icons/openrouter.svg';
+    if (lowerName.includes('panel') || lowerName.includes('megapass') || lowerName.includes('cloud')) return 'assets/icons/cloudflare.svg';
     return 'assets/icons/web.svg';
   }
 
@@ -845,7 +894,7 @@
         const preloadUrl = (window.megabox && window.megabox.webviewPreloadUrl) ? window.megabox.webviewPreloadUrl : '../main/preload-webview.js';
         wv.setAttribute('preload', preloadUrl);
         wv.setAttribute('allowpopups', '');
-        wv.style.display = (activeAppId === app.id) ? 'flex' : 'none';
+        if (activeAppId === app.id) wv.classList.add('is-active-wv');
 
         // Auto Favicon caching handler
         const handleFaviconUpdate = (favUrl) => {
@@ -878,6 +927,13 @@
         // Listen to badge events from preload-webview bridge
         wv.addEventListener('dom-ready', () => {
           restoreWebviewZoom(app.id, wv);
+          // Sync translate toggle state to webview
+          try {
+            const appExtKey = 'megabox_ext_' + app.id;
+            const prefs = JSON.parse(localStorage.getItem(appExtKey) || '{}');
+            const isTranslateEnabled = prefs['translate'] !== undefined ? prefs['translate'] : true;
+            wv.send('translate:toggle-state', isTranslateEnabled);
+          } catch (_) {}
           // Proactively send credentials to webview on dom-ready
           if (window.megabox && typeof window.megabox.vaultFindForUrl === 'function') {
             const checkUrl = wv.src || app.url;
@@ -995,8 +1051,31 @@
     isTileModeActive = false;
     secondaryTiledAppId = null;
     webviewsContainer.classList.remove('is-tiled');
+    // Clear secondary active tab styles
+    apps.forEach(app => {
+      const tab = document.getElementById('tab-' + app.id);
+      if (tab) tab.classList.remove('is-secondary-active');
+    });
     selectApp(activeAppId);
     console.log('[Megabox Tile] Exited split tile view');
+  }
+
+  function triggerWebviewRelayout() {
+    // Force Chromium/Electron Webview render bounds synchronization
+    requestAnimationFrame(() => {
+      const activeWvs = document.querySelectorAll('webview.is-active-wv');
+      activeWvs.forEach(wv => {
+        // Trigger resize layout cycle in webview
+        if (typeof wv.focus === 'function') {
+          try {
+            // Dispatch resize event inside webview guest if accessible
+            wv.executeJavaScript('window.dispatchEvent(new Event("resize"));').catch(() => {});
+          } catch (_) {}
+        }
+      });
+      // Global window resize trigger for bounds refresh
+      window.dispatchEvent(new Event('resize'));
+    });
   }
 
   function toggleTileView(targetId) {
@@ -1018,7 +1097,7 @@
     secondaryTiledAppId = secondary;
     webviewsContainer.classList.add('is-tiled');
 
-    // Show both webviews
+    // Show both webviews and hide inactive from layout flow
     apps.forEach(app => {
       const wv = document.getElementById('wv-' + app.id);
       const tab = document.getElementById('tab-' + app.id);
@@ -1029,20 +1108,26 @@
             wv.src = app.url;
             if (tab) tab.classList.remove('is-hibernated');
           }
-          wv.style.display = 'flex';
+          wv.classList.add('is-active-wv');
         } else {
-          wv.style.display = 'none';
+          wv.classList.remove('is-active-wv');
         }
       }
       if (tab) {
-        if (app.id === activeAppId || app.id === secondaryTiledAppId) {
+        if (app.id === activeAppId) {
           tab.classList.add('is-active');
+          tab.classList.remove('is-secondary-active');
+        } else if (app.id === secondaryTiledAppId) {
+          tab.classList.remove('is-active');
+          tab.classList.add('is-secondary-active');
         } else {
           tab.classList.remove('is-active');
+          tab.classList.remove('is-secondary-active');
         }
       }
     });
 
+    triggerWebviewRelayout();
     console.log(`[Megabox Tile] 1x2 Split screen active: ${activeAppId} & ${secondaryTiledAppId}`);
   }
 
@@ -1093,12 +1178,12 @@
     contextMenu.style.visibility = 'hidden';
     contextMenu.style.display = 'block';
     contextMenu.style.zIndex = '200';
-    const menuWidth = contextMenu.offsetWidth || 220;
-    const menuHeight = contextMenu.offsetHeight || 380;
+    const menuWidth = contextMenu.offsetWidth || 240;
+    const menuHeight = contextMenu.offsetHeight || 470;
     contextMenu.style.visibility = 'visible';
 
-    const safeX = Math.max(10, Math.min(x, window.innerWidth - menuWidth - 10));
-    const safeY = Math.max(10, Math.min(y, window.innerHeight - menuHeight - 10));
+    const safeX = Math.max(8, Math.min(x, window.innerWidth - menuWidth - 12));
+    const safeY = Math.max(8, Math.min(y, window.innerHeight - menuHeight - 12));
     contextMenu.style.left = `${safeX}px`;
     contextMenu.style.top = `${safeY}px`;
   }
@@ -1111,9 +1196,46 @@
 
   function selectApp(id) {
     if (isTileModeActive) {
-      isTileModeActive = false;
-      secondaryTiledAppId = null;
-      webviewsContainer.classList.remove('is-tiled');
+      if (id === activeAppId || id === secondaryTiledAppId) {
+        // Swap primary/secondary active focus within tile mode without breaking split view
+        if (id === secondaryTiledAppId) {
+          const prevActive = activeAppId;
+          activeAppId = secondaryTiledAppId;
+          secondaryTiledAppId = prevActive;
+        }
+        appLastAccessed[activeAppId] = Date.now();
+
+        apps.forEach(app => {
+          const tab = document.getElementById('tab-' + app.id);
+          if (tab) {
+            if (app.id === activeAppId) {
+              tab.classList.add('is-active');
+              tab.classList.remove('is-secondary-active');
+            } else if (app.id === secondaryTiledAppId) {
+              tab.classList.remove('is-active');
+              tab.classList.add('is-secondary-active');
+            } else {
+              tab.classList.remove('is-active');
+              tab.classList.remove('is-secondary-active');
+            }
+          }
+        });
+
+        const targetWv = document.getElementById('wv-' + activeAppId);
+        if (targetWv && typeof targetWv.focus === 'function') {
+          try { targetWv.focus(); } catch (_) {}
+        }
+        return;
+      } else {
+        // Clicked external 3rd app -> exit tile mode cleanly
+        isTileModeActive = false;
+        secondaryTiledAppId = null;
+        webviewsContainer.classList.remove('is-tiled');
+        apps.forEach(app => {
+          const tab = document.getElementById('tab-' + app.id);
+          if (tab) tab.classList.remove('is-secondary-active');
+        });
+      }
     }
     activeAppId = id;
     appLastAccessed[id] = Date.now();
@@ -1121,6 +1243,7 @@
     apps.forEach(app => {
       const tab = document.getElementById('tab-' + app.id);
       if (tab) {
+        tab.classList.remove('is-secondary-active');
         if (app.id === id) {
           tab.classList.add('is-active');
         } else {
@@ -1135,14 +1258,31 @@
           if (wv.dataset.hibernated === 'true') {
             console.log('[Megabox Hibernate] Immediate foreground wake up for active app:', app.id);
             wv.dataset.hibernated = 'false';
-            wv.src = app.url;
+            // If the webview was set to about:blank previously, restore app.url; otherwise keep loaded DOM intact
+            if (wv.src === 'about:blank' || !wv.src) {
+              wv.src = app.url;
+            }
+            if (!isDndActive) {
+              try { if (typeof wv.setAudioMuted === 'function') wv.setAudioMuted(false); } catch (_) {}
+            }
             if (tab) tab.classList.remove('is-hibernated');
           }
-          wv.style.display = 'flex';
-          restoreWebviewZoom(app.id, wv);
+          wv.classList.add('is-active-wv');
+          // Sync current translate extension state on tab switch
+          try {
+            const appExtKey = 'megabox_ext_' + app.id;
+            const prefs = JSON.parse(localStorage.getItem(appExtKey) || '{}');
+            const isTranslateEnabled = prefs['translate'] !== undefined ? prefs['translate'] : true;
+            wv.send('translate:toggle-state', isTranslateEnabled);
+          } catch (_) {}
+          // Only restore zoom if not already 100% or explicitly customized to avoid re-rendering layout jump
+          const savedPct = parseInt(localStorage.getItem('megabox_zoom_' + app.id), 10);
+          if (!isNaN(savedPct) && savedPct !== 100) {
+            restoreWebviewZoom(app.id, wv);
+          }
           try { wv.focus(); } catch (err) {}
         } else {
-          wv.style.display = 'none';
+          wv.classList.remove('is-active-wv');
         }
       }
     });
@@ -1168,16 +1308,20 @@
     if (wv.dataset.hibernated === 'true') {
       // Wake up
       wv.dataset.hibernated = 'false';
-      wv.src = app.url;
+      if (wv.src === 'about:blank' || !wv.src) {
+        wv.src = app.url;
+      }
+      if (!isDndActive) {
+        try { if (typeof wv.setAudioMuted === 'function') wv.setAudioMuted(false); } catch (_) {}
+      }
       if (tab) tab.classList.remove('is-hibernated');
     } else {
       // Hibernate
       wv.dataset.hibernated = 'true';
-      wv.src = 'about:blank';
+      try {
+        if (typeof wv.setAudioMuted === 'function') wv.setAudioMuted(true);
+      } catch (_) {}
       if (tab) tab.classList.add('is-hibernated');
-      if (activeAppId === id) {
-        wv.style.display = 'none';
-      }
     }
   }
 
@@ -1233,9 +1377,12 @@
               }
             } catch (_) {}
 
-            console.log('[Megabox Hibernate] Putting idle service to sleep:', app.id);
+            console.log('[Megabox Hibernate] Putting idle service to sleep (suspending background tasks):', app.id);
             wv.dataset.hibernated = 'true';
-            wv.src = 'about:blank';
+            // Electron/Chromium Background Throttling without destroying the DOM tree (prevents viewport flicker)
+            try {
+              if (typeof wv.setAudioMuted === 'function') wv.setAudioMuted(true);
+            } catch (_) {}
             if (tab) tab.classList.add('is-hibernated');
           }
         }
@@ -1387,8 +1534,8 @@
   function renderQuickSwitchList() {
     const q = quickswitchInput.value.toLowerCase().trim();
     
-    // Match apps
-    const matchedApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => {
+    // Pure workspace application switcher (clean, high-speed, zero-distraction)
+    filteredQuickApps = apps.filter(a => a.name.toLowerCase().includes(q) || a.id.toLowerCase().includes(q)).map(a => {
       const iconSrc = resolveAppIconSrc(a);
       return {
         type: 'app',
@@ -1400,21 +1547,9 @@
       };
     });
 
-    // Match system commands
-    const matchedCommands = systemCommands.filter(c => c.name.toLowerCase().includes(q) || c.subtitle.toLowerCase().includes(q)).map(c => ({
-      type: 'cmd',
-      id: c.id,
-      name: c.name,
-      subtitle: c.subtitle,
-      svg: c.svg,
-      action: c.action
-    }));
-
-    filteredQuickApps = [...matchedApps, ...matchedCommands];
-
     quickswitchList.innerHTML = '';
     if (filteredQuickApps.length === 0) {
-      quickswitchList.innerHTML = '<div style="padding:14px;text-align:center;color:#888;font-size:13px;">Tidak ada layanan atau perintah yang cocok</div>';
+      quickswitchList.innerHTML = '<div style="padding:20px;text-align:center;color:#8E8E93;font-size:13px;font-weight:500;">Tidak ada layanan yang cocok</div>';
       return;
     }
 
@@ -1424,22 +1559,18 @@
     filteredQuickApps.forEach((app, idx) => {
       const item = document.createElement('div');
       item.className = 'quickswitch-item' + (idx === quickSwitchIndex ? ' is-selected' : '');
-      
-      const isCmd = app.type === 'cmd';
-      const iconMarkup = (isCmd && app.svg)
-        ? `<div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${app.svg}</div>`
-        : `<img src="${app.icon}" class="tab-icon" onerror="this.src='assets/icons/web.svg'">`;
+
+      const isCurrentActive = (app.id === activeAppId);
 
       item.innerHTML = `
-        ${iconMarkup}
-        <div style="flex:1;overflow:hidden;">
-          <div style="font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;">
+        <img src="${app.icon}" class="quickswitch-icon" alt="${app.name}" onerror="this.src='assets/icons/web.svg'">
+        <div class="quickswitch-item-info">
+          <div class="quickswitch-item-name">
             <span>${app.name}</span>
-            ${isCmd ? '<span style="font-size:10px;background:rgba(114,102,240,0.25);color:#a5b4fc;padding:1px 5px;border-radius:3px;">Perintah</span>' : ''}
           </div>
-          <div style="font-size:11px;opacity:0.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${app.subtitle}</div>
+          <div class="quickswitch-item-sub">${app.subtitle}</div>
         </div>
-        ${app.id === activeAppId ? '<span style="font-size:11px;background:rgba(255,255,255,0.15);padding:2px 6px;border-radius:4px;">Aktif</span>' : ''}
+        ${isCurrentActive ? '<span class="quickswitch-badge-active">Aktif</span>' : ''}
       `;
 
       item.onclick = () => {
@@ -2479,7 +2610,7 @@
               updateCheckStatusMsg.style.background = 'rgba(255, 255, 255, 0.04)';
               updateCheckStatusMsg.style.color = '#94a3b8';
               updateCheckStatusMsg.style.border = '1px solid rgba(255, 255, 255, 0.08)';
-              updateCheckStatusMsg.textContent = (t.update_latest_already || "You are using the latest version ({version}).").replace('{version}', res.version || 'v1.5.0');
+              updateCheckStatusMsg.textContent = (t.update_latest_already || "You are using the latest version ({version}).").replace('{version}', res.version || 'v1.7.0');
             }
           }
         }
@@ -2679,6 +2810,14 @@
         localStorage.setItem(appExtKey, JSON.stringify(savedPrefs));
         console.log(`[Megabox Extensions] ${ext.id} set to ${toggle.checked} for app ${app ? app.id : 'default'}`);
 
+        // If Translate toggled, broadcast instantly to the active webview
+        if (ext.id === 'translate' && activeAppId) {
+          const wv = document.getElementById('wv-' + activeAppId);
+          if (wv) {
+            try { wv.send('translate:toggle-state', toggle.checked); } catch (_) {}
+          }
+        }
+
         // If Dark Reader toggled, apply immediate fast CSS injection for instant result!
         if (ext.id === 'dark-reader' && activeAppId) {
           const wv = document.getElementById('wv-' + activeAppId);
@@ -2711,6 +2850,12 @@
   let cachedVaultItems = [];
 
   window.handleMegawardenPrompt = handleMegawardenPrompt;
+  if (window.megabox && typeof window.megabox.onVaultSavePrompt === 'function') {
+    window.megabox.onVaultSavePrompt((data) => {
+      console.log('[Megawarden] Received popup save prompt relay:', data.url);
+      handleMegawardenPrompt(data);
+    });
+  }
   async function handleMegawardenPrompt(data) {
     if (!data || !data.password || !data.username) return;
 

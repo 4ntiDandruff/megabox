@@ -222,17 +222,27 @@ document.addEventListener('keydown', (e) => {
 // Simple Translate - Floating Selection Translator Engine (Cupertino Liquid Glass)
 // ============================================================================
 (function initSimpleTranslate() {
+  let isTranslateActive = true;
   let tooltipEl = null;
   let currentSelectionText = "";
   let lastTranslateTimer = null;
   let activeRequestId = 0;
 
-  // Icons Lucide SVG strings
-  const SVG_ARROW = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
-  const SVG_COPY = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
-  const SVG_CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  const SVG_CLOSE = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-  const SVG_SPINNER = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: megabox-spin 0.8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+  // Sync extension enabled state from host
+  ipcRenderer.on('translate:toggle-state', (_, enabled) => {
+    isTranslateActive = Boolean(enabled);
+    if (!isTranslateActive) {
+      hideTooltip();
+    }
+  });
+
+  // Native Lucide SVG icons (Stroke 1.75 - 2px, clean geometry)
+  const SVG_ARROW = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.65; flex-shrink:0;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  const SVG_COPY = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+  const SVG_CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#30D158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>';
+  const SVG_CLOSE = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+  const SVG_SPINNER = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; animation: megabox-spin 0.8s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+  const SVG_ERROR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
 
   function injectKeyframesOnce() {
     if (document.getElementById("megabox-st-styles")) return;
@@ -244,31 +254,49 @@ document.addEventListener('keydown', (e) => {
         to { transform: rotate(360deg); }
       }
       @keyframes megabox-pop-in {
-        0% { opacity: 0; transform: scale(0.96) translateY(4px); }
+        0% { opacity: 0; transform: scale(0.97) translateY(4px); }
         100% { opacity: 1; transform: scale(1) translateY(0); }
       }
+      #megabox-simple-translate-panel {
+        box-sizing: border-box !important;
+      }
       #megabox-simple-translate-panel * {
-        box-sizing: border-box;
+        box-sizing: border-box !important;
+      }
+      #st-copy-btn {
+        transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
       }
       #st-copy-btn:hover {
-        background: rgba(255, 255, 255, 0.95) !important;
-        border-color: rgba(0, 0, 0, 0.12) !important;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        border-color: rgba(0, 113, 227, 0.28) !important;
         color: #0071E3 !important;
+        box-shadow: 0 2px 6px rgba(0, 113, 227, 0.12) !important;
       }
       #st-copy-btn:active {
-        transform: scale(0.96) !important;
+        transform: scale(0.95) !important;
+      }
+      #st-close-btn {
+        transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
       }
       #st-close-btn:hover {
-        background: rgba(0, 0, 0, 0.06) !important;
+        background: rgba(0, 0, 0, 0.07) !important;
         color: #1D1D1F !important;
       }
+      #st-close-btn:active {
+        transform: scale(0.92) !important;
+      }
       #st-translated-text::-webkit-scrollbar {
-        width: 4px;
+        width: 5px;
+      }
+      #st-translated-text::-webkit-scrollbar-track {
+        background: transparent;
       }
       #st-translated-text::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.16);
-        border-radius: 4px;
+        border-radius: 9999px;
+      }
+      #st-translated-text::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.28);
       }
     `;
     (document.head || document.documentElement).appendChild(style);
@@ -284,19 +312,19 @@ document.addEventListener('keydown', (e) => {
       "position: absolute",
       "display: none",
       "z-index: 2147483647",
-      "background: rgba(255, 255, 255, 0.88)",
+      "background: rgba(255, 255, 255, 0.92)",
       "color: #1D1D1F",
       "backdrop-filter: blur(28px) saturate(190%)",
       "-webkit-backdrop-filter: blur(28px) saturate(190%)",
       "border: 1px solid rgba(255, 255, 255, 0.95)",
       "border-radius: 14px",
-      "box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 20px 48px -12px rgba(0, 113, 227, 0.10), inset 0 1px 0 rgba(255, 255, 255, 1)",
+      "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 12px 32px -4px rgba(0, 0, 0, 0.14), 0 20px 48px -12px rgba(0, 113, 227, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1)",
       "font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif",
       "font-size: 13px",
       "line-height: 1.5",
-      "max-width: 390px",
-      "min-width: 240px",
-      "padding: 11px 14px 13px 14px",
+      "min-width: 280px",
+      "max-width: 380px",
+      "padding: 12px 14px 13px 14px",
       "user-select: text",
       "box-sizing: border-box",
       "animation: megabox-pop-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards"
@@ -323,26 +351,26 @@ document.addEventListener('keydown', (e) => {
       const target = (res.targetLang || 'id').toUpperCase();
 
       tooltipEl.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-bottom:7px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:11px;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.18); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 7px; border-radius:6px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; padding-bottom:8px; border-bottom:1px solid rgba(0,0,0,0.06); gap:12px;">
+          <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-shrink:1;">
+            <div style="display:inline-flex; align-items:center; gap:4px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.18); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 7px; border-radius:6px; flex-shrink:0;">
               <span>${source}</span>
               ${SVG_ARROW}
               <span>${target}</span>
             </div>
-            <span style="font-size:11px; font-weight:600; color:#86868B; letter-spacing:-0.01em;">Terjemahan Instan</span>
+            <span style="font-size:11px; font-weight:600; color:#86868B; letter-spacing:-0.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Terjemahan Instan</span>
           </div>
-          <div style="display:flex; align-items:center; gap:5px;">
-            <button id="st-copy-btn" type="button" title="Salin terjemahan" style="background:rgba(255,255,255,0.7); border:1px solid rgba(0,0,0,0.08); border-radius:7px; color:#4B5563; cursor:pointer; font-size:11px; font-weight:600; padding:3px 8px; display:inline-flex; align-items:center; gap:4px; transition:all 0.14s ease;">
+          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <button id="st-copy-btn" type="button" title="Salin terjemahan" style="background:rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.09); border-radius:7px; color:#374151; cursor:pointer; font-size:11px; font-weight:600; padding:3.5px 9px; display:inline-flex; align-items:center; gap:5px; height:24px; outline:none;">
               ${SVG_COPY}
               <span>Salin</span>
             </button>
-            <button id="st-close-btn" type="button" title="Tutup" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:all 0.14s ease;">
+            <button id="st-close-btn" type="button" title="Tutup" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; padding:0; outline:none;">
               ${SVG_CLOSE}
             </button>
           </div>
         </div>
-        <div id="st-translated-text" style="font-size:13px; color:#1D1D1F; font-weight:500; word-break:break-word; max-height:220px; overflow-y:auto; line-height:1.58; padding-right:2px; letter-spacing:-0.01em;">
+        <div id="st-translated-text" style="font-size:13.5px; color:#1D1D1F; font-weight:450; word-break:break-word; max-height:220px; overflow-y:auto; line-height:1.6; padding-right:2px; letter-spacing:-0.01em;">
           ${res.translation}
         </div>
       `;
@@ -352,13 +380,13 @@ document.addEventListener('keydown', (e) => {
         copyBtn.onclick = () => {
           navigator.clipboard.writeText(res.translation).then(() => {
             copyBtn.innerHTML = `${SVG_CHECK}<span style="color:#30D158; font-weight:700;">Tersalin</span>`;
-            copyBtn.style.borderColor = "rgba(48,209,88,0.3)";
-            copyBtn.style.background = "rgba(48,209,88,0.08)";
+            copyBtn.style.borderColor = "rgba(48,209,88,0.32)";
+            copyBtn.style.background = "rgba(48,209,88,0.09)";
             setTimeout(() => {
               if (copyBtn) {
                 copyBtn.innerHTML = `${SVG_COPY}<span>Salin</span>`;
-                copyBtn.style.borderColor = "rgba(0,0,0,0.08)";
-                copyBtn.style.background = "rgba(255,255,255,0.7)";
+                copyBtn.style.borderColor = "rgba(0,0,0,0.09)";
+                copyBtn.style.background = "rgba(255,255,255,0.85)";
               }
             }, 1600);
           }).catch(() => {});
@@ -370,14 +398,17 @@ document.addEventListener('keydown', (e) => {
 
     } else {
       tooltipEl.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#FF3B30; font-weight:500; gap:8px;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-            <span>Gagal menerjemahkan (${res ? res.error || 'Network error' : 'Error'})</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-bottom:7px; border-bottom:1px solid rgba(255,59,48,0.12); gap:10px;">
+          <div style="display:flex; align-items:center; gap:6px; min-width:0; flex-shrink:1;">
+            ${SVG_ERROR}
+            <span style="font-size:11.5px; color:#FF3B30; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Gagal Menerjemahkan</span>
           </div>
-          <button id="st-close-btn" type="button" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; padding:0;">
+          <button id="st-close-btn" type="button" title="Tutup" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; padding:0; flex-shrink:0; outline:none;">
             ${SVG_CLOSE}
           </button>
+        </div>
+        <div style="font-size:12px; color:#6B7280; line-height:1.5;">
+          ${res && res.error ? res.error : 'Terjadi gangguan jaringan saat menghubungi engine terjemahan.'}
         </div>
       `;
       const closeBtn = tooltipEl.querySelector('#st-close-btn');
@@ -386,6 +417,7 @@ document.addEventListener('keydown', (e) => {
   });
 
   function handleSelection() {
+    if (!isTranslateActive) return;
     const sel = window.getSelection();
     if (!sel || sel.isCollapsed) {
       hideTooltip();
@@ -410,18 +442,18 @@ document.addEventListener('keydown', (e) => {
       const panel = createTooltip();
       panel.style.display = "block";
       panel.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.06); font-size:11px;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <div style="display:inline-flex; align-items:center; gap:3px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.16); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 6px; border-radius:6px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-bottom:7px; border-bottom:1px solid rgba(0,0,0,0.06); gap:12px;">
+          <div style="display:flex; align-items:center; gap:8px; min-width:0; flex-shrink:1;">
+            <div style="display:inline-flex; align-items:center; gap:3px; background:rgba(0,113,227,0.08); border:1px solid rgba(0,113,227,0.18); color:#0071E3; font-weight:700; font-size:10px; letter-spacing:0.04em; padding:2px 7px; border-radius:6px; flex-shrink:0;">
               AUTO-FLIP
             </div>
-            <span style="font-size:11px; font-weight:600; color:#86868B;">Menerjemahkan</span>
+            <span style="font-size:11px; font-weight:600; color:#86868B; letter-spacing:-0.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Menerjemahkan...</span>
           </div>
-          <button id="st-close-btn" type="button" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; padding:0;">
+          <button id="st-close-btn" type="button" title="Tutup" style="background:transparent; border:none; border-radius:6px; color:#86868B; cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; padding:0; flex-shrink:0; outline:none;">
             ${SVG_CLOSE}
           </button>
         </div>
-        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#6B7280; padding:4px 0;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#6B7280; padding:3px 0 1px 0;">
           ${SVG_SPINNER}
           <span>Menghubungkan ke engine terjemahan...</span>
         </div>
@@ -433,8 +465,8 @@ document.addEventListener('keydown', (e) => {
       let topPos = rect.bottom + scrollTop + 8;
       let leftPos = rect.left + scrollLeft;
 
-      if (leftPos + 390 > window.innerWidth + scrollLeft) {
-        leftPos = Math.max(10, window.innerWidth + scrollLeft - 400);
+      if (leftPos + 380 > window.innerWidth + scrollLeft) {
+        leftPos = Math.max(10, window.innerWidth + scrollLeft - 390);
       }
       panel.style.top = topPos + "px";
       panel.style.left = leftPos + "px";
@@ -470,7 +502,6 @@ document.addEventListener('keydown', (e) => {
 
   console.log("[Megabox] Simple Translate selection observer mounted via IPC Relay (Liquid Apple Glass).");
 })();
-
 
 // Flag preload loaded for health check
 window.__megabox_preload_loaded = true;
@@ -524,10 +555,22 @@ window.__megabox_preload_loaded = true;
     let activeDropdown = null;
     let lastActiveInput = null;
 
-    // Request available credentials for current domain on load
+    // Request available credentials for current domain on load (supports webview sendToHost & popup invoke)
     function requestVaultCredentials() {
       const origin = window.location.href;
-      ipcRenderer.sendToHost("megawarden:request-credentials", { url: origin });
+      try {
+        ipcRenderer.sendToHost("megawarden:request-credentials", { url: origin });
+      } catch (_) {}
+      try {
+        ipcRenderer.invoke("megawarden:find-for-url", { url: origin }).then(res => {
+          if (res && res.success && res.matches) {
+            cachedCredentials = res.matches;
+            if (lastActiveInput && isCredentialInput(lastActiveInput)) {
+              showSuggestionDropdown(lastActiveInput);
+            }
+          }
+        }).catch(() => {});
+      } catch (_) {}
     }
 
     // Receive credentials from host
@@ -959,12 +1002,18 @@ window.__megabox_preload_loaded = true;
         const url = window.location.href;
         const title = document.title || "";
 
-        ipcRenderer.sendToHost("megawarden:save-prompt", {
+        const promptData = {
           url,
           title,
           username: username.trim(),
           password: password
-        });
+        };
+        try {
+          ipcRenderer.sendToHost("megawarden:save-prompt", promptData);
+        } catch (_) {}
+        try {
+          ipcRenderer.send("megawarden:popup-save-prompt", promptData);
+        } catch (_) {}
       } catch (err) {
         console.warn("[Megawarden Preload] Capture error:", err.message);
       }

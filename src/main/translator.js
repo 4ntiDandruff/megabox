@@ -1,10 +1,14 @@
 const https = require('https');
 
 /**
- * Perform robust translation using Google PA API (absorbed from Simple Translate)
- * with automatic fallback to Google GTX endpoint and Smart Auto-Flip logic:
- * - If text is Indonesian (id) -> translated to English (en).
- * - If text is English or any other foreign language -> translated to Indonesian (id).
+ * Perform robust translation with multiple failover engines:
+ * 1. Google Chrome Dict API (dict-chrome-ex) - highly reliable, no 429 quota lock
+ * 2. MyMemory Translation API - high quality fallback
+ * 3. Fallback to Google GTX
+ *
+ * Smart Auto-Flip logic:
+ * - If source is Indonesian (id) -> translated to English (en).
+ * - If source is English or any other language -> translated to Indonesian (id).
  *
  * @param {string} text - The input string to translate
  * @returns {Promise<{success: boolean, original: string, translation: string, sourceLang: string, targetLang: string, error?: string}>}
@@ -16,35 +20,39 @@ async function translateText(text) {
 
   const cleanText = text.trim();
 
-  // Helper 1: Google PA API (Official Simple Translate client endpoint)
-  function queryGooglePA(targetLang) {
+  // Helper 1: Google Dict API (client=dict-chrome-ex) - Fast, lightweight, zero 429 block
+  function queryGoogleDict(targetLang) {
     return new Promise((resolve, reject) => {
-      const params = new URLSearchParams({
-        'params.client': 'gtx',
-        'query.source_language': 'auto',
-        'query.target_language': targetLang,
-        'query.display_language': targetLang,
-        'query.text': cleanText,
-        'key': Buffer.from('QUl6YVN5RExlZUZJNU90RkJ3WUJJb0tfamo1bTMyclpLNUMrQ1hB', 'base64').toString(),
-        'data_types': 'TRANSLATION'
-      });
-      const url = `https://translate-pa.googleapis.com/v1/translate?${params.toString()}`;
-
-      const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 7000 }, (res) => {
+      const url = `https://translate.googleapis.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=${encodeURIComponent(targetLang)}&q=${encodeURIComponent(cleanText)}`;
+      const req = https.get(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+          'Accept': '*/*'
+        },
+        timeout: 6000
+      }, (res) => {
         let raw = '';
         res.on('data', chunk => raw += chunk);
         res.on('end', () => {
           if (res.statusCode === 200) {
             try {
               const data = JSON.parse(raw);
-              const sourceLang = (data.sourceLanguage || 'auto').toLowerCase();
-              const translation = data.translation || '';
-              resolve({ sourceLang, translation });
+              // Expected response: [["Translated text", "source_lang"]] or ["Translated text"]
+              if (Array.isArray(data) && data.length > 0) {
+                if (Array.isArray(data[0])) {
+                  const translation = data[0][0] || '';
+                  const sourceLang = (data[0][1] || 'auto').toLowerCase();
+                  return resolve({ sourceLang, translation });
+                } else if (typeof data[0] === 'string') {
+                  return resolve({ sourceLang: 'auto', translation: data[0] });
+                }
+              }
+              resolve({ sourceLang: 'auto', translation: cleanText });
             } catch (e) {
               reject(e);
             }
           } else {
-            reject(new Error(`Google PA HTTP ${res.statusCode}`));
+            reject(new Error(`Google Dict HTTP ${res.statusCode}`));
           }
         });
       });
@@ -52,33 +60,32 @@ async function translateText(text) {
       req.on('error', reject);
       req.on('timeout', () => {
         req.destroy();
-        reject(new Error('Google PA Request Timeout'));
+        reject(new Error('Google Dict Request Timeout'));
       });
     });
   }
 
-  // Helper 2: Fallback GTX API
-  function queryGoogleGTX(targetLang) {
+  // Helper 2: MyMemory Translation API fallback
+  function queryMyMemory(sourceLang, targetLang) {
     return new Promise((resolve, reject) => {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(cleanText)}`;
-      
-      const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 7000 }, (res) => {
+      const langPair = `${sourceLang || 'en'}|${targetLang}`;
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanText)}&langpair=${encodeURIComponent(langPair)}`;
+      const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 6000 }, (res) => {
         let raw = '';
         res.on('data', chunk => raw += chunk);
         res.on('end', () => {
           if (res.statusCode === 200) {
             try {
               const data = JSON.parse(raw);
-              const sourceLang = (data && data[2]) ? String(data[2]).toLowerCase() : 'auto';
-              const translation = (data && data[0] && Array.isArray(data[0]))
-                ? data[0].map(item => (item && item[0]) ? item[0] : '').join('')
-                : '';
-              resolve({ sourceLang, translation });
+              if (data && data.responseData && data.responseData.translatedText) {
+                return resolve({ sourceLang: sourceLang || 'auto', translation: data.responseData.translatedText });
+              }
+              reject(new Error('MyMemory invalid response'));
             } catch (e) {
               reject(e);
             }
           } else {
-            reject(new Error(`GTX HTTP ${res.statusCode}`));
+            reject(new Error(`MyMemory HTTP ${res.statusCode}`));
           }
         });
       });
@@ -86,26 +93,31 @@ async function translateText(text) {
       req.on('error', reject);
       req.on('timeout', () => {
         req.destroy();
-        reject(new Error('GTX Request Timeout'));
+        reject(new Error('MyMemory Request Timeout'));
       });
     });
   }
 
   async function performQuery(targetLang) {
     try {
-      return await queryGooglePA(targetLang);
-    } catch (err) {
-      return await queryGoogleGTX(targetLang);
+      return await queryGoogleDict(targetLang);
+    } catch (err1) {
+      console.warn('[Translator] Google Dict error, falling back to MyMemory:', err1.message);
+      try {
+        return await queryMyMemory('auto', targetLang);
+      } catch (err2) {
+        throw new Error(err1.message + ' | ' + err2.message);
+      }
     }
   }
 
   try {
     // 1st pass: translate towards Indonesian
     const pass1 = await performQuery('id');
-    const detected = pass1.sourceLang;
+    const detected = (pass1.sourceLang || 'auto').toLowerCase();
 
-    // Smart Auto-Flip: if source text is already Indonesian, flip target to English
-    if (detected === 'id') {
+    // Smart Auto-Flip: if detected source is Indonesian or translation is identical, flip to English
+    if (detected === 'id' || (detected === 'auto' && pass1.translation.trim().toLowerCase() === cleanText.toLowerCase())) {
       const pass2 = await performQuery('en');
       return {
         success: true,
@@ -116,7 +128,6 @@ async function translateText(text) {
       };
     }
 
-    // Otherwise, result to Indonesian is returned
     return {
       success: true,
       original: cleanText,

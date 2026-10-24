@@ -4,6 +4,53 @@ Seluruh rekam jejak pembaruan penting pada proyek **Megabox** dicatat secara kro
 
 ---
 
+## [1.7.0] - 2026-10-24
+
+### Ditambahkan (Added)
+- **Ekstraksi Tautan Chat Cerdas (`Copy Link Address`)**: Menu klik-kanan webview membaca parameter event `params.linkURL` secara langsung. Jika kursor mengklik tautan eksternal di pesan chat (WhatsApp, Telegram, Discord, Gmail), sistem menampilkan opsi **Copy Link Address** dan **Open Link in External Browser** secara presisi tanpa salah menyalin URL induk webview.
+- **IPC Direct Clipboard Writer (`clipboard:write-text`)**: Saluran IPC baru antara renderer dan proses utama Electron via `clipboard.writeText()` yang kebal terhadap pembatasan izin keamanan clipboard DOM pada lingkungan Linux Wayland.
+- **Opsi Salin URL pada Tab Sidebar**: Menambahkan item menu **Salin URL** pada context menu tab sidebar aplikasi lengkap dengan umpan balik visual notifikasi toast instan dan mekanisme *fallback chain* (getURL -> src -> default config URL).
+- **Pintasan Keyboard Global Bagi Layar (Alt+S)**: Memasang pintasan `Alt+S` untuk toggle mode Bagi Layar (Split Screen) serta navigasi tab naik/turun (`Alt+Panah`).
+
+### Diubah (Changed)
+- **Standarisasi Penuh Bahasa Inggris pada Context Menu Webview**: Menyelaraskan seluruh label menu konteks webview native ke dalam Bahasa Inggris baku (*Back, Forward, Reload, Copy, Paste, Copy Link Address, Open Link in External Browser, Inspect Element*) demi konsistensi standar aplikasi desktop global.
+- **Redesain Ergonomi Sidebar Navigasi Kiri**: Merampingkan lebar sidebar dari 68px menjadi 54px, menyesuaikan ukuran container ikon aplikasi menjadi 34x34px, mengatur ulang padding dan jarak vertikal antar-ikon, serta menyelaraskan posisi popover riwayat unduhan (flyout download) dan banner notifikasi pembaruan sistem agar layout tetap proporsional dan muat lebih banyak tab kerja.
+- **Penyelarasan Visual Badge Shortcut Context Menu**: Memperbarui tampilan badge shortcut keyboard pada context menu sidebar dengan tipografi monospace kontras tinggi (`.ctx-shortcut`) yang mudah dibaca dari jarak pandang meja kerja.
+
+### Dihapus (Removed)
+- **Eliminasi Opsi Redundan `Salin URL Halaman`**: Menghapus opsi *Salin URL Halaman* dari menu konteks webview untuk mencegah kebingungan saat menyalin tautan di dalam obrolan.
+- **Pembersihan Fitur `Set current URL as app's default`**: Menghapus opsi penetapan URL default dari menu konteks beserta seluruh pendengar (*listener*) IPC dan pemanggil handler terkait di proses utama dan renderer.
+
+### Diperbaiki (Fixed)
+- **Kalkulasi Responsif Mode Bagi Layar (Split Screen Dual-Pane)**: Menata ulang struktur flexbox container webview (`#webview-container`) saat mode Bagi Layar aktif sehingga kedua pane terdistribusi presisi 50%:50% membentang memenuhi 100% tinggi dan lebar layar tanpa menciut di tengah.
+- **Eliminasi Lapisan Overlay Transparan (Dimmer Trap)**: Menghapus bug blocking pointer-events dan seleksi semu pada pane sebelah kanan saat Bagi Layar aktif, menjamin kedua webview beroperasi aktif secara independen tanpa hambatan klik.
+
+---
+
+## [1.6.1] - 2026-10-21
+
+### Diperbaiki (Fixed)
+- **Kompatibilitas Format CSV Google Password Manager**: Memperkuat parser impor dan eksportir berkas CSV Megawarden agar 100% kompatibel dengan skema resmi Google Password Manager (`name,url,username,password,note`), termasuk penanganan otomatis tanda kutip multiline dan pemetaan otomatis field nama layanan.
+- **Pembersihan Logika Zoom Scope**: Memindahkan helper kalkulasi zoom ke cakupan modul (*module scope*) untuk mencegah error referensi saat berpindah antar-tab aplikasi secara cepat.
+
+### Diubah (Changed)
+- **Penyempurnaan Visual Vault Megawarden**: Menyelaraskan kartu entri sandi dan modal brankas Megawarden dengan palet Apple Liquid Glass bernuansa abu-abu gelap bergradasi halus dan tipografi tajam.
+
+---
+
+## [1.6.0] - 2026-10-21
+
+### Ditambahkan (Added)
+- **Megawarden Vault (Brankas Sandi Meja Kerja Local-First)**: Brankas kata sandi bawaan mandiri berbasis penyimpanan file JSON lokal dengan proteksi penulisan atomik. Mendukung pengisian otomatis (*autofill overlay*) yang aman pada webview, deteksi otomatis kredensial router LAN, dan impor/ekspor CSV Google Password Manager tanpa server cloud pihak ketiga.
+- **Pengelola Unduhan Mandiri (Integrated Download Interceptor)**: Menangkap seluruh unduhan berkas melalui Electron `will-download`, dilengkapi flyout popover riwayat unduhan di sidebar, progres bar real-time, dan penyimpanan data unduhan atomik.
+- **Pengatur Skala Tampilan per-Aplikasi (Discrete Zoom Controller)**: Skala zoom independen yang tersimpan otomatis di localStorage per-tab aplikasi, dilengkapi notifikasi visual HUD OSD mengambang (*floating pill*) saat tombol pintasan zoom ditekan.
+- **Katalog Vektor Ikon 480+ Layanan**: Memperluas pustaka ikon lokal dengan penambahan brand perbankan nasional (BCA, Mandiri), e-commerce (Tokopedia, Bukalapak), perangkat hardware servis, dan router LAN.
+
+### Diubah (Changed)
+- **Penyelarasan Tema Apple Cupertino Light Liquid Crystal v2.1**: Merombak tampilan modal Pengaturan, Brankas Sandi, dan Kartu Bantuan dengan kaca frosted translucent, parit taktil neumorphic halus, dan tombol aksi bergradasi jernih.
+
+---
+
 ## [1.5.0] - 2026-10-19
 
 ### Ditambahkan (Added)

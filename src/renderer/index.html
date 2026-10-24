@@ -22,7 +22,7 @@
       --brand-primary-hover: #0077ED;
       --brand-danger: #FF3B30;
       --brand-success: #34C759;
-      --sidebar-width: 72px;
+      --sidebar-width: 58px;
       --sidebar-bg: rgba(18, 18, 20, 0.88);
       --sidebar-active-bg: rgba(255, 255, 255, 0.12);
       --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
@@ -63,7 +63,7 @@
       user-select: none;
     }
 
-    /* Workspace Utilitarian Sidebar */
+    /* Workspace Utilitarian Sidebar (Compact & Ergonomic) */
     .sidebar {
       width: var(--sidebar-width);
       height: 100vh;
@@ -74,41 +74,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px 0 14px 0;
+      padding: 10px 0 10px 0;
       user-select: none;
       flex-shrink: 0;
       z-index: 20;
       box-shadow: 1px 0 10px rgba(0, 0, 0, 0.25);
-    }
-
-    .sidebar-logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #0071E3 0%, #0077ED 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .sidebar-logo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(0, 113, 227, 0.35);
-    }
-    .sidebar-logo svg {
-      width: 24px;
-      height: 24px;
-      color: #FFFFFF;
-    }
-
-    .sidebar-divider {
-      width: 32px;
-      height: 1px;
-      background-color: var(--sidebar-border);
-      margin-bottom: 12px;
     }
 
     /* Tabs Container */
@@ -120,21 +90,21 @@
       align-items: center;
       overflow-y: auto;
       overflow-x: hidden;
-      gap: 12px;
-      padding: 0 8px;
+      gap: 7px;
+      padding: 2px 4px;
     }
 
     .tabs-container::-webkit-scrollbar {
       display: none;
     }
 
-    /* Tab Item - Perfectly Centered & Balanced Squircle */
+    /* Tab Item - Compact Squircle (42x42px) */
     .tab-item {
-      width: 50px;
-      height: 50px;
-      min-height: 50px;
+      width: 42px;
+      height: 42px;
+      min-height: 42px;
       flex-shrink: 0;
-      border-radius: 14px;
+      border-radius: 11px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -143,48 +113,65 @@
       background: transparent;
       border: 1px solid transparent;
       margin: 0 auto;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .tab-item:hover {
       background-color: var(--sidebar-hover-bg);
+      transform: scale(1.03);
     }
 
     .tab-item.is-active {
       background-color: rgba(255, 255, 255, 0.12);
       border-color: rgba(0, 113, 227, 0.45);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.15);
     }
 
+    /* Active Indicator Pill - perfectly anchored to the left border */
     .tab-item.is-active::before {
       content: '';
       position: absolute;
-      left: -11px;
-      top: 12px;
-      bottom: 12px;
+      left: -8px;
+      top: 10px;
+      bottom: 10px;
       width: 3.5px;
       background: linear-gradient(180deg, #389BFF 0%, #0071E3 100%);
       border-radius: 0 3px 3px 0;
-      box-shadow: 0 0 10px rgba(0, 113, 227, 0.65);
+      box-shadow: 0 0 8px rgba(0, 113, 227, 0.7);
+    }
+
+    /* Secondary Split Screen Active Tab Indicator */
+    .tab-item.is-secondary-active {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .tab-item.is-secondary-active::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 13px;
+      bottom: 13px;
+      width: 3px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
     }
 
     .tab-item.is-hibernated {
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
     .tab-item img.tab-icon {
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
       pointer-events: none;
-      border-radius: 6px;
-      /* Anti-black-sink: guarantees visible outline and contrast against dark backgrounds */
-      /* Flat crisp render without drop-shadow halo */
+      border-radius: 5px;
       filter: none;
-}
+    }
 
     .tab-item span.tab-fallback {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
       color: #FFFFFF;
       text-transform: uppercase;
@@ -194,32 +181,33 @@
     /* Workspace Message Count Badge */
     .tab-badge {
       position: absolute;
-      top: 2px;
-      right: 2px;
+      top: 1px;
+      right: 1px;
       background-color: var(--brand-danger);
       color: #ffffff;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      min-width: 17px;
-      height: 17px;
-      line-height: 17px;
-      padding: 0 4px;
-      border-radius: 9px;
+      min-width: 15px;
+      height: 15px;
+      line-height: 15px;
+      padding: 0 3px;
+      border-radius: 8px;
       text-align: center;
-      box-shadow: none;
-      border: 1.5px solid var(--sidebar-bg);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--sidebar-bg);
       display: none;
+      pointer-events: none;
     }
 
     .tab-badge.active {
       display: block;
     }
 
-    /* Add New Service (+) Button */
+    /* Add New Service (+) Button (36x36px) */
     .btn-add-service {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       border: 1px dashed rgba(255, 255, 255, 0.22);
       background: transparent;
       color: #8E8E93;
@@ -227,36 +215,39 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      margin-top: 4px;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 2px;
+      margin-bottom: 2px;
+      flex-shrink: 0;
     }
     .btn-add-service:hover {
       border-color: #0071E3;
       color: #389BFF;
       background-color: rgba(0, 113, 227, 0.18);
-      transform: scale(1.04);
-      box-shadow: 0 0 10px rgba(0, 113, 227, 0.25);
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(0, 113, 227, 0.25);
     }
 
     .btn-add-service svg {
-      width: 20px;
-      height: 20px;
+      width: 17px;
+      height: 17px;
     }
 
-    /* Bottom Control Actions */
+    /* Bottom Control Actions (Compact 5px Gap) */
     .sidebar-bottom {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      padding-top: 10px;
+      gap: 5px;
+      padding-top: 8px;
       border-top: 1px solid var(--sidebar-border);
+      flex-shrink: 0;
     }
 
-        .profile-avatar-btn {
-      width: 40px;
-      height: 40px;
+    .profile-avatar-btn {
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -267,15 +258,17 @@
       position: relative;
       overflow: hidden;
       transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-      margin-bottom: 6px;
+      margin-top: 2px;
+      margin-bottom: 1px;
       color: #8E8E93;
+      flex-shrink: 0;
     }
     .profile-avatar-btn:hover {
       background: rgba(255, 255, 255, 0.12);
       border-color: rgba(0, 113, 227, 0.5);
       color: #FFFFFF;
       transform: scale(1.06);
-      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
     }
     .profile-avatar-btn img {
       width: 100%;
@@ -284,7 +277,7 @@
       border-radius: 50%;
     }
     .profile-avatar-initials {
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 700;
       color: #1D1D1F;
       text-transform: uppercase;
@@ -292,8 +285,8 @@
     }
 
     .sidebar-btn {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       background: transparent;
       border: none;
@@ -303,43 +296,74 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.15s;
+      flex-shrink: 0;
     }
 
     .sidebar-btn:hover {
       background-color: rgba(255, 255, 255, 0.10);
       color: #FFFFFF;
+      transform: scale(1.05);
     }
 
     .sidebar-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 17px;
+      height: 17px;
     }
 
-    /* Webview Container */
+    /* Webview Container & Responsiveness */
     .webviews-container {
       flex: 1;
       height: 100vh;
       background-color: var(--webview-bg);
       position: relative;
       overflow: hidden;
+      display: flex;
     }
 
-    
-    /* Split Tile 1x2 Dual Screen Mode */
+    /* Split Screen 1x2 Dual Screen Mode (Zero-Gap Full Fit) */
     .webviews-container.is-tiled {
       display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 4px;
-      background: #E5E5EA;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      grid-template-rows: 100% !important;
+      gap: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+      box-sizing: border-box;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
     }
-    .webviews-container.is-tiled webview {
+
+    /* Out-of-flow inactive webviews in tiled mode to prevent grid auto-flow fragmentation */
+    .webviews-container.is-tiled webview:not(.is-active-wv) {
+      display: none !important;
+    }
+
+    /* Active split screen webview panels */
+    .webviews-container.is-tiled webview.is-active-wv {
+      display: flex !important;
       position: relative !important;
       width: 100% !important;
       height: 100% !important;
-      border-radius: 4px;
-      box-shadow: none;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      z-index: 10 !important;
+      box-sizing: border-box;
     }
 
+    /* Apple Slate Hairline Split Divider */
+    .webviews-container.is-tiled webview.is-active-wv:first-of-type {
+      border-right: 1px solid rgba(0, 0, 0, 0.12) !important;
+    }
+
+    /* Default Single-View Webview Layout */
     webview {
       width: 100%;
       height: 100%;
@@ -348,6 +372,15 @@
       position: absolute;
       top: 0;
       left: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    webview.is-active-wv {
+      visibility: visible !important;
+      pointer-events: auto !important;
+      z-index: 10 !important;
     }
 
     /* Service Store / Recipe Catalog Modal */
@@ -735,66 +768,91 @@
       opacity: 0.9;
     }
 
-    /* Custom Right Click Context Menu (Dark Slate Glass - Rambox Matching) */
+    /* Custom Right Click Context Menu (Dark Slate Glass - High-Legibility & Comfortable Touch/Click Scale) */
     .custom-context-menu {
       position: fixed;
-      background: rgba(26, 26, 36, 0.96);
-      backdrop-filter: blur(32px) saturate(190%);
-      -webkit-backdrop-filter: blur(32px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 5px;
-      min-width: 190px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.2);
+      background: rgba(22, 22, 28, 0.97);
+      backdrop-filter: blur(36px) saturate(200%);
+      -webkit-backdrop-filter: blur(36px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 6px;
+      min-width: 230px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.35);
       z-index: 200;
       display: none;
-      color: #F0F0F5;
+      color: #F5F5F7;
     }
 
-    .context-menu-item {
-      padding: 7px 12px;
-      font-size: 12.5px;
-      color: #E2E2EA;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: background-color 0.12s ease, color 0.12s ease;
-    }
-
-    .context-menu-item:hover {
-      background-color: rgba(0, 113, 227, 0.88);
-      color: #FFFFFF;
-    }
-
-    .context-menu-item.danger {
-      color: #FF6961;
-    }
-
-    .context-menu-item.danger:hover {
-      background-color: rgba(255, 59, 48, 0.88);
-      color: #FFFFFF;
+    .context-menu-header {
+      padding: 6px 14px 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #A1A1A6;
+      letter-spacing: 0.6px;
     }
 
     .context-menu-divider {
       height: 1px;
-      background-color: rgba(255, 255, 255, 0.08);
-      margin: 4px 0;
+      background-color: rgba(255, 255, 255, 0.10);
+      margin: 4px 2px;
     }
 
-    .context-menu-header {
-      padding: 5px 12px 4px 12px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #9C9CAE;
-      letter-spacing: 0.5px;
+    .context-menu-item {
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #F0F0F5;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.12s ease, color 0.12s ease, transform 0.08s ease;
+    }
+
+    .context-menu-item:hover {
+      background-color: rgba(0, 113, 227, 0.92);
+      color: #FFFFFF;
+    }
+
+    .context-menu-item:active {
+      background-color: #0071E3;
+      transform: scale(0.99);
+    }
+
+    .context-menu-item.danger {
+      color: #FF5A52;
+    }
+
+    .context-menu-item.danger:hover {
+      background-color: rgba(255, 69, 58, 0.92);
+      color: #FFFFFF;
+    }
+
+    .context-menu-item.danger:active {
+      background-color: #FF453A;
+    }
+
+    .context-menu-item .ctx-shortcut {
+      font-size: 12px;
+      color: #98989F;
+      font-weight: 600;
+      margin-left: 20px;
+      letter-spacing: 0.3px;
+      transition: color 0.12s ease;
+    }
+
+    .context-menu-item:hover .ctx-shortcut {
+      color: rgba(255, 255, 255, 0.85);
     }
   
 
 
-    /* Quick Switcher Modal */
+    /* Quick Switcher Modal (Clean Apple Liquid Glass) */
     .quickswitch-box {
       width: 100%;
       max-width: 520px;
@@ -803,7 +861,7 @@
       -webkit-backdrop-filter: blur(32px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.95);
       border-radius: 16px;
-      box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.12);
+      box-shadow: 0 24px 60px -12px rgba(0, 113, 227, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -813,13 +871,26 @@
     .quickswitch-input {
       width: 100%;
       box-sizing: border-box;
-      padding: 14px 18px;
+      padding: 15px 18px;
       font-size: 15px;
-      background: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.85);
       border: none;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       color: #1D1D1F;
       outline: none;
+    }
+    .quickswitch-input::placeholder {
+      color: #8E8E93;
+    }
+
+    .quickswitch-list {
+      max-height: 340px;
+      overflow-y: auto;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
 
     .quickswitch-item {
@@ -827,25 +898,68 @@
       align-items: center;
       gap: 12px;
       padding: 8px 12px;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       color: #1D1D1F;
-      transition: background-color 0.1s;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
     }
 
     .quickswitch-item:hover, .quickswitch-item.is-selected {
-      background-color: rgba(0, 113, 227, 0.10);
+      background-color: rgba(0, 113, 227, 0.08);
+      border-color: rgba(0, 113, 227, 0.20);
       color: #0071E3;
     }
-    .quickswitch-list { max-height: 320px; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
 
-    .quickswitch-item img {
-      width: 24px;
-      height: 24px;
+    .quickswitch-item:hover .quickswitch-item-name,
+    .quickswitch-item.is-selected .quickswitch-item-name {
+      color: #0071E3;
+    }
+
+    /* Direct native icon render with subtle contrast protection for white/light SVGs */
+    .quickswitch-item img.quickswitch-icon {
+      width: 26px;
+      height: 26px;
       object-fit: contain;
-      /* Flat crisp render */
-      filter: none;
-}
+      flex-shrink: 0;
+      border-radius: 6px;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+    }
+
+    .quickswitch-item-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .quickswitch-item-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1D1D1F;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s ease;
+    }
+
+    .quickswitch-item-sub {
+      font-size: 11px;
+      color: #86868B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .quickswitch-badge-active {
+      font-size: 11px;
+      font-weight: 600;
+      color: #0071E3;
+      background: rgba(0, 113, 227, 0.10);
+      border: 1px solid rgba(0, 113, 227, 0.25);
+      padding: 2px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
 
   
     /* Contextual Right Slide-Over Extension Drawer (340px) */
@@ -1381,18 +1495,6 @@
 
     <!-- Bottom Actions -->
     <div class="sidebar-bottom">
-      
-            <button id="btn-settings" class="profile-avatar-btn" title="Pengaturan Akun" style="position:relative;">
-        <div id="avatar-container" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:50%;">
-          <svg id="avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:var(--brand-primary);">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <img id="avatar-user-img" src="assets/megabox.png" style="display:block; width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Avatar">
-          <span id="avatar-user-initials" class="profile-avatar-initials" style="display:none;">ME</span>
-        </div>
-
-      </button>
       <button id="btn-extensions" class="sidebar-btn" title="Ekstensi">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1"></path>
@@ -1422,12 +1524,29 @@
       </button>
 
       <button id="btn-dnd" class="sidebar-btn" title="Fokus Tenang (DND)" style="position:relative;">
+        <!-- Lucide Bell (Normal / Not Muted) -->
         <svg id="icon-dnd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
         </svg>
-        <svg id="icon-dnd-on" style="display:none;color:#5E5CE6;" viewBox="0 0 24 24" fill="currentColor" stroke="#5E5CE6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        <!-- Lucide Bell Off (DND Active / Muted) -->
+        <svg id="icon-dnd-on" style="display:none;color:#5E5CE6;" viewBox="0 0 24 24" fill="none" stroke="#5E5CE6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"></path>
+          <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"></path>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+          <line x1="2" y1="2" x2="22" y2="22"></line>
         </svg>
+      </button>
+
+      <button id="btn-settings" class="profile-avatar-btn" title="Pengaturan Workspace" style="position:relative;">
+        <div id="avatar-container" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:50%;">
+          <svg id="avatar-default-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" style="display:none; color:var(--brand-primary);">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <img id="avatar-user-img" src="assets/megabox.png" style="display:block; width:100%; height:100%; border-radius:50%; object-fit:cover;" alt="Avatar">
+          <span id="avatar-user-initials" class="profile-avatar-initials" style="display:none;">ME</span>
+        </div>
       </button>
     </div>
 
@@ -1437,7 +1556,7 @@
   
   <!-- Webview Host Area (Clean White Background for Web Pages) -->
     <!-- Floating Top Update Banner (Rambox / VS Code Style) -->
-  <div id="update-banner" style="display: none; position: absolute; top: 0; left: 72px; right: 0; height: 38px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px) saturate(190%); border-bottom: 1px solid rgba(0, 0, 0, 0.08); z-index: 40; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: transform 0.25s ease, opacity 0.25s ease;">
+  <div id="update-banner" style="display: none; position: absolute; top: 0; left: var(--sidebar-width); right: 0; height: 38px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px) saturate(190%); border-bottom: 1px solid rgba(0, 0, 0, 0.08); z-index: 40; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: transform 0.25s ease, opacity 0.25s ease;">
     <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
       <span style="position: relative; display: flex; width: 8px; height: 8px;">
         <span style="position: absolute; display: inline-flex; width: 100%; height: 100%; border-radius: 9999px; background-color: #34C759; opacity: 0.75; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
@@ -1538,15 +1657,15 @@
     <div class="context-menu-divider"></div>
     <div id="ctx-back" class="context-menu-item">
       <span>Kembali</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Alt+←</span>
+      <span class="ctx-shortcut">Alt+←</span>
     </div>
     <div id="ctx-forward" class="context-menu-item">
       <span>Maju</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Alt+→</span>
+      <span class="ctx-shortcut">Alt+→</span>
     </div>
     <div id="ctx-reload" class="context-menu-item">
       <span>Muat Ulang</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Ctrl+R</span>
+      <span class="ctx-shortcut">Ctrl+R</span>
     </div>
     <div id="ctx-home" class="context-menu-item">
       <span>Beranda</span>
@@ -1555,21 +1674,24 @@
     <div id="ctx-open-browser" class="context-menu-item">
       <span>Browser</span>
     </div>
+    <div id="ctx-copy-url" class="context-menu-item">
+      <span>Salin URL</span>
+    </div>
     <div id="ctx-hibernate" class="context-menu-item">
       <span id="ctx-hibernate-label">Tidurkan</span>
     </div>
     <div id="ctx-tile" class="context-menu-item">
       <span id="ctx-tile-label">Bagi Layar</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Alt+S</span>
+      <span class="ctx-shortcut">Alt+S</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-move-up" class="context-menu-item">
       <span>Pindah Naik</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Alt+↑</span>
+      <span class="ctx-shortcut">Alt+↑</span>
     </div>
     <div id="ctx-move-down" class="context-menu-item">
       <span>Pindah Turun</span>
-      <span style="font-size:11px;color:#8E8EA0;font-weight:500;margin-left:14px;">Alt+↓</span>
+      <span class="ctx-shortcut">Alt+↓</span>
     </div>
     <div class="context-menu-divider"></div>
     <div id="ctx-edit" class="context-menu-item">
@@ -1935,7 +2057,7 @@
                 <div>
                   <div style="display: flex; align-items: baseline; gap: 6px;">
                     <span style="font-size: 15px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.01em;">Megabox</span>
-                    <span style="font-size: 11px; font-weight: 500; color: #86868B;">v1.5.0</span>
+                    <span style="font-size: 11px; font-weight: 500; color: #86868B;">v1.7.0</span>
                   </div>
                   <div id="i18n-about-hero-sub" style="font-size: 11px; color: #86868B; margin-top: 1px;">Ruang Kerja Multi-Aplikasi Zero-Bloat & Local-First</div>
                 </div>
@@ -2242,7 +2364,7 @@
   </div>
 
   <!-- Download History Popover Flyout (Apple Cupertino Crystal) -->
-  <div id="download-history-popover" style="display:none; position:fixed; bottom:70px; left:72px; z-index:85; width:360px; max-height:480px; background:rgba(255, 255, 255, 0.94); backdrop-filter:blur(32px) saturate(190%); -webkit-backdrop-filter:blur(32px) saturate(190%); border:1px solid rgba(0, 0, 0, 0.1); border-radius:16px; box-shadow:0 12px 40px rgba(0, 0, 0, 0.15); flex-direction:column; overflow:hidden;">
+  <div id="download-history-popover" style="display:none; position:fixed; bottom:70px; left:58px; z-index:85; width:360px; max-height:480px; background:rgba(255, 255, 255, 0.94); backdrop-filter:blur(32px) saturate(190%); -webkit-backdrop-filter:blur(32px) saturate(190%); border:1px solid rgba(0, 0, 0, 0.1); border-radius:16px; box-shadow:0 12px 40px rgba(0, 0, 0, 0.15); flex-direction:column; overflow:hidden;">
     <!-- Popover Header -->
     <div style="padding:14px 18px; border-bottom:1px solid rgba(0, 0, 0, 0.07); background:rgba(255, 255, 255, 0.75); display:flex; justify-content:space-between; align-items:center;">
       <div style="display:flex; align-items:center; gap:8px;">
