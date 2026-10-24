@@ -928,6 +928,12 @@
         // Listen to badge events from preload-webview bridge
         wv.addEventListener('dom-ready', () => {
           restoreWebviewZoom(app.id, wv);
+          // If custom app does not have cached favicon yet, discover favicon directly from DOM
+          if ((!app.custom_icon || !app.custom_icon.startsWith('data:')) && (!app.icon || app.icon === 'custom' || app.icon === 'globe' || app.icon === 'web')) {
+            wv.executeJavaScript('document.querySelector(\'link[rel*="icon"]\')?.href || null').then(foundUrl => {
+              if (foundUrl) handleFaviconUpdate(foundUrl);
+            }).catch(() => {});
+          }
           // Sync translate & sponsorblock toggle states to webview
           try {
             const appExtKey = 'megabox_ext_' + app.id;

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Tray, Menu, nativeImage, dialog, shell, clipboard, net } = require('electron');
 const path = require('path');
 const { initDatabase, getApps, saveApp, deleteApp, reorderApp, getSettings, saveSettings, getDownloads, saveDownload, deleteDownload, clearDownloads, getSnippets, saveSnippet, deleteSnippet, incrementSnippetUsage } = require('./db.js');
 const { setupHeaderInterceptors } = require('./extensions.js');
@@ -864,29 +864,14 @@ async function resolveFaviconForUrl(targetUrl) {
   }
 
   const candidates = [
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
-    `${origin}/favicon.ico`,
-    `${origin}/apple-touch-icon.png`
+    origin + '/favicon.ico',
+    origin + '/apple-touch-icon.png',
+    'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64'
   ];
 
   for (const favUrl of candidates) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
-      const resp = await fetch(favUrl, {
-        signal: controller.signal,
-        headers: { 'User-Agent': 'Mozilla/5.0 Megabox Favicon' }
-      });
-      clearTimeout(timeoutId);
-      if (resp.ok) {
-        const ct = resp.headers.get('content-type') || 'image/png';
-        const arrayBuf = await resp.arrayBuffer();
-        const buf = Buffer.from(arrayBuf);
-        if (buf.length > 100 && buf.length <= 1500000) {
-          return 'data:' + ct + ';base64,' + buf.toString('base64');
-        }
-      }
-    } catch (_) {}
+    const dataUri = await cacheFaviconToDataUri(favUrl);
+    if (dataUri) return dataUri;
   }
   return null;
 }
@@ -895,13 +880,9 @@ async function cacheFaviconToDataUri(iconUrl) {
   if (!iconUrl || typeof iconUrl !== 'string') return null;
   if (iconUrl.startsWith('data:')) return iconUrl;
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
-    const resp = await fetch(iconUrl, {
-      signal: controller.signal,
+    const resp = await net.fetch(iconUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 Megabox Favicon' }
     });
-    clearTimeout(timeoutId);
     if (!resp.ok) return null;
     const ct = resp.headers.get('content-type') || 'image/png';
     const arrayBuf = await resp.arrayBuffer();
