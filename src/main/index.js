@@ -607,6 +607,19 @@ function createWindow() {
             });
 
             if (!saveRes.canceled && saveRes.filePath) {
+              try {
+                await webviewWebContents.executeJavaScript(`
+                  (async () => {
+                    const cur = window.scrollY;
+                    const max = Math.min(document.body.scrollHeight, 2500);
+                    window.scrollTo({ top: max, behavior: 'smooth' });
+                    await new Promise(r => setTimeout(r, 350));
+                    window.scrollTo({ top: cur, behavior: 'smooth' });
+                    await new Promise(r => setTimeout(r, 200));
+                  })()
+                `);
+              } catch (_) {}
+
               const pdfBuffer = await webviewWebContents.printToPDF({
                 printBackground: true,
                 landscape: false,

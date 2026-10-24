@@ -549,11 +549,27 @@
           marginsType: 0
         });
 
-        // Convert Uint8Array to base64
+        // Smooth page-scan simulation (mimic chrome Web to PDF scroll & preview cue)
+        try {
+          await wv.executeJavaScript(`
+            (async () => {
+              const cur = window.scrollY;
+              const max = Math.min(document.body.scrollHeight, 2500);
+              window.scrollTo({ top: max, behavior: 'smooth' });
+              await new Promise(r => setTimeout(r, 350));
+              window.scrollTo({ top: cur, behavior: 'smooth' });
+              await new Promise(r => setTimeout(r, 200));
+            })()
+          `);
+        } catch (_) {}
+
+        // Convert Uint8Array to base64 safely without call stack overflow
         let binary = '';
         const len = pdfBuffer.byteLength;
-        for (let i = 0; i < len; i++) {
-          binary += String.fromCharCode(pdfBuffer[i]);
+        const chunkSize = 8192;
+        for (let i = 0; i < len; i += chunkSize) {
+          const sub = pdfBuffer.subarray ? pdfBuffer.subarray(i, i + chunkSize) : pdfBuffer.slice(i, i + chunkSize);
+          binary += String.fromCharCode.apply(null, sub);
         }
         const base64Data = btoa(binary);
 
